@@ -25,7 +25,10 @@ export const UpdateProfileSchema = z.object({
     .string()
     .min(3, { message: "Name must be at least 3 characters" })
     .max(255, { message: "Name must be less than 256 characters" }),
-  password: z.string(),
+  password: z
+    .string()
+    .min(3, { message: "Name must be at least 3 characters" })
+    .max(255, { message: "Name must be less than 256 characters" }),
 });
 
 export const RequestResetPasswordSchema = z.object({
@@ -46,8 +49,14 @@ export const ResetPasswordSchema = z.object({
 });
 
 export const CreateOrderSchema = z.object({
-  studentNumber: z.string().min(3, { message: "Student Number must be at least 3 characters" }),
-  studentName: z.string().min(3, { message: "Name must be at least 3 characters" }),
-  studentGender: z.string().min(3, { message: "Gender must be at least 3 characters" }),
-  receipt: z.string()
-})
+  studentNumber: z
+    .string()
+    .min(3, { message: "Student Number must be at least 3 characters" }),
+  studentName: z
+    .string()
+    .min(3, { message: "Name must be at least 3 characters" }),
+  studentGender: z
+    .string()
+    .min(3, { message: "Gender must be at least 3 characters" }),
+  receipt: z.string(),
+});
