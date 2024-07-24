@@ -48,6 +48,7 @@ function Orders() {
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
+  const [currentPage, setCurrentPage] = useState(0);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -319,10 +320,7 @@ function Orders() {
       accessorKey: "receipt",
       header: "Receipt",
       cell: ({ row }) => (
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a target="_blank" rel="noopener noreferrer">
           <img
             src={row.getValue("receipt")}
             alt="Receipt"
@@ -506,18 +504,32 @@ function Orders() {
     },
   });
 
+  const rowsPerPage = 5;
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 0));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) =>
+      Math.min(
+        prevPage + 1,
+        Math.floor(table.getRowModel().rows.length / rowsPerPage)
+      )
+    );
+  };
+
+  const displayedRows = table
+    .getRowModel()
+    .rows.slice(currentPage * rowsPerPage, (currentPage + 1) * rowsPerPage);
+
   return (
     <Spin
       spinning={
         loadingApprove || loadingClaimed || loadingDone || loadingArchive
       }
       indicator={
-        <LoadingOutlined
-          className="dark:text-white"
-          style={{
-            fontSize: 48,
-          }}
-        />
+        <LoadingOutlined className="dark:text-white" style={{ fontSize: 48 }} />
       }
     >
       <div className="w-full p-4 h-screen">
@@ -589,8 +601,8 @@ function Orders() {
                 ))}
               </TableHeader>
               <TableBody>
-                {table.getRowModel().rows?.length ? (
-                  table.getRowModel().rows.map((row) => (
+                {displayedRows.length ? (
+                  displayedRows.map((row) => (
                     <TableRow
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
@@ -608,7 +620,7 @@ function Orders() {
                 ) : (
                   <TableRow>
                     <TableCell
-                      colSpan={columns.length}
+                      colSpan={table.getAllColumns().length}
                       className="h-24 text-center"
                     >
                       No results.
@@ -628,16 +640,19 @@ function Orders() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
+              onClick={handlePreviousPage}
+              disabled={currentPage === 0}
             >
               Previous
             </Button>
             <Button
               variant="outline"
               size="sm"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
+              onClick={handleNextPage}
+              disabled={
+                (currentPage + 1) * rowsPerPage >=
+                table.getRowModel().rows.length
+              }
             >
               Next
             </Button>

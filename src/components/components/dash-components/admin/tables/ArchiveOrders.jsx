@@ -48,14 +48,16 @@ function ArchiveOrders() {
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
+  const [currentPage, setCurrentPage] = useState(0);
   const navigate = useNavigate();
-  const {toast } = useToast()
+  const { toast } = useToast();
 
   const toastError = () => {
     toast({
       variant: "destructive",
       title: "Uh oh! Something went wrong.",
-      description: "There was a problem with your request. Check you internet connection and try again",
+      description:
+        "There was a problem with your request. Check you internet connection and try again",
       action: (
         <ToastAction
           altText="Ok"
@@ -133,12 +135,12 @@ function ArchiveOrders() {
           });
         });
       } else {
-        toastError()
+        toastError();
         setLoadingApprove(false);
       }
     } catch (error) {
       setLoadingApprove(false);
-      toastError()
+      toastError();
     }
   };
 
@@ -185,11 +187,11 @@ function ArchiveOrders() {
           });
         });
       } else {
-        toastError()
+        toastError();
         setLoadingDone(false);
       }
     } catch (error) {
-      toastError()
+      toastError();
       setLoadingDone(false);
     }
   };
@@ -237,11 +239,11 @@ function ArchiveOrders() {
           });
         });
       } else {
-        toastError()
+        toastError();
         setLoadingClaimed(false);
       }
     } catch (error) {
-      toastError()
+      toastError();
       setLoadingClaimed(false);
     }
   };
@@ -278,13 +280,13 @@ function ArchiveOrders() {
           return prevData.filter((item) => item._id !== order._id);
         });
       } else {
-        toastError()
+        toastError();
         setLoadingUnarchive(false);
       }
     } catch (error) {
       {
         setLoadingUnarchive(false);
-        toastError()
+        toastError();
       }
     }
   };
@@ -513,18 +515,32 @@ function ArchiveOrders() {
     },
   });
 
+  const rowsPerPage = 5;
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 0));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) =>
+      Math.min(
+        prevPage + 1,
+        Math.floor(table.getRowModel().rows.length / rowsPerPage)
+      )
+    );
+  };
+
+  const displayedRows = table
+    .getRowModel()
+    .rows.slice(currentPage * rowsPerPage, (currentPage + 1) * rowsPerPage);
+
   return (
     <Spin
       spinning={
         loadingApprove || loadingClaimed || loadingDone || loadingUnarchive
       }
       indicator={
-        <LoadingOutlined
-          className="dark:text-white"
-          style={{
-            fontSize: 48,
-          }}
-        />
+        <LoadingOutlined className="dark:text-white" style={{ fontSize: 48 }} />
       }
     >
       <div className="w-full p-4 h-screen">
@@ -596,8 +612,8 @@ function ArchiveOrders() {
                 ))}
               </TableHeader>
               <TableBody>
-                {table.getRowModel().rows?.length ? (
-                  table.getRowModel().rows.map((row) => (
+                {displayedRows.length ? (
+                  displayedRows.map((row) => (
                     <TableRow
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
@@ -615,7 +631,7 @@ function ArchiveOrders() {
                 ) : (
                   <TableRow>
                     <TableCell
-                      colSpan={columns.length}
+                      colSpan={table.getAllColumns().length}
                       className="h-24 text-center"
                     >
                       No results.
@@ -635,16 +651,19 @@ function ArchiveOrders() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
+              onClick={handlePreviousPage}
+              disabled={currentPage === 0}
             >
               Previous
             </Button>
             <Button
               variant="outline"
               size="sm"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
+              onClick={handleNextPage}
+              disabled={
+                (currentPage + 1) * rowsPerPage >=
+                table.getRowModel().rows.length
+              }
             >
               Next
             </Button>
