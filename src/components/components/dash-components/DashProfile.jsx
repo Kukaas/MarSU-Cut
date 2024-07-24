@@ -1,4 +1,4 @@
-import { Alert, Avatar, Modal, message, notification } from "antd";
+import { Alert, Avatar, message, notification } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -35,6 +35,15 @@ import { Input } from "@/components/ui/input";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SkeletonProfile from "../SkeletonProfile";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const DashProfile = () => {
   const navigate = useNavigate();
@@ -48,8 +57,6 @@ const DashProfile = () => {
   const [loading, setLoading] = useState(false);
   const [updateProfileLoading, setUpdateProfileLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [modalDeleteUser, setModalDeleteUser] = useState(false);
   const [skeletonLoading, setSkeletonLoading] = useState(true);
 
   const form = useForm({
@@ -72,15 +79,6 @@ const DashProfile = () => {
       setSkeletonLoading(false);
     }, 4000);
   }, []);
-
-  const showModalDeleteUser = () => {
-    setModalDeleteUser(true);
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
-    setModalDeleteUser(false);
-  };
 
   // Handle image upload
   const handleImageChange = (e) => {
@@ -180,29 +178,6 @@ const DashProfile = () => {
     }
   };
 
-  // Logout user
-  const handleLogout = async () => {
-    try {
-      setLoading(true);
-      const res = await axios.post(
-        "https://garments.kukaas.tech/api/v1/auth/logout",
-        {
-          withCredentials: true,
-        }
-      );
-      if (res.status === 200) {
-        setIsModalVisible(false);
-        setLoading(false);
-        dispatch(logout());
-        message.success("Thank you for using our service. Come back soon!");
-        navigate("/sign-in");
-      }
-    } catch (error) {
-      message.error("Something went wrong");
-      setLoading(false);
-    }
-  };
-
   // Delete user account
   const handleDeleteUser = async () => {
     try {
@@ -214,7 +189,6 @@ const DashProfile = () => {
         }
       );
       if (res.status === 200) {
-        setIsModalVisible(false);
         setLoading(false);
         dispatch(logout());
         message.success("Account deleted successfully");
@@ -363,77 +337,43 @@ const DashProfile = () => {
               </Button>
             </form>
             <div className="w-full p-3 mb-[80px]">
-              <Button
-                onClick={() => showModalDeleteUser()}
-                variant="destructive"
-                className="w-full p-4"
-              >
-                {loading ? (
-                  <span className="loading-dots">Deleting Account</span>
-                ) : (
-                  "Delete Account"
-                )}
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="destructive" className="w-full">
+                    Delete Account
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Delete Account?</DialogTitle>
+                    <DialogDescription>
+                      All of your data will be deleted. Click Ok to proceed
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="flex justify-end">
+                    <DialogClose>
+                      <Button variant="secondary" className="m-2">
+                        Cancel
+                      </Button>
+                    </DialogClose>
+                    <Button
+                      onClick={() => handleDeleteUser()}
+                      className="m-2"
+                      variant="destructive"
+                    >
+                      {loading ? (
+                        <span className="loading-dots">Deleting Account</span>
+                      ) : (
+                        "Delete Account"
+                      )}
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
           </Form>
         </div>
       )}
-      <Modal
-        title="Confirm Signout"
-        open={isModalVisible}
-        onOk={handleLogout}
-        onCancel={handleCancel}
-        footer={[
-          <Button
-            key="back"
-            onClick={handleCancel}
-            className="bg-gray-200 hover:bg-gray-300 text-gray-800"
-          >
-            Cancel
-          </Button>,
-          <Button
-            key="submit"
-            type="primary"
-            onClick={handleLogout}
-            className="bg-red-500 hover:bg-red-600 text-white"
-            disabled={loading}
-            danger
-          >
-            {loading ? "Signing Out.." : "Sign Out"}
-          </Button>,
-        ]}
-        className="rounded-lg"
-      >
-        <p>Are you sure you want to sign out?</p>
-      </Modal>
-      <Modal
-        title="Confirm Delete"
-        open={modalDeleteUser}
-        onOk={handleDeleteUser}
-        onCancel={handleCancel}
-        footer={[
-          <Button
-            key="back"
-            onClick={handleCancel}
-            className="bg-gray-200 hover:bg-gray-300 text-gray-800"
-          >
-            Cancel
-          </Button>,
-          <Button
-            key="submit"
-            type="primary"
-            onClick={handleDeleteUser}
-            className="bg-red-500 hover:bg-red-600 text-white"
-            disabled={loading}
-            danger
-          >
-            {loading ? "Deleting.." : "Delete"}
-          </Button>,
-        ]}
-        className="rounded-lg"
-      >
-        <p>Are you sure you want to delete your account?</p>
-      </Modal>
     </div>
   );
 };
