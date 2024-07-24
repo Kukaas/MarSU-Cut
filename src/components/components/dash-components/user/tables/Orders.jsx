@@ -37,6 +37,7 @@ import { ToastAction } from "@/components/ui/toast";
 import { useSelector } from "react-redux";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -411,6 +412,11 @@ function Orders() {
                   </DialogDescription>
                 </DialogHeader>
                 <CreateOrder />
+                <DialogClose asChild>
+                  <Button variant="outline" className="w-full">
+                    Close
+                  </Button>
+                </DialogClose>
               </DialogContent>
             </Dialog>
           </Tooltip>

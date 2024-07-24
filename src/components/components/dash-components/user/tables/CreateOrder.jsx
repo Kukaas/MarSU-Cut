@@ -1,5 +1,14 @@
 import { Button } from "@/components/ui/button";
 import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -17,7 +26,7 @@ import { Input } from "@/components/ui/input";
 import { app } from "@/firebase";
 import { CreateOrderSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { message, Modal, notification, Progress } from "antd";
+import { message, notification, Progress } from "antd";
 import axios from "axios";
 import {
   getDownloadURL,
@@ -34,6 +43,7 @@ const CreateOrder = () => {
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
 
   const form = useForm({
@@ -104,106 +114,49 @@ const CreateOrder = () => {
     );
   };
 
-  // Function to handle form submission
   const handleCreateOrder = async (values) => {
-    const submitForm = async () => {
-      if (imageFileUrl === null) {
-        message.error("Image is still uploading, please wait...");
-        return;
-      }
+    if (imageFileUrl === null) {
+      message.error("Please fill all fields or the image is still uploading, please wait...");
+      return;
+    }
 
-      try {
-        setLoading(true);
-        const res = await axios.post(
-          "https://garments.kukaas.tech/api/v1/order/student/create",
-          {
-            ...values,
-            receipt: imageFileUrl,
-            userId: currentUser._id,
-            studentEmail: currentUser.email,
-          },
-          {
-            headers: { "Content-Type": "application/json" },
-            withCredentials: true,
-          }
-        );
-
-        if (res.status === 201) {
-          setProgress(0);
-          setLoading(false);
-          notification.success({
-            message: "Order submitted successfully",
-            description: "Wait for the admin to schedule your measurement.",
-            pauseOnHover: false,
-            showProgress: true,
-          });
+    try {
+      setLoading(true);
+      const res = await axios.post(
+        "https://garments.kukaas.tech/api/v1/order/student/create",
+        {
+          ...values,
+          receipt: imageFileUrl,
+          userId: currentUser._id,
+          studentEmail: currentUser.email,
+        },
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
         }
-      } catch (error) {
+      );
+
+      if (res.status === 201) {
+        setProgress(0);
         setLoading(false);
-        notification.error({
-          message: "Failed to submit order",
-          description: "Please try again later.",
+        form.reset();
+        notification.success({
+          message: "Order submitted successfully",
+          description: "Wait for the admin to schedule your measurement.",
           pauseOnHover: false,
           showProgress: true,
         });
       }
-    };
-    // Function to convert camelCase or snake_case to a more readable format
-    const formatKey = (key) => {
-      // Convert snake_case to camelCase
-      let formattedKey = key.replace(/_([a-z])/g, (g) => g[1].toUpperCase());
-      // Break camelCase and add spaces
-      formattedKey = formattedKey.replace(/([A-Z])/g, " $1");
-      // Capitalize the first letter of each word
-      return formattedKey.charAt(0).toUpperCase() + formattedKey.slice(1);
-    };
-
-    // Function to check if a string is a valid URL
-    const isUrl = (value) => {
-      try {
-        new URL(value);
-        return true;
-      } catch (_) {
-        return false;
-      }
-    };
-
-    // Display form details in a modal
-    const formDetailsElements = Object.entries(values).map(([key, value]) => (
-      <div key={key} style={{ marginBottom: "10px", fontSize: "16px" }}>
-        {formatKey(key)}:{" "}
-        {key === "receipt" && isUrl(imageFileUrl) ? ( // Check if 'receipt' and imageFileUrl is a valid URL
-          <a
-            href={imageFileUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ fontWeight: "bold" }}
-          >
-            View Image
-          </a>
-        ) : (
-          <strong>{value}</strong>
-        )}
-      </div>
-    ));
-
-    // Display a modal to confirm form submission
-    Modal.confirm({
-      title: "Confirm Submission",
-      content: (
-        <div style={{ fontSize: "16px" }}>
-          <p>Are you sure you want to submit these details?</p>
-          <p style={{ marginBottom: "20px", color: "red" }}>
-            Once you submit you can&apos;t change the details.
-          </p>
-          {formDetailsElements}
-        </div>
-      ),
-      onOk() {
-        submitForm();
-      },
-      onCancel() {},
-    });
+    } catch (error) {
+      setLoading(false);
+      setLoading(false);
+      notification.error({
+        message: "Failed to submit order",
+        description: "Please try again later.",
+        pauseOnHover: false,
+        showProgress: true,
+      });
+    }
   };
 
   return (
@@ -306,13 +259,51 @@ const CreateOrder = () => {
                 <span className="dark:text-white">{percent}%</span>
               )}
             />
-            <Button type="submit" className="w-full">
-              {loading ? (
-                <span className="loading-dots">Submitting Order</span>
-              ) : (
-                "Submit"
-              )}
-            </Button>
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  onClick={() => setDialogOpen(true)}
+                  variant="default"
+                  className="w-full"
+                >
+                  Submit Order
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px] mx-auto">
+                <DialogHeader>
+                  <DialogTitle>Confirm Submission</DialogTitle>
+                  <DialogDescription>
+                    <div>
+                      <p>Are you sure you want to submit these details?</p>
+                      <p className="mb-5 text-red-500">
+                        Once you submit you can&apos;t change the details.
+                      </p>
+                    </div>
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="flex justify-end">
+                  <DialogClose asChild>
+                    <Button variant="outline" className="m-2">
+                      Cancel
+                    </Button>
+                  </DialogClose>
+                  <Button
+                    onClick={() => {
+                      handleCreateOrder(form.getValues());
+                      setDialogOpen(false);
+                    }}
+                    className="m-2"
+                    variant="default"
+                  >
+                    {loading ? (
+                      <span className="loading-dots">Submitting Order</span>
+                    ) : (
+                      "Submit Order"
+                    )}
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
           </form>
         </Form>
       </div>
