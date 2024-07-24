@@ -16,6 +16,7 @@ import DashSalesReport from "@/components/components/dash-components/admin/DashS
 import DashArchiveOrders from "@/components/components/dash-components/admin/DashArchiveOrders";
 import DashArchiveRentals from "@/components/components/dash-components/admin/DashArchiveRentals";
 import { useSelector } from "react-redux";
+import DashUsers from "@/components/components/dash-components/admin/DashUsers";
 
 const Dashboard = () => {
   const location = useLocation();
@@ -56,6 +57,7 @@ const Dashboard = () => {
       {tab === "raw-materials" && <DashRawMaterials />}
       {tab === "accomplishment-report" && <DashAccomplishmentReport />}
       {tab === "sales-report" && <DashSalesReport />}
+      {tab === "all-users" && <DashUsers />}
 
       {/* User */}
       {tab === "home" && <DashHome />}

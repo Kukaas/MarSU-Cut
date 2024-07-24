@@ -108,6 +108,15 @@ const MenuAdmin = () => {
               </DropdownMenuItem>
             </DropdownMenuSubContent>
           </DropdownMenuPortal>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() => {
+              navigate("/dashboard?tab=all-users");
+            }}
+          >
+            Users
+            <DropdownMenuShortcut>⇧⌘U</DropdownMenuShortcut>
+          </DropdownMenuItem>
         </DropdownMenuSub>
       </DropdownMenuGroup>
     </>
