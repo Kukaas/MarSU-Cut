@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+html,
+body {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  font-family: "Poppins", Arial, Helvetica, sans-serif;
+}
+
+/* Make the font to poppins */
+.ant-btn, .ant-form-item-label > label, .ant-typography, .ant-menu, .ant-input-placeholder.ant-dropdown, .ant-modal, .ant-table, .ant-popconfirm, .ant-card, .ant-message-notice-content, .ant-notification-notice-content, .ant-select, .ant-option, .ant-picker, .ant-tooltip {
+  font-family: 'Poppins', sans-serif !important;
+}
+
+@keyframes dots {
+  0%, 100% {
+    content: ".";
+    opacity: 0;
+  }
+  25% {
+    content: ".";
+    opacity: 1;
+  }
+  33% {
+    content: "..";
+    opacity: 0.5;
+  }
+  50% {
+    content: "...";
+    opacity: 1;
+  }
+  66% {
+    content: "..";
+    opacity: 0.5;
+  }
+  75% {
+    content: ".";
+    opacity: 1;
+  }
+}
+
+.loading-dots::after {
+  display: inline-block;
+  content: "";
+  animation: dots 2s infinite;
+  padding-left: 5px;
+}
+
+
+.styled-checkbox-group .ant-checkbox-inner {
+  border-color: #4d90fe; /* Change border color */
+  border-radius: 4px; /* Make the corners rounded */
+  border-width: 2px; /* Make the border thicker */
+}
+
+.styled-checkbox-group .ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #4d90fe; /* Change background color when checked */
+  border-color: #4d90fe; /* Change border color when checked */
+}
+
+.styled-checkbox-group .ant-checkbox-checked::after {
+  border: 1px solid #fff; /* Change checkmark color to white */
+  top: 0px; /* Adjust checkmark position */
+  left: 4px; /* Adjust checkmark position */
+}
+
+.styled-checkbox-group .ant-checkbox-group-item {
+  margin-right: 15px; /* Add some space between checkboxes */
+  font-size: 15px; /* Increase font size */
+}
+
+.styled-checkbox-group .ant-checkbox:hover .ant-checkbox-inner,
+.styled-checkbox-group .ant-checkbox-input:focus + .ant-checkbox-inner {
+  border-color: #4d90fe; /* Change border color on hover/focus */
+}
+
+
