@@ -44,6 +44,7 @@ function Orders() {
   const [loadingDone, setLoadingDone] = useState(false);
   const [loadingClaimed, setLoadingClaimed] = useState(false);
   const [loadingArchive, setLoadingArchive] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState(false);
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
@@ -281,6 +282,45 @@ function Orders() {
     }
   };
 
+  // Function to handle delete
+  const handleDelete = async (order) => {
+    try {
+      setLoadingDelete(true);
+      const res = await axios.delete(
+        `https://garments.kukaas.tech/api/v1/order/student/delete/${order._id}`
+      );
+
+      if (res.status === 200) {
+        setLoadingDelete(false);
+        toast({
+          title: "Order deleted successfully",
+          description: `The order for student ${order.studentName} is deleted.`,
+          variant: "success",
+          action: (
+            <ToastAction
+              altText="Ok"
+              variant="outline"
+              className="hover:text-black text-white"
+            >
+              Ok
+            </ToastAction>
+          ),
+        });
+
+        // Update the data in the state
+        setData((prevData) => {
+          return prevData.filter((item) => item._id !== order._id);
+        });
+      } else {
+        setLoadingDelete(false);
+        toastError();
+      }
+    } catch (error) {
+      setLoadingDelete(false);
+      toastError();
+    }
+  };
+
   const columns = [
     {
       id: "select",
@@ -468,7 +508,7 @@ function Orders() {
               <DropdownMenuItem onClick={() => handleArchive(order)}>
                 Archive
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDelete(order)}>
                 <span className="text-red-500 hover:text-red-400">Delete</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -526,7 +566,11 @@ function Orders() {
   return (
     <Spin
       spinning={
-        loadingApprove || loadingClaimed || loadingDone || loadingArchive
+        loadingApprove ||
+        loadingClaimed ||
+        loadingDone ||
+        loadingArchive ||
+        loadingDelete
       }
       indicator={
         <LoadingOutlined className="dark:text-white" style={{ fontSize: 48 }} />
