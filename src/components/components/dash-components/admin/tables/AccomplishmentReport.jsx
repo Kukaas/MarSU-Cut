@@ -36,12 +36,20 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Form, FormControl } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -50,11 +58,15 @@ import {
 } from "@/components/ui/dialog";
 import CreateAccomplishment from "./CreateAccomplishment";
 import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
+import { EditAccomplishmentSchema } from "@/schema/shema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const AccomplishmentReport = () => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [updateLoading, setUpdateLoading] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
@@ -63,7 +75,32 @@ const AccomplishmentReport = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedDate, setSelectedDate] = useState(null);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const [selectedAccomplishment, setSelectedAccomplishment] = useState(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const form = useForm();
+
+  const formAccomplishment = useForm({
+    resolver: zodResolver(EditAccomplishmentSchema),
+    defaultValues: {
+      type: "",
+      accomplishment: "",
+    },
+  });
+
+  useEffect(() => {
+    if (selectedAccomplishment) {
+      formAccomplishment.reset({
+        type: selectedAccomplishment.type,
+        accomplishment: selectedAccomplishment.accomplishment,
+      });
+      setIsDialogOpen(true);
+    } else {
+      formAccomplishment.reset({
+        type: "",
+        accomplishment: "",
+      });
+    }
+  }, [selectedAccomplishment, formAccomplishment]);
 
   const handleDateSelect = (date) => {
     setSelectedDate(date);
@@ -109,6 +146,42 @@ const AccomplishmentReport = () => {
   useEffect(() => {
     filterData(data, selectedDate);
   }, [selectedDate, data]);
+
+  const handleEditAccomplishment = async (values, event) => {
+    try {
+      event.preventDefault();
+      event.stopPropagation();
+      setUpdateLoading(true);
+      const res = await axios.put(
+        `https://garments.kukaas.tech/api/v1/accomplishment-report/update/${selectedAccomplishment._id}`,
+        values
+      );
+      if (res.status === 200) {
+        setIsDialogOpen(false);
+        setUpdateLoading(false);
+        toast.success("Accomplishment report updated successfully!", {
+          action: {
+            label: "Ok",
+          },
+        });
+        setData((prevData) => {
+          return prevData.map((item) => {
+            if (item._id === selectedAccomplishment._id) {
+              return { ...item, ...values };
+            }
+            return item;
+          });
+        });
+        form.reset();
+      } else {
+        toast.error("Uh oh! Something went wrong");
+        setUpdateLoading(false);
+      }
+    } catch (error) {
+      toast.error("Uh oh! Something went wrong");
+      setUpdateLoading(false);
+    }
+  };
 
   // Function to delete an accomplishment report
   const handleDeleteAccomplishment = async (accomplishment) => {
@@ -225,7 +298,11 @@ const AccomplishmentReport = () => {
                 Copy Order ID
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Edit Accomplishment</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setSelectedAccomplishment(accomplishment)}
+              >
+                Edit Accomplishment
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => handleDeleteAccomplishment(accomplishment)}
@@ -459,6 +536,64 @@ const AccomplishmentReport = () => {
           </div>
         </div>
       </div>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Accomplishment</DialogTitle>
+            <DialogDescription>
+              Edit the selected accomplishment details below.
+            </DialogDescription>
+          </DialogHeader>
+          <Form {...formAccomplishment}>
+            <form
+              onSubmit={formAccomplishment.handleSubmit(
+                handleEditAccomplishment
+              )}
+            >
+              <FormField
+                control={formAccomplishment.control}
+                name="type"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Type of Accomplishment</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={formAccomplishment.control}
+                name="accomplishment"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Accomplishment</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex justify-end items-center">
+                <DialogClose asChild>
+                  <Button variant="outline" className="mr-2 mt-4">
+                    Cancel
+                  </Button>
+                </DialogClose>
+                <Button type="submit" className="mt-4">
+                  {updateLoading ? (
+                    <div className="loading-dots">Saving changes</div>
+                  ) : (
+                    "Save Changes"
+                  )}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
     </Spin>
   );
 };

@@ -86,3 +86,14 @@ export const CreateAccomplishmentSchema = z.object({
   .min(3, { message: "Accomplishment must be at least 3 characters" })
   .max(255, { message: "Accomplishment must be less than 256 characters" }),
 })
+
+export const EditAccomplishmentSchema = z.object({
+  type: z
+  .string()
+  .min(3, { message: "Type must be at least 3 characters" })
+  .max(255, { message: "Type must be less than 256 characters" }),
+  accomplishment: z
+  .string()
+  .min(3, { message: "Accomplishment must be at least 3 characters" })
+  .max(255, { message: "Accomplishment must be less than 256 characters" }),
+})
