@@ -299,7 +299,9 @@ const AccomplishmentReport = () => {
                   <FormControl>
                     <Button
                       variant={"outline"}
-                      className={cn("w-[240px] pl-3 text-left font-normal")}
+                      className={cn(
+                        "sm:max-w-[130px] pl-3 text-left font-normal"
+                      )}
                       onClick={() => setIsPopoverOpen(true)}
                     >
                       <span>
