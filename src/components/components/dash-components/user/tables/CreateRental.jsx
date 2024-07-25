@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import { LoadingOutlined } from "@ant-design/icons";
 import {
   Dialog,
   DialogClose,
@@ -27,7 +28,7 @@ import { app } from "@/firebase";
 import { cn } from "@/lib/utils";
 import { CreateRentalSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { message, notification, Progress } from "antd";
+import { message, notification, Progress, Spin } from "antd";
 import axios from "axios";
 import { format } from "date-fns";
 import {
@@ -118,7 +119,7 @@ const CreateRental = () => {
     );
   };
 
-  const handleCreateRental = async (values, event) => {
+  const handleCreateRental = async (values) => {
     if (imageFileUrl === null) {
       message.error(
         "Please fill all fields or image is still uploading, please wait..."
@@ -127,8 +128,6 @@ const CreateRental = () => {
     }
 
     try {
-      event.preventDefault();
-      event.stopPropagation();
       setLoading(true);
       const res = await axios.post(
         "https://garments.kukaas.tech/api/v1/rental/create",
@@ -180,6 +179,17 @@ const CreateRental = () => {
   };
 
   return (
+    <Spin
+      spinning={loading}
+      indicator={
+        <LoadingOutlined
+          className="dark:text-white"
+          style={{
+            fontSize: 48,
+          }}
+        />
+      }
+    >
     <div className="grid gap-4 py-4">
       <div className="w-full">
         <Form {...form}>
@@ -335,7 +345,7 @@ const CreateRental = () => {
                   variant="default"
                   className="w-full"
                 >
-                  Submit Order
+                  Submit Rental
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px] mx-auto">
@@ -366,7 +376,7 @@ const CreateRental = () => {
                     disabled={loading}
                   >
                     {loading ? (
-                      <span className="loading-dots">Submitting Order</span>
+                      <span className="loading-dots">Submitting Rental</span>
                     ) : (
                       "Submit Order"
                     )}
@@ -378,6 +388,7 @@ const CreateRental = () => {
         </Form>
       </div>
     </div>
+    </Spin>
   );
 };
 

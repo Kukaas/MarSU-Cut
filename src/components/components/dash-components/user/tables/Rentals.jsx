@@ -347,7 +347,7 @@ function Rentals() {
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                  <DialogTitle>Create a Renal</DialogTitle>
+                  <DialogTitle>Create a Rental</DialogTitle>
                   <DialogDescription>
                     Click submit when you&apos;re done.
                   </DialogDescription>

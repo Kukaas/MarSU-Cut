@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { LoadingOutlined } from "@ant-design/icons";
 import {
   Dialog,
   DialogClose,
@@ -26,7 +27,7 @@ import { Input } from "@/components/ui/input";
 import { app } from "@/firebase";
 import { CreateOrderSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { message, notification, Progress } from "antd";
+import { message, notification, Progress, Spin } from "antd";
 import axios from "axios";
 import {
   getDownloadURL,
@@ -169,156 +170,168 @@ const CreateOrder = () => {
   };
 
   return (
-    <div className="grid gap-4 py-4">
-      <div className="w-full">
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(handleCreateOrder)}
-            className="space-y-1 w-full"
-          >
-            <FormField
-              control={form.control}
-              name="studentNumber"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Student Number</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="eg.21B994" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="studentName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="eg.Jhon Doe" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="studentGender"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Gender</FormLabel>
-                  <FormControl>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          className="block w-full text-start"
-                          variant="outline"
-                        >
-                          {field.value || "Select Gender"}
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        <DropdownMenuItem
-                          onSelect={() => field.onChange("Male")}
-                        >
-                          Male
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onSelect={() => field.onChange("Female")}
-                        >
-                          Female
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="receipt"
-              render={() => (
-                <FormItem>
-                  <FormLabel>Upload Receipt</FormLabel>
-                  <FormControl>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => {
-                        handleImageChange(e);
-                        // Field value will be set after upload is complete
-                      }}
-                      className="block w-full text-sm text-gray-500"
-                      ref={fileInputRef}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Progress
-              percent={progress}
-              status="active"
-              strokeColor={{
-                from: "#108ee9",
-                to: "#87d068",
-              }}
-              format={(percent) => (
-                <span className="dark:text-white">{percent}%</span>
-              )}
-            />
-            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-              <DialogTrigger asChild>
-                <Button
-                  onClick={() => setDialogOpen(true)}
-                  variant="default"
-                  className="w-full"
-                >
-                  Submit Order
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px] mx-auto">
-                <DialogHeader>
-                  <DialogTitle>Confirm Submission</DialogTitle>
-                  <DialogDescription>
-                    <div>
-                      <p>Are you sure you want to submit these details?</p>
-                      <p className="mb-5 text-red-500">
-                        Once you submit you can&apos;t change the details.
-                      </p>
-                    </div>
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="flex justify-end">
-                  <DialogClose asChild>
-                    <Button variant="outline" className="m-2">
-                      Cancel
-                    </Button>
-                  </DialogClose>
+    <Spin
+      spinning={loading}
+      indicator={
+        <LoadingOutlined
+          className="dark:text-white"
+          style={{
+            fontSize: 48,
+          }}
+        />
+      }
+    >
+      <div className="grid gap-4 py-4">
+        <div className="w-full">
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleCreateOrder)}
+              className="space-y-1 w-full"
+            >
+              <FormField
+                control={form.control}
+                name="studentNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Student Number</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="eg.21B994" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="studentName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="eg.Jhon Doe" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="studentGender"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Gender</FormLabel>
+                    <FormControl>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            className="block w-full text-start"
+                            variant="outline"
+                          >
+                            {field.value || "Select Gender"}
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          <DropdownMenuItem
+                            onSelect={() => field.onChange("Male")}
+                          >
+                            Male
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onSelect={() => field.onChange("Female")}
+                          >
+                            Female
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="receipt"
+                render={() => (
+                  <FormItem>
+                    <FormLabel>Upload Receipt</FormLabel>
+                    <FormControl>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          handleImageChange(e);
+                          // Field value will be set after upload is complete
+                        }}
+                        className="block w-full text-sm text-gray-500"
+                        ref={fileInputRef}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Progress
+                percent={progress}
+                status="active"
+                strokeColor={{
+                  from: "#108ee9",
+                  to: "#87d068",
+                }}
+                format={(percent) => (
+                  <span className="dark:text-white">{percent}%</span>
+                )}
+              />
+              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <DialogTrigger asChild>
                   <Button
-                    onClick={() => {
-                      handleCreateOrder(form.getValues());
-                      setDialogOpen(false);
-                    }}
-                    className="m-2"
+                    onClick={() => setDialogOpen(true)}
                     variant="default"
-                    disabled={loading}
+                    className="w-full"
                   >
-                    {loading ? (
-                      <span className="loading-dots">Submitting Order</span>
-                    ) : (
-                      "Submit Order"
-                    )}
+                    Submit Order
                   </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </form>
-        </Form>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px] mx-auto">
+                  <DialogHeader>
+                    <DialogTitle>Confirm Submission</DialogTitle>
+                    <DialogDescription>
+                      <div>
+                        <p>Are you sure you want to submit these details?</p>
+                        <p className="mb-5 text-red-500">
+                          Once you submit you can&apos;t change the details.
+                        </p>
+                      </div>
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="flex justify-end">
+                    <DialogClose asChild>
+                      <Button variant="outline" className="m-2">
+                        Cancel
+                      </Button>
+                    </DialogClose>
+                    <Button
+                      onClick={() => {
+                        handleCreateOrder(form.getValues());
+                        setDialogOpen(false);
+                      }}
+                      className="m-2"
+                      variant="default"
+                      disabled={loading}
+                    >
+                      {loading ? (
+                        <span className="loading-dots">Submitting Order</span>
+                      ) : (
+                        "Submit Order"
+                      )}
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </form>
+          </Form>
+        </div>
       </div>
-    </div>
+    </Spin>
   );
 };
 
