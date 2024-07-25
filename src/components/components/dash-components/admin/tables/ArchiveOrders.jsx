@@ -34,8 +34,7 @@ import {
 import { Spin, Tooltip } from "antd";
 import { useNavigate } from "react-router-dom";
 import { ArrowDownLeft } from "lucide-react";
-import { ToastAction } from "@/components/ui/toast";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
 function ArchiveOrders() {
   const [data, setData] = useState([]);
@@ -51,24 +50,9 @@ function ArchiveOrders() {
   const [rowSelection, setRowSelection] = useState({});
   const [currentPage, setCurrentPage] = useState(0);
   const navigate = useNavigate();
-  const { toast } = useToast();
 
   const toastError = () => {
-    toast({
-      variant: "destructive",
-      title: "Uh oh! Something went wrong.",
-      description:
-        "There was a problem with your request. Check you internet connection and try again",
-      action: (
-        <ToastAction
-          altText="Ok"
-          variant="outline"
-          className="hover:text-black text-white"
-        >
-          Ok
-        </ToastAction>
-      ),
-    });
+    toast.error("Uh oh! Something went wrong.");
   };
 
   const fetchArchivedOrders = async () => {
@@ -105,20 +89,9 @@ function ArchiveOrders() {
 
       if (res.status === 200) {
         setLoadingApprove(false);
-        toast({
-          title: "Order status  updated to APPROVED",
-          description: `The order for student ${order.studentName} is approved.`,
-          variant: "success",
-          action: (
-            <ToastAction
-              altText="Ok"
-              variant="outline"
-              className="hover:text-black text-white"
-            >
-              Ok
-            </ToastAction>
-          ),
-        });
+        toast.success(
+          `Order of ${order.studentName} is approved successfully!`
+        );
         // Correctly update the data in the state for the approved order
         setData((prevData) => {
           return prevData.map((item) => {
@@ -158,20 +131,7 @@ function ArchiveOrders() {
 
       if (res.status === 200) {
         setLoadingDone(false);
-        toast({
-          title: "Order status  updated to DONE",
-          description: `The order for student ${order.studentName} is ready to be claimed.`,
-          variant: "success",
-          action: (
-            <ToastAction
-              altText="Ok"
-              variant="outline"
-              className="hover:text-black text-white"
-            >
-              Ok
-            </ToastAction>
-          ),
-        });
+        toast.success(`Order of ${order.studentName} is ready to be claimed!`);
         // Update the data in the state
         setData((prevData) => {
           return prevData.map((item) => {
@@ -210,20 +170,7 @@ function ArchiveOrders() {
 
       if (res.status === 200) {
         setLoadingClaimed(false);
-        toast({
-          title: "Order status  updated to CLAIMED",
-          description: `The order for student ${order.studentName} is claimed.`,
-          variant: "success",
-          action: (
-            <ToastAction
-              altText="Ok"
-              variant="outline"
-              className="hover:text-black text-white"
-            >
-              Ok
-            </ToastAction>
-          ),
-        });
+        toast.success(`Order of ${order.studentName} is claimed!`);
         // Update the data in the state
         setData((prevData) => {
           return prevData.map((item) => {
@@ -261,20 +208,9 @@ function ArchiveOrders() {
       );
 
       if (res.status === 200) {
-        toast({
-          title: "Order Unrchive successfully",
-          description: `The order for student ${order.studentName} is Unarchived.`,
-          variant: "success",
-          action: (
-            <ToastAction
-              altText="Ok"
-              variant="outline"
-              className="hover:text-black text-white"
-            >
-              Ok
-            </ToastAction>
-          ),
-        });
+        toast.success(
+          `Order of ${order.studentName} is unarchived successfully!`
+        );
         setLoadingUnarchive(false);
 
         setData((prevData) => {
@@ -302,20 +238,7 @@ function ArchiveOrders() {
 
       if (res.status === 200) {
         setLoadingDelete(false);
-        toast({
-          title: "Order deleted successfully",
-          description: `The order for student ${order.studentName} is deleted.`,
-          variant: "success",
-          action: (
-            <ToastAction
-              altText="Ok"
-              variant="outline"
-              className="hover:text-black text-white"
-            >
-              Ok
-            </ToastAction>
-          ),
-        });
+        toast.success(`Order of ${order.studentName} is deleted successfully!`);
 
         // Update the data in the state
         setData((prevData) => {

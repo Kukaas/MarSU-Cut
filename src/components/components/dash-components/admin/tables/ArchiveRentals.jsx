@@ -33,9 +33,8 @@ import {
 import { Spin, Tooltip } from "antd";
 import { useNavigate } from "react-router-dom";
 import { ArrowDownLeft } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
-import { ToastAction } from "@/components/ui/toast";
 import { Checkbox } from "@/components/ui/checkbox";
+import { toast } from "sonner";
 
 function ArchiveRentals() {
   const [data, setData] = useState([]);
@@ -49,24 +48,9 @@ function ArchiveRentals() {
   const [rowSelection, setRowSelection] = useState({});
   const [currentPage, setCurrentPage] = useState(0);
   const navigate = useNavigate();
-  const { toast } = useToast();
 
   const toastError = () => {
-    toast({
-      variant: "destructive",
-      title: "Uh oh! Something went wrong.",
-      description:
-        "There was a problem with your request. Check you internet connection and try again",
-      action: (
-        <ToastAction
-          altText="Ok"
-          variant="outline"
-          className="hover:text-black text-white"
-        >
-          Ok
-        </ToastAction>
-      ),
-    });
+    toast.error("Uh oh! Something went wrong.");
   };
 
   const fetchRentals = async () => {
@@ -108,20 +92,9 @@ function ArchiveRentals() {
 
       if (res.status === 200) {
         setLoadingApprove(false);
-        toast({
-          title: "Rental status  updated to APPROVED",
-          description: `The rental for student ${rental.studentName} is approved.`,
-          variant: "success",
-          action: (
-            <ToastAction
-              altText="Ok"
-              variant="outline"
-              className="hover:text-black text-white"
-            >
-              Ok
-            </ToastAction>
-          ),
-        });
+        toast.success(
+          `Rental of ${rental.studentName} is approved successfully!`
+        );
 
         // Update the data in the state
         setData((prevData) => {
@@ -153,20 +126,7 @@ function ArchiveRentals() {
 
       if (res.status === 200) {
         setLoadingReturned(false);
-        toast({
-          title: "Rented item RETURNED",
-          description: `The rented item of ${rental.studentName} is returned.`,
-          variant: "success",
-          action: (
-            <ToastAction
-              altText="Ok"
-              variant="outline"
-              className="hover:text-black text-white"
-            >
-              Ok
-            </ToastAction>
-          ),
-        });
+        toast.success(`Rental of ${rental.studentName} is returned!`);
 
         // Update the data in the state
         setData((prevData) => {
@@ -201,20 +161,9 @@ function ArchiveRentals() {
 
       if (res.status === 200) {
         setLoadingArchive(false);
-        toast({
-          title: "Rental unarchived successfully!",
-          description: `The rental of student ${rental.studentName} is unarchived.`,
-          variant: "success",
-          action: (
-            <ToastAction
-              altText="Ok"
-              variant="outline"
-              className="hover:text-black text-white"
-            >
-              Ok
-            </ToastAction>
-          ),
-        });
+        toast.success(
+          `Rental of ${rental.studentName} is unarchived successfully!`
+        );
 
         setData((prevData) => {
           return prevData.filter((item) => item._id !== rental._id);
@@ -239,20 +188,9 @@ function ArchiveRentals() {
       );
 
       if (res.status === 200) {
-        toast({
-          title: "Rental dleted successfully!",
-          description: `The rental of student ${rental.studentName} is deleted`,
-          variant: "success",
-          action: (
-            <ToastAction
-              altText="Ok"
-              variant="outline"
-              className="hover:text-black text-white"
-            >
-              Ok
-            </ToastAction>
-          ),
-        });
+        toast.success(
+          `Rental of ${rental.studentName} is deleted successfully!`
+        );
         // Update the data in the state
         setData((prevData) => {
           return prevData.filter((item) => item._id !== rental._id);
