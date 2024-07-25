@@ -1,9 +1,10 @@
-import { Calendar } from "@/components/ui/calendar";
+import { CustomCalendar } from "../user/CustomCalendar";
+
 
 const DashSchedules = () => {
   return (
     <div className="w-full h-screen flex items-center justify-center">
-      <Calendar mode="single" className="rounded-md border shadow" />
+      <CustomCalendar mode="single" className="w-full h-full" />
     </div>
   );
 };
