@@ -1,12 +1,11 @@
-import { ToastProvider } from "@/components/ui/toast";
+import { Toaster } from "sonner";
 import Orders from "./tables/Orders";
 
 const DashOrder = () => {
   return (
     <div className="w-full h-screen">
-      <ToastProvider>
-        <Orders />
-      </ToastProvider>
+      <Orders />
+      <Toaster richColors />
     </div>
   );
 };

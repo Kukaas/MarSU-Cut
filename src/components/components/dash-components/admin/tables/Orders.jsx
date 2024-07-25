@@ -57,11 +57,14 @@ function Orders() {
 
   const fetchOrders = async () => {
     try {
+      setLoading(true)
       const response = await axios.get(
         "https://garments.kukaas.tech/api/v1/order/all"
       );
+      setLoading(false)
       return response.data.orders.filter((order) => !order.isArchived);
     } catch (error) {
+      setLoading(false)
       return [];
     }
   };
@@ -518,7 +521,7 @@ function Orders() {
               onClick={() => navigate("/dashboard?tab=archive-orders")}
             >
               <ArchiveIcon size={20} className="mr-2" />
-              Orders
+              Archive
             </Button>
           </Tooltip>
           <DropdownMenu>

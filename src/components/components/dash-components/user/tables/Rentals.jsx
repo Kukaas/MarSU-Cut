@@ -30,8 +30,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Spin, Tooltip } from "antd";
-import { useToast } from "@/components/ui/use-toast";
-import { ToastAction } from "@/components/ui/toast";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
@@ -44,6 +42,7 @@ import {
 import { PlusCircle } from "lucide-react";
 import CreateRental from "./CreateRental";
 import { useSelector } from "react-redux";
+import { toast } from "sonner";
 
 function Rentals() {
   const [data, setData] = useState([]);
@@ -55,24 +54,9 @@ function Rentals() {
   const [rowSelection, setRowSelection] = useState({});
   const [currentPage, setCurrentPage] = useState(0);
   const { currentUser } = useSelector((state) => state.user);
-  const { toast } = useToast();
 
   const toastError = () => {
-    toast({
-      variant: "destructive",
-      title: "Uh oh! Something went wrong.",
-      description:
-        "There was a problem with your request. Check you internet connection and try again",
-      action: (
-        <ToastAction
-          altText="Ok"
-          variant="outline"
-          className="hover:text-black text-white"
-        >
-          Ok
-        </ToastAction>
-      ),
-    });
+    toast.error("Uh oh! Something went wrong.")
   };
 
   // Fetch the data
@@ -110,20 +94,7 @@ function Rentals() {
 
       if (res.status === 200) {
         setLoadingDelete(false);
-        toast({
-          title: "Rental deleted successfully!",
-          description: `The rental with rental ID ${rental._id} has been deleted`,
-          variant: "success",
-          action: (
-            <ToastAction
-              altText="Ok"
-              variant="outline"
-              className="hover:text-black text-white"
-            >
-              Ok
-            </ToastAction>
-          ),
-        });
+        toast.success(`Rental whith rental ID ${rental._id} has been deleeted!`)
 
         // Update the data in the state
         setData((prevData) => {

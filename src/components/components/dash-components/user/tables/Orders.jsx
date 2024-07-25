@@ -32,8 +32,6 @@ import {
 } from "@/components/ui/table";
 import { Spin, Tooltip } from "antd";
 import { PlusCircle } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
-import { ToastAction } from "@/components/ui/toast";
 import { useSelector } from "react-redux";
 import {
   Dialog,
@@ -44,6 +42,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import CreateOrder from "./CreateOrder";
+import { toast } from "sonner";
 
 function Orders() {
   const [data, setData] = useState([]);
@@ -55,24 +54,9 @@ function Orders() {
   const [rowSelection, setRowSelection] = useState({});
   const [currentPage, setCurrentPage] = useState(0);
   const { currentUser } = useSelector((state) => state.user);
-  const { toast } = useToast();
 
   const toastError = () => {
-    toast({
-      variant: "destructive",
-      title: "Uh oh! Something went wrong.",
-      description:
-        "There was a problem with your request. Check you internet connection and try again",
-      action: (
-        <ToastAction
-          altText="Ok"
-          variant="outline"
-          className="hover:text-black text-white"
-        >
-          Ok
-        </ToastAction>
-      ),
-    });
+    toast.error("Uh oh! Something went wrong.")
   };
 
   // Fetch the data
@@ -104,20 +88,7 @@ function Orders() {
 
       if (res.status === 200) {
         setLoadingDelete(false);
-        toast({
-          title: "Order deleted successfully!",
-          description: `The order with order ID ${order._id} has been deleted`,
-          variant: "success",
-          action: (
-            <ToastAction
-              altText="Ok"
-              variant="outline"
-              className="hover:text-black text-white"
-            >
-              Ok
-            </ToastAction>
-          ),
-        });
+        toast.success(`The order with ID ${order._id} has ben deleted.`)
 
         // Update the data in the state
         setData((prevData) => {
