@@ -83,10 +83,7 @@ const Header = () => {
   };
 
   return (
-    <div
-      className="border-b border-solid border-gray-300 shadow-lg sticky top-0 bg-white dark:bg-slate-900"
-      style={{ zIndex: 1000 }}
-    >
+    <div className="border-b border-solid z-30 border-gray-300 shadow-lg sticky top-0 bg-white dark:bg-slate-900">
       <div className="flex justify-between items-center max-w-6xl mx-auto p-3">
         <Link to="/">
           <h1 className="font-bold text-2xl">
