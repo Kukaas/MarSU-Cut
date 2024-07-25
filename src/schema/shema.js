@@ -75,3 +75,14 @@ export const CreateRentalSchema = z.object({
   returnDate: z.string(),
   receipt: z.string(),
 });
+
+export const CreateAccomplishmentSchema = z.object({
+  type: z
+  .string()
+  .min(3, { message: "Type must be at least 3 characters" })
+  .max(255, { message: "Type must be less than 256 characters" }),
+  accomplishment: z
+  .string()
+  .min(3, { message: "Accomplishment must be at least 3 characters" })
+  .max(255, { message: "Accomplishment must be less than 256 characters" }),
+})
