@@ -60,3 +60,18 @@ export const CreateOrderSchema = z.object({
     .min(3, { message: "Gender must be at least 3 characters" }),
   receipt: z.string(),
 });
+
+export const CreateRentalSchema = z.object({
+  studentNumber: z
+    .string()
+    .min(3, { message: "Student Number must be at least 3 characters" }),
+  studentName: z
+    .string()
+    .min(3, { message: "Name must be at least 3 characters" }),
+  studentGender: z
+    .string()
+    .min(3, { message: "Gender must be at least 3 characters" }),
+  rentalDate: z.string(),
+  returnDate: z.string(),
+  receipt: z.string(),
+});
