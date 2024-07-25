@@ -91,7 +91,12 @@ function ArchiveRentals() {
       if (res.status === 200) {
         setLoadingApprove(false);
         toast.success(
-          `Rental of ${rental.studentName} is approved successfully!`
+          `Rental of ${rental.studentName} is approved successfully!`,
+          {
+            action: {
+              label: "Ok",
+            },
+          }
         );
 
         // Update the data in the state
@@ -124,7 +129,11 @@ function ArchiveRentals() {
 
       if (res.status === 200) {
         setLoadingReturned(false);
-        toast.success(`Rental of ${rental.studentName} is returned!`);
+        toast.success(`Rental of ${rental.studentName} is returned!`, {
+          action: {
+            label: "Ok",
+          },
+        });
 
         // Update the data in the state
         setData((prevData) => {
@@ -160,7 +169,12 @@ function ArchiveRentals() {
       if (res.status === 200) {
         setLoadingArchive(false);
         toast.success(
-          `Rental of ${rental.studentName} is unarchived successfully!`
+          `Rental of ${rental.studentName} is unarchived successfully!`,
+          {
+            action: {
+              label: "Ok",
+            },
+          }
         );
 
         setData((prevData) => {
@@ -187,7 +201,12 @@ function ArchiveRentals() {
 
       if (res.status === 200) {
         toast.success(
-          `Rental of ${rental.studentName} is deleted successfully!`
+          `Rental of ${rental.studentName} is deleted successfully!`,
+          {
+            action: {
+              label: "Ok",
+            },
+          }
         );
         // Update the data in the state
         setData((prevData) => {

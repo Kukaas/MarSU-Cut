@@ -50,8 +50,7 @@ function Rentals() {
   const navigate = useNavigate();
 
   const toastError = () => {
-    toast.error(
-      "Uh oh! Something went wrong.")
+    toast.error("Uh oh! Something went wrong.");
   };
 
   const fetchRentals = async () => {
@@ -96,7 +95,14 @@ function Rentals() {
 
       if (res.status === 200) {
         setLoadingApprove(false);
-        toast.success(`Rental of ${rental.studentName} is approved successfully!`)
+        toast.success(
+          `Rental of ${rental.studentName} is approved successfully!`,
+          {
+            action: {
+              label: "Ok",
+            },
+          }
+        );
 
         // Update the data in the state
         setData((prevData) => {
@@ -128,7 +134,11 @@ function Rentals() {
 
       if (res.status === 200) {
         setLoadingReturned(false);
-        toast.success(`Rental of ${rental.studentName} is returned!`)
+        toast.success(`Rental of ${rental.studentName} is returned!`, {
+          action: {
+            label: "Ok",
+          },
+        });
 
         // Update the data in the state
         setData((prevData) => {
@@ -163,7 +173,14 @@ function Rentals() {
 
       if (res.status === 200) {
         setLoadingArchive(false);
-        toast.success(`Rental of ${rental.studentName} is archived successfully!`)
+        toast.success(
+          `Rental of ${rental.studentName} is archived successfully!`,
+          {
+            action: {
+              label: "Ok",
+            },
+          }
+        );
 
         setData((prevData) => {
           return prevData.filter((item) => item._id !== rental._id);
@@ -188,7 +205,14 @@ function Rentals() {
       );
 
       if (res.status === 200) {
-        toast.success(`Rental of ${rental.studentName} is deleted successfully!`)
+        toast.success(
+          `Rental of ${rental.studentName} is deleted successfully!`,
+          {
+            action: {
+              label: "Ok",
+            },
+          }
+        );
         // Update the data in the state
         setData((prevData) => {
           return prevData.filter((item) => item._id !== rental._id);

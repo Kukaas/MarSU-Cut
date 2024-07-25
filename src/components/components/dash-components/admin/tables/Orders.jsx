@@ -57,14 +57,14 @@ function Orders() {
 
   const fetchOrders = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const response = await axios.get(
         "https://garments.kukaas.tech/api/v1/order/all"
       );
-      setLoading(false)
+      setLoading(false);
       return response.data.orders.filter((order) => !order.isArchived);
     } catch (error) {
-      setLoading(false)
+      setLoading(false);
       return [];
     }
   };
@@ -83,7 +83,12 @@ function Orders() {
       if (res.status === 200) {
         setLoadingApprove(false);
         toast.success(
-          `Order of ${order.studentName} is approved successfully!`
+          `Order of ${order.studentName} is approved successfully!`,
+          {
+            action: {
+              label: "Ok",
+            },
+          }
         );
         // Correctly update the data in the state for the approved order
         setData((prevData) => {
@@ -124,7 +129,11 @@ function Orders() {
 
       if (res.status === 200) {
         setLoadingDone(false);
-        toast.success(`Order of ${order.studentName} is ready to be claimed!`);
+        toast.success(`Order of ${order.studentName} is ready to be claimed!`, {
+          action: {
+            label: "Ok",
+          },
+        });
         // Update the data in the state
         setData((prevData) => {
           return prevData.map((item) => {
@@ -163,7 +172,11 @@ function Orders() {
 
       if (res.status === 200) {
         setLoadingClaimed(false);
-        toast.success(`Order of ${order.studentName} is claimed!`);
+        toast.success(`Order of ${order.studentName} is claimed!`, {
+          action: {
+            label: "Ok",
+          },
+        });
         // Update the data in the state
         setData((prevData) => {
           return prevData.map((item) => {
@@ -203,7 +216,12 @@ function Orders() {
       if (res.status === 200) {
         setLoadingArchive(false);
         toast.success(
-          `Order of ${order.studentName} is archived successfully!`
+          `Order of ${order.studentName} is archived successfully!`,
+          {
+            action: {
+              label: "Ok",
+            },
+          }
         );
 
         setData((prevData) => {
@@ -231,7 +249,14 @@ function Orders() {
 
       if (res.status === 200) {
         setLoadingDelete(false);
-        toast.success(`Order of ${order.studentName} is deleted successfully!`);
+        toast.success(
+          `Order of ${order.studentName} is deleted successfully!`,
+          {
+            action: {
+              label: "Ok",
+            },
+          }
+        );
 
         // Update the data in the state
         setData((prevData) => {

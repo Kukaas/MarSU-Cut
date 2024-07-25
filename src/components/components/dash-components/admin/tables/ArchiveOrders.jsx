@@ -90,7 +90,12 @@ function ArchiveOrders() {
       if (res.status === 200) {
         setLoadingApprove(false);
         toast.success(
-          `Order of ${order.studentName} is approved successfully!`
+          `Order of ${order.studentName} is approved successfully!`,
+          {
+            action: {
+              label: "Ok",
+            },
+          }
         );
         // Correctly update the data in the state for the approved order
         setData((prevData) => {
@@ -131,7 +136,11 @@ function ArchiveOrders() {
 
       if (res.status === 200) {
         setLoadingDone(false);
-        toast.success(`Order of ${order.studentName} is ready to be claimed!`);
+        toast.success(`Order of ${order.studentName} is ready to be claimed!`, {
+          action: {
+            label: "Ok",
+          },
+        });
         // Update the data in the state
         setData((prevData) => {
           return prevData.map((item) => {
@@ -170,7 +179,11 @@ function ArchiveOrders() {
 
       if (res.status === 200) {
         setLoadingClaimed(false);
-        toast.success(`Order of ${order.studentName} is claimed!`);
+        toast.success(`Order of ${order.studentName} is claimed!`, {
+          action: {
+            label: "Ok",
+          },
+        });
         // Update the data in the state
         setData((prevData) => {
           return prevData.map((item) => {
@@ -209,7 +222,12 @@ function ArchiveOrders() {
 
       if (res.status === 200) {
         toast.success(
-          `Order of ${order.studentName} is unarchived successfully!`
+          `Order of ${order.studentName} is unarchived successfully!`,
+          {
+            action: {
+              label: "Ok",
+            },
+          }
         );
         setLoadingUnarchive(false);
 
@@ -238,7 +256,14 @@ function ArchiveOrders() {
 
       if (res.status === 200) {
         setLoadingDelete(false);
-        toast.success(`Order of ${order.studentName} is deleted successfully!`);
+        toast.success(
+          `Order of ${order.studentName} is deleted successfully!`,
+          {
+            action: {
+              label: "Ok",
+            },
+          }
+        );
 
         // Update the data in the state
         setData((prevData) => {
