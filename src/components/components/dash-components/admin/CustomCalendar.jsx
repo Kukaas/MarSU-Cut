@@ -3,7 +3,6 @@ import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DayPicker } from "react-day-picker";
 import PropTypes from "prop-types";
-
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 
@@ -23,10 +22,10 @@ function CustomCalendar({
         caption:
           "flex justify-between items-center py-2 px-4 relative text-3xl font-bold",
         caption_label: "text-3xl font-bold",
-        nav: "flex items-center space-x-2", // Added spacing between nav buttons
+        nav: "flex items-center gap-2",
         nav_button: cn(
           buttonVariants({ variant: "outline" }),
-          "h-12 w-12 bg-transparent p-0 opacity-50 hover:opacity-100" // Increased height and width
+          "h-10 w-10 bg-transparent p-0 opacity-50 hover:opacity-100"
         ),
         nav_button_previous: "ml-2",
         nav_button_next: "mr-2",
@@ -35,10 +34,10 @@ function CustomCalendar({
         head_cell:
           "text-muted-foreground rounded-md w-full font-normal text-xl flex-1 text-center",
         row: "flex w-full mt-2",
-        cell: "h-20 w-full text-center text-xl p-0 relative flex items-center justify-center flex-1", // Increased height here
+        cell: "h-20 w-full text-center text-xl p-0 relative flex items-center justify-center flex-1 cursor-pointer",
         day: cn(
           buttonVariants({ variant: "ghost" }),
-          "h-20 w-full p-0 font-normal aria-selected:opacity-100 flex items-center justify-center" // Increased height here
+          "h-20 w-full p-0 font-normal aria-selected:opacity-100 flex items-center justify-center"
         ),
         day_range_end: "day-range-end",
         day_selected:
@@ -53,8 +52,8 @@ function CustomCalendar({
         ...classNames,
       }}
       components={{
-        IconLeft: ({ ...props }) => <ChevronLeft className="h-12 w-12" />, // Increased icon size
-        IconRight: ({ ...props }) => <ChevronRight className="h-12 w-12" />, // Increased icon size
+        IconLeft: ({ ...props }) => <ChevronLeft className="h-10 w-10" />,
+        IconRight: ({ ...props }) => <ChevronRight className="h-10 w-10" />,
       }}
       {...props}
     />
