@@ -118,7 +118,7 @@ const CreateRental = () => {
     );
   };
 
-  const handleCreateRental = async (values) => {
+  const handleCreateRental = async (values, event) => {
     if (imageFileUrl === null) {
       message.error(
         "Please fill all fields or image is still uploading, please wait..."
@@ -127,6 +127,8 @@ const CreateRental = () => {
     }
 
     try {
+      event.preventDefault();
+      event.stopPropagation();
       setLoading(true);
       const res = await axios.post(
         "https://garments.kukaas.tech/api/v1/rental/create",
@@ -361,6 +363,7 @@ const CreateRental = () => {
                     }}
                     className="m-2"
                     variant="default"
+                    disabled={loading}
                   >
                     {loading ? (
                       <span className="loading-dots">Submitting Order</span>

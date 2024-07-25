@@ -114,13 +114,17 @@ const CreateOrder = () => {
     );
   };
 
-  const handleCreateOrder = async (values) => {
+  const handleCreateOrder = async (values, event) => {
     if (imageFileUrl === null) {
-      message.error("Please fill all fields or the image is still uploading, please wait...");
+      message.error(
+        "Please fill all fields or the image is still uploading, please wait..."
+      );
       return;
     }
 
     try {
+      event.preventDefault();
+      event.stopPropagation();
       setLoading(true);
       const res = await axios.post(
         "https://garments.kukaas.tech/api/v1/order/student/create",
@@ -300,6 +304,7 @@ const CreateOrder = () => {
                     }}
                     className="m-2"
                     variant="default"
+                    disabled={loading}
                   >
                     {loading ? (
                       <span className="loading-dots">Submitting Order</span>
