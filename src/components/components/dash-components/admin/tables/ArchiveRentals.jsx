@@ -71,8 +71,6 @@ function ArchiveRentals() {
       );
       setData(rentalsWithPenalties);
     } catch (error) {
-      console.error("Failed to fetch data:", error);
-    } finally {
       setLoading(false);
     }
   };

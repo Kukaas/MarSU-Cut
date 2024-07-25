@@ -73,8 +73,6 @@ function Rentals() {
           return { ...rental, penalty: penaltyRes.data.penalty };
         })
       );
-
-      console.log("Fetched Rentals with Penalties:", rentalsWithPenalties);
       setData(rentalsWithPenalties);
     } catch (error) {
       console.error("Failed to fetch data:", error);
