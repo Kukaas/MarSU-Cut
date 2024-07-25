@@ -302,14 +302,6 @@ function Rentals() {
       header: "Student Name",
     },
     {
-      accessorKey: "studentGender",
-      header: "Gender",
-    },
-    {
-      accessorKey: "studentPhone",
-      header: "Phone",
-    },
-    {
       accessorKey: "receipt",
       header: "Receipt",
       cell: ({ row }) => (

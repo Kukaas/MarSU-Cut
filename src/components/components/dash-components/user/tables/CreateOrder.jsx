@@ -34,7 +34,7 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 
@@ -45,6 +45,7 @@ const CreateOrder = () => {
   const [progress, setProgress] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
+  const fileInputRef = useRef(null);
 
   const form = useForm({
     resolver: zodResolver(CreateOrderSchema),
@@ -52,7 +53,6 @@ const CreateOrder = () => {
       studentNumber: "",
       studentName: "",
       studentGender: "",
-      studentPhone: "",
       receipt: "",
     },
   });
@@ -146,6 +146,11 @@ const CreateOrder = () => {
           pauseOnHover: false,
           showProgress: true,
         });
+
+        // Clear the file input
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
       }
     } catch (error) {
       setLoading(false);
@@ -242,6 +247,7 @@ const CreateOrder = () => {
                         // Field value will be set after upload is complete
                       }}
                       className="block w-full text-sm text-gray-500"
+                      ref={fileInputRef}
                     />
                   </FormControl>
                   <FormMessage />
