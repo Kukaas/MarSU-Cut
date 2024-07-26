@@ -10,13 +10,12 @@ const DashRentalAdmin = () => {
 
   useEffect(() => {
     if (currentUser && currentUser.isAdmin) {
-      navigate("/dashboard?tab=rentals-admin");
+      navigate(`/dashboard?tab=rentals-admin/${currentUser.token.substring(0, 25)}`);
     } else if (currentUser && currentUser.isAdmin === false) {
-      navigate("/dashboard?tab=home");
+      navigate(`/dashboard?tab=home/${currentUser.token.substring(0, 25)}`);
     } else {
       navigate("/");
     }
-    
   }, [currentUser, navigate]);
   return (
     <div className="w-full h-screen">

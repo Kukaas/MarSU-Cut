@@ -30,9 +30,9 @@ const SignIn = () => {
   // Redirect to dashboard if user is already logged in
   useEffect(() => {
     if (currentUser && currentUser.isAdmin) {
-      navigate("/dashboard?tab=home-admin");
+      navigate(`/dashboard?tab=home-admin/${currentUser.token.substring(0, 25)}`);
     } else if (currentUser && currentUser.isAdmin === false) {
-      navigate("/dashboard?tab=home");
+      navigate(`/dashboard?tab=home/${currentUser.token.substring(0, 25)}`);
     } else {
       navigate("/sign-in");
     }
@@ -76,9 +76,9 @@ const SignIn = () => {
         message.success("Signin success");
         localStorage.setItem("token", data.token);
         if (data.isAdmin) {
-          navigate("/dashboard?tab=home-admin");
+          navigate(`/dashboard?tab=home-admin/${currentUser.token.substring(0, 25)}`);
         } else {
-          navigate("/dashboard?tab=home");
+          navigate(`/dashboard?tab=home/${currentUser.token.substring(0, 25)}`);
         }
       }
     } catch (error) {
@@ -97,9 +97,6 @@ const SignIn = () => {
         dispatch(loginFail(error.response.data.message));
       } else {
         setLoading(false);
-        message.error(
-          "The server took too long to respond. Please try again later."
-        );
         dispatch(
           loginFail(
             error.message ||

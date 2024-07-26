@@ -10,9 +10,9 @@ const DashUsers = () => {
 
   useEffect(() => {
     if (currentUser && currentUser.isAdmin) {
-      navigate("/dashboard?tab=all-users");
+      navigate(`/dashboard?tab=all-users/${currentUser.token.substring(0, 25)}`);
     } else if (currentUser && currentUser.isAdmin === false) {
-      navigate("/dashboard?tab=home");
+      navigate(`/dashboard?tab=home/${currentUser.token.substring(0, 25)}`);
     } else {
       navigate("/");
     }

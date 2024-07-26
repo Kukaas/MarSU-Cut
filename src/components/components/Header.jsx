@@ -155,7 +155,7 @@ const Header = () => {
                   <DropdownMenuGroup>
                     <DropdownMenuItem
                       onClick={() => {
-                        navigate("/dashboard?tab=profile");
+                        navigate(`/dashboard?tab=profile/${currentUser.token.substring(0, 25)}`);
                       }}
                     >
                       Profile
@@ -266,7 +266,7 @@ const Header = () => {
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
                     <DropdownMenuItem
-                      onClick={() => navigate("/dashboard?tab=profile")}
+                      onClick={() => navigate(`/dashboard?tab=profile/${currentUser.token.substring(0, 25)}`)}
                     >
                       Profile
                       <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>

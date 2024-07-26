@@ -56,7 +56,7 @@ function Orders() {
   const { currentUser } = useSelector((state) => state.user);
 
   const toastError = () => {
-    toast.error("Uh oh! Something went wrong.")
+    toast.error("Uh oh! Something went wrong.");
   };
 
   // Fetch the data
@@ -65,7 +65,10 @@ function Orders() {
       setLoading(true);
       try {
         const res = await axios.get(
-          `https://garments.kukaas.tech/api/v1/order/student/${currentUser._id}`
+          `https://garments.kukaas.tech/api/v1/order/student/${currentUser.token.substring(
+            0,
+            25
+          )}`
         );
         setData(res.data.orders);
       } catch (error) {
@@ -88,7 +91,7 @@ function Orders() {
 
       if (res.status === 200) {
         setLoadingDelete(false);
-        toast.success(`The order with ID ${order._id} has ben deleted.`)
+        toast.success(`The order with ID ${order._id} has ben deleted.`);
 
         // Update the data in the state
         setData((prevData) => {

@@ -52,6 +52,7 @@ import {
 } from "@/components/ui/form";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
 
 function Orders() {
   const [data, setData] = useState([]);
@@ -69,6 +70,7 @@ function Orders() {
   const [currentPage, setCurrentPage] = useState(0);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
   const toastError = () => {
@@ -984,7 +986,14 @@ function Orders() {
             <Button
               variant="default"
               className="m-2"
-              onClick={() => navigate("/dashboard?tab=archive-orders")}
+              onClick={() =>
+                navigate(
+                  `/dashboard?tab=archive-orders/${currentUser.token.substring(
+                    0,
+                    25
+                  )}`
+                )
+              }
             >
               <ArchiveIcon size={20} className="mr-2" />
               Archive

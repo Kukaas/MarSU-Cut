@@ -35,9 +35,11 @@ const OTPVerification = () => {
   // Redirect to dashboard if user is already logged in
   useEffect(() => {
     if (currentUser && currentUser.isAdmin) {
-      navigate("/dashboard?tab=home-admin");
+      navigate(
+        `/dashboard?tab=home-admin/${currentUser.token.substring(0, 25)}`
+      );
     } else if (currentUser && currentUser.isAdmin === false) {
-      navigate("/dashboard?tab=home");
+      navigate(`/dashboard?tab=home/${currentUser.token.substring(0, 25)}`);
     } else {
       navigate(`/otp-verification/${hashedEmail}`);
     }

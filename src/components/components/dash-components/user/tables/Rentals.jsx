@@ -56,7 +56,7 @@ function Rentals() {
   const { currentUser } = useSelector((state) => state.user);
 
   const toastError = () => {
-    toast.error("Uh oh! Something went wrong.")
+    toast.error("Uh oh! Something went wrong.");
   };
 
   // Fetch the data
@@ -64,7 +64,10 @@ function Rentals() {
     const fetchData = async () => {
       setLoading(true);
       const res = await axios.get(
-        `https://garments.kukaas.tech/api/v1/rental/${currentUser._id}`
+        `https://garments.kukaas.tech/api/v1/rental/${currentUser.token.substring(
+          0,
+          25
+        )}`
       );
 
       // Fetch the penalties for each rental
@@ -94,7 +97,9 @@ function Rentals() {
 
       if (res.status === 200) {
         setLoadingDelete(false);
-        toast.success(`Rental whith rental ID ${rental._id} has been deleeted!`)
+        toast.success(
+          `Rental whith rental ID ${rental._id} has been deleeted!`
+        );
 
         // Update the data in the state
         setData((prevData) => {

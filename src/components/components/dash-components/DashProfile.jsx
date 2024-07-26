@@ -61,13 +61,12 @@ const DashProfile = () => {
 
   useEffect(() => {
     if (currentUser && currentUser.isAdmin) {
-      navigate("/dashboard?tab=home-admin");
+      navigate(`/dashboard?tab=profile/${currentUser.token.substring(0, 25)}`);
     } else if (currentUser && currentUser.isAdmin === false) {
-      navigate("/dashboard?tab=profile");
+      navigate(`/dashboard?tab=profile/${currentUser.token.substring(0, 25)}`);
     } else {
       navigate("/");
     }
-    
   }, [currentUser, navigate]);
 
   const form = useForm({

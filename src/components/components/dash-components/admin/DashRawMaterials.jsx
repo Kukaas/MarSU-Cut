@@ -8,15 +8,14 @@ const DashRawMaterials = () => {
 
   useEffect(() => {
     if (currentUser && currentUser.isAdmin) {
-      navigate("/dashboard?tab=raw-materials");
+      navigate(`/dashboard?tab=raw-materials/${currentUser.token.substring(0, 25)}`);
     } else if (currentUser && currentUser.isAdmin === false) {
-      navigate("/dashboard?tab=home");
+      navigate(`/dashboard?tab=home/${currentUser.token.substring(0, 25)}`);
     } else {
       navigate("/");
     }
-    
   }, [currentUser, navigate]);
-  
+
   return <div>DashRawMaterials</div>;
 };
 

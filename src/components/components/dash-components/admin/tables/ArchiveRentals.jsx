@@ -35,6 +35,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowDownLeft } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
+import { useSelector } from "react-redux";
 
 function ArchiveRentals() {
   const [data, setData] = useState([]);
@@ -47,6 +48,7 @@ function ArchiveRentals() {
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
   const [currentPage, setCurrentPage] = useState(0);
+  const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
   const toastError = () => {
@@ -442,7 +444,14 @@ function ArchiveRentals() {
             <Button
               variant="default"
               className="m-2"
-              onClick={() => navigate("/dashboard?tab=rentals-admin")}
+              onClick={() =>
+                navigate(
+                  `/dashboard?tab=rentals-admin/${currentUser.token.substring(
+                    0,
+                    25
+                  )}`
+                )
+              }
             >
               <ArrowDownLeft size={20} className="mr-2" />
               Rentals
