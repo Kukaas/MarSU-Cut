@@ -59,6 +59,17 @@ const DashProfile = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [skeletonLoading, setSkeletonLoading] = useState(true);
 
+  useEffect(() => {
+    if (currentUser && currentUser.isAdmin) {
+      navigate("/dashboard?tab=home-admin");
+    } else if (currentUser && currentUser.isAdmin === false) {
+      navigate("/dashboard?tab=profile");
+    } else {
+      navigate("/");
+    }
+    
+  }, [currentUser, navigate]);
+
   const form = useForm({
     resolver: zodResolver(UpdateProfileSchema),
     defaultValues: {

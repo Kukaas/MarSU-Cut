@@ -11,6 +11,8 @@ import {
 import { Button } from "@/components/ui/button";
 import moment from "moment";
 import { CustomCalendar } from "./CustomCalendar";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const DashSchedules = () => {
   const [schedules, setSchedules] = useState({});
@@ -18,6 +20,19 @@ const DashSchedules = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [students, setStudents] = useState([]);
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  const { currentUser } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (currentUser && currentUser.isAdmin) {
+      navigate("/dashboard?tab=schedules");
+    } else if (currentUser && currentUser.isAdmin === false) {
+      navigate("/dashboard?tab=home");
+    } else {
+      navigate("/");
+    }
+    
+  }, [currentUser, navigate]);
 
   useEffect(() => {
     const fetchSchedules = async () => {
