@@ -97,3 +97,11 @@ export const EditAccomplishmentSchema = z.object({
   .min(3, { message: "Accomplishment must be at least 3 characters" })
   .max(255, { message: "Accomplishment must be less than 256 characters" }),
 })
+
+export const AddOrderItemsSchema = z.object({
+  level: z.string().min(1),
+  productType: z.string().min(1),
+  size: z.string().min(1),
+  unitPrice: z.number().int().nonnegative(),
+  quantity: z.number().int().nonnegative()
+});

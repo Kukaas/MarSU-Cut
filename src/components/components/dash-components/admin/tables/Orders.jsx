@@ -33,8 +33,25 @@ import {
 } from "@/components/ui/table";
 import { Spin, Tooltip } from "antd";
 import { useNavigate } from "react-router-dom";
-import { ArchiveIcon } from "lucide-react";
+import { ArchiveIcon, MinusCircle, PlusCircle } from "lucide-react";
 import { toast } from "sonner";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
+import PropTypes from "prop-types";
 
 function Orders() {
   const [data, setData] = useState([]);
@@ -44,11 +61,14 @@ function Orders() {
   const [loadingClaimed, setLoadingClaimed] = useState(false);
   const [loadingArchive, setLoadingArchive] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
+  const [loadingAdditems, setLoadingAddItems] = useState(false);
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
   const [currentPage, setCurrentPage] = useState(0);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
   const navigate = useNavigate();
 
   const toastError = () => {
@@ -340,13 +360,15 @@ function Orders() {
       accessorKey: "orderItems",
       header: "Order Items",
       cell: ({ row }) => {
-        // Check if orderItems is not present or is an empty array
-        if (!row.original.orderItems || row.original.orderItems.length === 0) {
+        const orderItems = row.original.orderItems || []; // Ensure orderItems is an array
+
+        // Check if orderItems is an empty array
+        if (!Array.isArray(orderItems) || orderItems.length === 0) {
           return <div>Not yet Measured</div>;
         }
 
         // Group items by productType, size, and level, and sum their quantities
-        const groupedItems = row.original.orderItems.reduce((acc, item) => {
+        const groupedItems = orderItems.reduce((acc, item) => {
           const key = `${item.productType}-${item.size}-${item.level}`;
           if (!acc[key]) {
             acc[key] = { ...item, quantity: 0 }; // Initialize if not exist
@@ -447,7 +469,14 @@ function Orders() {
                 <DropdownMenuItem onClick={() => handleApprove(order)}>
                   Approve
                 </DropdownMenuItem>
-                <DropdownMenuItem>Measure</DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setIsDialogOpen(true);
+                    setSelectedOrder(order);
+                  }}
+                >
+                  Measure
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => handleDone(order)}>
                   Done
                 </DropdownMenuItem>
@@ -475,6 +504,176 @@ function Orders() {
       setLoading(false);
     });
   }, []);
+
+  // Function to automatically update the unit price based on productType, size, and level
+  const updateUnitPrice = (fieldName, productType, size, level) => {
+    // Example logic to determine unit price based on productType, size, and level
+    let unitPrice = 0;
+    if (productType === "BLOUSE" && size === "S14" && level === "SHS") {
+      unitPrice = 460;
+    } else if (productType === "BLOUSE" && size === "S15" && level === "SHS") {
+      unitPrice = 510;
+    } else if (productType === "BLOUSE" && size === "S16" && level === "SHS") {
+      unitPrice = 560;
+    } else if (productType === "BLOUSE" && size === "S17" && level === "SHS") {
+      unitPrice = 610;
+    } else if (productType === "BLOUSE" && size === "S18+" && level === "SHS") {
+      unitPrice = 660;
+    } else if (
+      productType === "BLOUSE" &&
+      size === "S14" &&
+      level === "COLLEGE"
+    ) {
+      unitPrice = 400;
+    } else if (
+      productType === "BLOUSE" &&
+      size === "S15" &&
+      level === "COLLEGE"
+    ) {
+      unitPrice = 450;
+    } else if (
+      productType === "BLOUSE" &&
+      size === "S16" &&
+      level === "COLLEGE"
+    ) {
+      unitPrice = 500;
+    } else if (
+      productType === "BLOUSE" &&
+      size === "S17" &&
+      level === "COLLEGE"
+    ) {
+      unitPrice = 550;
+    } else if (
+      productType === "BLOUSE" &&
+      size === "S18+" &&
+      level === "COLLEGE"
+    ) {
+      unitPrice = 600;
+    } else if (productType === "SKIRT" && size === "S24" && level === "SHS") {
+      unitPrice = 427;
+    } else if (productType === "SKIRT" && size === "S25" && level === "SHS") {
+      unitPrice = 477;
+    } else if (productType === "SKIRT" && size === "S26" && level === "SHS") {
+      unitPrice = 527;
+    } else if (productType === "SKIRT" && size === "S27" && level === "SHS") {
+      unitPrice = 577;
+    } else if (productType === "SKIRT" && size === "S28+" && level === "SHS") {
+      unitPrice = 627;
+    } else if (
+      productType === "SKIRT" &&
+      size === "S24" &&
+      level === "COLLEGE"
+    ) {
+      unitPrice = 350;
+    } else if (
+      productType === "SKIRT" &&
+      size === "S25" &&
+      level === "COLLEGE"
+    ) {
+      unitPrice = 400;
+    } else if (
+      productType === "SKIRT" &&
+      size === "S26" &&
+      level === "COLLEGE"
+    ) {
+      unitPrice = 450;
+    } else if (
+      productType === "SKIRT" &&
+      size === "S27" &&
+      level === "COLLEGE"
+    ) {
+      unitPrice = 500;
+    } else if (
+      productType === "SKIRT" &&
+      size === "S28+" &&
+      level === "COLLEGE"
+    ) {
+      unitPrice = 550;
+    } else if (productType === "POLO" && size === "S15" && level === "SHS") {
+      unitPrice = 390;
+    } else if (productType === "POLO" && size === "S16" && level === "SHS") {
+      unitPrice = 440;
+    } else if (productType === "POLO" && size === "S17" && level === "SHS") {
+      unitPrice = 490;
+    } else if (productType === "POLO" && size === "S18" && level === "SHS") {
+      unitPrice = 540;
+    } else if (productType === "POLO" && size === "S19+" && level === "SHS") {
+      unitPrice = 590;
+    } else if (
+      productType === "POLO" &&
+      size === "S15" &&
+      level === "COLLEGE"
+    ) {
+      unitPrice = 390;
+    } else if (
+      productType === "POLO" &&
+      size === "S16" &&
+      level === "COLLEGE"
+    ) {
+      unitPrice = 440;
+    } else if (
+      productType === "POLO" &&
+      size === "S17" &&
+      level === "COLLEGE"
+    ) {
+      unitPrice = 490;
+    } else if (
+      productType === "POLO" &&
+      size === "S18" &&
+      level === "COLLEGE"
+    ) {
+      unitPrice = 540;
+    } else if (
+      productType === "POLO" &&
+      size === "S19+" &&
+      level === "COLLEGE"
+    ) {
+      unitPrice = 590;
+    } else if (productType === "PANTS" && size === "S24" && level === "SHS") {
+      unitPrice = 450;
+    } else if (productType === "PANTS" && size === "S25" && level === "SHS") {
+      unitPrice = 500;
+    } else if (productType === "PANTS" && size === "S26" && level === "SHS") {
+      unitPrice = 550;
+    } else if (productType === "PANTS" && size === "S27" && level === "SHS") {
+      unitPrice = 600;
+    } else if (productType === "PANTS" && size === "S28+" && level === "SHS") {
+      unitPrice = 650;
+    } else if (
+      productType === "PANTS" &&
+      size === "S24" &&
+      level === "COLLEGE"
+    ) {
+      unitPrice = 450;
+    } else if (
+      productType === "PANTS" &&
+      size === "S25" &&
+      level === "COLLEGE"
+    ) {
+      unitPrice = 500;
+    } else if (
+      productType === "PANTS" &&
+      size === "S26" &&
+      level === "COLLEGE"
+    ) {
+      unitPrice = 550;
+    } else if (
+      productType === "PANTS" &&
+      size === "S27" &&
+      level === "COLLEGE"
+    ) {
+      unitPrice = 600;
+    } else if (
+      productType === "PANTS" &&
+      size === "S28+" &&
+      level === "COLLEGE"
+    ) {
+      unitPrice = 650;
+    }
+    // Add more conditions as needed...
+    // Update the form field for unitPrice
+    form.setValue(`orderItems[${fieldName}].unitPrice`, unitPrice);
+  };
 
   const table = useReactTable({
     data,
@@ -513,6 +712,248 @@ function Orders() {
   const displayedRows = table
     .getRowModel()
     .rows.slice(currentPage * rowsPerPage, (currentPage + 1) * rowsPerPage);
+
+  const form = useForm({
+    defaultValues: {
+      orderItems: [],
+    },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "orderItems",
+  });
+
+  const handleAddItems = async (values) => {
+    setLoadingAddItems(true);
+
+    // Ensure orderItems is an array
+    const orderItems = Array.isArray(values.orderItems)
+      ? values.orderItems
+      : [];
+
+    const res = await axios.put(
+      `https://garments.kukaas.tech/api/v1/order/add-item/${selectedOrder._id}`,
+      {
+        orderItems: orderItems,
+      }
+    );
+
+    if (res.status === 200) {
+      toast.success(`The student ${selectedOrder.studentName} is measured`, {
+        action: {
+          label: "Ok",
+        },
+      });
+    } else {
+      toastError();
+    }
+
+    setLoadingAddItems(false);
+  };
+
+  const onSubmit = async (values) => {
+    await handleAddItems(values);
+    form.reset();
+  };
+
+  const OrderItemForm = ({ index, form, updateUnitPrice, remove }) => {
+    const { watch, getValues } = form;
+    const level = watch(`orderItems[${index}].level`);
+    const productType = watch(`orderItems[${index}].productType`);
+    const size = watch(`orderItems[${index}].size`);
+
+    useEffect(() => {
+      updateUnitPrice(index, productType, size, level);
+    }, [level, productType, size, index, updateUnitPrice]);
+
+    return (
+      <div key={index} className="flex gap-4 w-full items-center">
+        <Controller
+          control={form.control}
+          name={`orderItems[${index}].level`}
+          rules={{ required: "Missing level" }}
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button className="w-20" variant="outline">
+                      {field.value || "Level"}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        const { productType, size } = getValues([
+                          `orderItems[${index}].productType`,
+                          `orderItems[${index}].size`,
+                        ]);
+                        updateUnitPrice(index, productType, size, "SHS");
+                        field.onChange("SHS");
+                      }}
+                    >
+                      SHS
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        const { productType, size } = getValues([
+                          `orderItems[${index}].productType`,
+                          `orderItems[${index}].size`,
+                        ]);
+                        updateUnitPrice(index, productType, size, "COLLEGE");
+                        field.onChange("COLLEGE");
+                      }}
+                    >
+                      COLLEGE
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Controller
+          control={form.control}
+          name={`orderItems[${index}].productType`}
+          rules={{ required: "Missing product type" }}
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button className="w-20" variant="outline">
+                      {field.value || "Type"}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    {[
+                      "SKIRT",
+                      "POLO",
+                      "PANTS",
+                      "BLOUSE",
+                      "PE TSHIRT",
+                      "PE JOGGING PANT",
+                    ].map((type) => (
+                      <DropdownMenuItem
+                        key={type}
+                        onClick={() => {
+                          const { level, size } = getValues([
+                            `orderItems[${index}].level`,
+                            `orderItems[${index}].size`,
+                          ]);
+                          updateUnitPrice(index, type, size, level);
+                          field.onChange(type);
+                        }}
+                      >
+                        {type}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Controller
+          control={form.control}
+          name={`orderItems[${index}].size`}
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button className="w-20" variant="outline">
+                      {field.value || "Size"}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="max-h-48 overflow-y-auto">
+                    {[
+                      "S14",
+                      "S15",
+                      "S16",
+                      "S17",
+                      "S18",
+                      "S18+",
+                      "S19+",
+                      "S24",
+                      "S25",
+                      "S26",
+                      "S27",
+                      "S28+",
+                    ].map((size) => (
+                      <DropdownMenuItem
+                        key={size}
+                        onClick={() => {
+                          const { productType, level } = getValues([
+                            `orderItems[${index}].productType`,
+                            `orderItems[${index}].level`,
+                          ]);
+                          updateUnitPrice(index, productType, size, level);
+                          field.onChange(size);
+                        }}
+                      >
+                        {size}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name={`orderItems[${index}].unitPrice`}
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Tooltip title="Unit Price" className="cursor-pointer">
+                  <Input
+                    {...field}
+                    placeholder="Unit Price"
+                    type="number"
+                    readOnly
+                    className="w-full"
+                  />
+                </Tooltip>
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name={`orderItems[${index}].quantity`}
+          rules={{ required: "Missing quantity" }}
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Tooltip title="Quantity" className="cursor-pointer">
+                  <Input {...field} placeholder="Quantity" type="number" />
+                </Tooltip>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <MinusCircle
+          onClick={() => remove(index)}
+          style={{ width: "50px", height: "50px" }} // Adjust the size as needed
+          className="cursor-pointer"
+        />
+      </div>
+    );
+  };
+
+  OrderItemForm.propTypes = {
+    index: PropTypes.number.isRequired,
+    form: PropTypes.object.isRequired,
+    updateUnitPrice: PropTypes.func.isRequired,
+    remove: PropTypes.func.isRequired,
+  };
 
   return (
     <Spin
@@ -654,6 +1095,68 @@ function Orders() {
           </div>
         </div>
       </div>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Order Items</DialogTitle>
+            <DialogDescription>
+              Please fill out the form below to add items to your order.
+            </DialogDescription>
+          </DialogHeader>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-4 w-full"
+            >
+              {fields.map((field, index) => (
+                <OrderItemForm
+                  key={field.id}
+                  index={index}
+                  form={form}
+                  updateUnitPrice={updateUnitPrice}
+                  remove={remove}
+                />
+              ))}
+              <Tooltip title="Add fields">
+                <PlusCircle
+                  onClick={() =>
+                    append({
+                      level: "",
+                      productType: "",
+                      size: "",
+                      unitPrice: 0,
+                      quantity: 0,
+                    })
+                  }
+                  className="mt-5 w-full cursor-pointer"
+                />
+              </Tooltip>
+              <div className="flex justify-end items-center">
+                <DialogClose asChild>
+                  <Button
+                    variant="outline"
+                    className="mr-2 mt-4"
+                    onClick={() => form.reset()}
+                  >
+                    Cancel
+                  </Button>
+                </DialogClose>
+                <Button
+                  type="submit"
+                  className="mt-4"
+                  onClick={() => handleAddItems(form.getValues)}
+                >
+                  {loadingAdditems ? (
+                    <div className="loading-dots">Adding Items</div>
+                  ) : (
+                    "Add Items"
+                  )}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
     </Spin>
   );
 }
