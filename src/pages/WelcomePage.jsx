@@ -12,7 +12,7 @@ const WelcomePage = () => {
   // Redirect to dashboard if user is already logged in
   useEffect(() => {
     if (!currentUser || !currentUser.token) {
-      navigate("/);
+      navigate("/");
     }
     
     const token = currentUser.token;
