@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/chart";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
-const Chart = () => {
+const Overview = () => {
   const chartData = [
     { month: "Jan", desktop: 4000, mobile: 2400 },
     { month: "Feb", desktop: 3000, mobile: 1398 },
@@ -30,7 +30,8 @@ const Chart = () => {
   };
 
   return (
-    <ChartContainer config={chartConfig} className="min-h-[200px] w-full rounded-md border">
+    <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+      {}
       <BarChart accessibilityLayer data={chartData}>
         <CartesianGrid vertical={false} />
         <XAxis
@@ -42,11 +43,11 @@ const Chart = () => {
         />
         <ChartTooltip content={<ChartTooltipContent />} />
         <ChartLegend content={<ChartLegendContent />} />
-        <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-        <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+        <Bar dataKey="desktop" fill="currentColor" radius={4} />
+        <Bar dataKey="mobile" fill="CurrentColor" radius={4} />
       </BarChart>
     </ChartContainer>
   );
 };
 
-export default Chart;
+export default Overview;

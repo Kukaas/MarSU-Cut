@@ -1,10 +1,10 @@
 import { Skeleton } from "@/components/ui/skeleton"
 
 
-const CardLoading = () => {
+const TableLoading = () => {
   return (
-    <div className="flex flex-col space-y-3">
-      <Skeleton className="h-[115px] w-[250px] rounded-xl" />
+    <div className="flex items-center space-x-4">
+      <Skeleton className="h-12 w-12 rounded-full" />
       <div className="space-y-2">
         <Skeleton className="h-4 w-[250px]" />
         <Skeleton className="h-4 w-[200px]" />
@@ -13,4 +13,4 @@ const CardLoading = () => {
   )
 }
 
-export default CardLoading
+export default TableLoading
