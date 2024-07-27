@@ -7,29 +7,16 @@ const WelcomePage = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
-<<<<<<< HEAD
-=======
-  
->>>>>>> 57d73dffeebd9c36445bda045416916c6761d113
 
   // Redirect to dashboard if user is already logged in
   useEffect(() => {
     if (!currentUser || !currentUser.token) {
       navigate("/");
-<<<<<<< HEAD
       return;
     }
     const token = currentUser.token;
     const parts = token.split(".");
     const url = parts[2];
-=======
-    }
-    
-    const token = currentUser.token;
-    const parts = token.split(".");
-    const url = parts[2];
-    
->>>>>>> 57d73dffeebd9c36445bda045416916c6761d113
     if (currentUser && currentUser.isAdmin) {
       navigate(`/dashboard?tab=home-admin/${url}`);
     } else if (currentUser && currentUser.isAdmin === false) {
