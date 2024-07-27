@@ -34,12 +34,20 @@ const OTPVerification = () => {
 
   // Redirect to dashboard if user is already logged in
   useEffect(() => {
-    if (currentUser && currentUser.isAdmin) {
-      navigate(
-        `/dashboard?tab=home-admin/${currentUser.token.substring(0, 25)}`
-      );
-    } else if (currentUser && currentUser.isAdmin === false) {
-      navigate(`/dashboard?tab=home/${currentUser.token.substring(0, 25)}`);
+    if (!currentUser || !currentUser.token) {
+      navigate(`/otp-verification/${hashedEmail}`);
+      return;
+    }
+  
+    const token = currentUser.token;
+    const parts = token.split(".");
+    const url = parts[2];
+  
+    // Redirect to dashboard if user is already logged in
+    if (currentUser.isAdmin) {
+      navigate(`/dashboard?tab=home-admin/${url}`);
+    } else if (currentUser.isAdmin === false) {
+      navigate(`/dashboard?tab=home/${url}`);
     } else {
       navigate(`/otp-verification/${hashedEmail}`);
     }

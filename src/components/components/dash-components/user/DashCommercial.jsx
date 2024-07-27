@@ -10,7 +10,7 @@ const DashCommercial = () => {
     if (currentUser && currentUser.isAdmin) {
       navigate(`/dashboard?tab=home-admin/${currentUser.token.substring(0, 25)}`);
     } else if (currentUser && currentUser.isAdmin === false) {
-      navigate(`/dashboard?tab=commercial-job/${currentUser.token.substring(0, 25)}`);
+      navigate(`/dashboard?tab=commercial-job/${currentUser._id}`);
     } else {
       navigate("/");
     }

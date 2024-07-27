@@ -10,13 +10,17 @@ import { useSelector } from "react-redux";
 const MenuUser = () => {
   const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
+  const token = currentUser.token;
+  const parts = token.split(".");
+  const url = parts[2];
+
 
   return (
     <>
       <DropdownMenuSeparator />
       <DropdownMenuItem
         onClick={() => {
-          navigate(`/dashboard?tab=home/${currentUser.token.substring(0, 25)}`);
+          navigate(`/dashboard?tab=home/${url}`);
         }}
       >
         Dashboard
@@ -26,7 +30,7 @@ const MenuUser = () => {
       <DropdownMenuGroup>
         <DropdownMenuItem
           onClick={() => {
-            navigate(`/dashboard?tab=orders/${currentUser.token.substring(0, 25)}`);
+            navigate(`/dashboard?tab=orders/${currentUser._id}`);
           }}
         >
           Orders
@@ -34,7 +38,7 @@ const MenuUser = () => {
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => {
-            navigate(`/dashboard?tab=rentals/${currentUser.token.substring(0, 25)}`);
+            navigate(`/dashboard?tab=rentals/${currentUser._id}`);
           }}
         >
           Rentals
@@ -42,7 +46,7 @@ const MenuUser = () => {
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => {
-            navigate(`/dashboard?tab=commercial-job/${currentUser.token.substring(0, 25)}`);
+            navigate(`/dashboard?tab=commercial-job/${currentUser._id}`);
           }}
         >
           Commercial Job Orders

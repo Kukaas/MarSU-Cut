@@ -988,10 +988,7 @@ function Orders() {
               className="m-2"
               onClick={() =>
                 navigate(
-                  `/dashboard?tab=archive-orders/${currentUser.token.substring(
-                    0,
-                    25
-                  )}`
+                  `/dashboard?tab=archive-orders/${currentUser._id}`
                 )
               }
             >

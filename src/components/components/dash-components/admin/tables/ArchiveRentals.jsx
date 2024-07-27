@@ -446,10 +446,7 @@ function ArchiveRentals() {
               className="m-2"
               onClick={() =>
                 navigate(
-                  `/dashboard?tab=rentals-admin/${currentUser.token.substring(
-                    0,
-                    25
-                  )}`
+                  `/dashboard?tab=rentals-admin/${currentUser._id}`
                 )
               }
             >

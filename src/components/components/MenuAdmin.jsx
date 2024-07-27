@@ -14,13 +14,16 @@ import { useSelector } from "react-redux";
 const MenuAdmin = () => {
   const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
+  const token = currentUser.token;
+  const parts = token.split(".");
+  const url = parts[2];
 
   return (
     <>
       <DropdownMenuSeparator />
       <DropdownMenuItem
         onClick={() => {
-          navigate(`/dashboard?tab=home-admin/${currentUser.token.substring(0, 25)}`);
+          navigate(`/dashboard?tab=home-admin/${url}`);
         }}
       >
         Dashboard
@@ -36,7 +39,7 @@ const MenuAdmin = () => {
               <DropdownMenuItem
                 onClick={() => {
                   navigate(
-                    `/dashboard?tab=orders-admin/${currentUser.token.substring(0, 25)}`
+                    `/dashboard?tab=orders-admin/${currentUser._id}`
                   );
                 }}
               >
@@ -46,7 +49,7 @@ const MenuAdmin = () => {
               <DropdownMenuItem
                 onClick={() => {
                   navigate(
-                    `/dashboard?tab=rentals-admin/${currentUser.token.substring(0, 25)}`
+                    `/dashboard?tab=rentals-admin/${currentUser._id}`
                   );
                 }}
               >
@@ -57,7 +60,7 @@ const MenuAdmin = () => {
               <DropdownMenuItem
                 onClick={() => {
                   navigate(
-                    `/dashboard?tab=schedules/${currentUser.token.substring(0, 25)}`
+                    `/dashboard?tab=schedules/${currentUser._id}`
                   );
                 }}
               >
@@ -76,7 +79,7 @@ const MenuAdmin = () => {
               <DropdownMenuItem
                 onClick={() => {
                   navigate(
-                    `/dashboard?tab=finished-products/${currentUser.token.substring(0, 25)}`
+                    `/dashboard?tab=finished-products/${currentUser._id}`
                   );
                 }}
               >
@@ -86,7 +89,7 @@ const MenuAdmin = () => {
               <DropdownMenuItem
                 onClick={() => {
                   navigate(
-                    `/dashboard?tab=raw-materials/${currentUser.token.substring(0, 25)}`
+                    `/dashboard?tab=raw-materials/${currentUser._id}`
                   );
                 }}
               >
@@ -105,7 +108,7 @@ const MenuAdmin = () => {
               <DropdownMenuItem
                 onClick={() => {
                   navigate(
-                    `/dashboard?tab=accomplishment-report/${currentUser.token.substring(0, 25)}`
+                    `/dashboard?tab=accomplishment-report/${currentUser._id}`
                   );
                 }}
               >
@@ -115,7 +118,7 @@ const MenuAdmin = () => {
               <DropdownMenuItem
                 onClick={() => {
                   navigate(
-                    `/dashboard?tab=sales-report/${currentUser.token.substring(0, 25)}`
+                    `/dashboard?tab=sales-report/${currentUser._id}`
                   );
                 }}
               >
@@ -127,7 +130,7 @@ const MenuAdmin = () => {
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {
-              navigate(`/dashboard?tab=all-users/${currentUser.token.substring(0, 25)}`);
+              navigate(`/dashboard?tab=all-users/${currentUser._id}`);
             }}
           >
             Users

@@ -22,6 +22,9 @@ const Dashboard = () => {
   const location = useLocation();
   const [tab, setTab] = useState("");
   const { currentUser } = useSelector((state) => state.user);
+  const token = currentUser.token;
+  const parts = token.split(".");
+  const url = parts[2];
 
   // Get tab from url
   useEffect(() => {
@@ -33,29 +36,29 @@ const Dashboard = () => {
   }, [location.search]);
   return (
     <div className="flex flex-col md:flex-row">
-      {tab === `profile/${currentUser.token.substring(0, 25)}` && <DashProfile />}
+      {tab === `profile/${currentUser._id}` && <DashProfile />}
       {/* Admin */}
-      {tab === `home-admin/${currentUser.token.substring(0, 25)}` && <DashHomeAdmin />}
-      {tab === `orders-admin/${currentUser.token.substring(0, 25)}` && <DashOrderAdmin />}
-      {tab === `archive-orders/${currentUser.token.substring(0, 25)}` && <DashArchiveOrders />}
-      {tab === `rentals-admin/${currentUser.token.substring(0, 25)}` && <DashRentalAdmin />}
-      {tab === `archive-rentals/${currentUser.token.substring(0, 25)}` && <DashArchiveRentals />}
-      {tab === `schedules/${currentUser.token.substring(0, 25)}` && <DashSchedules />}
-      {tab === `finished-products/${currentUser.token.substring(0, 25)}` && (
+      {tab === `home-admin/${url}` && <DashHomeAdmin />}
+      {tab === `orders-admin/${currentUser._id}` && <DashOrderAdmin />}
+      {tab === `archive-orders/${currentUser._id}` && <DashArchiveOrders />}
+      {tab === `rentals-admin/${currentUser._id}` && <DashRentalAdmin />}
+      {tab === `archive-rentals/${currentUser._id}` && <DashArchiveRentals />}
+      {tab === `schedules/${currentUser._id}` && <DashSchedules />}
+      {tab === `finished-products/${currentUser._id}` && (
         <DashFinishedProduct />
       )}
-      {tab === `raw-materials/${currentUser.token.substring(0, 25)}` && <DashRawMaterials />}
-      {tab === `accomplishment-report/${currentUser.token.substring(0, 25)}` && (
+      {tab === `raw-materials/${currentUser._id}` && <DashRawMaterials />}
+      {tab === `accomplishment-report/${currentUser._id}` && (
         <DashAccomplishmentReport />
       )}
-      {tab === `sales-report/${currentUser.token.substring(0, 25)}` && <DashSalesReport />}
-      {tab === `all-users/${currentUser.token.substring(0, 25)}` && <DashUsers />}
+      {tab === `sales-report/${currentUser._id}` && <DashSalesReport />}
+      {tab === `all-users/${currentUser._id}` && <DashUsers />}
 
       {/* User */}
-      {tab === `home/${currentUser.token.substring(0, 25)}` && <DashHome />}
-      {tab === `orders/${currentUser.token.substring(0, 25)}` && <DashOrder />}
-      {tab === `rentals/${currentUser.token.substring(0, 25)}` && <DashRental />}
-      {tab === `commercial-job/${currentUser.token.substring(0, 25)}` && <DashCommercial />}
+      {tab === `home/${url}` && <DashHome />}
+      {tab === `orders/${currentUser._id}` && <DashOrder />}
+      {tab === `rentals/${currentUser._id}` && <DashRental />}
+      {tab === `commercial-job/${currentUser._id}` && <DashCommercial />}
     </div>
   );
 };

@@ -61,9 +61,9 @@ const DashProfile = () => {
 
   useEffect(() => {
     if (currentUser && currentUser.isAdmin) {
-      navigate(`/dashboard?tab=profile/${currentUser.token.substring(0, 25)}`);
+      navigate(`/dashboard?tab=profile/${currentUser._id}`);
     } else if (currentUser && currentUser.isAdmin === false) {
-      navigate(`/dashboard?tab=profile/${currentUser.token.substring(0, 25)}`);
+      navigate(`/dashboard?tab=profile/${currentUser._id}`);
     } else {
       navigate("/");
     }

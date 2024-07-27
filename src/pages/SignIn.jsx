@@ -27,14 +27,21 @@ const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
 
-  // Redirect to dashboard if user is already logged in
   useEffect(() => {
-    if (currentUser && currentUser.isAdmin) {
-      navigate(`/dashboard?tab=home-admin/${currentUser.token.substring(0, 25)}`);
-    } else if (currentUser && currentUser.isAdmin === false) {
-      navigate(`/dashboard?tab=home/${currentUser.token.substring(0, 25)}`);
-    } else {
+    if (!currentUser || !currentUser.token) {
       navigate("/sign-in");
+      return;
+    }
+
+    const token = currentUser.token;
+    const parts = token.split(".");
+    const url = parts[2];
+
+    // Redirect to dashboard if user is already logged in
+    if (currentUser.isAdmin) {
+      navigate(`/dashboard?tab=home-admin/${url}`);
+    } else {
+      navigate(`/dashboard?tab=home/${url}`);
     }
   }, [currentUser, navigate]);
 
@@ -75,10 +82,13 @@ const SignIn = () => {
         dispatch(loginSuccess(data));
         message.success("Signin success");
         localStorage.setItem("token", data.token);
+        const token = data.token;
+        const parts = token.split(".");
+        const url = parts[2];
         if (data.isAdmin) {
-          navigate(`/dashboard?tab=home-admin/${currentUser.token.substring(0, 25)}`);
+          navigate(`/dashboard?tab=home-admin/${url}`);
         } else {
-          navigate(`/dashboard?tab=home/${currentUser.token.substring(0, 25)}`);
+          navigate(`/dashboard?tab=home/${url}`);
         }
       }
     } catch (error) {

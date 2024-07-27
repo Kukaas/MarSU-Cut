@@ -65,10 +65,7 @@ function Orders() {
       setLoading(true);
       try {
         const res = await axios.get(
-          `https://garments.kukaas.tech/api/v1/order/student/${currentUser.token.substring(
-            0,
-            25
-          )}`
+          `https://garments.kukaas.tech/api/v1/order/student/${currentUser._id}`
         );
         setData(res.data.orders);
       } catch (error) {

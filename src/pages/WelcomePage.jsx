@@ -7,17 +7,22 @@ const WelcomePage = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
+  const token = currentUser.token;
+  const parts = token.split(".");
+  const url = parts[2];
 
   // Redirect to dashboard if user is already logged in
   useEffect(() => {
     if (currentUser && currentUser.isAdmin) {
-      navigate(`/dashboard?tab=home-admin/${currentUser.token.substring(0, 25)}`);
+      navigate(
+        `/dashboard?tab=home-admin/${url}`
+      );
     } else if (currentUser && currentUser.isAdmin === false) {
-      navigate(`/dashboard?tab=home/${currentUser.token.substring(0, 25)}`);
+      navigate(`/dashboard?tab=home/${url}`);
     } else {
       navigate("/");
     }
-  }, [currentUser, navigate]);
+  }, [currentUser, navigate, url]);
 
   const handleClicked = () => {
     setLoading(true);
@@ -44,7 +49,7 @@ const WelcomePage = () => {
         <div className="flex flex-row gap-2 mt-4">
           <Button
             className="w-full p-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white text-lg hover:bg-gradient-to-r hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600"
-            size="large"
+            size="lg"
             onClick={handleClicked}
           >
             {loading ? (

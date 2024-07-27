@@ -5,16 +5,19 @@ import { useNavigate } from "react-router-dom";
 const DashHomeAdmin = () => {
   const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
+  const token = currentUser.token;
+  const parts = token.split(".");
+  const url = parts[2];
 
   useEffect(() => {
     if (currentUser && currentUser.isAdmin) {
-      navigate(`/dashboard?tab=home-admin/${currentUser.token.substring(0, 25)}`);
+      navigate(`/dashboard?tab=home-admin/${url}`);
     } else if (currentUser && currentUser.isAdmin === false) {
-      navigate(`/dashboard?tab=home/${currentUser.token.substring(0, 25)}`);
+      navigate(`/dashboard?tab=home/${url}`);
     } else {
       navigate("/");
     }
-  }, [currentUser, navigate]);
+  }, [currentUser, navigate, url]);
 
   return <div>DashHomeAdmin</div>;
 };

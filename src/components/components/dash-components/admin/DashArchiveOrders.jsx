@@ -10,7 +10,7 @@ const DashArchiveOrders = () => {
 
   useEffect(() => {
     if (currentUser && currentUser.isAdmin) {
-      navigate(`/dashboard?tab=archive-orders/${currentUser.token.substring(0, 25)}`);
+      navigate(`/dashboard?tab=archive-orders/${currentUser._id}`);
     } else if (currentUser && currentUser.isAdmin === false) {
       navigate(`/dashboard?tab=home/${currentUser.token.substring(0, 25)}`);
     } else {

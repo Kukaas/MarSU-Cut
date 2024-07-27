@@ -12,7 +12,7 @@ const DashOrder = () => {
     if (currentUser && currentUser.isAdmin) {
       navigate(`/dashboard?tab=home-admin/${currentUser.token.substring(0, 25)}`);
     } else if (currentUser && currentUser.isAdmin === false) {
-      navigate(`/dashboard?tab=orders/${currentUser.token.substring(0, 25)}`);
+      navigate(`/dashboard?tab=orders/${currentUser._id}`);
     } else {
       navigate("/");
     }

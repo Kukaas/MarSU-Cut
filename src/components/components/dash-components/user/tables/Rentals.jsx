@@ -64,10 +64,7 @@ function Rentals() {
     const fetchData = async () => {
       setLoading(true);
       const res = await axios.get(
-        `https://garments.kukaas.tech/api/v1/rental/${currentUser.token.substring(
-          0,
-          25
-        )}`
+        `https://garments.kukaas.tech/api/v1/rental/${currentUser._id}`
       );
 
       // Fetch the penalties for each rental
