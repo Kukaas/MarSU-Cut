@@ -5,11 +5,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
 } from "../ui/dropdown-menu";
-import { useSelector } from "react-redux";
 
 const MenuUser = () => {
   const navigate = useNavigate();
-  const { currentUser } = useSelector((state) => state.user);
 
   return (
     <>
@@ -26,7 +24,7 @@ const MenuUser = () => {
       <DropdownMenuGroup>
         <DropdownMenuItem
           onClick={() => {
-            navigate(`/dashboard?tab=orders/${currentUser._id}`);
+            navigate("/dashboard?tab=orders");
           }}
         >
           Orders
@@ -34,7 +32,7 @@ const MenuUser = () => {
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => {
-            navigate(`/dashboard?tab=rentals/${currentUser._id}`);
+            navigate("/dashboard?tab=rentals");
           }}
         >
           Rentals
@@ -42,7 +40,7 @@ const MenuUser = () => {
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => {
-            navigate(`/dashboard?tab=commercial-job/${currentUser._id}`);
+            navigate("/dashboard?tab=commercial-job");
           }}
         >
           Commercial Job Orders

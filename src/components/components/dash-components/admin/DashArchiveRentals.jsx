@@ -10,9 +10,9 @@ const DashArchiveRentals = () => {
 
   useEffect(() => {
     if (currentUser && currentUser.isAdmin) {
-      navigate(`/dashboard?tab=archive-rentals/${currentUser._id}`);
+      navigate("/dashboard?tab=archive-rentals");
     } else if (currentUser && currentUser.isAdmin === false) {
-      navigate(`/dashboard?tab=home/${currentUser.token.substring(0, 25)}`);
+      navigate("/dashboard?tab=home");
     } else {
       navigate("/");
     }

@@ -10,9 +10,9 @@ const DashAccomplishmentReport = () => {
 
   useEffect(() => {
     if (currentUser && currentUser.isAdmin) {
-      navigate(`/dashboard?tab=accomplishment-report/${currentUser._id}`);
+      navigate("/dashboard?tab=accomplishment-report");
     } else if (currentUser && currentUser.isAdmin === false) {
-      navigate(`/dashboard?tab=home/${currentUser.token.substring(0, 25)}`);
+      navigate("/dashboard?tab=home");
     } else {
       navigate("/");
     }

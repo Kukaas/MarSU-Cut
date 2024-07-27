@@ -61,9 +61,9 @@ const DashProfile = () => {
 
   useEffect(() => {
     if (currentUser && currentUser.isAdmin) {
-      navigate(`/dashboard?tab=profile/${currentUser._id}`);
+      navigate("/dashboard?tab=profile");
     } else if (currentUser && currentUser.isAdmin === false) {
-      navigate(`/dashboard?tab=profile/${currentUser._id}`);
+      navigate("/dashboard?tab=profile");
     } else {
       navigate("/");
     }

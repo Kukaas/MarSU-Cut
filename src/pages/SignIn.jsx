@@ -75,9 +75,9 @@ const SignIn = () => {
         message.success("Signin success");
         localStorage.setItem("token", data.token);
         if (data.isAdmin) {
-          navigate("/dashboard?tab=home-admin");
+          navigate("dashboard?tab=home-admin");
         } else {
-          navigate("/dashboard?tab=home");
+          navigate("dashboard?tab=home");
         }
       }
     } catch (error) {

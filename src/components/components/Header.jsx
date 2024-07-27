@@ -155,7 +155,7 @@ const Header = () => {
                   <DropdownMenuGroup>
                     <DropdownMenuItem
                       onClick={() => {
-                        navigate(`/dashboard?tab=profile/${currentUser._id}`);
+                        navigate(`/dashboard?tab=profile`);
                       }}
                     >
                       Profile

@@ -8,9 +8,9 @@ const DashFinishedProduct = () => {
 
   useEffect(() => {
     if (currentUser && currentUser.isAdmin) {
-      navigate(`/dashboard?tab=finished-products/${currentUser._id}`);
+      navigate("/dashboard?tab=finished-products");
     } else if (currentUser && currentUser.isAdmin === false) {
-      navigate(`/dashboard?tab=home/${currentUser.token.substring(0, 25)}`);
+      navigate("/dashboard?tab=home");
     } else {
       navigate("/");
     }

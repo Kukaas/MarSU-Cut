@@ -16,12 +16,10 @@ import DashSalesReport from "@/components/components/dash-components/admin/DashS
 import DashArchiveOrders from "@/components/components/dash-components/admin/DashArchiveOrders";
 import DashArchiveRentals from "@/components/components/dash-components/admin/DashArchiveRentals";
 import DashUsers from "@/components/components/dash-components/admin/DashUsers";
-import { useSelector } from "react-redux";
 
 const Dashboard = () => {
   const location = useLocation();
   const [tab, setTab] = useState("");
-  const { currentUser } = useSelector((state) => state.user);
 
   // Get tab from url
   useEffect(() => {
@@ -33,29 +31,25 @@ const Dashboard = () => {
   }, [location.search]);
   return (
     <div className="flex flex-col md:flex-row">
-      {tab === `profile/${currentUser._id}` && <DashProfile />}
+      {tab === "profile" && <DashProfile />}
       {/* Admin */}
       {tab === "home-admin" && <DashHomeAdmin />}
-      {tab === `orders-admin/${currentUser._id}` && <DashOrderAdmin />}
-      {tab === `archive-orders/${currentUser._id}` && <DashArchiveOrders />}
-      {tab === `rentals-admin/${currentUser._id}` && <DashRentalAdmin />}
-      {tab === `archive-rentals/${currentUser._id}` && <DashArchiveRentals />}
-      {tab === `schedules/${currentUser._id}` && <DashSchedules />}
-      {tab === `finished-products/${currentUser._id}` && (
-        <DashFinishedProduct />
-      )}
-      {tab === `raw-materials/${currentUser._id}` && <DashRawMaterials />}
-      {tab === `accomplishment-report/${currentUser._id}` && (
-        <DashAccomplishmentReport />
-      )}
-      {tab === `sales-report/${currentUser._id}` && <DashSalesReport />}
-      {tab === `all-users/${currentUser._id}` && <DashUsers />}
+      {tab === "orders-admin" && <DashOrderAdmin />}
+      {tab === "archive-orders" && <DashArchiveOrders />}
+      {tab === "rentals-admin" && <DashRentalAdmin />}
+      {tab === "archive-rentals" && <DashArchiveRentals />}
+      {tab === "schedules" && <DashSchedules />}
+      {tab === "finished-products" && <DashFinishedProduct />}
+      {tab === "raw-materials" && <DashRawMaterials />}
+      {tab === "accomplishment-report" && <DashAccomplishmentReport />}
+      {tab === "sales-report" && <DashSalesReport />}
+      {tab === "all-users" && <DashUsers />}
 
       {/* User */}
       {tab === "home" && <DashHome />}
-      {tab === `orders/${currentUser._id}` && <DashOrder />}
-      {tab === `rentals/${currentUser._id}` && <DashRental />}
-      {tab === `commercial-job/${currentUser._id}` && <DashCommercial />}
+      {tab === "orders" && <DashOrder />}
+      {tab === "rentals" && <DashRental />}
+      {tab === "commercial-job" && <DashCommercial />}
     </div>
   );
 };

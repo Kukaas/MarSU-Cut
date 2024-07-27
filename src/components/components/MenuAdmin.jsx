@@ -9,11 +9,9 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
 } from "../ui/dropdown-menu";
-import { useSelector } from "react-redux";
 
 const MenuAdmin = () => {
   const navigate = useNavigate();
-  const { currentUser } = useSelector((state) => state.user);
 
   return (
     <>
@@ -35,7 +33,7 @@ const MenuAdmin = () => {
             <DropdownMenuSubContent>
               <DropdownMenuItem
                 onClick={() => {
-                  navigate(`/dashboard?tab=orders-admin/${currentUser._id}`);
+                  navigate("/dashboard?tab=orders-admin");
                 }}
               >
                 Orders
@@ -43,7 +41,7 @@ const MenuAdmin = () => {
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  navigate(`/dashboard?tab=rentals-admin/${currentUser._id}`);
+                  navigate("/dashboard?tab=rentals-admin");
                 }}
               >
                 Rentals
@@ -52,7 +50,7 @@ const MenuAdmin = () => {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => {
-                  navigate(`/dashboard?tab=schedules/${currentUser._id}`);
+                  navigate("/dashboard?tab=schedules");
                 }}
               >
                 Schedule
@@ -69,9 +67,7 @@ const MenuAdmin = () => {
             <DropdownMenuSubContent>
               <DropdownMenuItem
                 onClick={() => {
-                  navigate(
-                    `/dashboard?tab=finished-products/${currentUser._id}`
-                  );
+                  navigate("/dashboard?tab=finished-products");
                 }}
               >
                 Finished Product
@@ -79,7 +75,7 @@ const MenuAdmin = () => {
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  navigate(`/dashboard?tab=raw-materials/${currentUser._id}`);
+                  navigate("/dashboard?tab=raw-materials");
                 }}
               >
                 Raw Materials
@@ -96,9 +92,7 @@ const MenuAdmin = () => {
             <DropdownMenuSubContent>
               <DropdownMenuItem
                 onClick={() => {
-                  navigate(
-                    `/dashboard?tab=accomplishment-report/${currentUser._id}`
-                  );
+                  navigate("/dashboard?tab=accomplishment-report");
                 }}
               >
                 Accomplishment
@@ -106,7 +100,7 @@ const MenuAdmin = () => {
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  navigate(`/dashboard?tab=sales-report/${currentUser._id}`);
+                  navigate("/dashboard?tab=sales-report");
                 }}
               >
                 Sales
@@ -117,7 +111,7 @@ const MenuAdmin = () => {
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {
-              navigate(`/dashboard?tab=all-users/${currentUser._id}`);
+              navigate("/dashboard?tab=all-users");
             }}
           >
             Users
