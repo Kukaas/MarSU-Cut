@@ -29,9 +29,9 @@ const SignIn = () => {
 
   useEffect(() => {
     if (currentUser && currentUser.isAdmin) {
-      navigate(`/dashboard?tab=home-admin`);
+      navigate("/dashboard?tab=home-admin");
     } else if (currentUser && currentUser.isAdmin === false) {
-      navigate(`/dashboard?tab=home`);
+      navigate("/dashboard?tab=home");
     } else {
       navigate("/sign-in");
     }
@@ -74,13 +74,10 @@ const SignIn = () => {
         dispatch(loginSuccess(data));
         message.success("Signin success");
         localStorage.setItem("token", data.token);
-        const token = data.token;
-        const parts = token.split(".");
-        const url = parts[2];
         if (data.isAdmin) {
-          navigate(`/dashboard?tab=home-admin/${url}`);
+          navigate("/dashboard?tab=home-admin");
         } else {
-          navigate(`/dashboard?tab=home/${url}`);
+          navigate("/dashboard?tab=home");
         }
       }
     } catch (error) {

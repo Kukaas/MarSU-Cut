@@ -1,25 +1,58 @@
+import { Button } from "@/components/ui/button";
+import { Col, Row, Typography } from "antd";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import Cards from "./dashboard-components/Cards";
+import Chart from "./dashboard-components/Chart";
+import Table from "./dashboard-components/Table";
 
 const DashHomeAdmin = () => {
   const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
-  const token = currentUser.token;
-  const parts = token.split(".");
-  const url = parts[2];
 
   useEffect(() => {
     if (currentUser && currentUser.isAdmin) {
-      navigate(`/dashboard?tab=home-admin/${url}`);
+      navigate("/dashboard?tab=home-admin");
     } else if (currentUser && currentUser.isAdmin === false) {
-      navigate(`/dashboard?tab=home/${url}`);
+      navigate("/dashboard?tab=home");
     } else {
       navigate("/");
     }
-  }, [currentUser, navigate, url]);
+  }, [currentUser, navigate]);
 
-  return <div>DashHomeAdmin</div>;
+  return (
+    <div className="w-full min-h-screen p-10 overflow-x-auto">
+      <Row gutter={[16, 16]}>
+        <Col xs={24} sm={12} lg={18}>
+          <div>
+            <Typography.Title level={2} className="text-black dark:text-white">
+              Dashboard
+            </Typography.Title>
+            <Typography.Text className="text-black dark:text-gray-500">
+              Welcome to the dashboard.
+            </Typography.Text>
+          </div>
+        </Col>
+        <Col xs={24} sm={12} lg={6}>
+          <div className="flex lg:justify-end justify-start">
+            <Button>Download</Button>
+          </div>
+        </Col>
+      </Row>
+      <Row gutter={[16, 16]} className="mt-5">
+        <Cards />
+      </Row>
+      <Row gutter={[16, 16]} className="mt-8">
+        <Col xs={24} sm={24} lg={12}>
+          <Chart className="rounded-md border"/>
+        </Col>
+        <Col xs={24} sm={12} lg={12}>
+          <Table className="rounded-md border"/>
+        </Col>
+      </Row>
+    </div>
+  );
 };
 
 export default DashHomeAdmin;

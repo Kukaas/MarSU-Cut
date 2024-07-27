@@ -35,7 +35,7 @@ const Dashboard = () => {
     <div className="flex flex-col md:flex-row">
       {tab === `profile/${currentUser._id}` && <DashProfile />}
       {/* Admin */}
-      {tab === `home-admin/${currentUser._id}` && <DashHomeAdmin />}
+      {tab === "home-admin" && <DashHomeAdmin />}
       {tab === `orders-admin/${currentUser._id}` && <DashOrderAdmin />}
       {tab === `archive-orders/${currentUser._id}` && <DashArchiveOrders />}
       {tab === `rentals-admin/${currentUser._id}` && <DashRentalAdmin />}
@@ -52,7 +52,7 @@ const Dashboard = () => {
       {tab === `all-users/${currentUser._id}` && <DashUsers />}
 
       {/* User */}
-      {tab === `home/${currentUser._id}` && <DashHome />}
+      {tab === "home" && <DashHome />}
       {tab === `orders/${currentUser._id}` && <DashOrder />}
       {tab === `rentals/${currentUser._id}` && <DashRental />}
       {tab === `commercial-job/${currentUser._id}` && <DashCommercial />}

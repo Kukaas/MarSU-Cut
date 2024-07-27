@@ -20,7 +20,7 @@ const MenuAdmin = () => {
       <DropdownMenuSeparator />
       <DropdownMenuItem
         onClick={() => {
-          navigate(`/dashboard?tab=home-admin`);
+          navigate("/dashboard?tab=home-admin");
         }}
       >
         Dashboard
@@ -35,9 +35,7 @@ const MenuAdmin = () => {
             <DropdownMenuSubContent>
               <DropdownMenuItem
                 onClick={() => {
-                  navigate(
-                    `/dashboard?tab=orders-admin/${currentUser._id}`
-                  );
+                  navigate(`/dashboard?tab=orders-admin/${currentUser._id}`);
                 }}
               >
                 Orders
@@ -45,9 +43,7 @@ const MenuAdmin = () => {
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  navigate(
-                    `/dashboard?tab=rentals-admin/${currentUser._id}`
-                  );
+                  navigate(`/dashboard?tab=rentals-admin/${currentUser._id}`);
                 }}
               >
                 Rentals
@@ -56,9 +52,7 @@ const MenuAdmin = () => {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => {
-                  navigate(
-                    `/dashboard?tab=schedules/${currentUser._id}`
-                  );
+                  navigate(`/dashboard?tab=schedules/${currentUser._id}`);
                 }}
               >
                 Schedule
@@ -85,9 +79,7 @@ const MenuAdmin = () => {
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  navigate(
-                    `/dashboard?tab=raw-materials/${currentUser._id}`
-                  );
+                  navigate(`/dashboard?tab=raw-materials/${currentUser._id}`);
                 }}
               >
                 Raw Materials
@@ -114,9 +106,7 @@ const MenuAdmin = () => {
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  navigate(
-                    `/dashboard?tab=sales-report/${currentUser._id}`
-                  );
+                  navigate(`/dashboard?tab=sales-report/${currentUser._id}`);
                 }}
               >
                 Sales

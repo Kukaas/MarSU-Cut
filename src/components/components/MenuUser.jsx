@@ -16,7 +16,7 @@ const MenuUser = () => {
       <DropdownMenuSeparator />
       <DropdownMenuItem
         onClick={() => {
-          navigate(`/dashboard?tab=home`);
+          navigate("/dashboard?tab=home");
         }}
       >
         Dashboard
