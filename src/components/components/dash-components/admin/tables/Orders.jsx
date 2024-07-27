@@ -780,7 +780,7 @@ function Orders() {
               <FormControl>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button className="w-20" variant="outline">
+                    <Button className="w-15 overflow-y-auto" variant="outline">
                       {field.value || "Level"}
                     </Button>
                   </DropdownMenuTrigger>
@@ -825,7 +825,7 @@ function Orders() {
               <FormControl>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button className="w-20" variant="outline">
+                    <Button className="w-15 overflow-y-auto" variant="outline">
                       {field.value || "Type"}
                     </Button>
                   </DropdownMenuTrigger>
@@ -867,7 +867,7 @@ function Orders() {
               <FormControl>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button className="w-20" variant="outline">
+                    <Button className="w-15 overflow-y-auto" variant="outline">
                       {field.value || "Size"}
                     </Button>
                   </DropdownMenuTrigger>
