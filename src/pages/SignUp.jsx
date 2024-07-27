@@ -24,12 +24,16 @@ const SignUp = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
-  const token = currentUser.token;
-  const parts = token.split(".");
-  const url = parts[2];
 
   // Redirect to dashboard if user is already logged in
   useEffect(() => {
+    if (!currentUser || !currentUser.token) {
+      navigate("/sign-up");
+      return;
+    }
+    const token = currentUser.token;
+    const parts = token.split(".");
+    const url = parts[2];
     if (currentUser && currentUser.isAdmin) {
       navigate(`dashboard?tab=home-admin/${url}`);
     } else if (currentUser && currentUser.isAdmin === false) {
@@ -37,7 +41,7 @@ const SignUp = () => {
     } else {
       navigate("/sign-up");
     }
-  }, [currentUser, navigate, url]);
+  }, [currentUser, navigate]);
 
   const toggleShowPassword = () => {
     setShowPassword((prev) => !prev);
