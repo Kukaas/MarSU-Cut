@@ -9,10 +9,10 @@ const DashCommercial = () => {
   useEffect(() => {
     if (currentUser && currentUser.isAdmin) {
       navigate(
-        `"/dashboard?tab=home-admin"/${currentUser.token.substring(0, 25)}`
+        "/dashboard?tab=home-admin"
       );
     } else if (currentUser && currentUser.isAdmin === false) {
-      navigate(`/dashboard?tab=commercial-job/${currentUser._id}`);
+      navigate("/dashboard?tab=commercial-job");
     } else {
       navigate("/");
     }

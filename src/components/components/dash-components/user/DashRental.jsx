@@ -11,10 +11,10 @@ const DashRental = () => {
   useEffect(() => {
     if (currentUser && currentUser.isAdmin) {
       navigate(
-        `"/dashboard?tab=home-admin"/${currentUser.token.substring(0, 25)}`
+        "/dashboard?tab=home-admin"
       );
     } else if (currentUser && currentUser.isAdmin === false) {
-      navigate(`/dashboard?tab=rentals/${currentUser._id}`);
+      navigate("/dashboard?tab=rentals");
     } else {
       navigate("/");
     }

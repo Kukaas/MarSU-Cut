@@ -267,12 +267,7 @@ const Header = () => {
                   <DropdownMenuGroup>
                     <DropdownMenuItem
                       onClick={() =>
-                        navigate(
-                          `/dashboard?tab=profile/${currentUser.token.substring(
-                            0,
-                            25
-                          )}`
-                        )
+                        navigate("/dashboard?tab=profile")
                       }
                     >
                       Profile

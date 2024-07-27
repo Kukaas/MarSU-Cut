@@ -1,15 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Col, Row, Typography } from "antd";
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import Cards from "./dashboard-components/Cards";
 import Chart from "./dashboard-components/Chart";
 import Table from "./dashboard-components/Table";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const DashHomeAdmin = () => {
   const navigate = useNavigate();
-  const { currentUser } = useSelector((state) => state.user);
+   const {currentUser} = useSelector((state) => state.user);
 
   useEffect(() => {
     if (currentUser && currentUser.isAdmin) {
@@ -17,7 +17,7 @@ const DashHomeAdmin = () => {
     } else if (currentUser && currentUser.isAdmin === false) {
       navigate("/dashboard?tab=home");
     } else {
-      navigate("/");
+      navigate("/sign-in");
     }
   }, [currentUser, navigate]);
 
@@ -48,7 +48,7 @@ const DashHomeAdmin = () => {
           <Chart className="rounded-md border"/>
         </Col>
         <Col xs={24} sm={12} lg={12}>
-          <Table className="rounded-md border"/>
+          <Table />
         </Col>
       </Row>
     </div>
