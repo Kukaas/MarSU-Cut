@@ -14,16 +14,13 @@ import { useSelector } from "react-redux";
 const MenuAdmin = () => {
   const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
-  const token = currentUser.token;
-  const parts = token.split(".");
-  const url = parts[2];
 
   return (
     <>
       <DropdownMenuSeparator />
       <DropdownMenuItem
         onClick={() => {
-          navigate(`/dashboard?tab=home-admin/${url}`);
+          navigate(`/dashboard?tab=home-admin`);
         }}
       >
         Dashboard

@@ -28,20 +28,12 @@ const SignIn = () => {
   const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
-    if (!currentUser || !currentUser.token) {
-      navigate("/sign-in");
-      return;
-    }
-
-    const token = currentUser.token;
-    const parts = token.split(".");
-    const url = parts[2];
-
-    // Redirect to dashboard if user is already logged in
-    if (currentUser.isAdmin) {
-      navigate(`/dashboard?tab=home-admin/${url}`);
+    if (currentUser && currentUser.isAdmin) {
+      navigate(`/dashboard?tab=home-admin`);
+    } else if (currentUser && currentUser.isAdmin === false) {
+      navigate(`/dashboard?tab=home`);
     } else {
-      navigate(`/dashboard?tab=home/${url}`);
+      navigate("/sign-in");
     }
   }, [currentUser, navigate]);
 

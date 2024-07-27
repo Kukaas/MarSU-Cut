@@ -43,20 +43,11 @@ const ResetPassword = () => {
   };
 
   useEffect(() => {
-    if (!currentUser || !currentUser.token) {
-      navigate(`/reset-password/${hashedEmail}`);
-      return;
-    }
-  
-    const token = currentUser.token;
-    const parts = token.split(".");
-    const url = parts[2];
-  
     // Redirect to dashboard if user is already logged in
     if (currentUser.isAdmin) {
-      navigate(`/dashboard?tab=home-admin/${url}`);
+      navigate(`/dashboard?tab=home-admin`);
     } else if (currentUser.isAdmin === false) {
-      navigate(`/dashboard?tab=home/${url}`);
+      navigate(`/dashboard?tab=home`);
     } else {
       navigate(`/reset-password/${hashedEmail}`);
     }

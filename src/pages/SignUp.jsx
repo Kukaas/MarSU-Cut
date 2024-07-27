@@ -27,17 +27,10 @@ const SignUp = () => {
 
   // Redirect to dashboard if user is already logged in
   useEffect(() => {
-    if (!currentUser || !currentUser.token) {
-      navigate("/sign-up");
-      return;
-    }
-    const token = currentUser.token;
-    const parts = token.split(".");
-    const url = parts[2];
     if (currentUser && currentUser.isAdmin) {
-      navigate(`dashboard?tab=home-admin/${url}`);
+      navigate(`/dashboard?tab=home-admin`);
     } else if (currentUser && currentUser.isAdmin === false) {
-      navigate(`dashboard?tab=home/${url}`);
+      navigate(`/dashboard?tab=home`);
     } else {
       navigate("/sign-up");
     }
