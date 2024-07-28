@@ -8,7 +8,6 @@ import {
   forgotPasswordSuccess,
 } from "../redux/forgotPassword/forgotPassword";
 import { useEffect, useState } from "react";
-import { SHA512 } from "crypto-js";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ResetPasswordSchema } from "@/schema/shema";
@@ -31,8 +30,6 @@ const ResetPassword = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { currentEmail } = useSelector((state) => state.forgotPasword);
-  const { currentUser } = useSelector((state) => state.user);
-  const hashedEmail = SHA512(currentEmail).toString();
 
   const toggleShowPassword = () => {
     setShowPassword((prev) => !prev);
@@ -41,17 +38,6 @@ const ResetPassword = () => {
   const toggleShowConfirmPassword = () => {
     setShowConfirmPassword((prev) => !prev);
   };
-
-  useEffect(() => {
-    // Redirect to dashboard if user is already logged in
-    if (currentUser.isAdmin) {
-      navigate("/dashboard?tab=home-admin");
-    } else if (currentUser.isAdmin === false) {
-      navigate("/dashboard?tab=home");
-    } else {
-      navigate(`/reset-password/${hashedEmail}`);
-    }
-  }, [currentUser, navigate, hashedEmail]);
 
   const form = useForm({
     resolver: zodResolver(ResetPasswordSchema),

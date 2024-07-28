@@ -29,20 +29,7 @@ const OTPVerification = () => {
   const [resendLoading, setResendLoading] = useState(false);
   const [countdown, setCountdown] = useState(60);
   const { currentEmail } = useSelector((state) => state.forgotPasword);
-  const { currentUser } = useSelector((state) => state.user);
   const hashedEmail = SHA256(currentEmail).toString();
-
-  // Redirect to dashboard if user is already logged in
-  useEffect(() => {
-    // Redirect to dashboard if user is already logged in
-    if (currentUser.isAdmin) {
-      navigate("/dashboard?tab=home-admin");
-    } else if (currentUser.isAdmin === false) {
-      navigate("/dashboard?tab=home");
-    } else {
-      navigate(`/otp-verification/${hashedEmail}`);
-    }
-  }, [currentUser, navigate, hashedEmail]);
 
   // Redirect to forgot password page if email is not available
   useEffect(() => {

@@ -8,7 +8,7 @@ import {
   forgotPasswordStart,
   forgotPasswordSuccess,
 } from "../redux/forgotPassword/forgotPassword";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SHA256 } from "crypto-js";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,18 +29,6 @@ const RequestResetPassword = () => {
   const { loading1 } = useSelector((state) => state.forgotPassword) || {};
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { currentUser } = useSelector((state) => state.user);
-
-  useEffect(() => {
-    // Redirect to dashboard if user is already logged in
-    if (currentUser.isAdmin) {
-      navigate("/dashboard?tab=home-admin");
-    } else if (currentUser.isAdmin === false) {
-      navigate("/dashboard?tab=home");
-    } else {
-      navigate("/forgot-password");
-    }
-  }, [currentUser, navigate]);
 
   const form = useForm({
     resolver: zodResolver(RequestResetPasswordSchema),
