@@ -62,6 +62,7 @@ import { Input } from "@/components/ui/input";
 import { EditAccomplishmentSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addDays, format } from "date-fns";
+import DownloadButton from "./DownloadButton";
 
 const AccomplishmentReport = () => {
   const [data, setData] = useState([]);
@@ -471,7 +472,7 @@ const AccomplishmentReport = () => {
           </Tooltip>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
+              <Button variant="outline" className="ml-auto mr-2">
                 Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
@@ -493,6 +494,7 @@ const AccomplishmentReport = () => {
                 ))}
             </DropdownMenuContent>
           </DropdownMenu>
+          <DownloadButton selectedDate={selectedDate} filteredData={filteredData} />
         </div>
         <div className="rounded-md border">
           {loading ? (
