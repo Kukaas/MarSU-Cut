@@ -378,16 +378,26 @@ const AccomplishmentReport = () => {
         <div className="flex items-center py-4 justify-between overflow-y-auto">
           <div className={cn("grid gap-2")}>
             <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
-            <Tooltip
-                  title={
+              <Tooltip
+                title={
+                  selectedDate?.from ? (
                     <>
-                      <span>{selectedDate?.from && format(selectedDate.from, 'LLL dd, y')} - </span>
-                      <span>{selectedDate?.to && format(selectedDate.to, 'LLL dd, y')}</span>
+                      <span>
+                        {selectedDate?.from &&
+                          format(selectedDate.from, "LLL dd, y")}{" "}
+                        -{" "}
+                      </span>
+                      <span>
+                        {selectedDate?.to &&
+                          format(selectedDate.to, "LLL dd, y")}
+                      </span>
                     </>
-                  }
-                >
-              <PopoverTrigger asChild>
-                
+                  ) : (
+                    "Please select a date"
+                  )
+                }
+              >
+                <PopoverTrigger asChild>
                   <Button
                     id="date"
                     variant={"outline"}
@@ -410,8 +420,8 @@ const AccomplishmentReport = () => {
                       <span>Pick a date</span>
                     )}
                   </Button>
-              </PopoverTrigger>
-                </Tooltip>
+                </PopoverTrigger>
+              </Tooltip>
               <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
                   initialFocus
@@ -421,6 +431,22 @@ const AccomplishmentReport = () => {
                   onSelect={handleSelect}
                   numberOfMonths={2}
                 />
+                <div className="flex justify-end gap-2 p-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsPopoverOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setSelectedDate(null);
+                      setIsPopoverOpen(false);
+                    }}
+                  >
+                    Show All
+                  </Button>
+                </div>
               </PopoverContent>
             </Popover>
           </div>
