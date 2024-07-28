@@ -10,13 +10,15 @@ import {
 } from "@/components/ui/card";
 import CardLoading from "./loading-components/CardLoading";
 import axios from "axios";
-import { ShoppingBasket } from "lucide-react";
+import { PhilippinePeso, Shirt, ShoppingBasket } from "lucide-react";
 
 const Cards = () => {
   const [loading, setLoading] = useState(true);
   const [ordersThisMonth, setOrdersThisMonth] = useState([]);
   const [ordersLastMonth, setOrdersLastMonth] = useState([]);
-  const [totalOrdersThisYear, setTotalOrdersThisYear] = useState([])
+  const [totalOrdersThisYear, setTotalOrdersThisYear] = useState([]);
+  const [totalRentalsThisYear, setTotalRentalsThisYear] = useState([]);
+  const [totalRentalsLastYear, setTotalRentalsLastYear] = useState([]);
 
   const fetchOrdersThisMonth = async () => {
     try {
@@ -70,28 +72,92 @@ const Cards = () => {
       setLoading(false);
       return [];
     }
-  }
+  };
 
-  const calculatePercentageChange = (current, previous) => {
-    if (typeof current !== 'number' || typeof previous !== 'number' || isNaN(current) || isNaN(previous)) {
-      return 'N/A'; // Handle non-numeric inputs
+  const fetchTotalRentalsThisYear = async () => {
+    try {
+      const res = await axios.get(
+        "https://garments.kukaas.tech/api/v1/rental/total/this-year"
+      );
+
+      const data = res.data.rentals;
+      if (res.status === 200) {
+        setTotalRentalsThisYear(data);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+      return [];
     }
-    if (previous === 0) return 'N/A'; // Handle division by zero
+  };
+
+  const fetchRentalsLastYear = async () => {
+    try {
+      const res = await axios.get(
+        "https://garments.kukaas.tech/api/v1/rental/total/last-year"
+      );
+
+      const data = res.data.rentals;
+      if (res.status === 200) {
+        setTotalRentalsLastYear(data);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+      return [];
+    }
+  };
+
+  const calculatePercentageChangeOrders = (current, previous) => {
+    if (
+      typeof current !== "number" ||
+      typeof previous !== "number" ||
+      isNaN(current) ||
+      isNaN(previous)
+    ) {
+      return "N/A"; // Handle non-numeric inputs
+    }
+    if (previous === 0) return "N/A"; // Handle division by zero
     let change = ((current - previous) / previous) * 100;
     change = Math.max(-100, Math.min(100, change)); // Cap the change at -100% and +100%
-    const sign = change >= 0 ? '+' : '-';
+    const sign = change >= 0 ? "+" : "-";
     return `${sign}${Math.abs(change).toFixed()}`; // Format to one decimal place and add sign
   };
-  
-  const percentageChange = calculatePercentageChange(
+
+  const percentageChangeOrders = calculatePercentageChangeOrders(
     ordersThisMonth.length,
     ordersLastMonth.length
+  );
+
+  const calculatePercentageChangeRentals = (current, previous) => {
+    if (
+      typeof current !== "number" ||
+      typeof previous !== "number" ||
+      isNaN(current) ||
+      isNaN(previous)
+    ) {
+      return "N/A"; // Handle non-numeric inputs
+    }
+    if (previous === 0) return "N/A"; // Handle division by zero
+    let change = ((current - previous) / previous) * 100;
+    change = Math.max(-100, Math.min(100, change)); // Cap the change at -100% and +100%
+    const sign = change >= 0 ? "+" : "-";
+    return `${sign}${Math.abs(change).toFixed()}`; // Format to one decimal place and add sign
+  };
+
+  const percentageChangeRentals = calculatePercentageChangeRentals(
+    totalRentalsThisYear.length,
+    totalRentalsLastYear.length
   );
 
   useEffect(() => {
     fetchOrdersThisMonth();
     fetchOrdersLastMonth();
-    fetchTotalOrdersThisYear()
+    fetchTotalOrdersThisYear();
+    fetchRentalsLastYear();
+    fetchTotalRentalsThisYear();
   });
 
   return (
@@ -111,13 +177,15 @@ const Cards = () => {
                 <CardTitle className="text-sm font-medium">
                   Total Orders This Year
                 </CardTitle>
-                <ShoppingBasket className="h-4 w-4 text-muted-foreground"/>
+                <ShoppingBasket className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{totalOrdersThisYear.length}</div>
+                <div className="text-2xl font-bold">
+                  {totalOrdersThisYear.length}
+                </div>
                 <p className="text-xs text-muted-foreground">
-                  {percentageChange !== "N/A"
-                    ? `${percentageChange}% from last month`
+                  {percentageChangeOrders !== "N/A"
+                    ? `${percentageChangeOrders}% from last month`
                     : "No data from last month"}
                 </p>
               </CardContent>
@@ -125,46 +193,27 @@ const Cards = () => {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Subscriptions
+                  Total Rentals This Year
                 </CardTitle>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  className="h-4 w-4 text-muted-foreground"
-                >
-                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                  <circle cx="9" cy="7" r="4" />
-                  <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-                </svg>
+                <Shirt className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">+2350</div>
+                <div className="text-2xl font-bold">
+                  {totalRentalsThisYear.length}
+                </div>
                 <p className="text-xs text-muted-foreground">
-                  +180.1% from last month
+                  {percentageChangeRentals !== "N/A"
+                    ? `${percentageChangeRentals}% from last year`
+                    : "No data from last year"}
                 </p>
               </CardContent>
             </Card>
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Sales</CardTitle>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  className="h-4 w-4 text-muted-foreground"
-                >
-                  <rect width="20" height="14" x="2" y="5" rx="2" />
-                  <path d="M2 10h20" />
-                </svg>
+                <CardTitle className="text-sm font-medium">
+                  Product Produced This Year
+                </CardTitle>
+                <Shirt className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">+12,234</div>
@@ -176,20 +225,9 @@ const Cards = () => {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Active Now
+                  Total Revenue
                 </CardTitle>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  className="h-4 w-4 text-muted-foreground"
-                >
-                  <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-                </svg>
+                <PhilippinePeso className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">+573</div>
