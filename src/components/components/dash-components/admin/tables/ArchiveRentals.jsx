@@ -54,8 +54,9 @@ function ArchiveRentals() {
   };
 
   const fetchRentals = async () => {
-    setLoading(true);
+    
     try {
+      setLoading(true);
       const res = await axios.get(
         `https://marsu.cut.server.kukaas.tech/api/v1/rental/archive/all`
       );
@@ -70,6 +71,7 @@ function ArchiveRentals() {
         })
       );
       setData(rentalsWithPenalties);
+      setLoading(false);
     } catch (error) {
       setLoading(false);
     }

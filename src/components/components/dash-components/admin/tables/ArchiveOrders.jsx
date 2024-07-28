@@ -551,7 +551,7 @@ function ArchiveOrders() {
             <Button
               variant="default"
               className="m-2"
-              onClick={() => navigate("dashboard/tab?-orders-admin")}
+              onClick={() => navigate("dashboard/tab?orders-admin")}
             >
               <ArrowDownLeft size={20} className="mr-2" />
               Orders
