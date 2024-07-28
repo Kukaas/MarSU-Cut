@@ -19,7 +19,7 @@ const DashUsers = () => {
   }, [currentUser, navigate]);
 
   return (
-    <div className="w-full h-screen">
+    <div className="w-full h-screen overflow-x-auto">
       <ToastProvider>
         <Users />
       </ToastProvider>

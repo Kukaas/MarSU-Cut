@@ -19,7 +19,7 @@ const DashOrderAdmin = () => {
   }, [currentUser, navigate]);
 
   return (
-    <div className="w-full h-screen">
+    <div className="w-full h-screen overflow-x-auto">
       <Orders />
       <Toaster richColors />
     </div>

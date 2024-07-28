@@ -19,7 +19,7 @@ const DashAccomplishmentReport = () => {
   }, [currentUser, navigate]);
 
   return (
-    <div className="w-full h-screen">
+    <div className="w-full h-screen overflow-x-auto">
       <AccomplishmentReport />
       <Toaster richColors />
     </div>

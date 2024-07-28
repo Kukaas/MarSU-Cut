@@ -19,7 +19,7 @@ const DashArchiveOrders = () => {
   }, [currentUser, navigate]);
 
   return (
-    <div className="w-full h-screen">
+    <div className="w-full h-screen overflow-x-auto">
       <ArchiveOrders />
       <Toaster richColors />
     </div>
