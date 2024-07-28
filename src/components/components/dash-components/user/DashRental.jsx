@@ -10,9 +10,7 @@ const DashRental = () => {
 
   useEffect(() => {
     if (currentUser && currentUser.isAdmin) {
-      navigate(
-        "/dashboard?tab=home-admin"
-      );
+      navigate("/dashboard?tab=home-admin");
     } else if (currentUser && currentUser.isAdmin === false) {
       navigate("/dashboard?tab=rentals");
     } else {
@@ -21,7 +19,7 @@ const DashRental = () => {
   }, [currentUser, navigate]);
 
   return (
-    <div className="w-full h-screen">
+    <div className="w-full h-screen overflow-x-auto">
       <Rentals />
       <Toaster richColors />
     </div>
