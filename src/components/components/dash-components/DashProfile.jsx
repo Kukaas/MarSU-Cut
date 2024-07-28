@@ -159,7 +159,7 @@ const DashProfile = () => {
         values.photo = imageFileUrl;
       }
       const res = await axios.put(
-        `https://garments.kukaas.tech/api/v1/user/update/${currentUser?._id}`,
+        `https://marsu.cut.server.kukaas.tech/api/v1/user/update/${currentUser?._id}`,
         values,
         {
           headers: { "Content-Type": "application/json" },
@@ -193,7 +193,7 @@ const DashProfile = () => {
     try {
       setLoading(true);
       const res = await axios.delete(
-        `https://garments.kukaas.tech/api/v1/user/delete/${currentUser?._id}`,
+        `https://marsu.cut.server.kukaas.tech/api/v1/user/delete/${currentUser?._id}`,
         {
           withCredentials: true,
         }

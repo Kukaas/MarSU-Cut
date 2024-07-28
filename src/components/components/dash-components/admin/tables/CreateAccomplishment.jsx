@@ -31,7 +31,7 @@ const CreateAccomplishment = () => {
     event.stopPropagation();
     setLoading(true);
     const res = await axios.post(
-      "https://garments.kukaas.tech/api/v1/accomplishment-report/create",
+      "https://marsu.cut.server.kukaas.tech/api/v1/accomplishment-report/create",
       values
     );
     if (res.status === 201) {

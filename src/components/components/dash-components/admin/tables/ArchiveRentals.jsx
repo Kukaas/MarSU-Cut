@@ -57,14 +57,14 @@ function ArchiveRentals() {
     setLoading(true);
     try {
       const res = await axios.get(
-        `https://garments.kukaas.tech/api/v1/rental/archive/all`
+        `https://marsu.cut.server.kukaas.tech/api/v1/rental/archive/all`
       );
 
       // Fetch the penalties for each rental
       const rentalsWithPenalties = await Promise.all(
         res.data.rentals.map(async (rental) => {
           const penaltyRes = await axios.get(
-            `https://garments.kukaas.tech/api/v1/rental/penalty/${rental._id}`
+            `https://marsu.cut.server.kukaas.tech/api/v1/rental/penalty/${rental._id}`
           );
           return { ...rental, penalty: penaltyRes.data.penalty };
         })
@@ -84,7 +84,7 @@ function ArchiveRentals() {
     try {
       setLoadingApprove(true);
       const res = await axios.put(
-        `https://garments.kukaas.tech/api/v1/rental/update/${rental._id}`,
+        `https://marsu.cut.server.kukaas.tech/api/v1/rental/update/${rental._id}`,
         { status: "APPROVED" }
       );
 
@@ -124,7 +124,7 @@ function ArchiveRentals() {
     try {
       setLoadingReturned(true);
       const res = await axios.put(
-        `https://garments.kukaas.tech/api/v1/rental/return/${rental._id}`
+        `https://marsu.cut.server.kukaas.tech/api/v1/rental/return/${rental._id}`
       );
 
       if (res.status === 200) {
@@ -160,7 +160,7 @@ function ArchiveRentals() {
     try {
       setLoadingArchive(true);
       const res = await axios.put(
-        `https://garments.kukaas.tech/api/v1/rental/archive/update/${rental._id}`,
+        `https://marsu.cut.server.kukaas.tech/api/v1/rental/archive/update/${rental._id}`,
         {
           isArchived: false,
         }
@@ -196,7 +196,7 @@ function ArchiveRentals() {
   const handleDelete = async (rental) => {
     try {
       const res = await axios.delete(
-        `https://garments.kukaas.tech/api/v1/rental/${rental._id}`
+        `https://marsu.cut.server.kukaas.tech/api/v1/rental/${rental._id}`
       );
 
       if (res.status === 200) {

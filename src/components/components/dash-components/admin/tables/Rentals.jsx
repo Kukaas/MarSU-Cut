@@ -35,7 +35,6 @@ import { useNavigate } from "react-router-dom";
 import { ArchiveIcon } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
-import { useSelector } from "react-redux";
 
 function Rentals() {
   const [data, setData] = useState([]);
@@ -48,7 +47,6 @@ function Rentals() {
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
   const [currentPage, setCurrentPage] = useState(0);
-  const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
   const toastError = () => {
@@ -59,7 +57,7 @@ function Rentals() {
     setLoading(true);
     try {
       const res = await axios.get(
-        `https://garments.kukaas.tech/api/v1/rental/all/get`
+        `https://marsu.cut.server.kukaas.tech/api/v1/rental/all/get`
       );
 
       const activeRentals = res.data.rentals.filter(
@@ -69,7 +67,7 @@ function Rentals() {
       const rentalsWithPenalties = await Promise.all(
         activeRentals.map(async (rental) => {
           const penaltyRes = await axios.get(
-            `https://garments.kukaas.tech/api/v1/rental/penalty/${rental._id}`
+            `https://marsu.cut.server.kukaas.tech/api/v1/rental/penalty/${rental._id}`
           );
           return { ...rental, penalty: penaltyRes.data.penalty };
         })
@@ -91,7 +89,7 @@ function Rentals() {
     try {
       setLoadingApprove(true);
       const res = await axios.put(
-        `https://garments.kukaas.tech/api/v1/rental/update/${rental._id}`,
+        `https://marsu.cut.server.kukaas.tech/api/v1/rental/update/${rental._id}`,
         { status: "APPROVED" }
       );
 
@@ -131,7 +129,7 @@ function Rentals() {
     try {
       setLoadingReturned(true);
       const res = await axios.put(
-        `https://garments.kukaas.tech/api/v1/rental/return/${rental._id}`
+        `https://marsu.cut.server.kukaas.tech/api/v1/rental/return/${rental._id}`
       );
 
       if (res.status === 200) {
@@ -167,7 +165,7 @@ function Rentals() {
     try {
       setLoadingArchive(true);
       const res = await axios.put(
-        `https://garments.kukaas.tech/api/v1/rental/archive/update/${rental._id}`,
+        `https://marsu.cut.server.kukaas.tech/api/v1/rental/archive/update/${rental._id}`,
         {
           isArchived: true,
         }
@@ -203,7 +201,7 @@ function Rentals() {
   const handleDelete = async (rental) => {
     try {
       const res = await axios.delete(
-        `https://garments.kukaas.tech/api/v1/rental/${rental._id}`
+        `https://marsu.cut.server.kukaas.tech/api/v1/rental/${rental._id}`
       );
 
       if (res.status === 200) {
@@ -441,11 +439,7 @@ function Rentals() {
             <Button
               variant="default"
               className="m-2"
-              onClick={() =>
-                navigate(
-                  `/dashboard?tab=archive-rentals/${currentUser._id}`
-                )
-              }
+              onClick={() => navigate("/dashboard?tab=archive-rentals")}
             >
               <ArchiveIcon size={20} className="mr-2" />
               Archive

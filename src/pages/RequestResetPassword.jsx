@@ -58,7 +58,7 @@ const RequestResetPassword = () => {
       setLoading(true);
       dispatch(forgotPasswordStart());
       const res = await axios.post(
-        "https://garments.kukaas.tech/api/v1/auth/send-otp",
+        "https://marsu.cut.server.kukaas.tech/api/v1/auth/send-otp",
         values,
         {
           headers: { "Content-Type": "application/json" },

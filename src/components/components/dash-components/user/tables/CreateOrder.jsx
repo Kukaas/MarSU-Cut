@@ -126,7 +126,7 @@ const CreateOrder = () => {
     try {
       setLoading(true);
       const res = await axios.post(
-        "https://garments.kukaas.tech/api/v1/order/student/create",
+        "https://marsu.cut.server.kukaas.tech/api/v1/order/student/create",
         {
           ...values,
           receipt: imageFileUrl,

@@ -59,7 +59,7 @@ const SignIn = () => {
       setLoading(true);
       dispatch(loginStart());
       const res = await axios.post(
-        "https://garments.kukaas.tech/api/v1/auth/sign-in",
+        "https://marsu.cut.server.kukaas.tech/api/v1/auth/sign-in",
         values,
         {
           headers: { "Content-Type": "application/json" },

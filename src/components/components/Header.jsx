@@ -64,7 +64,7 @@ const Header = () => {
       event.stopPropagation(); // Stop event from propagating and closing the dropdown
       setIsLoggingOut(true);
       const res = await axios.post(
-        "https://garments.kukaas.tech/api/v1/auth/logout",
+        "https://marsu.cut.server.kukaas.tech/api/v1/auth/logout",
         {
           withCredentials: true,
         }
@@ -266,9 +266,7 @@ const Header = () => {
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
                     <DropdownMenuItem
-                      onClick={() =>
-                        navigate("/dashboard?tab=profile")
-                      }
+                      onClick={() => navigate("/dashboard?tab=profile")}
                     >
                       Profile
                       <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>

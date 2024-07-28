@@ -52,7 +52,6 @@ import {
 } from "@/components/ui/form";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import PropTypes from "prop-types";
-import { useSelector } from "react-redux";
 
 function Orders() {
   const [data, setData] = useState([]);
@@ -70,7 +69,6 @@ function Orders() {
   const [currentPage, setCurrentPage] = useState(0);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
-  const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
   const toastError = () => {
@@ -81,7 +79,7 @@ function Orders() {
     try {
       setLoading(true);
       const response = await axios.get(
-        "https://garments.kukaas.tech/api/v1/order/all"
+        "https://marsu.cut.server.kukaas.tech/api/v1/order/all"
       );
       setLoading(false);
       return response.data.orders.filter((order) => !order.isArchived);
@@ -96,7 +94,7 @@ function Orders() {
     try {
       setLoadingApprove(true);
       const res = await axios.put(
-        `https://garments.kukaas.tech/api/v1/order/update/student/${order._id}`,
+        `https://marsu.cut.server.kukaas.tech/api/v1/order/update/student/${order._id}`,
         {
           status: "APPROVED",
         }
@@ -143,7 +141,7 @@ function Orders() {
     try {
       setLoadingDone(true);
       const res = await axios.put(
-        `https://garments.kukaas.tech/api/v1/order/update/student/${order._id}`,
+        `https://marsu.cut.server.kukaas.tech/api/v1/order/update/student/${order._id}`,
         {
           status: "DONE",
         }
@@ -186,7 +184,7 @@ function Orders() {
     try {
       setLoadingClaimed(true);
       const res = await axios.put(
-        `https://garments.kukaas.tech/api/v1/order/update/student/${order._id}`,
+        `https://marsu.cut.server.kukaas.tech/api/v1/order/update/student/${order._id}`,
         {
           status: "CLAIMED",
         }
@@ -229,7 +227,7 @@ function Orders() {
     try {
       setLoadingArchive(true);
       const res = await axios.put(
-        `https://garments.kukaas.tech/api/v1/order/archive/update/${order._id}`,
+        `https://marsu.cut.server.kukaas.tech/api/v1/order/archive/update/${order._id}`,
         {
           isArchived: true,
         }
@@ -266,7 +264,7 @@ function Orders() {
     try {
       setLoadingDelete(true);
       const res = await axios.delete(
-        `https://garments.kukaas.tech/api/v1/order/student/delete/${order._id}`
+        `https://marsu.cut.server.kukaas.tech/api/v1/order/student/delete/${order._id}`
       );
 
       if (res.status === 200) {
@@ -735,7 +733,7 @@ function Orders() {
       : [];
 
     const res = await axios.put(
-      `https://garments.kukaas.tech/api/v1/order/add-item/${selectedOrder._id}`,
+      `https://marsu.cut.server.kukaas.tech/api/v1/order/add-item/${selectedOrder._id}`,
       {
         orderItems: orderItems,
       }
@@ -986,11 +984,7 @@ function Orders() {
             <Button
               variant="default"
               className="m-2"
-              onClick={() =>
-                navigate(
-                  `/dashboard?tab=archive-orders/${currentUser._id}`
-                )
-              }
+              onClick={() => navigate("/dashboard?tab=archive-orders")}
             >
               <ArchiveIcon size={20} className="mr-2" />
               Archive

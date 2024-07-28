@@ -59,7 +59,7 @@ function ArchiveOrders() {
     try {
       setLoading(true);
       const response = await axios.get(
-        "https://garments.kukaas.tech/api/v1/order/archive/all"
+        "https://marsu.cut.server.kukaas.tech/api/v1/order/archive/all"
       );
       setLoading(false);
       return response.data.orders;
@@ -81,7 +81,7 @@ function ArchiveOrders() {
     try {
       setLoadingApprove(true);
       const res = await axios.put(
-        `https://garments.kukaas.tech/api/v1/order/update/student/${order._id}`,
+        `https://marsu.cut.server.kukaas.tech/api/v1/order/update/student/${order._id}`,
         {
           status: "APPROVED",
         }
@@ -128,7 +128,7 @@ function ArchiveOrders() {
     try {
       setLoadingDone(true);
       const res = await axios.put(
-        `https://garments.kukaas.tech/api/v1/order/update/student/${order._id}`,
+        `https://marsu.cut.server.kukaas.tech/api/v1/order/update/student/${order._id}`,
         {
           status: "DONE",
         }
@@ -171,7 +171,7 @@ function ArchiveOrders() {
     try {
       setLoadingClaimed(true);
       const res = await axios.put(
-        `https://garments.kukaas.tech/api/v1/order/update/student/${order._id}`,
+        `https://marsu.cut.server.kukaas.tech/api/v1/order/update/student/${order._id}`,
         {
           status: "CLAIMED",
         }
@@ -214,7 +214,7 @@ function ArchiveOrders() {
     try {
       setLoadingUnarchive(true);
       const res = await axios.put(
-        `https://garments.kukaas.tech/api/v1/order/archive/update/${order._id}`,
+        `https://marsu.cut.server.kukaas.tech/api/v1/order/archive/update/${order._id}`,
         {
           isArchived: false,
         }
@@ -251,7 +251,7 @@ function ArchiveOrders() {
     try {
       setLoadingDelete(true);
       const res = await axios.delete(
-        `https://garments.kukaas.tech/api/v1/order/student/delete/${order._id}`
+        `https://marsu.cut.server.kukaas.tech/api/v1/order/student/delete/${order._id}`
       );
 
       if (res.status === 200) {

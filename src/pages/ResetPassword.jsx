@@ -84,7 +84,7 @@ const ResetPassword = () => {
     try {
       setLoading(true);
       const res = await axios.post(
-        "https://garments.kukaas.tech/api/v1/auth/reset-password",
+        "https://marsu.cut.server.kukaas.tech/api/v1/auth/reset-password",
         { email: currentEmail, ...values },
         {
           headers: { "Content-Type": "application/json" },

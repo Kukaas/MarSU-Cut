@@ -37,7 +37,7 @@ const DashSchedules = () => {
     const fetchSchedules = async () => {
       setLoading(true);
       const response = await axios.get(
-        "https://garments.kukaas.tech/api/v1/order/schedule/all"
+        "https://marsu.cut.server.kukaas.tech/api/v1/order/schedule/all"
       );
       const data = response.data.schedules;
       if (Array.isArray(data)) {

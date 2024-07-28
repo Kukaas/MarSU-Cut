@@ -90,7 +90,7 @@ const SignUp = () => {
     }
     try {
       const res = await axios.post(
-        "https://garments.kukaas.tech/api/v1/auth/sign-up",
+        "https://marsu.cut.server.kukaas.tech/api/v1/auth/sign-up",
         values,
         {
           headers: { "Content-Type": "application/json" },

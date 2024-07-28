@@ -105,7 +105,7 @@ const OTPVerification = () => {
     try {
       dispatch(forgotPasswordStart());
       const res = await axios.post(
-        "https://garments.kukaas.tech/api/v1/auth/send-otp",
+        "https://marsu.cut.server.kukaas.tech/api/v1/auth/send-otp",
         { email: currentEmail },
         {
           headers: { "Content-Type": "application/json" },
@@ -144,7 +144,7 @@ const OTPVerification = () => {
       setLoading(true);
       if (!values.otp) return message.error("OTP is required");
       const res = await axios.post(
-        "https://garments.kukaas.tech/api/v1/auth/verify-otp",
+        "https://marsu.cut.server.kukaas.tech/api/v1/auth/verify-otp",
         { email: currentEmail, otp: values.otp },
         {
           headers: { "Content-Type": "application/json" },

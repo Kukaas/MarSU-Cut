@@ -23,7 +23,7 @@ const Cards = () => {
   const fetchOrdersThisMonth = async () => {
     try {
       const res = await axios.get(
-        "https://garments.kukaas.tech/api/v1/order/this-month"
+        "https://marsu.cut.server.kukaas.tech/api/v1/order/this-month"
       );
 
       const data = res.data.orders;
@@ -41,7 +41,7 @@ const Cards = () => {
   const fetchOrdersLastMonth = async () => {
     try {
       const res = await axios.get(
-        "https://garments.kukaas.tech/api/v1/order/last-month"
+        "https://marsu.cut.server.kukaas.tech/api/v1/order/last-month"
       );
 
       const data = res.data.orders;
@@ -59,7 +59,7 @@ const Cards = () => {
   const fetchTotalOrdersThisYear = async () => {
     try {
       const res = await axios.get(
-        "https://garments.kukaas.tech/api/v1/order/this-year"
+        "https://marsu.cut.server.kukaas.tech/api/v1/order/this-year"
       );
 
       const data = res.data.orders;
@@ -77,7 +77,7 @@ const Cards = () => {
   const fetchTotalRentalsThisYear = async () => {
     try {
       const res = await axios.get(
-        "https://garments.kukaas.tech/api/v1/rental/total/this-year"
+        "https://marsu.cut.server.kukaas.tech/api/v1/rental/total/this-year"
       );
 
       const data = res.data.rentals;
@@ -95,7 +95,7 @@ const Cards = () => {
   const fetchRentalsLastYear = async () => {
     try {
       const res = await axios.get(
-        "https://garments.kukaas.tech/api/v1/rental/total/last-year"
+        "https://marsu.cut.server.kukaas.tech/api/v1/rental/total/last-year"
       );
 
       const data = res.data.rentals;

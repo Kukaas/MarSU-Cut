@@ -130,7 +130,7 @@ const CreateRental = () => {
     try {
       setLoading(true);
       const res = await axios.post(
-        "https://garments.kukaas.tech/api/v1/rental/create",
+        "https://marsu.cut.server.kukaas.tech/api/v1/rental/create",
         {
           ...values,
           receipt: imageFileUrl,
@@ -190,204 +190,204 @@ const CreateRental = () => {
         />
       }
     >
-    <div className="grid gap-4 py-4">
-      <div className="w-full">
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(handleCreateRental)}
-            className="space-y-1 w-full"
-          >
-            <FormField
-              control={form.control}
-              name="studentNumber"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Student Number</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="eg.21B994" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="studentName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="eg.Jhon Doe" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="rentalDate"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Rental Date</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "pl-3 text-left font-normal w-full",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, "PPP")
-                          ) : (
-                            <span>Pick a rental date</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) =>
-                          date < new Date().setHours(0, 0, 0, 0)
-                        }
-                        initialFocus
+      <div className="grid gap-4 py-4">
+        <div className="w-full">
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleCreateRental)}
+              className="space-y-1 w-full"
+            >
+              <FormField
+                control={form.control}
+                name="studentNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Student Number</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="eg.21B994" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="studentName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="eg.Jhon Doe" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="rentalDate"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Rental Date</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "pl-3 text-left font-normal w-full",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {field.value ? (
+                              format(field.value, "PPP")
+                            ) : (
+                              <span>Pick a rental date</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          disabled={(date) =>
+                            date < new Date().setHours(0, 0, 0, 0)
+                          }
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="returnDate"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Return Date</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "pl-3 text-left font-normal w-full",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {field.value ? (
+                              format(field.value, "PPP")
+                            ) : (
+                              <span>Pick a return date</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          disabled={(date) =>
+                            date < new Date().setHours(0, 0, 0, 0)
+                          }
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="receipt"
+                render={() => (
+                  <FormItem>
+                    <FormLabel>Upload Receipt</FormLabel>
+                    <FormControl>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          handleImageChange(e);
+                          // Field value will be set after upload is complete
+                        }}
+                        className="block w-full text-sm text-gray-500"
+                        ref={fileInputRef}
                       />
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="returnDate"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Return Date</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "pl-3 text-left font-normal w-full",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, "PPP")
-                          ) : (
-                            <span>Pick a return date</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) =>
-                          date < new Date().setHours(0, 0, 0, 0)
-                        }
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="receipt"
-              render={() => (
-                <FormItem>
-                  <FormLabel>Upload Receipt</FormLabel>
-                  <FormControl>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => {
-                        handleImageChange(e);
-                        // Field value will be set after upload is complete
-                      }}
-                      className="block w-full text-sm text-gray-500"
-                      ref={fileInputRef}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Progress
-              percent={progress}
-              status="active"
-              strokeColor={{
-                from: "#108ee9",
-                to: "#87d068",
-              }}
-              format={(percent) => (
-                <span className="dark:text-white">{percent}%</span>
-              )}
-            />
-            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-              <DialogTrigger asChild>
-                <Button
-                  onClick={() => setDialogOpen(true)}
-                  variant="default"
-                  className="w-full"
-                >
-                  Submit Rental
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px] mx-auto">
-                <DialogHeader>
-                  <DialogTitle>Confirm Submission</DialogTitle>
-                  <DialogDescription>
-                    <div>
-                      <p>Are you sure you want to submit these details?</p>
-                      <p className="mb-5 text-red-500">
-                        Once you submit you can&apos;t change the details.
-                      </p>
-                    </div>
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="flex justify-end">
-                  <DialogClose asChild>
-                    <Button variant="outline" className="m-2">
-                      Cancel
-                    </Button>
-                  </DialogClose>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Progress
+                percent={progress}
+                status="active"
+                strokeColor={{
+                  from: "#108ee9",
+                  to: "#87d068",
+                }}
+                format={(percent) => (
+                  <span className="dark:text-white">{percent}%</span>
+                )}
+              />
+              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <DialogTrigger asChild>
                   <Button
-                    onClick={() => {
-                      handleCreateRental(form.getValues());
-                      setDialogOpen(false);
-                    }}
-                    className="m-2"
+                    onClick={() => setDialogOpen(true)}
                     variant="default"
-                    disabled={loading}
+                    className="w-full"
                   >
-                    {loading ? (
-                      <span className="loading-dots">Submitting Rental</span>
-                    ) : (
-                      "Submit Order"
-                    )}
+                    Submit Rental
                   </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </form>
-        </Form>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px] mx-auto">
+                  <DialogHeader>
+                    <DialogTitle>Confirm Submission</DialogTitle>
+                    <DialogDescription>
+                      <div>
+                        <p>Are you sure you want to submit these details?</p>
+                        <p className="mb-5 text-red-500">
+                          Once you submit you can&apos;t change the details.
+                        </p>
+                      </div>
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="flex justify-end">
+                    <DialogClose asChild>
+                      <Button variant="outline" className="m-2">
+                        Cancel
+                      </Button>
+                    </DialogClose>
+                    <Button
+                      onClick={() => {
+                        handleCreateRental(form.getValues());
+                        setDialogOpen(false);
+                      }}
+                      className="m-2"
+                      variant="default"
+                      disabled={loading}
+                    >
+                      {loading ? (
+                        <span className="loading-dots">Submitting Rental</span>
+                      ) : (
+                        "Submit Order"
+                      )}
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </form>
+          </Form>
+        </div>
       </div>
-    </div>
     </Spin>
   );
 };

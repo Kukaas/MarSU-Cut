@@ -111,7 +111,7 @@ const AccomplishmentReport = () => {
     try {
       setLoading(true);
       const res = await axios.get(
-        "https://garments.kukaas.tech/api/v1/accomplishment-report/all"
+        "https://marsu.cut.server.kukaas.tech/api/v1/accomplishment-report/all"
       );
 
       if (res.status === 200) {
@@ -153,7 +153,7 @@ const AccomplishmentReport = () => {
       event.stopPropagation();
       setUpdateLoading(true);
       const res = await axios.put(
-        `https://garments.kukaas.tech/api/v1/accomplishment-report/update/${selectedAccomplishment._id}`,
+        `https://marsu.cut.server.kukaas.tech/api/v1/accomplishment-report/update/${selectedAccomplishment._id}`,
         values
       );
       if (res.status === 200) {
@@ -188,7 +188,7 @@ const AccomplishmentReport = () => {
     try {
       setLoadingDelete(true);
       const res = await axios.delete(
-        `https://garments.kukaas.tech/api/v1/accomplishment-report/delete/${accomplishment._id}`
+        `https://marsu.cut.server.kukaas.tech/api/v1/accomplishment-report/delete/${accomplishment._id}`
       );
       if (res.status === 200) {
         setLoadingDelete(false);

@@ -65,7 +65,7 @@ function Orders() {
       setLoading(true);
       try {
         const res = await axios.get(
-          `https://garments.kukaas.tech/api/v1/order/student/${currentUser._id}`
+          `https://marsu.cut.server.kukaas.tech/api/v1/order/student/${currentUser._id}`
         );
         setData(res.data.orders);
       } catch (error) {
@@ -83,7 +83,7 @@ function Orders() {
     try {
       setLoadingDelete(true);
       const res = await axios.delete(
-        `https://garments.kukaas.tech/api/v1/order/student/delete/${order._id}`
+        `https://marsu.cut.server.kukaas.tech/api/v1/order/student/delete/${order._id}`
       );
 
       if (res.status === 200) {

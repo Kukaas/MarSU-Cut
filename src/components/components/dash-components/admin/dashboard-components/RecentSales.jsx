@@ -28,7 +28,7 @@ const RecentSales = () => {
   const fetchRencentOrders = async () => {
     try {
       const res = await axios.get(
-        "https://garments.kukaas.tech/api/v1/order/recent"
+        "https://marsu.cut.server.kukaas.tech/api/v1/order/recent"
       );
 
       const data = res.data.orders;

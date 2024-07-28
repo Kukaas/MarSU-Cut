@@ -39,7 +39,7 @@ const Users = () => {
   const fetchData = async () => {
     setLoading(true);
     const result = await axios.get(
-      "https://garments.kukaas.tech/api/v1/user/all"
+      "https://marsu.cut.server.kukaas.tech/api/v1/user/all"
     );
     const sortedData = result.data.sort((a, b) => a.name.localeCompare(b.name));
     setData(sortedData);

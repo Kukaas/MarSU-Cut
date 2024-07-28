@@ -64,14 +64,14 @@ function Rentals() {
     const fetchData = async () => {
       setLoading(true);
       const res = await axios.get(
-        `https://garments.kukaas.tech/api/v1/rental/${currentUser._id}`
+        `https://marsu.cut.server.kukaas.tech/api/v1/rental/${currentUser._id}`
       );
 
       // Fetch the penalties for each rental
       const rentalsWithPenalties = await Promise.all(
         res.data.rental.map(async (rental) => {
           const penaltyRes = await axios.get(
-            `https://garments.kukaas.tech/api/v1/rental/penalty/${rental._id}`
+            `https://marsu.cut.server.kukaas.tech/api/v1/rental/penalty/${rental._id}`
           );
           return { ...rental, penalty: penaltyRes.data.penalty };
         })
@@ -89,7 +89,7 @@ function Rentals() {
     try {
       setLoadingDelete(true);
       const res = await axios.delete(
-        `https://garments.kukaas.tech/api/v1/rental/${rental._id}`
+        `https://marsu.cut.server.kukaas.tech/api/v1/rental/${rental._id}`
       );
 
       if (res.status === 200) {
