@@ -61,6 +61,7 @@ import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { EditAccomplishmentSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { addDays, format } from "date-fns";
 
 const AccomplishmentReport = () => {
   const [data, setData] = useState([]);
@@ -73,11 +74,27 @@ const AccomplishmentReport = () => {
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
   const [currentPage, setCurrentPage] = useState(0);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [selectedAccomplishment, setSelectedAccomplishment] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const form = useForm();
+
+  const [selectedDate, setSelectedDate] = useState({
+    from: new Date(),
+    to: addDays(new Date(), 30),
+  });
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+
+  const handleSelect = (selectedDateRange) => {
+    setSelectedDate(selectedDateRange);
+  };
+
+  useEffect(() => {
+    fetchAccomplishments();
+  }, []);
+
+  useEffect(() => {
+    filterData(data, selectedDate);
+  }, [selectedDate, data]);
 
   const formAccomplishment = useForm({
     resolver: zodResolver(EditAccomplishmentSchema),
@@ -102,11 +119,6 @@ const AccomplishmentReport = () => {
     }
   }, [selectedAccomplishment, formAccomplishment]);
 
-  const handleDateSelect = (date) => {
-    setSelectedDate(date);
-    setIsPopoverOpen(false);
-  };
-
   const fetchAccomplishments = async () => {
     try {
       setLoading(true);
@@ -126,26 +138,21 @@ const AccomplishmentReport = () => {
     }
   };
 
-  useEffect(() => {
-    fetchAccomplishments();
-  }, []);
-
-  const filterData = (data, date) => {
-    if (!date) {
+  const filterData = (data, dateRange) => {
+    if (!dateRange) {
       setFilteredData(data);
       return;
     }
 
-    const filtered = data.filter(
-      (item) =>
-        new Date(item.date).toDateString() === new Date(date).toDateString()
-    );
+    const filtered = data.filter((item) => {
+      const itemDate = new Date(item.date);
+      return (
+        itemDate >= new Date(dateRange.from) &&
+        itemDate <= new Date(dateRange.to)
+      );
+    });
     setFilteredData(filtered);
   };
-
-  useEffect(() => {
-    filterData(data, selectedDate);
-  }, [selectedDate, data]);
 
   const handleEditAccomplishment = async (values, event) => {
     try {
@@ -368,50 +375,55 @@ const AccomplishmentReport = () => {
       }
     >
       <div className="w-full p-4 h-screen">
-        <div className="flex items-center py-4 justify-between">
-          <Form {...form}>
-            <form>
-              <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "sm:max-w-[130px] pl-3 text-left font-normal"
-                      )}
-                      onClick={() => setIsPopoverOpen(true)}
-                    >
-                      <span>
-                        {selectedDate
-                          ? selectedDate.toLocaleDateString("en-US", {
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            })
-                          : "Pick a date"}
-                      </span>
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    initialFocus
-                    selected={selectedDate}
-                    onSelect={handleDateSelect}
-                  />
+        <div className="flex items-center py-4 justify-between overflow-y-auto">
+          <div className={cn("grid gap-2")}>
+            <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+            <Tooltip
+                  title={
+                    <>
+                      <span>{selectedDate?.from && format(selectedDate.from, 'LLL dd, y')} - </span>
+                      <span>{selectedDate?.to && format(selectedDate.to, 'LLL dd, y')}</span>
+                    </>
+                  }
+                >
+              <PopoverTrigger asChild>
+                
                   <Button
-                    variant="outline"
-                    className="w-full p-2"
-                    onClick={() => setSelectedDate(null)}
+                    id="date"
+                    variant={"outline"}
+                    className={cn(
+                      "w-[150px] justify-start text-left font-normal overflow-y-auto",
+                      !selectedDate && "text-muted-foreground"
+                    )}
                   >
-                    Show All{" "}
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {selectedDate?.from ? (
+                      selectedDate.to ? (
+                        <>
+                          {format(selectedDate.from, "LLL dd, y")} -{" "}
+                          {format(selectedDate.to, "LLL dd, y")}
+                        </>
+                      ) : (
+                        format(selectedDate.from, "LLL dd, y")
+                      )
+                    ) : (
+                      <span>Pick a date</span>
+                    )}
                   </Button>
-                </PopoverContent>
-              </Popover>
-            </form>
-          </Form>
+              </PopoverTrigger>
+                </Tooltip>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  initialFocus
+                  mode="range"
+                  defaultMonth={selectedDate?.from}
+                  selected={selectedDate}
+                  onSelect={handleSelect}
+                  numberOfMonths={2}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
           <Tooltip title="Create Accomplishment Report">
             <Dialog>
               <DialogTrigger asChild>
