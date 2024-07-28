@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Overview from "./Overview";
 import RecentSales from "./RecentSales";
 import {
@@ -9,22 +9,43 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import CardLoading from "./loading-components/CardLoading";
+import axios from "axios";
 
 const Cards = () => {
   const [loading, setLoading] = useState(true);
+  const [ordersThisMonth, setOrdersThisMonth] = useState([]);
 
-  setTimeout(() => {
-    setLoading(false);
-  }, 2000);
+  const fetchOrdersThisMonth = async () => {
+    try {
+      const res = await axios.get(
+        "https://garments.kukaas.tech/api/v1/order/this-month"
+      );
+
+      const data = res.data.orders;
+      if (res.status === 200) {
+        setOrdersThisMonth(data);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+      return [];
+    }
+  };
+
+  useEffect(() => {
+    fetchOrdersThisMonth();
+  }, []);
+
   return (
     <div className="flex-1 space-y-4">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {loading ? (
           <>
-          <CardLoading />
-          <CardLoading />
-          <CardLoading />
-          <CardLoading />
+            <CardLoading />
+            <CardLoading />
+            <CardLoading />
+            <CardLoading />
           </>
         ) : (
           <>
@@ -143,8 +164,10 @@ const Cards = () => {
         </Card>
         <Card className="lg:col-span-3">
           <CardHeader>
-            <CardTitle>Recent Sales</CardTitle>
-            <CardDescription>You made 265 sales this month.</CardDescription>
+            <CardTitle>Recent Orders</CardTitle>
+            <CardDescription>
+              You made <span>{ordersThisMonth.length}</span> orders this month.
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <RecentSales />

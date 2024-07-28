@@ -15,94 +15,64 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import TableLoading from "./loading-components/TableLoading";
+import axios from "axios";
 
 const RecentSales = () => {
+  const [recentOrders, setRecentOrders] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(0);
 
-  setTimeout(() => {
-    setLoading(false);
-  }, 2000);
+  const fetchRencentOrders = async () => {
+    try {
+      const res = await axios.get(
+        "https://garments.kukaas.tech/api/v1/order/recent"
+      );
 
-  const data = useMemo(
-    () => [
-      {
-        id: 1,
-        product: "Apple Watch",
-        price: "$399.00",
-        date: "2021-09-01",
-        status: "Delivered",
-      },
-      {
-        id: 2,
-        product: "iPhone 13",
-        price: "$999.00",
-        date: "2021-09-02",
-        status: "Pending",
-      },
-      {
-        id: 3,
-        product: "Macbook Pro",
-        price: "$1,299.00",
-        date: "2021-09-03",
-        status: "Delivered",
-      },
-      {
-        id: 4,
-        product: "iPad Pro",
-        price: "$799.00",
-        date: "2021-09-04",
-        status: "Delivered",
-      },
-      {
-        id: 5,
-        product: "AirPods",
-        price: "$199.00",
-        date: "2021-09-05",
-        status: "Pending",
-      },
-      {
-        id: 6,
-        product: "Apple Watch",
-        price: "$399.00",
-        date: "2021-09-01",
-        status: "Delivered",
-      },
-    ],
-    []
-  );
+      const data = res.data.orders;
+      if (res.status === 200) {
+        setRecentOrders(data);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+      return [];
+    }
+  };
 
-  const columns = useMemo(
-    () => [
-      {
-        accessorKey: "product",
-        header: "Product",
-        cell: (row) => row.getValue("product"),
-      },
-      {
-        accessorKey: "price",
-        header: "Price",
-        cell: (row) => row.getValue("price"),
-      },
-      {
-        accessorKey: "date",
-        header: "Date",
-        cell: (row) => row.getValue("date"),
-      },
-      {
-        accessorKey: "status",
-        header: "Status",
-        cell: (row) => row.getValue("status"),
-      },
-    ],
-    []
-  );
+  useEffect(() => {
+    fetchRencentOrders();
+  }, []);
+
+  const columns = [
+    {
+      accessorKey: "studentName",
+      header: "Name",
+    },
+    {
+      accessorKey: "receipt",
+      header: "Receipt",
+      cell: ({ row }) => (
+        <a target="_blank" rel="noopener noreferrer">
+          <img
+            src={row.getValue("receipt")}
+            alt="Receipt"
+            style={{ width: "50px", height: "50px" }}
+          />
+        </a>
+      ),
+    },
+    {
+      accessorKey: "status",
+      header: "Status",
+    },
+  ];
 
   const table = useReactTable({
-    data,
+    data: recentOrders,
     columns,
     initialState: {
       pagination: {
@@ -119,21 +89,27 @@ const RecentSales = () => {
     },
   });
 
+  const rowsPerPage = 3;
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 0));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) =>
+      Math.min(
+        prevPage + 1,
+        Math.floor(table.getRowModel().rows.length / rowsPerPage)
+      )
+    );
+  };
+
+  const displayedRows = table
+    .getRowModel()
+    .rows.slice(currentPage * rowsPerPage, (currentPage + 1) * rowsPerPage);
+
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
-        <Input
-          placeholder="Filter product..."
-          value={table.getColumn("product")?.getFilterValue() ?? ""}
-          onChange={(event) => {
-            const column = table.getColumn("product");
-            if (column) {
-              column.setFilterValue(event.target.value);
-            }
-          }}
-          className="max-w-sm"
-        />
-      </div>
       <div className="rounded-md border">
         {loading ? (
           <div className="space-y-3 p-2">
@@ -162,11 +138,11 @@ const RecentSales = () => {
               ))}
             </TableHeader>
             <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
+              {displayedRows.length ? (
+                displayedRows.map((row) => (
                   <TableRow
                     key={row.id}
-                    data-state={row.getIsSelected() ? "selected" : undefined}
+                    data-state={row.getIsSelected() && "selected"}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
@@ -181,7 +157,7 @@ const RecentSales = () => {
               ) : (
                 <TableRow>
                   <TableCell
-                    colSpan={columns.length}
+                    colSpan={table.getAllColumns().length}
                     className="h-24 text-center"
                   >
                     No results.
@@ -201,16 +177,18 @@ const RecentSales = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
+            onClick={handlePreviousPage}
+            disabled={currentPage === 0}
           >
             Previous
           </Button>
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
+            onClick={handleNextPage}
+            disabled={
+              (currentPage + 1) * rowsPerPage >= table.getRowModel().rows.length
+            }
           >
             Next
           </Button>
