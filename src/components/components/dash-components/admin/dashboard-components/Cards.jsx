@@ -158,7 +158,7 @@ const Cards = () => {
     fetchTotalOrdersThisYear();
     fetchRentalsLastYear();
     fetchTotalRentalsThisYear();
-  });
+  }, []);
 
   return (
     <div className="flex-1 space-y-4">
