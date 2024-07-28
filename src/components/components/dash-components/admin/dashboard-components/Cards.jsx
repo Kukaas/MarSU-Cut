@@ -10,10 +10,13 @@ import {
 } from "@/components/ui/card";
 import CardLoading from "./loading-components/CardLoading";
 import axios from "axios";
+import { ShoppingBasket } from "lucide-react";
 
 const Cards = () => {
   const [loading, setLoading] = useState(true);
   const [ordersThisMonth, setOrdersThisMonth] = useState([]);
+  const [ordersLastMonth, setOrdersLastMonth] = useState([]);
+  const [totalOrdersThisYear, setTotalOrdersThisYear] = useState([])
 
   const fetchOrdersThisMonth = async () => {
     try {
@@ -33,9 +36,63 @@ const Cards = () => {
     }
   };
 
+  const fetchOrdersLastMonth = async () => {
+    try {
+      const res = await axios.get(
+        "https://garments.kukaas.tech/api/v1/order/last-month"
+      );
+
+      const data = res.data.orders;
+      if (res.status === 200) {
+        setOrdersLastMonth(data);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+      return [];
+    }
+  };
+
+  const fetchTotalOrdersThisYear = async () => {
+    try {
+      const res = await axios.get(
+        "https://garments.kukaas.tech/api/v1/order/this-year"
+      );
+
+      const data = res.data.orders;
+      if (res.status === 200) {
+        setTotalOrdersThisYear(data);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+      return [];
+    }
+  }
+
+  const calculatePercentageChange = (current, previous) => {
+    if (typeof current !== 'number' || typeof previous !== 'number' || isNaN(current) || isNaN(previous)) {
+      return 'N/A'; // Handle non-numeric inputs
+    }
+    if (previous === 0) return 'N/A'; // Handle division by zero
+    let change = ((current - previous) / previous) * 100;
+    change = Math.max(-100, Math.min(100, change)); // Cap the change at -100% and +100%
+    const sign = change >= 0 ? '+' : '-';
+    return `${sign}${Math.abs(change).toFixed()}`; // Format to one decimal place and add sign
+  };
+  
+  const percentageChange = calculatePercentageChange(
+    ordersThisMonth.length,
+    ordersLastMonth.length
+  );
+
   useEffect(() => {
     fetchOrdersThisMonth();
-  }, []);
+    fetchOrdersLastMonth();
+    fetchTotalOrdersThisYear()
+  });
 
   return (
     <div className="flex-1 space-y-4">
@@ -52,25 +109,16 @@ const Cards = () => {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Total Revenue
+                  Total Orders This Year
                 </CardTitle>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  className="h-4 w-4 text-muted-foreground"
-                >
-                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                </svg>
+                <ShoppingBasket className="h-4 w-4 text-muted-foreground"/>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">$45,231.89</div>
+                <div className="text-2xl font-bold">{totalOrdersThisYear.length}</div>
                 <p className="text-xs text-muted-foreground">
-                  +20.1% from last month
+                  {percentageChange !== "N/A"
+                    ? `${percentageChange}% from last month`
+                    : "No data from last month"}
                 </p>
               </CardContent>
             </Card>
