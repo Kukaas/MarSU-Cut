@@ -403,7 +403,7 @@ const AccomplishmentReport = () => {
                     id="date"
                     variant={"outline"}
                     className={cn(
-                      "w-[150px] justify-start text-left font-normal overflow-y-auto",
+                      "w-[300px] justify-start text-left font-normal overflow-y-auto",
                       !selectedDate && "text-muted-foreground"
                     )}
                   >
