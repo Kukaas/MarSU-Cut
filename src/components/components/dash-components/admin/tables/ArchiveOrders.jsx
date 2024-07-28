@@ -315,10 +315,6 @@ function ArchiveOrders() {
       header: "Gender",
     },
     {
-      accessorKey: "studentPhone",
-      header: "Phone",
-    },
-    {
       accessorKey: "receipt",
       header: "Receipt",
       cell: ({ row }) => (
