@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
 import DashProfile from "@/components/components/dash-components/DashProfile";
 import DashHomeAdmin from "../components/components/dash-components/admin/DashHomeAdmin";
 import DashHome from "../components/components/dash-components/user/DashHome";
@@ -16,42 +14,57 @@ import DashSalesReport from "@/components/components/dash-components/admin/DashS
 import DashArchiveOrders from "@/components/components/dash-components/admin/DashArchiveOrders";
 import DashArchiveRentals from "@/components/components/dash-components/admin/DashArchiveRentals";
 import DashUsers from "@/components/components/dash-components/admin/DashUsers";
+import PropTypes from 'prop-types'
 
-const Dashboard = () => {
-  const location = useLocation();
-  const [tab, setTab] = useState("");
-
-  // Get tab from url
-  useEffect(() => {
-    const urlParams = new URLSearchParams(location.search);
-    const tabFromUrl = urlParams.get("tab");
-    if (tabFromUrl) {
-      setTab(tabFromUrl);
+const Dashboard = ({ tab }) => {
+  const renderContent = () => {
+    switch (tab) {
+      case "profile":
+        return <DashProfile />;
+      case "home-admin":
+        return <DashHomeAdmin />;
+      case "orders-admin":
+        return <DashOrderAdmin />;
+      case "archive-orders":
+        return <DashArchiveOrders />;
+      case "rentals-admin":
+        return <DashRentalAdmin />;
+      case "archive-rentals":
+        return <DashArchiveRentals />;
+      case "schedules":
+        return <DashSchedules />;
+      case "finished-products":
+        return <DashFinishedProduct />;
+      case "raw-materials":
+        return <DashRawMaterials />;
+      case "accomplishment-report":
+        return <DashAccomplishmentReport />;
+      case "sales-report":
+        return <DashSalesReport />;
+      case "all-users":
+        return <DashUsers />;
+      case "home":
+        return <DashHome />;
+      case "orders":
+        return <DashOrder />;
+      case "rentals":
+        return <DashRental />;
+      case "commercial-job":
+        return <DashCommercial />;
+      default:
+        return null;
     }
-  }, [location.search]);
-  return (
-    <div className="flex flex-col md:flex-row">
-      {tab === "profile" && <DashProfile />}
-      {/* Admin */}
-      {tab === "home-admin" && <DashHomeAdmin />}
-      {tab === "orders-admin" && <DashOrderAdmin />}
-      {tab === "archive-orders" && <DashArchiveOrders />}
-      {tab === "rentals-admin" && <DashRentalAdmin />}
-      {tab === "archive-rentals" && <DashArchiveRentals />}
-      {tab === "schedules" && <DashSchedules />}
-      {tab === "finished-products" && <DashFinishedProduct />}
-      {tab === "raw-materials" && <DashRawMaterials />}
-      {tab === "accomplishment-report" && <DashAccomplishmentReport />}
-      {tab === "sales-report" && <DashSalesReport />}
-      {tab === "all-users" && <DashUsers />}
+  };
 
-      {/* User */}
-      {tab === "home" && <DashHome />}
-      {tab === "orders" && <DashOrder />}
-      {tab === "rentals" && <DashRental />}
-      {tab === "commercial-job" && <DashCommercial />}
+  return (
+    <div className="flex flex-col md:flex-row w-full">
+      {renderContent()}
     </div>
   );
+};
+
+Dashboard.propTypes = {
+  tab: PropTypes.string,
 };
 
 export default Dashboard;
