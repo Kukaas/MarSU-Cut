@@ -1,7 +1,20 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
+import { useState } from "react";
 
 const PageNotFound = () => {
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate()
+
+  const handleClick = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      navigate("/");
+    }
+    , 2000);
+  }
+
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <div className="p-3 max-w-3xl mx-auto text-center">
@@ -19,8 +32,9 @@ const PageNotFound = () => {
           <Button
             className="w-full p-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white text-lg hover:bg-gradient-to-r hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600"
             size="lg"
+            onClick={handleClick}
           >
-            Back to home
+            {loading ? "Loading..." : "Go to home"}
           </Button>
         </div>
       </div>
