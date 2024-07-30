@@ -136,7 +136,7 @@ function DownloadButton({ selectedDate, filteredData }) {
             <PopoverClose>
               <Button variant="outline">Cancel</Button>
             </PopoverClose>
-            <Button onClick={handleDownload} isDisabled={!selectedDate?.from}>
+            <Button onClick={handleDownload}>
               Download
             </Button>
           </div>
@@ -150,15 +150,15 @@ DownloadButton.propTypes = {
   selectedDate: PropTypes.shape({
     from: PropTypes.instanceOf(Date),
     to: PropTypes.instanceOf(Date),
-  }).isRequired,
+  }),
   filteredData: PropTypes.arrayOf(
     PropTypes.shape({
-      date: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      accomplishment: PropTypes.string.isRequired,
-      remarks: PropTypes.string.isRequired,
+      date: PropTypes.string,
+      type: PropTypes.string,
+      accomplishment: PropTypes.string,
+      remarks: PropTypes.string,
     })
-  ).isRequired,
+  ),
 };
 
 export default DownloadButton;

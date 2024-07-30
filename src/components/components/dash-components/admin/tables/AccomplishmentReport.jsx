@@ -222,6 +222,11 @@ const AccomplishmentReport = () => {
     }
   };
 
+  const handleAccomplishmentCreated = (newAccomplishment) => {
+    setData((prevData) => [...prevData, newAccomplishment]);
+    filterData([...data, newAccomplishment], selectedDate);
+  };
+
   const columns = [
     {
       id: "select",
@@ -467,7 +472,7 @@ const AccomplishmentReport = () => {
                     Click create when you&apos;re done.
                   </DialogDescription>
                 </DialogHeader>
-                <CreateAccomplishment />
+                <CreateAccomplishment onAccomplishmentCreated={handleAccomplishmentCreated} />
               </DialogContent>
             </Dialog>
           </Tooltip>
