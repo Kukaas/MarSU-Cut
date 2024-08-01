@@ -32,7 +32,6 @@ import { useForm } from "react-hook-form";
 import { UpdateProfileSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
-import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SkeletonProfile from "../SkeletonProfile";
 import {
@@ -44,6 +43,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import ChangePassword from "../forms/ChangePassword";
 
 const DashProfile = () => {
   const navigate = useNavigate();
@@ -56,7 +56,6 @@ const DashProfile = () => {
   const [imageUploadError, setImageUploadError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [updateProfileLoading, setUpdateProfileLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [skeletonLoading, setSkeletonLoading] = useState(true);
 
   useEffect(() => {
@@ -69,19 +68,14 @@ const DashProfile = () => {
     }
   }, [currentUser, navigate]);
 
-  const form = useForm({
+  const formUpdateProfile = useForm({
     resolver: zodResolver(UpdateProfileSchema),
     defaultValues: {
       photo: currentUser.photo,
       name: currentUser.name,
       email: currentUser.email,
-      password: "",
     },
   });
-
-  const toggleShowPassword = () => {
-    setShowPassword((prev) => !prev);
-  };
 
   // Simulate a data fetch with a timeout
   useEffect(() => {
@@ -174,11 +168,10 @@ const DashProfile = () => {
         dispatch(updateSuccess(data));
         message.success("Profile updated successfully");
         // Reset the form with updated values
-        form.reset({
+        formUpdateProfile.reset({
           photo: data.photo,
           name: data.name,
           email: data.email,
-          password: "", // Keep password empty or set to whatever is appropriate
         });
         setImageUploadProgress(false);
       }
@@ -231,9 +224,9 @@ const DashProfile = () => {
         </div>
       ) : (
         <div className="flex flex-col justify-center items-center h-screen mt-3">
-          <Form {...form}>
+          <Form {...formUpdateProfile}>
             <form
-              onSubmit={form.handleSubmit(handleUpdate)}
+              onSubmit={formUpdateProfile.handleSubmit(handleUpdate)}
               className="space-y-4 w-full p-3"
             >
               <input
@@ -284,7 +277,7 @@ const DashProfile = () => {
                 <Alert message={imageUploadError} type="error" />
               )}
               <FormField
-                control={form.control}
+                control={formUpdateProfile.control}
                 name="name"
                 render={({ field }) => (
                   <FormItem>
@@ -297,7 +290,7 @@ const DashProfile = () => {
                 )}
               />
               <FormField
-                control={form.control}
+                control={formUpdateProfile.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
@@ -309,35 +302,10 @@ const DashProfile = () => {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <Input
-                          type={showPassword ? "text" : "password"}
-                          placeholder="Enter your password..."
-                          {...field}
-                        />
-                        <button
-                          onClick={toggleShowPassword}
-                          type="button"
-                          className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
-                        >
-                          {showPassword ? <EyeOffIcon /> : <EyeIcon />}
-                        </button>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
               <Button
                 type="submit"
-                className="w-full mt-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white hover:bg-gradient-to-r hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600"
+                className="w-full"
+                disabled={updateProfileLoading}
               >
                 {updateProfileLoading ? (
                   <span className="loading-dots">Updating Profile</span>
@@ -346,6 +314,24 @@ const DashProfile = () => {
                 )}
               </Button>
             </form>
+            <div className="w-full p-3">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="secondary" className="w-full">
+                    Change Password
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Change Password</DialogTitle>
+                    <DialogDescription>
+                      Enter your new password
+                    </DialogDescription>
+                    <ChangePassword />
+                  </DialogHeader>
+                </DialogContent>
+              </Dialog>
+            </div>
             <div className="w-full p-3 mb-[80px]">
               <Dialog>
                 <DialogTrigger asChild>

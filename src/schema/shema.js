@@ -25,10 +25,6 @@ export const UpdateProfileSchema = z.object({
     .string()
     .min(3, { message: "Name must be at least 3 characters" })
     .max(255, { message: "Name must be less than 256 characters" }),
-  password: z
-    .string()
-    .min(3, { message: "Name must be at least 3 characters" })
-    .max(255, { message: "Name must be less than 256 characters" }),
 });
 
 export const RequestResetPasswordSchema = z.object({
@@ -47,6 +43,18 @@ export const ResetPasswordSchema = z.object({
     .string()
     .min(6, { message: "Confirm Password must be at least 6 characters" }),
 });
+
+export const ResetPasswordSchemaProfile = z.object({
+    oldPassword: z
+      .string()
+      .min(6, { message: "Password must be at least 6 characters" }),
+    newPassword: z
+      .string()
+      .min(6, { message: "Confirm Password must be at least 6 characters" }),
+    confirmPassword: z
+      .string()
+      .min(6, { message: "Confirm Password must be at least 6 characters" }),
+  });
 
 export const CreateOrderSchema = z.object({
   studentNumber: z

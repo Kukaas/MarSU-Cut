@@ -49,7 +49,6 @@ const SignUp = () => {
       name: "",
       email: "",
       password: "",
-      confirmPassword: "",
     },
   });
 
