@@ -338,7 +338,7 @@ const AccomplishmentReport = () => {
   ];
 
   const table = useReactTable({
-    data,
+    data: filteredData,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,

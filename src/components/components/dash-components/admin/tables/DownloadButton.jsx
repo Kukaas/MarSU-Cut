@@ -12,15 +12,19 @@ import { toast } from "sonner";
 
 function DownloadButton({ selectedDate, filteredData }) {
   const toastError = () => {
-    toast.error("No data to download");
+    toast.error("No data to download, please select a month", {
+      action: {
+        label: "Ok",
+      },
+    });
   };
-
+  
   const handleDownload = () => {
-    const selectedMonth = selectedDate.from
-      ? selectedDate.from.getMonth()
+    const selectedMonth = selectedDate?.from
+      ? selectedDate?.from.getMonth()
       : null;
-    const selectedYear = selectedDate.from
-      ? selectedDate.from.getFullYear()
+    const selectedYear = selectedDate?.from
+      ? selectedDate?.from.getFullYear()
       : null;
 
     if (selectedMonth === null || selectedYear === null) {
@@ -30,7 +34,6 @@ function DownloadButton({ selectedDate, filteredData }) {
 
     if (!filteredData || filteredData.length === 0) {
       toastError();
-      toast;
       return;
     }
 
@@ -58,17 +61,18 @@ function DownloadButton({ selectedDate, filteredData }) {
 
     const title = formatTitle(selectedMonth);
 
-    const sortedData = filteredData.sort((a, b) =>
-      a.type.localeCompare(b.type)
+    // Sort by date (ascending order)
+    const sortedData = filteredData.sort(
+      (a, b) => new Date(a.date) - new Date(b.date)
     );
 
     const tableData = sortedData.map((item) => {
       const splitAccomplishment = doc.splitTextToSize(item.accomplishment, 60);
       const joinedAccomplishment = splitAccomplishment.join("\n");
       const remarks =
-        item.remarks.charAt(0).toUpperCase() +
-        item.remarks.slice(1).toLowerCase();
-      return [item.type, joinedAccomplishment, formatDate(item.date), remarks];
+        item.remarks?.charAt(0).toUpperCase() +
+        item.remarks?.slice(1).toLowerCase();
+      return [formatDate(item.date), item.type, joinedAccomplishment, remarks];
     });
 
     const itemsPerPage = 14;
@@ -92,7 +96,7 @@ function DownloadButton({ selectedDate, filteredData }) {
       autoTable(doc, {
         startY: 40,
         body: pageData,
-        head: [["Type", "Accomplishment", "Date", "Remarks"]],
+        head: [["Date", "Type", "Accomplishment", "Remarks"]],
         styles: { fontSize: 12 },
       });
 
@@ -136,9 +140,7 @@ function DownloadButton({ selectedDate, filteredData }) {
             <PopoverClose>
               <Button variant="outline">Cancel</Button>
             </PopoverClose>
-            <Button onClick={handleDownload}>
-              Download
-            </Button>
+            <Button onClick={handleDownload}>Download</Button>
           </div>
         </PopoverContent>
       </Popover>

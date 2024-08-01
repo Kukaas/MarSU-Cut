@@ -27,9 +27,7 @@ const CreateAccomplishment = ({ onAccomplishmentCreated }) => {
     },
   });
 
-  const handleCreateAccomplishment = async (values, event) => {
-    event.preventDefault();
-    event.stopPropagation();
+  const handleCreateAccomplishment = async (values) => {
     setLoading(true);
     const res = await axios.post(
       "https://marsu.cut.server.kukaas.tech/api/v1/accomplishment-report/create",
@@ -94,7 +92,6 @@ const CreateAccomplishment = ({ onAccomplishmentCreated }) => {
               type="submit"
               variant="default"
               className="w-full"
-              onClick={(event) => handleCreateAccomplishment(event)}
             >
               {loading ? (
                 <span className="loading-dots">Creating</span>
