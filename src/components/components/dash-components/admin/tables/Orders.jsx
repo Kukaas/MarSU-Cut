@@ -72,184 +72,124 @@ function Orders() {
         "https://marsu.cut.server.kukaas.tech/api/v1/order/all"
       );
       setLoading(false);
-      return response.data.orders.filter((order) => !order.isArchived);
+      setData(response.data.orders.filter((order) => !order.isArchived));
     } catch (error) {
       setLoading(false);
-      return [];
+      setData([]);
+      toastError();
     }
   };
 
-  // Update the status of the order to APPROVED
   const handleApprove = async (order) => {
     try {
       setLoadingApprove(true);
       const res = await axios.put(
         `https://marsu.cut.server.kukaas.tech/api/v1/order/update/student/${order._id}`,
-        {
-          status: "APPROVED",
-        }
+        { status: "APPROVED" }
       );
 
       if (res.status === 200) {
-        setLoadingApprove(false);
         toast.success(
           `Order of ${order.studentName} is approved successfully!`,
-          {
-            action: {
-              label: "Ok",
-            },
-          }
+          { action: { label: "Ok" } }
         );
-        // Correctly update the data in the state for the approved order
-        setData((prevData) => {
-          return prevData.map((item) => {
-            if (item._id === order._id) {
-              // Correctly identifying the order to be updated
-              return {
-                ...item,
-                status: "APPROVED", // Only update the status of the intended order
-                schedule: res.data.schedule, // Assuming schedule needs to be updated as well
-              };
-            } else {
-              // Return other items as is
-              return item;
-            }
-          });
-        });
+        setData((prevData) =>
+          prevData.map((item) =>
+            item._id === order._id
+              ? { ...item, status: "APPROVED", schedule: res.data.schedule }
+              : item
+          )
+        );
       } else {
         toastError();
-        setLoadingApprove(false);
       }
     } catch (error) {
       toastError();
+    } finally {
       setLoadingApprove(false);
     }
   };
 
-  // Update the status to DONE
   const handleDone = async (order) => {
     try {
       setLoadingDone(true);
       const res = await axios.put(
         `https://marsu.cut.server.kukaas.tech/api/v1/order/update/student/${order._id}`,
-        {
-          status: "DONE",
-        }
+        { status: "DONE" }
       );
 
       if (res.status === 200) {
-        setLoadingDone(false);
         toast.success(`Order of ${order.studentName} is ready to be claimed!`, {
-          action: {
-            label: "Ok",
-          },
+          action: { label: "Ok" },
         });
-        // Update the data in the state
-        setData((prevData) => {
-          return prevData.map((item) => {
-            if (item._id === order._id) {
-              // This is the updated item
-              return {
-                ...item,
-                status: "DONE", // Update the status
-              };
-            } else {
-              // This is not the updated item, return it as is
-              return item;
-            }
-          });
-        });
+        setData((prevData) =>
+          prevData.map((item) =>
+            item._id === order._id ? { ...item, status: "DONE" } : item
+          )
+        );
       } else {
         toastError();
-        setLoadingDone(false);
       }
     } catch (error) {
       toastError();
+    } finally {
       setLoadingDone(false);
     }
   };
 
-  // Update the status to CLAIMED
   const handleClaimed = async (order) => {
     try {
       setLoadingClaimed(true);
       const res = await axios.put(
         `https://marsu.cut.server.kukaas.tech/api/v1/order/update/student/${order._id}`,
-        {
-          status: "CLAIMED",
-        }
+        { status: "CLAIMED" }
       );
 
       if (res.status === 200) {
-        setLoadingClaimed(false);
         toast.success(`Order of ${order.studentName} is claimed!`, {
-          action: {
-            label: "Ok",
-          },
+          action: { label: "Ok" },
         });
-        // Update the data in the state
-        setData((prevData) => {
-          return prevData.map((item) => {
-            if (item._id === order._id) {
-              // This is the updated item
-              return {
-                ...item,
-                status: "CLAIMED", // Update the status
-              };
-            } else {
-              // This is not the updated item, return it as is
-              return item;
-            }
-          });
-        });
+        setData((prevData) =>
+          prevData.map((item) =>
+            item._id === order._id ? { ...item, status: "CLAIMED" } : item
+          )
+        );
       } else {
         toastError();
-        setLoadingClaimed(false);
       }
     } catch (error) {
       toastError();
+    } finally {
       setLoadingClaimed(false);
     }
   };
 
-  // Function to handle unarchive
   const handleArchive = async (order) => {
     try {
       setLoadingArchive(true);
       const res = await axios.put(
         `https://marsu.cut.server.kukaas.tech/api/v1/order/archive/update/${order._id}`,
-        {
-          isArchived: true,
-        }
+        { isArchived: true }
       );
 
       if (res.status === 200) {
-        setLoadingArchive(false);
         toast.success(
           `Order of ${order.studentName} is archived successfully!`,
-          {
-            action: {
-              label: "Ok",
-            },
-          }
+          { action: { label: "Ok" } }
         );
-
-        setData((prevData) => {
-          return prevData.filter((item) => item._id !== order._id);
-        });
+        setData((prevData) =>
+          prevData.filter((item) => item._id !== order._id)
+        );
       } else {
         toastError();
-        setLoadingArchive(false);
       }
     } catch (error) {
-      {
-        toastError();
-        setLoadingArchive(false);
-      }
+      toastError();
+    } finally {
+      setLoadingArchive(false);
     }
   };
 
-  // Function to handle delete
   const handleDelete = async (order) => {
     try {
       setLoadingDelete(true);
@@ -258,27 +198,20 @@ function Orders() {
       );
 
       if (res.status === 200) {
-        setLoadingDelete(false);
         toast.success(
           `Order of ${order.studentName} is deleted successfully!`,
-          {
-            action: {
-              label: "Ok",
-            },
-          }
+          { action: { label: "Ok" } }
         );
-
-        // Update the data in the state
-        setData((prevData) => {
-          return prevData.filter((item) => item._id !== order._id);
-        });
+        setData((prevData) =>
+          prevData.filter((item) => item._id !== order._id)
+        );
       } else {
-        setLoadingDelete(false);
         toastError();
       }
     } catch (error) {
-      setLoadingDelete(false);
       toastError();
+    } finally {
+      setLoadingDelete(false);
     }
   };
 
@@ -350,24 +283,21 @@ function Orders() {
       accessorKey: "orderItems",
       header: "Order Items",
       cell: ({ row }) => {
-        const orderItems = row.original.orderItems || []; // Ensure orderItems is an array
+        const orderItems = row.original.orderItems || [];
 
-        // Check if orderItems is an empty array
         if (!Array.isArray(orderItems) || orderItems.length === 0) {
           return <div>Not yet Measured</div>;
         }
 
-        // Group items by productType, size, and level, and sum their quantities
         const groupedItems = orderItems.reduce((acc, item) => {
           const key = `${item.productType}-${item.size}-${item.level}`;
           if (!acc[key]) {
-            acc[key] = { ...item, quantity: 0 }; // Initialize if not exist
+            acc[key] = { ...item, quantity: 0 };
           }
-          acc[key].quantity += item.quantity; // Sum the quantity
+          acc[key].quantity += item.quantity;
           return acc;
         }, {});
 
-        // Convert the grouped items object back to an array for rendering
         const itemsToRender = Object.values(groupedItems);
 
         return (
@@ -392,7 +322,7 @@ function Orders() {
           (acc, item) => acc + parseFloat(item.totalPrice || 0),
           0
         );
-        return `Php${totalPrice.toFixed(2)}`; // Format as currency
+        return `Php${totalPrice.toFixed(2)}`;
       },
     },
     {
@@ -489,10 +419,7 @@ function Orders() {
   ];
 
   useEffect(() => {
-    fetchOrders().then((orders) => {
-      setData(orders);
-      setLoading(false);
-    });
+    fetchOrders();
   }, []);
 
   const table = useReactTable({
@@ -511,27 +438,23 @@ function Orders() {
       columnFilters,
       columnVisibility,
       rowSelection,
+      pagination: {
+        pageIndex: currentPage,
+        pageSize: 5,
+      },
     },
   });
-
-  const rowsPerPage = 5;
 
   const handlePreviousPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 0));
   };
 
   const handleNextPage = () => {
-    setCurrentPage((prevPage) =>
-      Math.min(
-        prevPage + 1,
-        Math.floor(table.getRowModel().rows.length / rowsPerPage)
-      )
-    );
+    setCurrentPage((prevPage) => {
+      const maxPage = table.getPageCount() - 1;
+      return Math.min(prevPage + 1, maxPage);
+    });
   };
-
-  const displayedRows = table
-    .getRowModel()
-    .rows.slice(currentPage * rowsPerPage, (currentPage + 1) * rowsPerPage);
 
   return (
     <Spin
@@ -615,8 +538,8 @@ function Orders() {
                 ))}
               </TableHeader>
               <TableBody>
-                {displayedRows.length ? (
-                  displayedRows.map((row) => (
+                {table.getRowModel().rows.length ? (
+                  table.getRowModel().rows.map((row) => (
                     <TableRow
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
@@ -663,10 +586,7 @@ function Orders() {
               variant="outline"
               size="sm"
               onClick={handleNextPage}
-              disabled={
-                (currentPage + 1) * rowsPerPage >=
-                table.getRowModel().rows.length
-              }
+              disabled={currentPage >= table.getPageCount() - 1}
             >
               Next
             </Button>
@@ -681,7 +601,7 @@ function Orders() {
               Please fill out the form below to add items to your order.
             </DialogDescription>
           </DialogHeader>
-           <AddOrderItems selectedOrder={selectedOrder}/>
+          <AddOrderItems selectedOrder={selectedOrder} />
         </DialogContent>
       </Dialog>
     </Spin>

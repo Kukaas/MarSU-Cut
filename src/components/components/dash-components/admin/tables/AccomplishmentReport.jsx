@@ -338,7 +338,7 @@ const AccomplishmentReport = () => {
   ];
 
   const table = useReactTable({
-    data: filteredData,
+    data,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -353,27 +353,24 @@ const AccomplishmentReport = () => {
       columnFilters,
       columnVisibility,
       rowSelection,
+      pagination: {
+        pageIndex: currentPage,
+        pageSize: 5,
+      },
     },
   });
-
-  const rowsPerPage = 5;
 
   const handlePreviousPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 0));
   };
 
   const handleNextPage = () => {
-    setCurrentPage((prevPage) =>
-      Math.min(
-        prevPage + 1,
-        Math.floor(table.getRowModel().rows.length / rowsPerPage)
-      )
-    );
+    setCurrentPage((prevPage) => {
+      const maxPage = table.getPageCount() - 1;
+      return Math.min(prevPage + 1, maxPage);
+    });
   };
 
-  const displayedRows = table
-    .getRowModel()
-    .rows.slice(currentPage * rowsPerPage, (currentPage + 1) * rowsPerPage);
   return (
     <Spin
       spinning={loadingDelete}
@@ -472,7 +469,9 @@ const AccomplishmentReport = () => {
                     Click create when you&apos;re done.
                   </DialogDescription>
                 </DialogHeader>
-                <CreateAccomplishment onAccomplishmentCreated={handleAccomplishmentCreated} />
+                <CreateAccomplishment
+                  onAccomplishmentCreated={handleAccomplishmentCreated}
+                />
               </DialogContent>
             </Dialog>
           </Tooltip>
@@ -500,7 +499,10 @@ const AccomplishmentReport = () => {
                 ))}
             </DropdownMenuContent>
           </DropdownMenu>
-          <DownloadButton selectedDate={selectedDate} filteredData={filteredData} />
+          <DownloadButton
+            selectedDate={selectedDate}
+            filteredData={filteredData}
+          />
         </div>
         <div className="rounded-md border">
           {loading ? (
@@ -524,8 +526,8 @@ const AccomplishmentReport = () => {
                 ))}
               </TableHeader>
               <TableBody>
-                {displayedRows.length ? (
-                  displayedRows.map((row) => (
+                {table.getRowModel().rows.length ? (
+                  table.getRowModel().rows.map((row) => (
                     <TableRow
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
@@ -572,10 +574,7 @@ const AccomplishmentReport = () => {
               variant="outline"
               size="sm"
               onClick={handleNextPage}
-              disabled={
-                (currentPage + 1) * rowsPerPage >=
-                table.getRowModel().rows.length
-              }
+              disabled={currentPage >= table.getPageCount() - 1}
             >
               Next
             </Button>
