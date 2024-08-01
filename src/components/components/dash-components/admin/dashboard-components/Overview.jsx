@@ -1,5 +1,7 @@
 import {
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
@@ -55,11 +57,9 @@ const Overview = () => {
   const chartConfig = {
     currentMonthSales: {
       label: `${getCurrentMonthYear()}`,
-      color: "#2563eb",
     },
     lastMonthSales: {
       label: `${getLastMonthYear()}`,
-      color: "#60a5fa",
     },
   };
 
@@ -74,6 +74,7 @@ const Overview = () => {
           axisLine={false}
         />
         <ChartTooltip content={<ChartTooltipContent />} />
+        <ChartLegend content={<ChartLegendContent />} />
         <Bar dataKey="currentMonthSales" fill="currentColor" radius={3} />
         <Bar dataKey="lastMonthSales" fill="currentColor" radius={3} />
       </BarChart>

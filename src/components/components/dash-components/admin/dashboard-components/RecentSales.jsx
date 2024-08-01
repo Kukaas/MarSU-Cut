@@ -3,6 +3,7 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 
@@ -21,7 +22,10 @@ import axios from "axios";
 
 const RecentSales = () => {
   const [recentOrders, setRecentOrders] = useState([]);
+  const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
+  const [columnVisibility, setColumnVisibility] = useState([]);
+  const [rowSelection, setRowSelection] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
 
@@ -74,39 +78,36 @@ const RecentSales = () => {
   const table = useReactTable({
     data: recentOrders,
     columns,
-    initialState: {
-      pagination: {
-        pageIndex: 0,
-        pageSize: 5,
-      },
-    },
+    onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
     state: {
+      sorting,
       columnFilters,
+      columnVisibility,
+      rowSelection,
+      pagination: {
+        pageIndex: currentPage,
+        pageSize: 3,
+      },
     },
   });
-
-  const rowsPerPage = 3;
 
   const handlePreviousPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 0));
   };
 
   const handleNextPage = () => {
-    setCurrentPage((prevPage) =>
-      Math.min(
-        prevPage + 1,
-        Math.floor(table.getRowModel().rows.length / rowsPerPage)
-      )
-    );
+    setCurrentPage((prevPage) => {
+      const maxPage = table.getPageCount() - 1;
+      return Math.min(prevPage + 1, maxPage);
+    });
   };
-
-  const displayedRows = table
-    .getRowModel()
-    .rows.slice(currentPage * rowsPerPage, (currentPage + 1) * rowsPerPage);
 
   return (
     <div className="w-full">
@@ -138,8 +139,8 @@ const RecentSales = () => {
               ))}
             </TableHeader>
             <TableBody>
-              {displayedRows.length ? (
-                displayedRows.map((row) => (
+              {table.getRowModel().rows.length ? (
+                table.getRowModel().rows.map((row) => (
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
@@ -186,9 +187,7 @@ const RecentSales = () => {
             variant="outline"
             size="sm"
             onClick={handleNextPage}
-            disabled={
-              (currentPage + 1) * rowsPerPage >= table.getRowModel().rows.length
-            }
+            disabled={currentPage >= table.getPageCount() - 1}
           >
             Next
           </Button>
