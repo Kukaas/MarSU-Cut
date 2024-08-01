@@ -482,7 +482,6 @@ const AddOrderItems = ({ selectedOrder }) => {
           <Button
             type="submit"
             className="mt-4"
-            onClick={() => handleAddItems(form.getValues())}
           >
             {loadingAddItems ? (
               <div className="loading-dots">Adding Items</div>
