@@ -40,7 +40,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { PlusCircle } from "lucide-react";
-import CreateRental from "./CreateRental";
+import CreateRental from "../../../forms/CreateRental";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
 

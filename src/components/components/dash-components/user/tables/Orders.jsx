@@ -41,7 +41,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import CreateOrder from "./CreateOrder";
+import CreateOrder from "../../../forms/CreateOrder";
 import { toast } from "sonner";
 
 function Orders() {
