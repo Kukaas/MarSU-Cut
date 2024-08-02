@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import FinishedProduct from "./tables/FinishedProduct";
+import { Toaster } from "sonner";
 
 const DashFinishedProduct = () => {
   const navigate = useNavigate();
@@ -16,7 +18,12 @@ const DashFinishedProduct = () => {
     }
   }, [currentUser, navigate]);
 
-  return <div>DashFinishedProduct</div>;
+  return (
+    <div className="w-full h-screen overfolow-x-auto">
+      <FinishedProduct />
+      <Toaster richColors />
+    </div>
+  );
 };
 
 export default DashFinishedProduct;

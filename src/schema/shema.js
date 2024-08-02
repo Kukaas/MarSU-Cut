@@ -45,16 +45,16 @@ export const ResetPasswordSchema = z.object({
 });
 
 export const ResetPasswordSchemaProfile = z.object({
-    oldPassword: z
-      .string()
-      .min(6, { message: "Password must be at least 6 characters" }),
-    newPassword: z
-      .string()
-      .min(6, { message: "Confirm Password must be at least 6 characters" }),
-    confirmPassword: z
-      .string()
-      .min(6, { message: "Confirm Password must be at least 6 characters" }),
-  });
+  oldPassword: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters" }),
+  newPassword: z
+    .string()
+    .min(6, { message: "Confirm Password must be at least 6 characters" }),
+  confirmPassword: z
+    .string()
+    .min(6, { message: "Confirm Password must be at least 6 characters" }),
+});
 
 export const CreateOrderSchema = z.object({
   studentNumber: z
@@ -86,30 +86,38 @@ export const CreateRentalSchema = z.object({
 
 export const CreateAccomplishmentSchema = z.object({
   type: z
-  .string()
-  .min(3, { message: "Type must be at least 3 characters" })
-  .max(255, { message: "Type must be less than 256 characters" }),
+    .string()
+    .min(3, { message: "Type must be at least 3 characters" })
+    .max(255, { message: "Type must be less than 256 characters" }),
   accomplishment: z
-  .string()
-  .min(3, { message: "Accomplishment must be at least 3 characters" })
-  .max(255, { message: "Accomplishment must be less than 256 characters" }),
-})
+    .string()
+    .min(3, { message: "Accomplishment must be at least 3 characters" })
+    .max(255, { message: "Accomplishment must be less than 256 characters" }),
+});
 
 export const EditAccomplishmentSchema = z.object({
   type: z
-  .string()
-  .min(3, { message: "Type must be at least 3 characters" })
-  .max(255, { message: "Type must be less than 256 characters" }),
+    .string()
+    .min(3, { message: "Type must be at least 3 characters" })
+    .max(255, { message: "Type must be less than 256 characters" }),
   accomplishment: z
-  .string()
-  .min(3, { message: "Accomplishment must be at least 3 characters" })
-  .max(255, { message: "Accomplishment must be less than 256 characters" }),
-})
+    .string()
+    .min(3, { message: "Accomplishment must be at least 3 characters" })
+    .max(255, { message: "Accomplishment must be less than 256 characters" }),
+});
 
 export const AddOrderItemsSchema = z.object({
   level: z.string().min(1),
   productType: z.string().min(1),
   size: z.string().min(1),
   unitPrice: z.number().int().nonnegative(),
-  quantity: z.number().int().nonnegative()
+  quantity: z.number().int().nonnegative(),
+});
+
+export const AddNewProductSchema = z.object({
+  level: z.string().min(1),
+  productType: z.string().min(1),
+  size: z.string().min(1),
+  price: z.number().int().nonnegative(),
+  quantity: z.number().int().nonnegative(),
 });

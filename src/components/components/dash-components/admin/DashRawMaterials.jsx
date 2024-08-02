@@ -16,7 +16,9 @@ const DashRawMaterials = () => {
     }
   }, [currentUser, navigate]);
 
-  return <div>DashRawMaterials</div>;
+  return (
+    <div className="w-full h-screen overflow-x-auto">DashRawMaterials</div>
+  );
 };
 
 export default DashRawMaterials;
