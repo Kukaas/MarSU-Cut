@@ -121,3 +121,11 @@ export const AddNewProductSchema = z.object({
   price: z.number().int().nonnegative(),
   quantity: z.number().int().nonnegative(),
 });
+
+export const EditProductSchema = z.object({
+  level: z.string().min(1),
+  productType: z.string().min(1),
+  size: z.string().min(1),
+  price: z.number().int().nonnegative(),
+  quantity: z.number().int().nonnegative(),
+});

@@ -15,58 +15,64 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { AddNewProductSchema } from "@/schema/shema";
+import { EditProductSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import PropTypes from "prop-types";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+const EditProduct = ({ selectedProduct }) => {
+  const [editProductLoading, setEditProductLoading] = useState(false);
 
-const AddNewProduct = () => {
-  const [addNewProductLoading, setAddNewProductLoading] = useState(false);
-
-  const addNewProductForm = useForm({
-    resolver: zodResolver(AddNewProductSchema),
+  const editProductForm = useForm({
+    resolver: zodResolver(EditProductSchema),
     defaultValues: {
-      level: "",
-      productType: "",
-      size: "",
-      quantity: 0,
-      price: 0,
+      level: selectedProduct.level,
+      productType: selectedProduct.productType,
+      size: selectedProduct.size,
+      price: selectedProduct.price,
+      quantity: selectedProduct.quantity,
     },
   });
 
-  const handleAddNewProduct = async (values) => {
-    setAddNewProductLoading(true);
+  const handleEditProduct = async (values) => {
     try {
-      const res = await axios.post(
-        "https://marsu.cut.server.kukaas.tech/api/v1/finished-product/create",
+      setEditProductLoading(true);
+      const res = await axios.put(
+        `https://marsu.cut.server.kukaas.tech/api/v1/finished-product/update/${selectedProduct._id}`,
         values
       );
 
       if (res.status === 200) {
-        setAddNewProductLoading(false);
-        toast.success("Product added successfully!", {
+        setEditProductLoading(false);
+        toast.success("Product updated successfully!", {
           action: {
             label: "Ok",
           },
         });
-        addNewProductForm.reset();
+        editProductForm.reset({
+          level: "",
+          productType: "",
+          size: "",
+          price: res.data.price,
+          quantity: res.data.quantity,
+        });
       }
     } catch (error) {
-      console.log(error);
       toast.error("Uh oh! Something went wrong");
+      console.log(error);
     }
   };
-
+  
   return (
-    <Form {...addNewProductForm}>
+    <Form {...editProductForm}>
       <form
-        onSubmit={addNewProductForm.handleSubmit(handleAddNewProduct)}
+        onSubmit={editProductForm.handleSubmit(handleEditProduct)}
         className="space-y-4 w-full p-3"
       >
         <FormField
-          control={addNewProductForm.control}
+          control={editProductForm.control}
           name="level"
           render={({ field }) => (
             <FormItem>
@@ -98,7 +104,7 @@ const AddNewProduct = () => {
           )}
         />
         <FormField
-          control={addNewProductForm.control}
+          control={editProductForm.control}
           name="productType"
           render={({ field }) => (
             <FormItem>
@@ -137,7 +143,7 @@ const AddNewProduct = () => {
           )}
         />
         <FormField
-          control={addNewProductForm.control}
+          control={editProductForm.control}
           name="size"
           render={({ field }) => (
             <FormItem>
@@ -182,7 +188,7 @@ const AddNewProduct = () => {
           )}
         />
         <FormField
-          control={addNewProductForm.control}
+          control={editProductForm.control}
           name="quantity"
           render={({ field }) => (
             <FormItem>
@@ -205,7 +211,7 @@ const AddNewProduct = () => {
           )}
         />
         <FormField
-          control={addNewProductForm.control}
+          control={editProductForm.control}
           name="price"
           render={({ field }) => (
             <FormItem>
@@ -229,10 +235,10 @@ const AddNewProduct = () => {
             <Button variant="outline">Cancel</Button>
           </DialogClose>
           <Button type="submit">
-            {addNewProductLoading ? (
-              <span className="loading-dots">Adding</span>
+            {editProductLoading ? (
+              <span className="loading-dots">Updating</span>
             ) : (
-              "Add Product"
+              "Update"
             )}
           </Button>
         </div>
@@ -241,4 +247,8 @@ const AddNewProduct = () => {
   );
 };
 
-export default AddNewProduct;
+EditProduct.propTypes = {
+  selectedProduct: PropTypes.object.isRequired,
+};
+
+export default EditProduct;

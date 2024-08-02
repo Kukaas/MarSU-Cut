@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -35,26 +36,35 @@ import {
 import { Tooltip } from "antd";
 import { ChevronDownIcon, PlusCircle } from "lucide-react";
 import { useEffect, useState } from "react";
+import axios from "axios";
+import EditProduct from "@/components/components/forms/EditProduct";
+import { toast } from "sonner";
 
 const FinishedProduct = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const fetchFinishedProduct = async () => {
-    setLoading(true);
     try {
-      console.log("Fetching finished product...");
-      const fetchedData = []; // Replace with actual data fetching logic
-      setData(fetchedData);
+      setLoading(true);
+      const res = await axios.get(
+        "https://marsu.cut.server.kukaas.tech/api/v1/finished-product/all"
+      );
+
+      const data = res.data;
+      setData(data.finishedProducts);
+      setLoading(false);
     } catch (error) {
       console.error(error);
-    } finally {
       setLoading(false);
     }
   };
@@ -62,6 +72,33 @@ const FinishedProduct = () => {
   useEffect(() => {
     fetchFinishedProduct();
   }, []);
+
+  const handleDelete = async () => {
+    try {
+      setDeleteLoading(true);
+      const res = await axios.delete(
+        `https://marsu.cut.server.kukaas.tech/api/v1/finished-product/delete/${selectedProduct._id}`
+      );
+
+      if (res.status === 200) {
+        setDeleteLoading(false);
+        setOpenDeleteDialog(false);
+        setData((prevData) =>
+          prevData.filter((product) => product._id !== selectedProduct._id)
+        );
+        toast.success("Product deleted successfully!", {
+          action: {
+            label: "Ok",
+          },
+        });
+      }
+    } catch (error) {
+      toast.error("Uh oh! Something went wrong");
+      setOpenDeleteDialog(false);
+      setDeleteLoading(false);
+      console.error(error);
+    }
+  };
 
   const columns = [
     {
@@ -137,6 +174,81 @@ const FinishedProduct = () => {
         );
       },
     },
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => {
+        const product = row.original;
+        return (
+          <div className="flex items-center justify-center space-x-2">
+            <Tooltip title="Edit product">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="default"
+                    size="sm"
+                    onClick={() => setSelectedProduct(product)}
+                  >
+                    Edit
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Edit Product</DialogTitle>
+                    <DialogDescription>
+                      Please fill out the form below to edit product.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <EditProduct selectedProduct={selectedProduct} />
+                </DialogContent>
+              </Dialog>
+            </Tooltip>
+            <Tooltip title="Delete product">
+              <Dialog
+                open={openDeleteDialog}
+                onOpenChange={setOpenDeleteDialog}
+              >
+                <DialogTrigger asChild>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => {
+                      setSelectedProduct(product);
+                      setOpenDeleteDialog(true);
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Delete Product</DialogTitle>
+                    <DialogDescription>
+                      Are you sure you want to delete this product?
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="flex items-center justify-end gap-2">
+                    <DialogClose>
+                      <Button variant="outline">Cancel</Button>
+                    </DialogClose>
+                    <Button
+                      variant="destructive"
+                      onClick={(event) => handleDelete(event)}
+                    >
+                      {deleteLoading ? (
+                        <span className="loading-dots">Deleting</span>
+                      ) : (
+                        "Delete"
+                      )}
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </Tooltip>
+          </div>
+        );
+      },
+    },
   ];
 
   const table = useReactTable({
@@ -174,20 +286,14 @@ const FinishedProduct = () => {
   };
 
   return (
-    <div>
+    <div className="overflow-x-auto">
       <div className="w-full p-4 h-screen">
         <div className="flex items-center py-4 justify-between">
           <Input
             placeholder="Filter by product type..."
-            value={
-              table
-                .getColumn("productType")
-                ?.getFilterValue() || ""
-            }
+            value={table.getColumn("productType")?.getFilterValue() || ""}
             onChange={(event) =>
-              table
-                .getColumn("productType")
-                ?.setFilterValue(event.target.value)
+              table.getColumn("productType")?.setFilterValue(event.target.value)
             }
             className="max-w-sm"
           />
@@ -206,7 +312,7 @@ const FinishedProduct = () => {
                     Click submit when you&apos;re done.
                   </DialogDescription>
                 </DialogHeader>
-                <AddNewProduct /> 
+                <AddNewProduct />
               </DialogContent>
             </Dialog>
           </Tooltip>
