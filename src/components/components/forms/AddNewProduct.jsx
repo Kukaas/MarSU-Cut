@@ -86,9 +86,9 @@ const AddNewProduct = () => {
                       SHS
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      onSelect={() => field.onChange("College")}
+                      onSelect={() => field.onChange("COLLEGE")}
                     >
-                      College
+                      COLLEGE
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

@@ -55,8 +55,8 @@ const EditProduct = ({ selectedProduct }) => {
           level: "",
           productType: "",
           size: "",
-          price: res.data.price,
-          quantity: res.data.quantity,
+          price: 0,
+          quantity: 0,
         });
       }
     } catch (error) {
