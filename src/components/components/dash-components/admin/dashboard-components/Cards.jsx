@@ -20,95 +20,114 @@ const Cards = () => {
   const [totalRentalsThisYear, setTotalRentalsThisYear] = useState([]);
   const [totalRentalsLastYear, setTotalRentalsLastYear] = useState([]);
 
-  const fetchOrdersThisMonth = async () => {
-    try {
-      const res = await axios.get(
-        "https://marsu.cut.server.kukaas.tech/api/v1/order/this-month"
-      );
+  useEffect(() => {
+    const fetchOrdersThisMonth = async () => {
+      try {
+        const res = await axios.get(
+          "https://marsu.cut.server.kukaas.tech/api/v1/order/this-month"
+        );
 
-      const data = res.data.orders;
-      if (res.status === 200) {
-        setOrdersThisMonth(data);
+        const data = res.data.orders;
+        if (res.status === 200) {
+          setOrdersThisMonth(data);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error(error);
         setLoading(false);
+        return [];
       }
-    } catch (error) {
-      console.error(error);
-      setLoading(false);
-      return [];
-    }
-  };
+    };
+    fetchOrdersThisMonth();
+  }, []);
 
-  const fetchOrdersLastMonth = async () => {
-    try {
-      const res = await axios.get(
-        "https://marsu.cut.server.kukaas.tech/api/v1/order/last-month"
-      );
+  useEffect(() => {
+    const fetchOrdersLastMonth = async () => {
+      try {
+        const res = await axios.get(
+          "https://marsu.cut.server.kukaas.tech/api/v1/order/last-month"
+        );
 
-      const data = res.data.orders;
-      if (res.status === 200) {
-        setOrdersLastMonth(data);
+        const data = res.data.orders;
+        if (res.status === 200) {
+          setOrdersLastMonth(data);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error(error);
         setLoading(false);
+        return [];
       }
-    } catch (error) {
-      console.error(error);
-      setLoading(false);
-      return [];
-    }
-  };
+    };
 
-  const fetchTotalOrdersThisYear = async () => {
-    try {
-      const res = await axios.get(
-        "https://marsu.cut.server.kukaas.tech/api/v1/order/this-year"
-      );
+    fetchOrdersLastMonth();
+  }, []);
 
-      const data = res.data.orders;
-      if (res.status === 200) {
-        setTotalOrdersThisYear(data);
+  useEffect(() => {
+    const fetchTotalOrdersThisYear = async () => {
+      try {
+        const res = await axios.get(
+          "https://marsu.cut.server.kukaas.tech/api/v1/order/this-year"
+        );
+
+        const data = res.data.orders;
+        if (res.status === 200) {
+          setTotalOrdersThisYear(data);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error(error);
         setLoading(false);
+        return [];
       }
-    } catch (error) {
-      console.error(error);
-      setLoading(false);
-      return [];
-    }
-  };
+    };
 
-  const fetchTotalRentalsThisYear = async () => {
-    try {
-      const res = await axios.get(
-        "https://marsu.cut.server.kukaas.tech/api/v1/rental/total/this-year"
-      );
+    fetchTotalOrdersThisYear();
+  }, []);
 
-      const data = res.data.rentals;
-      if (res.status === 200) {
-        setTotalRentalsThisYear(data);
+  useEffect(() => {
+    const fetchTotalRentalsThisYear = async () => {
+      try {
+        const res = await axios.get(
+          "https://marsu.cut.server.kukaas.tech/api/v1/rental/total/this-year"
+        );
+
+        const data = res.data.rentals;
+        if (res.status === 200) {
+          setTotalRentalsThisYear(data);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error(error);
         setLoading(false);
+        return [];
       }
-    } catch (error) {
-      console.error(error);
-      setLoading(false);
-      return [];
-    }
-  };
+    };
 
-  const fetchRentalsLastYear = async () => {
-    try {
-      const res = await axios.get(
-        "https://marsu.cut.server.kukaas.tech/api/v1/rental/total/last-year"
-      );
+    fetchTotalRentalsThisYear();
+  }, []);
 
-      const data = res.data.rentals;
-      if (res.status === 200) {
-        setTotalRentalsLastYear(data);
+  useEffect(() => {
+    const fetchRentalsLastYear = async () => {
+      try {
+        const res = await axios.get(
+          "https://marsu.cut.server.kukaas.tech/api/v1/rental/total/last-year"
+        );
+
+        const data = res.data.rentals;
+        if (res.status === 200) {
+          setTotalRentalsLastYear(data);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error(error);
         setLoading(false);
+        return [];
       }
-    } catch (error) {
-      console.error(error);
-      setLoading(false);
-      return [];
-    }
-  };
+    };
+
+    fetchRentalsLastYear();
+  }, []);
 
   const calculatePercentageChangeOrders = (current, previous) => {
     if (
@@ -151,14 +170,6 @@ const Cards = () => {
     totalRentalsThisYear.length,
     totalRentalsLastYear.length
   );
-
-  useEffect(() => {
-    fetchOrdersThisMonth();
-    fetchOrdersLastMonth();
-    fetchTotalOrdersThisYear();
-    fetchRentalsLastYear();
-    fetchTotalRentalsThisYear();
-  }, []);
 
   return (
     <div className="flex-1 space-y-4">
