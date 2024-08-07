@@ -16,7 +16,6 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -39,9 +38,6 @@ import { toast } from "sonner";
 function ArchiveOrders() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [loadingApprove, setLoadingApprove] = useState(false);
-  const [loadingDone, setLoadingDone] = useState(false);
-  const [loadingClaimed, setLoadingClaimed] = useState(false);
   const [loadingUnarchive, setLoadingUnarchive] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
   const [sorting, setSorting] = useState([]);
@@ -75,139 +71,6 @@ function ArchiveOrders() {
       setLoading(false);
     });
   }, []);
-
-  // Update the status of the order to APPROVED
-  const handleApprove = async (order) => {
-    try {
-      setLoadingApprove(true);
-      const res = await axios.put(
-        `https://marsu.cut.server.kukaas.tech/api/v1/order/update/student/${order._id}`,
-        {
-          status: "APPROVED",
-        }
-      );
-
-      if (res.status === 200) {
-        setLoadingApprove(false);
-        toast.success(
-          `Order of ${order.studentName} is approved successfully!`,
-          {
-            action: {
-              label: "Ok",
-            },
-          }
-        );
-        // Correctly update the data in the state for the approved order
-        setData((prevData) => {
-          return prevData.map((item) => {
-            if (item._id === order._id) {
-              // Correctly identifying the order to be updated
-              return {
-                ...item,
-                status: "APPROVED", // Only update the status of the intended order
-                schedule: res.data.schedule, // Assuming schedule needs to be updated as well
-              };
-            } else {
-              // Return other items as is
-              return item;
-            }
-          });
-        });
-      } else {
-        toastError();
-        setLoadingApprove(false);
-      }
-    } catch (error) {
-      setLoadingApprove(false);
-      toastError();
-    }
-  };
-
-  // Update the status to DONE
-  const handleDone = async (order) => {
-    try {
-      setLoadingDone(true);
-      const res = await axios.put(
-        `https://marsu.cut.server.kukaas.tech/api/v1/order/update/student/${order._id}`,
-        {
-          status: "DONE",
-        }
-      );
-
-      if (res.status === 200) {
-        setLoadingDone(false);
-        toast.success(`Order of ${order.studentName} is ready to be claimed!`, {
-          action: {
-            label: "Ok",
-          },
-        });
-        // Update the data in the state
-        setData((prevData) => {
-          return prevData.map((item) => {
-            if (item._id === order._id) {
-              // This is the updated item
-              return {
-                ...item,
-                status: "DONE", // Update the status
-              };
-            } else {
-              // This is not the updated item, return it as is
-              return item;
-            }
-          });
-        });
-      } else {
-        toastError();
-        setLoadingDone(false);
-      }
-    } catch (error) {
-      toastError();
-      setLoadingDone(false);
-    }
-  };
-
-  // Update the status to CLAIMED
-  const handleClaimed = async (order) => {
-    try {
-      setLoadingClaimed(true);
-      const res = await axios.put(
-        `https://marsu.cut.server.kukaas.tech/api/v1/order/update/student/${order._id}`,
-        {
-          status: "CLAIMED",
-        }
-      );
-
-      if (res.status === 200) {
-        setLoadingClaimed(false);
-        toast.success(`Order of ${order.studentName} is claimed!`, {
-          action: {
-            label: "Ok",
-          },
-        });
-        // Update the data in the state
-        setData((prevData) => {
-          return prevData.map((item) => {
-            if (item._id === order._id) {
-              // This is the updated item
-              return {
-                ...item,
-                status: "CLAIMED", // Update the status
-              };
-            } else {
-              // This is not the updated item, return it as is
-              return item;
-            }
-          });
-        });
-      } else {
-        toastError();
-        setLoadingClaimed(false);
-      }
-    } catch (error) {
-      toastError();
-      setLoadingClaimed(false);
-    }
-  };
 
   // Unarchive orders
   const handleUnarchive = async (order) => {
@@ -454,19 +317,6 @@ function ArchiveOrders() {
                 Copy Order ID
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem onClick={() => handleApprove(order)}>
-                  Approve
-                </DropdownMenuItem>
-                <DropdownMenuItem>Measure</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleDone(order)}>
-                  Done
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleClaimed(order)}>
-                  Claimed
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => handleUnarchive(order)}>
                 Unarchive
               </DropdownMenuItem>
@@ -517,9 +367,6 @@ function ArchiveOrders() {
   return (
     <Spin
       spinning={
-        loadingApprove ||
-        loadingClaimed ||
-        loadingDone ||
         loadingUnarchive ||
         loadingDelete
       }

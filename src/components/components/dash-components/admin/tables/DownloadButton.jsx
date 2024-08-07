@@ -130,7 +130,7 @@ function DownloadButton({ selectedDate, filteredData }) {
     <div>
       <Popover>
         <PopoverTrigger asChild>
-          <Button>Download</Button>
+          <Button variant="secondary">Download</Button>
         </PopoverTrigger>
         <PopoverContent>
           <span className="text-sm text-gray-500">
