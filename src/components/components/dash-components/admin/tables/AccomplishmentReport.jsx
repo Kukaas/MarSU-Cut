@@ -10,10 +10,9 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { CalendarIcon, ChevronDownIcon, PlusCircle } from "lucide-react";
+import { CalendarIcon, PlusCircle } from "lucide-react";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
@@ -454,55 +453,33 @@ const AccomplishmentReport = () => {
               </PopoverContent>
             </Popover>
           </div>
-          <Tooltip title="Create Accomplishment Report">
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="default" className="m-2">
-                  <PlusCircle size={20} className="mr-2" />
-                  Create
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Create an Accomplishment</DialogTitle>
-                  <DialogDescription>
-                    Click create when you&apos;re done.
-                  </DialogDescription>
-                </DialogHeader>
-                <CreateAccomplishment
-                  onAccomplishmentCreated={handleAccomplishmentCreated}
-                />
-              </DialogContent>
-            </Dialog>
-          </Tooltip>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto mr-2">
-                Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="flex items-center py-4 justify-between overflow-y-auto">
           <DownloadButton
-            selectedDate={selectedDate}
-            filteredData={filteredData}
-          />
+              selectedDate={selectedDate}
+              filteredData={filteredData}
+            />
+            <Tooltip title="Create Accomplishment Report">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="default" className="m-2">
+                    <PlusCircle size={20} className="mr-2" />
+                    Create
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Create an Accomplishment</DialogTitle>
+                    <DialogDescription>
+                      Click create when you&apos;re done.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <CreateAccomplishment
+                    onAccomplishmentCreated={handleAccomplishmentCreated}
+                  />
+                </DialogContent>
+              </Dialog>
+            </Tooltip>
+          </div>
         </div>
         <div className="rounded-md border">
           {loading ? (
