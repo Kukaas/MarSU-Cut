@@ -129,3 +129,9 @@ export const EditProductSchema = z.object({
   price: z.number().int().nonnegative(),
   quantity: z.number().int().nonnegative(),
 });
+
+export const EditRawMAterialsSchema = z.object({
+  type: z.string().min(3),
+  quantity: z.number().int().nonnegative(),
+  unit: z.string().min(3)
+})

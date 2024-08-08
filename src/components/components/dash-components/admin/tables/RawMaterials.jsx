@@ -1,9 +1,427 @@
-
+import AddNewProduct from "@/components/components/forms/AddNewProduct";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import { Tooltip } from "antd";
+import { ChevronDownIcon, PlusCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { toast } from "sonner";
+import EditRawMaterial from "@/components/components/forms/EditRawMaterial";
 
 const RawMaterials = () => {
-  return (
-    <div>RawMaterials</div>
-  )
-}
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [sorting, setSorting] = useState([]);
+  const [columnFilters, setColumnFilters] = useState([]);
+  const [columnVisibility, setColumnVisibility] = useState({});
+  const [rowSelection, setRowSelection] = useState({});
+  const [selectedRawMaterial, setSelectedRawMaterial] = useState(null);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
-export default RawMaterials
+  const fetchRawMaterial = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get(
+        "https://marsu.cut.server.kukaas.tech/api/v1/raw-materials/all"
+      );
+
+      const data = res.data;
+      setData(data.rawMaterials);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchRawMaterial();
+  }, []);
+
+  const handleDelete = async () => {
+    try {
+      setDeleteLoading(true);
+      const res = await axios.delete(
+        `https://marsu.cut.server.kukaas.tech/api/v1/raw-materials/delete/${selectedRawMaterial._id}`
+      );
+
+      if (res.status === 200) {
+        setDeleteLoading(false);
+        setOpenDeleteDialog(false);
+        setData((prevData) =>
+          prevData.filter((product) => product._id !== selectedRawMaterial._id)
+        );
+        toast.success("Product deleted successfully!", {
+          action: {
+            label: "Ok",
+          },
+        });
+      }
+    } catch (error) {
+      toast.error("Uh oh! Something went wrong");
+      setOpenDeleteDialog(false);
+      setDeleteLoading(false);
+      console.error(error);
+    }
+  };
+
+  const columns = [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
+    {
+      accessorKey: "type",
+      header: "Type",
+    },
+    {
+      accessorKey: "unit",
+      header: "Unit"
+    },
+    {
+      accessorKey: "quantity",
+      header: "Quantity",
+    },
+    {
+      accessorKey: "status",
+      header: "Status",
+      cell: ({ row }) => {
+        const status = row.getValue("status");
+        let bgColor, textColor;
+
+        switch (status) {
+          case "In Stock":
+            bgColor = "bg-green-500";
+            textColor = "text-white";
+            break;
+          case "Out of Stock":
+            bgColor = "bg-red-500";
+            textColor = "text-white";
+            break;
+          default:
+            bgColor = "bg-gray-500";
+            textColor = "text-white";
+            break;
+        }
+
+        return (
+          <div
+            className={`capitalize ${bgColor} ${textColor} p-2 rounded-lg flex items-center justify-center h-full`}
+          >
+            {status}
+          </div>
+        );
+      },
+    },
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => {
+        const rawMaterial = row.original;
+        return (
+          <div className="flex space-x-2">
+            <Tooltip title="Edit product">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="default"
+                    size="sm"
+                    onClick={() => setSelectedRawMaterial(rawMaterial)}
+                  >
+                    Edit
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Edit Raw Material</DialogTitle>
+                    <DialogDescription>
+                      Please fill out the form below to edit raw material.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <EditRawMaterial selectedRawMaterial={selectedRawMaterial} />
+                </DialogContent>
+              </Dialog>
+            </Tooltip>
+            <Tooltip title="Delete product">
+              <Dialog
+                open={openDeleteDialog}
+                onOpenChange={setOpenDeleteDialog}
+              >
+                <DialogTrigger asChild>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => {
+                      setSelectedRawMaterial(rawMaterial);
+                      setOpenDeleteDialog(true);
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Delete Raw Material</DialogTitle>
+                    <DialogDescription>
+                      Are you sure you want to delete this raw material?
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="flex items-center justify-end gap-2">
+                    <DialogClose>
+                      <Button variant="outline">Cancel</Button>
+                    </DialogClose>
+                    <Button
+                      variant="destructive"
+                      onClick={(event) => handleDelete(event)}
+                    >
+                      {deleteLoading ? (
+                        <span className="loading-dots">Deleting</span>
+                      ) : (
+                        "Delete"
+                      )}
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </Tooltip>
+          </div>
+        );
+      },
+    },
+  ];
+
+  const table = useReactTable({
+    data,
+    columns,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+      pagination: {
+        pageIndex: currentPage,
+        pageSize: 5,
+      },
+    },
+  });
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 0));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => {
+      const maxPage = table.getPageCount() - 1;
+      return Math.min(prevPage + 1, maxPage);
+    });
+  };
+
+  return (
+    <div className="overflow-x-auto">
+      <div className="w-full p-4 h-screen">
+        <div className="flex items-center py-4 justify-between">
+          <Input
+            placeholder="Filter by product type..."
+            value={table.getColumn("type")?.getFilterValue() || ""}
+            onChange={(event) =>
+              table.getColumn("type")?.setFilterValue(event.target.value)
+            }
+            className="max-w-sm"
+          />
+          <Tooltip title="Add new raw material">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="default" className="m-2">
+                  <PlusCircle size={20} className="mr-2" />
+                  New Material
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Add a new raw material</DialogTitle>
+                  <DialogDescription>
+                    Click submit when you&apos;re done.
+                  </DialogDescription>
+                </DialogHeader>
+                <AddNewProduct />
+              </DialogContent>
+            </Dialog>
+          </Tooltip>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="ml-auto">
+                Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className="capitalize"
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) =>
+                      column.toggleVisibility(!!value)
+                    }
+                  >
+                    {column.id}
+                  </DropdownMenuCheckboxItem>
+                ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        <div className="rounded-md border">
+          {loading ? (
+            <div className="p-4">Loading...</div>
+          ) : (
+            <Table>
+              <TableHeader>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <TableRow key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <TableHead key={header.id}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </TableHead>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableHeader>
+              <TableBody>
+                {table.getRowModel().rows.length ? (
+                  table.getRowModel().rows.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && "selected"}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={table.getAllColumns().length}
+                      className="h-24 text-center"
+                    >
+                      No results.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          )}
+        </div>
+        <div className="flex items-center justify-end space-x-2 py-4">
+          <div className="flex-1 text-sm text-muted-foreground">
+            {table.getFilteredSelectedRowModel().rows.length} of{" "}
+            {table.getFilteredRowModel().rows.length} row(s) selected.
+          </div>
+          <div className="space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handlePreviousPage}
+              disabled={currentPage === 0}
+            >
+              Previous
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleNextPage}
+              disabled={currentPage >= table.getPageCount() - 1}
+            >
+              Next
+            </Button>
+          </div>
+        </div>
+      </div>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add New Raw Material</DialogTitle>
+            <DialogDescription>
+              Please fill out the form below to add new raw material.
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+};
+
+export default RawMaterials;

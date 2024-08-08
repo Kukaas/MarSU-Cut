@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import RawMaterials from "./tables/RawMaterials";
+import { Toaster } from "@/components/ui/sonner";
 
 const DashRawMaterials = () => {
   const navigate = useNavigate();
@@ -17,7 +19,10 @@ const DashRawMaterials = () => {
   }, [currentUser, navigate]);
 
   return (
-    <div className="w-full h-screen overflow-x-auto">DashRawMaterials</div>
+    <div className="w-full h-screen overflow-x-auto">
+      <RawMaterials />
+      <Toaster richColors/>
+    </div>
   );
 };
 
