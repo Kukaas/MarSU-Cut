@@ -221,11 +221,6 @@ const AccomplishmentReport = () => {
     }
   };
 
-  const handleAccomplishmentCreated = (newAccomplishment) => {
-    setData((prevData) => [...prevData, newAccomplishment]);
-    filterData([...data, newAccomplishment], selectedDate);
-  };
-
   const columns = [
     {
       id: "select",
@@ -454,7 +449,7 @@ const AccomplishmentReport = () => {
             </Popover>
           </div>
           <div className="flex items-center py-4 justify-between overflow-y-auto">
-          <DownloadButton
+            <DownloadButton
               selectedDate={selectedDate}
               filteredData={filteredData}
             />
@@ -473,9 +468,7 @@ const AccomplishmentReport = () => {
                       Click create when you&apos;re done.
                     </DialogDescription>
                   </DialogHeader>
-                  <CreateAccomplishment
-                    onAccomplishmentCreated={handleAccomplishmentCreated}
-                  />
+                  <CreateAccomplishment />
                 </DialogContent>
               </Dialog>
             </Tooltip>

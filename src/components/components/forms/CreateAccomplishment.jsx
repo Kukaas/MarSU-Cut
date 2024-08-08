@@ -14,9 +14,8 @@ import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import PropTypes from "prop-types";
 
-const CreateAccomplishment = ({ onAccomplishmentCreated }) => {
+const CreateAccomplishment = () => {
   const [loading, setLoading] = useState();
 
   const form = useForm({
@@ -41,7 +40,6 @@ const CreateAccomplishment = ({ onAccomplishmentCreated }) => {
         },
       });
       form.reset();
-      onAccomplishmentCreated(res.data);
     } else {
       toast.error("Uh oh! Something went wrong");
       setLoading(false);
@@ -88,11 +86,7 @@ const CreateAccomplishment = ({ onAccomplishmentCreated }) => {
                 </FormItem>
               )}
             />
-            <Button
-              type="submit"
-              variant="default"
-              className="w-full"
-            >
+            <Button type="submit" variant="default" className="w-full">
               {loading ? (
                 <span className="loading-dots">Creating</span>
               ) : (
@@ -104,10 +98,6 @@ const CreateAccomplishment = ({ onAccomplishmentCreated }) => {
       </div>
     </div>
   );
-};
-
-CreateAccomplishment.propTypes = {
-  onAccomplishmentCreated: PropTypes.func,
 };
 
 export default CreateAccomplishment;
