@@ -1,4 +1,3 @@
-import AddNewProduct from "@/components/components/forms/AddNewProduct";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -39,6 +38,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import EditRawMaterial from "@/components/components/forms/EditRawMaterial";
+import AddNewRawMaterial from "@/components/components/forms/AddNewRawMaterial";
 
 const RawMaterials = () => {
   const [data, setData] = useState([]);
@@ -129,7 +129,7 @@ const RawMaterials = () => {
     },
     {
       accessorKey: "unit",
-      header: "Unit"
+      header: "Unit",
     },
     {
       accessorKey: "quantity",
@@ -304,7 +304,7 @@ const RawMaterials = () => {
                     Click submit when you&apos;re done.
                   </DialogDescription>
                 </DialogHeader>
-                <AddNewProduct />
+                <AddNewRawMaterial />
               </DialogContent>
             </Dialog>
           </Tooltip>
