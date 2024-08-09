@@ -33,7 +33,7 @@ const WelcomePage = () => {
     <div className="flex flex-col items-center justify-center min-h-screen mt-[-80px]">
       <Helmet>
         <title>MarSU Cut | Get Started</title>
-        <meta name="description" content=""/>
+        <meta name="description" content="Welcome to MarSU Cut. We are glad to have you here. Login or Register to explore our features"/>
         <meta name="keywords" content="marsu, marsu cut"/>
       </Helmet>
       <div className="p-3 max-w-3xl mx-auto text-center">
