@@ -35,7 +35,6 @@ const WelcomePage = () => {
         <title>MarSU Cut | Get Started</title>
         <meta name="description" content=""/>
         <meta name="keywords" content="marsu, marsu cut"/>
-        <link rel="canonical" href="https://marsu.cut.kukaas.tech/" />
       </Helmet>
       <div className="p-3 max-w-3xl mx-auto text-center">
         <Link to="/" className="font-bold hover:text-current text-6xl ">
