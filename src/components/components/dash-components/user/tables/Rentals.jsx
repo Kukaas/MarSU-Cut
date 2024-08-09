@@ -136,29 +136,20 @@ function Rentals() {
       enableHiding: false,
     },
     {
-      accessorKey: "studentNumber",
-      header: "Student Number",
+      accessorKey: "idNumber",
+      header: "ID Number",
     },
     {
-      accessorKey: "studentName",
-      header: "Student Name",
+      accessorKey: "coordinatorName",
+      header: "Coordinator Name",
     },
     {
-      accessorKey: "receipt",
-      header: "Receipt",
-      cell: ({ row }) => (
-        <a
-          href={row.getValue("receipt")}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img
-            src={row.getValue("receipt")}
-            alt="Receipt"
-            style={{ width: "50px", height: "50px" }}
-          />
-        </a>
-      ),
+      accessorKey: "department",
+      header: "Department",
+    },
+    {
+      accessorKey: "quantity",
+      header: "Quantity",
     },
     {
       accessorKey: "rentalDate",

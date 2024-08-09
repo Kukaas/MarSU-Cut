@@ -70,18 +70,16 @@ export const CreateOrderSchema = z.object({
 });
 
 export const CreateRentalSchema = z.object({
-  studentNumber: z
+  idNumber: z
     .string()
-    .min(3, { message: "Student Number must be at least 3 characters" }),
-  studentName: z
+    .min(3, { message: "ID Number must be at least 3 characters" }),
+  coordinatorName: z
     .string()
     .min(3, { message: "Name must be at least 3 characters" }),
-  studentGender: z
-    .string()
-    .min(3, { message: "Gender must be at least 3 characters" }),
+  department: z.string().min(3, { message: "Department must be at least 3 characters" }),
   rentalDate: z.string(),
   returnDate: z.string(),
-  receipt: z.string(),
+  quantity: z.number().int().nonnegative(),
 });
 
 export const CreateAccomplishmentSchema = z.object({
@@ -133,11 +131,11 @@ export const EditProductSchema = z.object({
 export const EditRawMAterialsSchema = z.object({
   type: z.string().min(3),
   quantity: z.number().int().nonnegative(),
-  unit: z.string().min(3)
-})
+  unit: z.string().min(3),
+});
 
 export const AddRawMaterialsSchema = z.object({
   type: z.string().min(3),
   quantity: z.number().int().nonnegative(),
-  unit: z.string().min(3)
-})
+  unit: z.string().min(3),
+});
