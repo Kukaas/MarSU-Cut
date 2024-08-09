@@ -16,6 +16,7 @@ import DashArchiveRentals from "@/components/components/dash-components/admin/Da
 import DashUsers from "@/components/components/dash-components/admin/DashUsers";
 import PropTypes from 'prop-types'
 import DashAcademicInventory from "@/components/components/dash-components/admin/DashAcademicInventory";
+import DashProductions from "@/components/components/dash-components/admin/DashProductions";
 
 const Dashboard = ({ tab }) => {
   const renderContent = () => {
@@ -54,6 +55,8 @@ const Dashboard = ({ tab }) => {
         return <DashCommercial />;
       case "academic-inventory":
         return <DashAcademicInventory />;
+      case "productions":
+        return <DashProductions />;
       default:
         return null;
     }

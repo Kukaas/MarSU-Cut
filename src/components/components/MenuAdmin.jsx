@@ -26,6 +26,47 @@ const MenuAdmin = () => {
       </DropdownMenuItem>
       <DropdownMenuSeparator />
       <DropdownMenuGroup>
+        {/* Production */}
+        <DropdownMenuItem
+          onClick={() => {
+            navigate("/dashboard?tab=productions");
+          }}
+        >
+          Production
+        </DropdownMenuItem>
+        {/* Inventory */}
+        <DropdownMenuSub>
+          <DropdownMenuSubTrigger>Inventory</DropdownMenuSubTrigger>
+          <DropdownMenuPortal>
+            <DropdownMenuSubContent>
+              <DropdownMenuItem
+                onClick={() => {
+                  navigate("/dashboard?tab=finished-products");
+                }}
+              >
+                Finished Product
+                <DropdownMenuShortcut>⇧⌘FP</DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  navigate("/dashboard?tab=raw-materials");
+                }}
+              >
+                Raw Materials
+                <DropdownMenuShortcut>⇧⌘RM</DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  navigate("/dashboard?tab=academic-inventory");
+                }}
+              >
+                Academic Inventory
+                <DropdownMenuShortcut>⇧⌘RM</DropdownMenuShortcut>
+              </DropdownMenuItem>
+            </DropdownMenuSubContent>
+          </DropdownMenuPortal>
+        </DropdownMenuSub>
+
         {/* Transactions */}
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>Transactions</DropdownMenuSubTrigger>
@@ -55,39 +96,6 @@ const MenuAdmin = () => {
               >
                 Schedule
                 <DropdownMenuShortcut>⇧⌘S</DropdownMenuShortcut>
-              </DropdownMenuItem>
-            </DropdownMenuSubContent>
-          </DropdownMenuPortal>
-        </DropdownMenuSub>
-
-        {/* Inventory */}
-        <DropdownMenuSub>
-          <DropdownMenuSubTrigger>Inventory</DropdownMenuSubTrigger>
-          <DropdownMenuPortal>
-            <DropdownMenuSubContent>
-              <DropdownMenuItem
-                onClick={() => {
-                  navigate("/dashboard?tab=finished-products");
-                }}
-              >
-                Finished Product
-                <DropdownMenuShortcut>⇧⌘FP</DropdownMenuShortcut>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
-                  navigate("/dashboard?tab=raw-materials");
-                }}
-              >
-                Raw Materials
-                <DropdownMenuShortcut>⇧⌘RM</DropdownMenuShortcut>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
-                  navigate("/dashboard?tab=academic-inventory");
-                }}
-              >
-                Academic Inventory
-                <DropdownMenuShortcut>⇧⌘RM</DropdownMenuShortcut>
               </DropdownMenuItem>
             </DropdownMenuSubContent>
           </DropdownMenuPortal>
