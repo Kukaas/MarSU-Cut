@@ -257,10 +257,6 @@ function Rentals() {
       header: "Coordinator Name",
     },
     {
-      accessorKey: "coordinatorEmail",
-      header: "Coordinator Email",
-    },
-    {
       accessorKey: "department",
       header: "Department",
     },

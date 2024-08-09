@@ -295,11 +295,7 @@ const CreateRental = () => {
                       variant="default"
                       disabled={loading}
                     >
-                      {loading ? (
-                        <span className="loading-dots">Submitting Rental</span>
-                      ) : (
-                        "Submit Order"
-                      )}
+                      Submit Rental
                     </Button>
                   </div>
                 </DialogContent>
