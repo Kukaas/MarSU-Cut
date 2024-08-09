@@ -200,6 +200,138 @@ const AddOrderItems = ({ selectedOrder }) => {
       level === "COLLEGE"
     ) {
       unitPrice = 650;
+    } else if (
+      productType === "JPANTS" &&
+      size === "S33+34" &&
+      level === "SHS"
+    ) {
+      unitPrice = 328.5;
+    } else if (
+      productType === "JPANTS" &&
+      size === "S35" &&
+      level === "SHS"
+    ) {
+      unitPrice = 351;
+    } else if ( 
+      productType === "JPANTS" &&
+      size === "S36" &&
+      level === "SHS"
+    ) {
+      unitPrice = 396;
+    } else if (
+      productType === "JPANTS" &&
+      size === "S37" &&
+      level === "SHS"
+    ) {
+      unitPrice = 441;
+    } else if (
+      productType === "JPANTS" &&
+      size === "S38+40" &&
+      level === "SHS"
+    ) {
+      unitPrice = 531;
+    } else if (
+      productType === "JPANTS" &&
+      size === "S42+45" &&
+      level === "SHS"
+    ) {
+      unitPrice = 581;
+    } else if (
+      productType === "JPANTS" &&
+      size === "S33+34" &&
+      level === "COLLEGE"
+    ) {
+      unitPrice = 328.5;
+    } else if (
+      productType === "JPANTS" &&
+      size === "S35" &&
+      level === "COLLEGE"
+    ) {
+      unitPrice = 351;
+    } else if (
+      productType === "JPANTS" &&
+      size === "S36" &&
+      level === "COLLEGE"
+    ) {
+      unitPrice = 396;
+    } else if (
+      productType === "JPANTS" &&
+      size === "S37" &&
+      level === "COLLEGE"
+    ) {
+      unitPrice = 441;
+    } else if (
+      productType === "JPANTS" &&
+      size === "S38+40" &&
+      level === "COLLEGE"
+    ) {
+      unitPrice = 531;
+    } else if (
+      productType === "JPANTS" &&
+      size === "S42+45" &&
+      level === "COLLEGE"
+    ) {
+      unitPrice = 581;
+    } else if (
+      productType === "PE TSHIRT" &&
+      size === "2XL" &&
+      level === "SHS"
+    ) {
+      unitPrice = 315;
+    } else if (
+      productType === "PE TSHIRT" &&
+      size === "XS/S" &&
+      level === "SHS"
+    ) {
+      unitPrice = 337.5;
+    } else if (
+      productType === "PE TSHIRT" &&
+      size === "M/L" &&
+      level === "SHS"
+    ) {
+      unitPrice = 382.5;
+    } else if (
+      productType === "PE TSHIRT" &&
+      size === "XL" &&
+      level === "SHS"
+    ) {
+      unitPrice = 427.5;
+    } else if (
+      productType === "PE TSHIRT" &&
+      size === "XXL" &&
+      level === "SHS"
+    ) {
+      unitPrice = 472.5;
+    } else if (
+      productType === "PE TSHIRT" &&
+      size === "2XL" &&
+      level === "COLLEGE"
+    ) {
+      unitPrice = 315;
+    } else if (
+      productType === "PE TSHIRT" &&
+      size === "XS/S" &&
+      level === "COLLEGE"
+    ) {
+      unitPrice = 337.5;
+    } else if (
+      productType === "PE TSHIRT" &&
+      size === "M/L" &&
+      level === "COLLEGE"
+    ) {
+      unitPrice = 382.5;
+    } else if (
+      productType === "PE TSHIRT" &&
+      size === "XL" &&
+      level === "COLLEGE"
+    ) {
+      unitPrice = 427.5;
+    } else if (
+      productType === "PE TSHIRT" &&
+      size === "XXL" &&
+      level === "COLLEGE"
+    ) {
+      unitPrice = 472.5;
     }
     // Add more conditions as needed...
     // Update the form field for unitPrice
@@ -213,19 +345,48 @@ const AddOrderItems = ({ selectedOrder }) => {
 
   const handleAddItems = async (values) => {
     setLoadingAddItems(true);
-
+  
     // Ensure orderItems is an array
     const orderItems = Array.isArray(values.orderItems)
       ? values.orderItems
       : [];
-
+  
+    // Add additional items based on productType and update totalPrice
+    const updatedOrderItems = orderItems.flatMap((item) => {
+      const newItems = [item]; // Start with the original item
+  
+      if (item.productType === "POLO") {
+        newItems.push({
+          level: "",
+          size: "",
+          quantity: 1,
+          productType: "LOGO",
+          unitPrice: 100,
+          totalPrice: 100,
+        });
+      } else if (item.productType === "BLOUSE") {
+        newItems.push(
+          {
+            level: "",
+            size: "",
+            quantity: 1,
+            productType: "NECKTIE",
+            unitPrice: 200,
+            totalPrice: 200,
+          },
+        );
+      }
+  
+      return newItems;
+    });
+  
     const res = await axios.put(
       `https://marsu.cut.server.kukaas.tech/api/v1/order/add-item/${selectedOrder._id}`,
       {
-        orderItems: orderItems,
+        orderItems: updatedOrderItems,
       }
     );
-
+  
     if (res.status === 200) {
       toast.success(`The student ${selectedOrder.studentName} is measured`, {
         action: {
@@ -235,7 +396,7 @@ const AddOrderItems = ({ selectedOrder }) => {
     } else {
       toastError();
     }
-
+  
     setLoadingAddItems(false);
   };
 
@@ -321,7 +482,7 @@ const AddOrderItems = ({ selectedOrder }) => {
                       "PANTS",
                       "BLOUSE",
                       "PE TSHIRT",
-                      "PE JOGGING PANT",
+                      "JPANTS",
                     ].map((type) => (
                       <DropdownMenuItem
                         key={type}
@@ -370,6 +531,17 @@ const AddOrderItems = ({ selectedOrder }) => {
                       "S26",
                       "S27",
                       "S28+",
+                      "S33+34",
+                      "S35",
+                      "S36",
+                      "S37",
+                      "S38+40",
+                      "S42+45",
+                      "2XL",
+                      "XS/S",
+                      "M/L",
+                      "XL",
+                      "XXL",
                     ].map((size) => (
                       <DropdownMenuItem
                         key={size}

@@ -304,10 +304,20 @@ function Orders() {
           <div>
             {itemsToRender.map((item, index) => (
               <div key={index}>
-                <span className="font-bold">{item.level}</span>:{" "}
-                <span className="font-semibold">{item.productType}</span> -{" "}
-                <span className="font-semibold">{item.size}</span> -{" "}
-                <span className="font-semibold">{item.quantity}</span>
+                {item.productType === "LOGO" ||
+                item.productType === "NECKTIE" ? (
+                  <>
+                    <span className="font-semibold">{item.productType}</span> -{" "}
+                    <span className="font-semibold">{item.quantity}</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="font-bold">{item.level}</span>:{" "}
+                    <span className="font-semibold">{item.productType}</span> -{" "}
+                    <span className="font-semibold">{item.size}</span> -{" "}
+                    <span className="font-semibold">{item.quantity}</span>
+                  </>
+                )}
               </div>
             ))}
           </div>
