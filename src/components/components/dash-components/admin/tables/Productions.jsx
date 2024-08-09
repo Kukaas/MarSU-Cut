@@ -1,3 +1,4 @@
+import AddProduction from "@/components/components/forms/AddProduction";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -278,19 +279,20 @@ const Productions = () => {
             className="max-w-sm"
           />
           <Tooltip title="Add new production">
-            <Dialog>
+            <Dialog className="overflow-x-auto">
               <DialogTrigger asChild>
                 <Button variant="default" className="m-2">
                   <PlusCircle size={20} className="mr-2" />
                   New Production
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
+              <DialogContent className="sm:max-w-[425px] max-h-[80vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle>Add a new production</DialogTitle>
                   <DialogDescription>
                     Click submit when you&apos;re done.
                   </DialogDescription>
+                  <AddProduction />
                 </DialogHeader>
               </DialogContent>
             </Dialog>

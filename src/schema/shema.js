@@ -76,7 +76,9 @@ export const CreateRentalSchema = z.object({
   coordinatorName: z
     .string()
     .min(3, { message: "Name must be at least 3 characters" }),
-  department: z.string().min(3, { message: "Department must be at least 3 characters" }),
+  department: z
+    .string()
+    .min(3, { message: "Department must be at least 3 characters" }),
   rentalDate: z.string(),
   returnDate: z.string(),
   quantity: z.number().int().nonnegative(),
@@ -105,37 +107,64 @@ export const EditAccomplishmentSchema = z.object({
 });
 
 export const AddOrderItemsSchema = z.object({
-  level: z.string().min(1),
-  productType: z.string().min(1),
-  size: z.string().min(1),
+  level: z.string().min(1, { message: "Level must be at least 1 characters" }),
+  productType: z
+    .string()
+    .min(3, { message: "Product Type must be at least 3 characters" }),
+  size: z.string().min(1, { message: "Size must be at least 1 characters" }),
   unitPrice: z.number().int().nonnegative(),
   quantity: z.number().int().nonnegative(),
 });
 
 export const AddNewProductSchema = z.object({
-  level: z.string().min(1),
-  productType: z.string().min(1),
-  size: z.string().min(1),
+  level: z.string().min(3, { message: "Level must be at least 3 characters" }),
+  productType: z
+    .string()
+    .min(3, { message: "Product Type must be at least 3 characters" }),
+  size: z.string().min(1, { message: "Size must be at least 1 characters" }),
   price: z.number().int().nonnegative(),
   quantity: z.number().int().nonnegative(),
 });
 
 export const EditProductSchema = z.object({
-  level: z.string().min(1),
-  productType: z.string().min(1),
-  size: z.string().min(1),
+  level: z.string().min(3, { message: "Level must be at least 3 characters" }),
+  productType: z
+    .string()
+    .min(3, { message: "Product Type must be at least 3 characters" }),
+  size: z.string().min(1, { message: "Size must be at least 1 characters" }),
   price: z.number().int().nonnegative(),
   quantity: z.number().int().nonnegative(),
 });
 
 export const EditRawMAterialsSchema = z.object({
-  type: z.string().min(3),
+  type: z.string().min(3, { message: "Type must be at least 3 characters" }),
   quantity: z.number().int().nonnegative(),
-  unit: z.string().min(3),
+  unit: z.string().min(1, { message: "Unit must be at least 1 characters" }),
 });
 
 export const AddRawMaterialsSchema = z.object({
-  type: z.string().min(3),
+  type: z.string().min(3, { message: "Type must be at least 3 characters" }),
   quantity: z.number().int().nonnegative(),
-  unit: z.string().min(3),
+  unit: z.string().min(1, { message: "Unit must be at least 1 characters" }),
+});
+
+export const AddProductionSchema = z.object({
+  level: z.string().min(3, { message: "Level must be at least 3 characters" }),
+  productType: z
+    .string()
+    .min(3, { message: "Product Type must be at least 3 characters" }),
+  productionDateFrom: z.string().refine((date) => !isNaN(Date.parse(date)), {
+    message: "Invalid date format for productionDateFrom",
+  }),
+  productionDateTo: z.string().refine((date) => !isNaN(Date.parse(date)), {
+    message: "Invalid date format for productionDateTo",
+  }),
+  size: z.string().min(1, { message: "Size must be at least 1 character" }),
+  quantity: z.number().int().nonnegative(),
+  rawMaterialsUsed: z.array(
+    z.object({
+      type: z.string(),
+      quantity: z.number().nonnegative(),
+    })
+  ),
 });
