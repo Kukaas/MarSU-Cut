@@ -3,6 +3,7 @@ import Rentals from "./tables/Rentals";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
+import { Helmet } from "react-helmet";
 
 const DashRental = () => {
   const navigate = useNavigate();
@@ -20,6 +21,10 @@ const DashRental = () => {
 
   return (
     <div className="w-full h-screen overflow-x-auto">
+      <Helmet>
+        <title>MarSU Cut | Rentals</title>
+        <meta name="description" content="" />
+      </Helmet>
       <Rentals />
       <Toaster richColors />
     </div>

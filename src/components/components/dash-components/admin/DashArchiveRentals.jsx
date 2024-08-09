@@ -3,6 +3,7 @@ import ArchiveRentals from "./tables/ArchiveRentals";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
+import { Helmet } from "react-helmet";
 
 const DashArchiveRentals = () => {
   const navigate = useNavigate();
@@ -20,6 +21,10 @@ const DashArchiveRentals = () => {
 
   return (
     <div className="w-full h-screen overflow-x-auto">
+      <Helmet>
+        <title>MarSU Cut | Archive Rentals</title>
+        <meta name="description" content="" />
+      </Helmet>
       <ArchiveRentals />
       <Toaster richColors />
     </div>

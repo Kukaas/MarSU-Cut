@@ -3,6 +3,7 @@ import Users from "./tables/Users";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
+import { Helmet } from "react-helmet";
 
 const DashUsers = () => {
   const navigate = useNavigate();
@@ -20,6 +21,10 @@ const DashUsers = () => {
 
   return (
     <div className="w-full h-screen overflow-x-auto">
+      <Helmet>
+        <title>MarSU Cut | Users</title>
+        <meta name="description" content="" />
+      </Helmet>
       <ToastProvider>
         <Users />
       </ToastProvider>

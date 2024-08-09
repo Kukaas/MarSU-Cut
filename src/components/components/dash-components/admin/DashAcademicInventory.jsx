@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { Toaster } from "sonner";
+import { Helmet } from "react-helmet";
 
 const DashAcademicInventory = () => {
   const navigate = useNavigate();
@@ -19,6 +20,10 @@ const DashAcademicInventory = () => {
   }, [currentUser, navigate]);
   return (
     <div className="w-full h-screen overflow-x-auto">
+      <Helmet>
+        <title>MarSU Cut | Academic Inventory</title>
+        <meta name="description" content="" />
+      </Helmet>
       <AcademicInventory />
       <Toaster richColors />
     </div>

@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -30,6 +31,12 @@ const WelcomePage = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen mt-[-80px]">
+      <Helmet>
+        <title>MarSU Cut | Get Started</title>
+        <meta name="description" content=""/>
+        <meta name="keywords" content="marsu, marsu cut"/>
+        <link rel="canonical" href="https://marsu.cut.kukaas.tech/" />
+      </Helmet>
       <div className="p-3 max-w-3xl mx-auto text-center">
         <Link to="/" className="font-bold hover:text-current text-6xl ">
           <span className="px-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white">

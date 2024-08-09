@@ -3,6 +3,7 @@ import Orders from "./tables/Orders";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
+import { Helmet } from "react-helmet";
 
 const DashOrder = () => {
   const navigate = useNavigate();
@@ -21,6 +22,10 @@ const DashOrder = () => {
   }, [currentUser, navigate]);
   return (
     <div className="w-full h-screen overflow-x-auto">
+      <Helmet>
+        <title>MarSU Cut | Orders</title>
+        <meta name="description" content="" />
+      </Helmet>
       <Orders />
       <Toaster richColors />
     </div>

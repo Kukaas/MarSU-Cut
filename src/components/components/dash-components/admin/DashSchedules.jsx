@@ -13,6 +13,7 @@ import moment from "moment";
 import { CustomCalendar } from "./CustomCalendar";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { Helmet } from "react-helmet";
 
 const DashSchedules = () => {
   const [schedules, setSchedules] = useState({});
@@ -76,6 +77,10 @@ const DashSchedules = () => {
 
   return (
     <div className="w-full h-screen flex items-center justify-center overflow-x-auto">
+      <Helmet>
+        <title>MarSU Cut | Schedules</title>
+        <meta name="description" content="" />
+      </Helmet>
       {loading ? (
         <div>Loading...</div>
       ) : (

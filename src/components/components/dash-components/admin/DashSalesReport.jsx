@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { Helmet } from "react-helmet";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -16,7 +17,12 @@ const DashSalesReport = () => {
     }
   }, [currentUser, navigate]);
 
-  return <div>DashSalesReport</div>;
+  return <div>
+    <Helmet>
+      <title>MarSU Cut | Sales Report</title>
+      <meta name="description" content="" />
+    </Helmet>
+    DashSalesReport</div>;
 };
 
 export default DashSalesReport;

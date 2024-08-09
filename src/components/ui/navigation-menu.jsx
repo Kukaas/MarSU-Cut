@@ -24,7 +24,7 @@ const NavigationMenu = React.forwardRef(
 NavigationMenu.displayName = NavigationMenuPrimitive.Root.displayName;
 
 NavigationMenu.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   className: PropTypes.string,
 };
 
@@ -41,7 +41,7 @@ const NavigationMenuList = React.forwardRef(({ className, ...props }, ref) => (
 NavigationMenuList.displayName = NavigationMenuPrimitive.List.displayName;
 
 NavigationMenuList.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   className: PropTypes.string,
 };
 
@@ -69,7 +69,7 @@ const NavigationMenuTrigger = React.forwardRef(
 NavigationMenuTrigger.displayName = NavigationMenuPrimitive.Trigger.displayName;
 
 NavigationMenuTrigger.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   className: PropTypes.string,
 };
 
@@ -88,7 +88,7 @@ const NavigationMenuContent = React.forwardRef(
 NavigationMenuContent.displayName = NavigationMenuPrimitive.Content.displayName;
 
 NavigationMenuContent.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   className: PropTypes.string,
 };
 
@@ -112,7 +112,7 @@ NavigationMenuViewport.displayName =
   NavigationMenuPrimitive.Viewport.displayName;
 
 NavigationMenuViewport.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   className: PropTypes.string,
 };
 
@@ -134,7 +134,7 @@ NavigationMenuIndicator.displayName =
   NavigationMenuPrimitive.Indicator.displayName;
 
 NavigationMenuIndicator.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   className: PropTypes.string,
 };
 

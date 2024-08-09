@@ -44,6 +44,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import ChangePassword from "../forms/ChangePassword";
+import { Helmet } from "react-helmet";
 
 const DashProfile = () => {
   const navigate = useNavigate();
@@ -218,6 +219,10 @@ const DashProfile = () => {
 
   return (
     <div className="max-w-lg mx-auto w-full max-h-screen">
+      <Helmet>
+        <title>MarSU Cut | Profile</title>
+        <meta name="description" content="" />
+      </Helmet>
       {skeletonLoading ? (
         <div className="flex justify-center items-start pt-20 h-screen">
           <SkeletonProfile />

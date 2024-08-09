@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import { message, notification } from "antd";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useSelector } from "react-redux";
+import { Helmet } from "react-helmet";
 
 const SignUp = () => {
   const [loading, setLoading] = useState(false);
@@ -123,6 +124,12 @@ const SignUp = () => {
 
   return (
     <div className="min-h-[500px] mt-[50px] mb-8">
+      <Helmet>
+        <title>MarSU Cut | Sign Up</title>
+        <meta name="description" content="" />
+        <meta name="keywords" content="marsu sign up, marsu cut" />
+        <link rel="canonical" href="https://marsu.cut.kukaas.tech/sign-up" />
+      </Helmet>
       <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center">
         {/* left */}
         <div className="flex-1 mb-4">

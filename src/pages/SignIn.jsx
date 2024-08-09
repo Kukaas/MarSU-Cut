@@ -19,6 +19,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginSchema } from "@/schema/shema";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { Helmet } from "react-helmet";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -108,6 +109,12 @@ const SignIn = () => {
 
   return (
     <div className="min-h-[400px] mt-[100px] mb-8">
+      <Helmet>
+        <title>MarSU Cut | Sign In</title>
+        <meta name="description" content="" />
+        <meta name="keywords" content="marsu sign in, marsu cut" />
+        <link rel="canonical" href="https://marsu.cut.kukaas.tech/sign-in" />
+      </Helmet>
       <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center">
         {/* left */}
         <div className="flex-1 mb-4">

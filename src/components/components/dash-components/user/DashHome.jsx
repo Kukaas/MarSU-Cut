@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { Helmet } from "react-helmet";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -16,7 +17,12 @@ const DashHome = () => {
     }
   }, [currentUser, navigate]);
 
-  return <div>Dashboard</div>;
+  return <div>
+    <Helmet>
+      <title>MarSU Cut | Dashboard</title>
+      <meta name="description" content="" />
+    </Helmet>
+    Dashboard</div>;
 };
 
 export default DashHome;

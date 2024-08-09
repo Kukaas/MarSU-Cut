@@ -4,6 +4,7 @@ import Cards from "./dashboard-components/Cards";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 const DashHomeAdmin = () => {
   const navigate = useNavigate();
@@ -21,6 +22,10 @@ const DashHomeAdmin = () => {
 
   return (
     <div className="w-full min-h-screen p-5 overflow-x-auto">
+      <Helmet>
+        <title>MarSU Cut | Dashboard</title>
+        <meta name="description" content="" />
+      </Helmet>
       <Row gutter={[16, 16]}>
         <Col xs={24} sm={12} lg={18}>
           <div>

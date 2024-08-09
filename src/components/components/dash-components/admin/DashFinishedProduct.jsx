@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import FinishedProduct from "./tables/FinishedProduct";
 import { Toaster } from "sonner";
+import { Helmet } from "react-helmet";
 
 const DashFinishedProduct = () => {
   const navigate = useNavigate();
@@ -20,6 +21,10 @@ const DashFinishedProduct = () => {
 
   return (
     <div className="w-full h-screen overfolow-x-auto">
+      <Helmet>
+        <title>MarSU Cut | Finished Products</title>
+        <meta name="description" content="" />
+      </Helmet>
       <FinishedProduct />
       <Toaster richColors />
     </div>
