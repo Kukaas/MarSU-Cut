@@ -168,3 +168,14 @@ export const AddProductionSchema = z.object({
     })
   ),
 });
+
+export const AddCommercialJobSchema = z.object({
+  idNumber: z
+    .string()
+    .min(3, { message: "ID Number must be at least 3 characters" }),
+  cbName: z
+    .string()
+    .min(3, { message: "Name must be at least 3 characters" }),
+  
+});
+

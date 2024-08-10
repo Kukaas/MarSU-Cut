@@ -1,22 +1,25 @@
-import AddProduction from "@/components/components/forms/AddProduction";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Spin, Tooltip } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
+import { Input } from "@/components/ui/input";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { ChevronDownIcon, PlusCircle } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -33,67 +36,70 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Tooltip } from "antd";
-import axios from "axios";
-import { ChevronDownIcon, PlusCircle } from "lucide-react";
 import { useEffect, useState } from "react";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { Checkbox } from "@/components/ui/checkbox";
+import { DotsHorizontalIcon } from "@radix-ui/react-icons";
+import CreateCommercialOrder from "@/components/components/forms/CreateCommercialOrder";
 import { toast } from "sonner";
 
-const Productions = () => {
+const CommercialJob = () => {
+  const { currentUser } = useSelector((state) => state.user);
   const [loading, setLoading] = useState(true);
+  const [loadingDelete, setLoadingDelete] = useState(false);
   const [data, setData] = useState([]);
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [deleteLoading, setDeleteLoading] = useState(false);
-  const [selectedProduction, setSelectedProduction] = useState(null);
-
-  const fetchProductions = async () => {
-    try {
-      setLoading(true);
-      const res = await axios.get(
-        "https://marsu.cut.server.kukaas.tech/api/v1/production/all"
-      );
-
-      const data = res.data.productions;
-      if (res.status === 200) {
-        setData(data);
-        setLoading(false);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   useEffect(() => {
-    fetchProductions();
-  }, []);
+    const fetchCommercialJob = async () => {
+      try {
+        const res = await axios.get(
+          `https://marsu.cut.server.kukaas.tech/api/v1/commercial-job/${currentUser._id}`
+        );
+        const data = res.data;
+        if (res.status === 200) {
+          setData(data.orders);
+        }
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-  const handleDelete = async (event) => {
-    event.preventDefault();
-    setDeleteLoading(true);
+    fetchCommercialJob();
+  }, [currentUser]);
 
+  const handleDelete = async (commercial) => {
     try {
+      setLoadingDelete(true);
       const res = await axios.delete(
-        `https://marsu.cut.server.kukaas.tech/api/v1/production/delete/${selectedProduction._id}`
+        `https://marsu.cut.server.kukaas.tech/api/v1/commercial-job/${commercial._id}`
       );
 
       if (res.status === 200) {
-        fetchProductions();
-        setOpenDeleteDialog(false);
-        toast.success(`Produxtion with ID ${selectedProduction._id} deleted.`, {
-          action: {
-            label: "Ok",
-          },
-        });
+        const updatedData = data.filter((item) => item._id !== commercial._id);
+        setData(updatedData);
+        setLoadingDelete(false);
+        toast.success(
+          `Commercial job with ID ${commercial._id} has been deleted.`,
+          {
+            action: {
+              label: "Ok",
+            },
+          }
+        );
       }
     } catch (error) {
-      console.error(error);
-    } finally {
-      setDeleteLoading(false);
+      toast.error("Uh oh! Something went wrong", {
+        action: {
+          label: "Ok",
+        },
+      });
     }
   };
 
@@ -121,112 +127,74 @@ const Productions = () => {
       enableHiding: false,
     },
     {
-      accessorKey: "productType",
-      header: "Product Type",
+      accessorKey: "idNumber",
+      header: "ID Number",
     },
     {
-      accessorKey: "size",
-      header: "Size",
+      accessorKey: "cbName",
+      header: "Name",
     },
     {
-      accessorKey: "level",
-      header: "Level",
+      accessorKey: "cbEmail",
+      header: "Email",
     },
     {
-      accessorKey: "productionDateFrom",
-      header: "Production Date From",
+      accessorKey: "status",
+      header: "Status",
       cell: ({ row }) => {
-        const date = new Date(row.getValue("productionDateFrom"));
-        return date.toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        });
+        const status = row.getValue("status");
+        let bgColor, textColor;
+
+        switch (status) {
+          case "APPROVED":
+            bgColor = "bg-blue-300 bg-opacity-50";
+            textColor = "text-black";
+            break;
+          case "DONE":
+            bgColor = "bg-purple-300 bg-opacity-50";
+            textColor = "text-black";
+            break;
+          default:
+            bgColor = "bg-pink-300 bg-opacity-50";
+            textColor = "text-black";
+        }
+
+        return (
+          <div
+            className={`capitalize ${bgColor} ${textColor} p-2 rounded-lg flex items-center justify-center h-full`}
+          >
+            {status}
+          </div>
+        );
       },
-    },
-    {
-      accessorKey: "productionDateTo",
-      header: "Production Date To",
-      cell: ({ row }) => {
-        const date = new Date(row.getValue("productionDateTo"));
-        return date.toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        });
-      },
-    },
-    {
-      accessorKey: "quantity",
-      header: "Quantity",
-    },
-    {
-      accessorKey: "rawMaterialsUsed",
-      header: "Raw Materials Used",
-      cell: ({ row }) => (
-        <ul>
-          {Array.isArray(row.original.rawMaterialsUsed) ? (
-            row.original.rawMaterialsUsed.map((rawMaterial) => (
-              <li key={rawMaterial.type}>
-                {rawMaterial.type} - {rawMaterial.quantity}
-              </li>
-            ))
-          ) : (
-            <li>No raw materials used</li>
-          )}
-        </ul>
-      ),
     },
     {
       id: "actions",
       header: "Actions",
       cell: ({ row }) => {
-        const production = row.original;
+        const commercial = row.original;
+
         return (
-          <div className="flex space-x-2">
-            <Tooltip title="Delete product">
-              <Dialog
-                open={openDeleteDialog}
-                onOpenChange={setOpenDeleteDialog}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <DotsHorizontalIcon className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem
+                onClick={() => navigator.clipboard.writeText(commercial._id)}
               >
-                <DialogTrigger asChild>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => {
-                      setSelectedProduction(production);
-                      setOpenDeleteDialog(true);
-                    }}
-                  >
-                    Delete
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Delete Raw Material</DialogTitle>
-                    <DialogDescription>
-                      Are you sure you want to delete this raw material?
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="flex items-center justify-end gap-2">
-                    <DialogClose>
-                      <Button variant="outline">Cancel</Button>
-                    </DialogClose>
-                    <Button
-                      variant="destructive"
-                      onClick={(event) => handleDelete(event)}
-                    >
-                      {deleteLoading ? (
-                        <span className="loading-dots">Deleting</span>
-                      ) : (
-                        "Delete"
-                      )}
-                    </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
-            </Tooltip>
-          </div>
+                Copy Commercial Job ID
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => handleDelete(commercial)}>
+                <span className="text-red-500 hover:text-red-400">Delete</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         );
       },
     },
@@ -265,35 +233,44 @@ const Productions = () => {
       return Math.min(prevPage + 1, maxPage);
     });
   };
-
   return (
-    <div className="overflow-x-auto">
+    <Spin
+      spinning={loadingDelete}
+      indicator={
+        <LoadingOutlined
+          className="dark:text-white"
+          style={{
+            fontSize: 48,
+          }}
+        />
+      }
+    >
       <div className="w-full p-4 h-screen">
         <div className="flex items-center py-4 justify-between">
           <Input
-            placeholder="Filter by product type..."
-            value={table.getColumn("")?.getFilterValue() || ""}
+            placeholder="Filter Student Numbers..."
+            value={table.getColumn("idNumber")?.getFilterValue() || ""}
             onChange={(event) =>
-              table.getColumn("")?.setFilterValue(event.target.value)
+              table.getColumn("idNumber")?.setFilterValue(event.target.value)
             }
             className="max-w-sm"
           />
-          <Tooltip title="Add new production">
-            <Dialog className="overflow-x-auto">
+          <Tooltip title="Create an Order">
+            <Dialog>
               <DialogTrigger asChild>
                 <Button variant="default" className="m-2">
                   <PlusCircle size={20} className="mr-2" />
-                  New Production
+                  Create
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px] max-h-[80vh] overflow-y-auto">
+              <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                  <DialogTitle>Add a new production</DialogTitle>
+                  <DialogTitle>Create an commercial job order</DialogTitle>
                   <DialogDescription>
                     Click submit when you&apos;re done.
                   </DialogDescription>
-                  <AddProduction />
                 </DialogHeader>
+                <CreateCommercialOrder />
               </DialogContent>
             </Dialog>
           </Tooltip>
@@ -399,8 +376,8 @@ const Productions = () => {
           </div>
         </div>
       </div>
-    </div>
+    </Spin>
   );
 };
 
-export default Productions;
+export default CommercialJob;

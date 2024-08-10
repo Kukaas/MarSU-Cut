@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import CommercialJob from "./tables/CommercialJob";
+import { Toaster } from "sonner";
 
 const DashCommercial = () => {
   const navigate = useNavigate();
@@ -9,9 +11,7 @@ const DashCommercial = () => {
 
   useEffect(() => {
     if (currentUser && currentUser.isAdmin) {
-      navigate(
-        "/dashboard?tab=home-admin"
-      );
+      navigate("/dashboard?tab=home-admin");
     } else if (currentUser && currentUser.isAdmin === false) {
       navigate("/dashboard?tab=commercial-job");
     } else {
@@ -19,11 +19,16 @@ const DashCommercial = () => {
     }
   }, [currentUser, navigate]);
 
-  return <div>
-    <Helmet>
+  return (
+    <div className="w-full h-screen overflow-x-auto">
+      <Helmet>
         <title>MarSU Cut | Commercial Job</title>
         <meta name="description" content="" />
-      </Helmet>DashCommercial</div>;
+      </Helmet>
+      <CommercialJob />
+      <Toaster richColors />
+    </div>
+  );
 };
 
 export default DashCommercial;
