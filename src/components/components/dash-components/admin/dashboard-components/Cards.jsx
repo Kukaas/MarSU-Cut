@@ -19,6 +19,11 @@ const Cards = () => {
   const [totalOrdersThisYear, setTotalOrdersThisYear] = useState([]);
   const [totalRentalsThisYear, setTotalRentalsThisYear] = useState([]);
   const [totalRentalsLastYear, setTotalRentalsLastYear] = useState([]);
+  const [totalProductionsThisYear, setTotalProductionsThisYear] = useState(0);
+  const [totalProductionsThisMonth, setTotalProductionsThisMonth] = useState(
+    0
+  );
+  const [totalProductionsLastMonth, setTotalProductionsLastMonth] = useState(0);
 
   useEffect(() => {
     const fetchOrdersThisMonth = async () => {
@@ -129,6 +134,69 @@ const Cards = () => {
     fetchRentalsLastYear();
   }, []);
 
+  useEffect(() => {
+    const fetchTotalProductionsThisYear = async () => {
+      try {
+        const res = await axios.get(
+          "https://marsu.cut.server.kukaas.tech/api/v1/production/this-year"
+        );
+
+        const data = res.data.totalQuantity;
+        if (res.status === 200) {
+          setTotalProductionsThisYear(data);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error(error);
+        setLoading(false);
+      }
+    };
+
+    fetchTotalProductionsThisYear();
+  }, []);
+
+  useEffect(() => {
+    const fetchTotalProductionsThisMonth = async () => {
+      try {
+        const res = await axios.get(
+          "https://marsu.cut.server.kukaas.tech/api/v1/production/this-month"
+        );
+
+        const data = res.data.totalQuantity;
+        if (res.status === 200) {
+          setTotalProductionsThisMonth(data);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error(error);
+        setLoading(false);
+      }
+    };
+
+    fetchTotalProductionsThisMonth();
+  }, []);
+
+  useEffect(() => {
+    const fetchTotalProductionsLastMonth = async () => {
+      try {
+        const res = await axios.get(
+          "https://marsu.cut.server.kukaas.tech/api/v1/production/last-month"
+        );
+
+        const data = res.data.totalQuantity;
+        if (res.status === 200) {
+          setTotalProductionsLastMonth(data);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error(error);
+        setLoading(false);
+      }
+    };
+
+    fetchTotalProductionsLastMonth();
+  }, []);
+
   const calculatePercentageChangeOrders = (current, previous) => {
     if (
       typeof current !== "number" ||
@@ -170,6 +238,28 @@ const Cards = () => {
     totalRentalsThisYear.length,
     totalRentalsLastYear.length
   );
+
+  const calculatePercentageChangeProduction = (current, previous) => {
+    if (
+      typeof current !== "number" ||
+      typeof previous !== "number" ||
+      isNaN(current) ||
+      isNaN(previous)
+    ) {
+      return "N/A"; // Handle non-numeric inputs
+    }
+    if (previous === 0) return "N/A"; // Handle division by zero
+    let change = ((current - previous) / previous) * 100;
+    change = Math.max(-100, Math.min(100, change)); // Cap the change at -100% and +100%
+    const sign = change >= 0 ? "+" : "-";
+    return `${sign}${Math.abs(change).toFixed()}`; // Format to one decimal place and add sign
+  };
+
+  const percentageChangeQuantity = calculatePercentageChangeProduction(
+    totalProductionsThisMonth,
+    totalProductionsLastMonth
+  );
+
 
   return (
     <div className="flex-1 space-y-4">
@@ -227,9 +317,13 @@ const Cards = () => {
                 <Shirt className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">+12,234</div>
+                <div className="text-2xl font-bold">
+                  {totalProductionsThisYear}
+                </div>
                 <p className="text-xs text-muted-foreground">
-                  +19% from last month
+                  {percentageChangeQuantity !== "N/A"
+                    ? `${percentageChangeQuantity}% from last month`
+                    : "No data from last month"}
                 </p>
               </CardContent>
             </Card>
