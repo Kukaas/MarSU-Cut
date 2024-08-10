@@ -62,23 +62,28 @@ function Orders() {
   const navigate = useNavigate();
 
   const toastError = () => {
-    toast.error("Uh oh! Something went wrong.");
+    toast.error("Uh oh! Something went wrong.", {
+      action: { label: "Ok" },
+    });
   };
 
-  const fetchOrders = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get(
-        "https://marsu.cut.server.kukaas.tech/api/v1/order/all"
-      );
-      setLoading(false);
-      setData(response.data.orders.filter((order) => !order.isArchived));
-    } catch (error) {
-      setLoading(false);
-      setData([]);
-      toastError();
-    }
-  };
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(
+          "https://marsu.cut.server.kukaas.tech/api/v1/order/all"
+        );
+        setLoading(false);
+        setData(response.data.orders.filter((order) => !order.isArchived));
+      } catch (error) {
+        setLoading(false);
+        setData([]);
+        toastError();
+      }
+    };
+    fetchOrders();
+  }, []);
 
   const handleApprove = async (order) => {
     try {
@@ -427,10 +432,6 @@ function Orders() {
       },
     },
   ];
-
-  useEffect(() => {
-    fetchOrders();
-  }, []);
 
   const table = useReactTable({
     data,
