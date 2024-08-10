@@ -272,9 +272,9 @@ const Productions = () => {
         <div className="flex items-center py-4 justify-between">
           <Input
             placeholder="Filter by product type..."
-            value={table.getColumn("")?.getFilterValue() || ""}
+            value={table.getColumn("productType")?.getFilterValue() || ""}
             onChange={(event) =>
-              table.getColumn("")?.setFilterValue(event.target.value)
+              table.getColumn("productType")?.setFilterValue(event.target.value)
             }
             className="max-w-sm"
           />
