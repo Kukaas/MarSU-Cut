@@ -88,6 +88,14 @@ const MenuAdmin = () => {
                 Rentals
                 <DropdownMenuShortcut>⇧⌘R</DropdownMenuShortcut>
               </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  navigate("/dashboard?tab=commercial-job-admin");
+                }}
+              >
+                Commercial Job Order
+                <DropdownMenuShortcut>⇧⌘cB</DropdownMenuShortcut>
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => {

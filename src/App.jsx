@@ -22,6 +22,7 @@ const DashboardWrapper = () => {
     "profile",
     "home-admin",
     "orders-admin",
+    "commercial-job-admin",
     "archive-orders",
     "rentals-admin",
     "archive-rentals",
