@@ -20,10 +20,9 @@ const Cards = () => {
   const [totalRentalsThisYear, setTotalRentalsThisYear] = useState([]);
   const [totalRentalsLastYear, setTotalRentalsLastYear] = useState([]);
   const [totalProductionsThisYear, setTotalProductionsThisYear] = useState(0);
-  const [totalProductionsThisMonth, setTotalProductionsThisMonth] = useState(
-    0
-  );
+  const [totalProductionsThisMonth, setTotalProductionsThisMonth] = useState(0);
   const [totalProductionsLastMonth, setTotalProductionsLastMonth] = useState(0);
+  const [totalRevenue, setTotalRevenue] = useState(0);
 
   useEffect(() => {
     const fetchOrdersThisMonth = async () => {
@@ -197,6 +196,27 @@ const Cards = () => {
     fetchTotalProductionsLastMonth();
   }, []);
 
+  useEffect(() => {
+    const fetchTotalRevenueThisYear = async () => {
+      try {
+        const res = await axios.get(
+          "https://marsu.cut.server.kukaas.tech/api/v1/sales-report/this-year"
+        );
+
+        const data = res.data.totalRevenue;
+        if (res.status === 200) {
+          setTotalRevenue(data);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error(error);
+        setLoading(false);
+      }
+    };
+
+    fetchTotalRevenueThisYear();
+  }, []);
+
   const calculatePercentageChangeOrders = (current, previous) => {
     if (
       typeof current !== "number" ||
@@ -259,7 +279,6 @@ const Cards = () => {
     totalProductionsThisMonth,
     totalProductionsLastMonth
   );
-
 
   return (
     <div className="flex-1 space-y-4">
@@ -335,7 +354,9 @@ const Cards = () => {
                 <PhilippinePeso className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">+573</div>
+                <div className="text-2xl font-bold">
+                  ₱ {totalRevenue.toLocaleString()}
+                </div>
                 <p className="text-xs text-muted-foreground">
                   +201 since last hour
                 </p>
