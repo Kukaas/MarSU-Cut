@@ -63,7 +63,7 @@ const CommercialJob = () => {
         );
         const data = res.data;
         if (res.status === 200) {
-          setData(data.orders);
+          setData(data.commercialOrders);
         }
         setLoading(false);
       } catch (error) {
