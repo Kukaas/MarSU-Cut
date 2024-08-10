@@ -147,21 +147,21 @@ const CommercialJob = () => {
 
         switch (status) {
           case "APPROVED":
-            bgColor = "bg-blue-300 bg-opacity-50";
-            textColor = "text-black";
+            bgColor = "bg-blue-500";
+            textColor = "text-white";
             break;
           case "DONE":
-            bgColor = "bg-purple-300 bg-opacity-50";
-            textColor = "text-black";
+            bgColor = "bg-purple-500";
+            textColor = "text-white";
             break;
           default:
-            bgColor = "bg-pink-300 bg-opacity-50";
-            textColor = "text-black";
+            bgColor = "bg-pink-500";
+            textColor = "text-white";
         }
 
         return (
           <div
-            className={`capitalize ${bgColor} ${textColor} p-2 rounded-lg flex items-center justify-center h-full`}
+            className={`capitalize ${bgColor} ${textColor} p-2 rounded-lg flex items-center justify-center h-full font-semibold`}
           >
             {status}
           </div>

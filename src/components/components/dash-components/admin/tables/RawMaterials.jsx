@@ -159,7 +159,7 @@ const RawMaterials = () => {
 
         return (
           <div
-            className={`capitalize ${bgColor} ${textColor} p-2 rounded-lg flex items-center justify-center h-full`}
+            className={`capitalize ${bgColor} ${textColor} p-2 rounded-lg flex items-center justify-center h-full font-semibold`}
           >
             {status}
           </div>
