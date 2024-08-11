@@ -11,6 +11,7 @@ import {
 import CardLoading from "./loading-components/CardLoading";
 import axios from "axios";
 import { PhilippinePeso, Shirt, ShoppingBasket } from "lucide-react";
+import CountUp from "react-countup";
 
 const Cards = () => {
   const [loading, setLoading] = useState(true);
@@ -301,7 +302,7 @@ const Cards = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {totalOrdersThisYear.length}
+                  <CountUp end={totalOrdersThisYear.length} duration={3} />
                 </div>
                 <p className="text-xs text-muted-foreground">
                   {percentageChangeOrders !== "N/A"
@@ -319,7 +320,7 @@ const Cards = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {totalRentalsThisYear.length}
+                  <CountUp end={totalRentalsThisYear.length} duration={3} />
                 </div>
                 <p className="text-xs text-muted-foreground">
                   {percentageChangeRentals !== "N/A"
@@ -337,7 +338,7 @@ const Cards = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {totalProductionsThisYear}
+                  <CountUp end={totalProductionsThisYear} duration={3} />
                 </div>
                 <p className="text-xs text-muted-foreground">
                   {percentageChangeQuantity !== "N/A"
@@ -355,7 +356,7 @@ const Cards = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  ₱ {totalRevenue.toLocaleString()}
+                  <CountUp end={totalRevenue} duration={2} prefix="₱"/>
                 </div>
                 <p className="text-xs text-muted-foreground">
                   +201 since last hour
