@@ -12,6 +12,7 @@ import OTPVerification from "./pages/OTPVerification";
 import ResetPassword from "./pages/ResetPassword";
 import PageNotFound from "./components/components/PageNotFound";
 import "./App.css";
+import { useSelector } from "react-redux";
 
 // Wrapper component to extract tab from URL and pass it as a prop
 const DashboardWrapper = () => {
@@ -44,6 +45,7 @@ const DashboardWrapper = () => {
 };
 
 const App = () => {
+  const {currentUser} = useSelector((state) => state.user);
   return (
     <BrowserRouter>
       <Header />
@@ -64,7 +66,8 @@ const App = () => {
         {/* Catch-all route */}
         <Route path="*" element={<PageNotFound />} />
       </Routes>
-      <ResponsiveFooter />
+      {!currentUser && <ResponsiveFooter />}
+      {currentUser?.isAdmin === false && <ResponsiveFooter />}
     </BrowserRouter>
   );
 };
