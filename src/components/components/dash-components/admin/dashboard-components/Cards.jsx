@@ -295,7 +295,7 @@ const Cards = () => {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Total Orders This Year
+                  Orders | <span className="text-muted-foreground">This Month</span>
                 </CardTitle>
                 <ShoppingBasket className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
@@ -313,7 +313,7 @@ const Cards = () => {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Total Rentals This Year
+                  Rentals | <span className="text-muted-foreground">This Year</span>
                 </CardTitle>
                 <Shirt className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
@@ -331,7 +331,7 @@ const Cards = () => {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Product Produced This Year
+                  Product Produced | <span className="text-muted-foreground">This Year</span>
                 </CardTitle>
                 <Shirt className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
@@ -349,7 +349,7 @@ const Cards = () => {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Total Revenue
+                  Total Revenue | <span className="text-muted-foreground">This Year</span>
                 </CardTitle>
                 <PhilippinePeso className="h-4 w-4 text-muted-foreground" />
               </CardHeader>

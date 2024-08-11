@@ -64,21 +64,29 @@ const Overview = () => {
   };
 
   return (
-    <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
-      <BarChart data={chartData}>
-        <CartesianGrid vertical={false} />
-        <XAxis
-          dataKey="productType"
-          tickLine={false}
-          tickMargin={10}
-          axisLine={false}
-        />
-        <ChartTooltip content={<ChartTooltipContent />} />
-        <ChartLegend content={<ChartLegendContent />} />
-        <Bar dataKey="currentMonthSales" fill="currentColor" radius={3} />
-        <Bar dataKey="lastMonthSales" fill="currentColor" radius={3} />
-      </BarChart>
-    </ChartContainer>
+    <>
+      {chartData.length > 0 ? (
+        <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+          <BarChart data={chartData}>
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="productType"
+              tickLine={false}
+              tickMargin={10}
+              axisLine={false}
+            />
+            <ChartTooltip content={<ChartTooltipContent />} />
+            <ChartLegend content={<ChartLegendContent />} />
+            <Bar dataKey="currentMonthSales" fill="currentColor" radius={3} />
+            <Bar dataKey="lastMonthSales" fill="currentColor" radius={3} />
+          </BarChart>
+        </ChartContainer>
+      ) : (
+        <div className="min-h-[200px] w-full flex items-center justify-center">
+          <p className="text-gray-400 mt-20 text-lg">No data available</p>
+        </div>
+      )}
+    </>
   );
 };
 
