@@ -1,5 +1,5 @@
 import { Button } from "../ui/button";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
 import { Menu, Moon, Sun } from "lucide-react";
 import { useTheme } from "./ThemProvider";
@@ -9,15 +9,6 @@ import {
   NavigationMenuList,
 } from "../ui/navigation-menu";
 import { useEffect, useState } from "react";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "../ui/drawer";
 import { useDispatch, useSelector } from "react-redux";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
@@ -36,6 +27,13 @@ import { message } from "antd";
 
 import MenuAdmin from "./MenuAdmin";
 import MenuUser from "./MenuUser";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetTrigger,
+} from "../ui/sheet";
 
 const Header = () => {
   const { setTheme } = useTheme();
@@ -119,96 +117,104 @@ const Header = () => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          {/* Admin */}
-          {currentUser && currentUser.isAdmin ? (
-            <>
-              <>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline">
-                      <Menu />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-56 mt-5">
-                    <DropdownMenuLabel>Menu</DropdownMenuLabel>
-                    <MenuAdmin />
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </>
-              <DropdownMenu className="">
-                <DropdownMenuTrigger asChild>
-                  <Avatar>
-                    <AvatarImage src={currentUser.photo} />
-                    <AvatarFallback>
-                      {`${currentUser.name.split(" ")[0][0]}${
-                        currentUser.name.split(" ").slice(-1)[0][0]
-                      }`}
-                    </AvatarFallback>
-                  </Avatar>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56 mt-5">
-                  <DropdownMenuLabel>{currentUser.name}</DropdownMenuLabel>
-                  <DropdownMenuLabel className="text-xs text-gray-600 mt-[-10px] dark:text-gray-400">
-                    {currentUser.email}
-                  </DropdownMenuLabel>
+          {currentUser && (
+            <DropdownMenu className="">
+              <DropdownMenuTrigger asChild>
+                <Avatar>
+                  <AvatarImage src={currentUser.photo} />
+                  <AvatarFallback>
+                    {`${currentUser.name.split(" ")[0][0]}${
+                      currentUser.name.split(" ").slice(-1)[0][0]
+                    }`}
+                  </AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56 mt-5">
+                <DropdownMenuLabel>{currentUser.name}</DropdownMenuLabel>
+                <DropdownMenuLabel className="text-xs text-gray-600 mt-[-10px] dark:text-gray-400">
+                  {currentUser.email}
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      navigate(`/dashboard?tab=profile`);
+                    }}
+                  >
+                    Profile
+                    <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                  </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuGroup>
-                    <DropdownMenuItem
-                      onClick={() => {
-                        navigate(`/dashboard?tab=profile`);
-                      }}
-                    >
-                      Profile
-                      <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      onClick={handleLogout}
-                      disabled={isLoggingOut}
-                    >
-                      {isLoggingOut ? "Logging Out..." : "Logout"}
-                      <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                  </DropdownMenuGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </>
+                  <DropdownMenuItem
+                    onClick={handleLogout}
+                    disabled={isLoggingOut}
+                  >
+                    {isLoggingOut ? "Logging Out..." : "Logout"}
+                    <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+          {/* Admin */}
+          {isSmallScreen && currentUser && currentUser.isAdmin ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">
+                  <Menu />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56 mt-5">
+                <DropdownMenuLabel>Menu</DropdownMenuLabel>
+                <MenuAdmin />
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : (
             <>
               {isSmallScreen && !currentUser ? (
-                <Drawer>
-                  <DrawerTrigger asChild>
+                <Sheet>
+                  <SheetTrigger asChild>
                     <Button variant="outline">Menu</Button>
-                  </DrawerTrigger>
-                  <DrawerContent className="h-[300px]">
-                    <div className="flex flex-col mx-auto w-full max-w-sm">
-                      <DrawerHeader>
-                        <DrawerTitle>MENU</DrawerTitle>
-                      </DrawerHeader>
-                      <DrawerFooter className="flex flex-row justify-center items-center">
-                        <NavigationMenu>
-                          <NavigationMenuList>
-                            <NavigationMenuItem className="mr-3">
-                              <Button variant="secondary" classNames="p-3">
-                                <Link to="/">Home</Link>
-                              </Button>
-                            </NavigationMenuItem>
-                            <NavigationMenuItem>
-                              <Button variant="default" classNames="p-3">
-                                <Link to="/sign-in">Signin</Link>
-                              </Button>
-                            </NavigationMenuItem>
-                          </NavigationMenuList>
-                        </NavigationMenu>
-                      </DrawerFooter>
-                      <DrawerFooter>
-                        <DrawerClose asChild>
-                          <Button variant="outline">Cancel</Button>
-                        </DrawerClose>
-                      </DrawerFooter>
+                  </SheetTrigger>
+                  <SheetContent>
+                    <SheetHeader className="mt-10">
+                      <Link
+                        to="/"
+                        className="font-bold hover:text-current text-3xl text-center sm:text-left"
+                      >
+                        <span className="px-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white">
+                          MarSU
+                        </span>{" "}
+                        Cut
+                      </Link>
+                    </SheetHeader>
+                    <div className="grid gap-4 py-4">
+                      <div className="flex flex-col gap-5 items-center justify-center mt-5">
+                        <NavLink
+                          to="/"
+                          className={({ isActive }) =>
+                            isActive
+                              ? "border-b-2 border-blue-500"
+                              : "border-b border-gray-300"
+                          }
+                        >
+                          <SheetClose>Home</SheetClose>
+                        </NavLink>
+
+                        <NavLink
+                          to="/sign-in"
+                          className={({ isActive }) =>
+                            isActive
+                              ? "border-b-2 border-blue-500"
+                              : "border-b border-gray-300"
+                          }
+                        >
+                          <SheetClose>Signin</SheetClose>
+                        </NavLink>
+                      </div>
                     </div>
-                  </DrawerContent>
-                </Drawer>
+                  </SheetContent>
+                </Sheet>
               ) : (
                 <>
                   {!currentUser && (
@@ -233,7 +239,7 @@ const Header = () => {
           )}
 
           {/* User */}
-          {currentUser?.isAdmin === false && (
+          {isSmallScreen && currentUser?.isAdmin === false && (
             <>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -244,42 +250,6 @@ const Header = () => {
                 <DropdownMenuContent className="w-56 mt-5">
                   <DropdownMenuLabel>Menu</DropdownMenuLabel>
                   <MenuUser />
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Avatar>
-                    <AvatarImage src={currentUser.photo} />
-                    <AvatarFallback>
-                      {`${currentUser.name.split(" ")[0][0]}${
-                        currentUser.name.split(" ").slice(-1)[0][0]
-                      }`}
-                    </AvatarFallback>
-                  </Avatar>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56 mt-5">
-                  <DropdownMenuLabel>{currentUser.name}</DropdownMenuLabel>
-                  <DropdownMenuLabel className="text-xs text-gray-600 mt-[-10px] dark:text-gray-400">
-                    {currentUser.email}
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuGroup>
-                    <DropdownMenuItem
-                      onClick={() => navigate("/dashboard?tab=profile")}
-                    >
-                      Profile
-                      <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      onClick={handleLogout}
-                      disabled={isLoggingOut}
-                    >
-                      {isLoggingOut ? "Logging Out..." : "Logout"}
-                      <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                  </DropdownMenuGroup>
                 </DropdownMenuContent>
               </DropdownMenu>
             </>
