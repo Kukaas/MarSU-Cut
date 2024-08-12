@@ -17,6 +17,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import {
   Table,
   TableBody,
   TableCell,
@@ -24,6 +31,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   flexRender,
   getCoreRowModel,
@@ -49,6 +57,19 @@ const Productions = () => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [selectedProduction, setSelectedProduction] = useState(null);
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+
+  // Check screen size
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsSmallScreen(window.innerWidth < 771);
+    };
+
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
 
   const fetchProductions = async () => {
     try {
@@ -259,23 +280,75 @@ const Productions = () => {
             className="max-w-sm"
           />
           <Tooltip title="Add new production">
-            <Dialog className="overflow-x-auto">
-              <DialogTrigger asChild>
-                <Button variant="default" className="m-2">
-                  <PlusCircle size={20} className="mr-2" />
-                  New Production
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px] max-h-[80vh] overflow-y-auto">
-                <DialogHeader>
-                  <DialogTitle>Add a new production</DialogTitle>
-                  <DialogDescription>
-                    Click submit when you&apos;re done.
-                  </DialogDescription>
-                  <AddProduction />
-                </DialogHeader>
-              </DialogContent>
-            </Dialog>
+            {!isSmallScreen ? (
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button>
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    Add Production
+                  </Button>
+                </SheetTrigger>
+                <SheetContent className="max-h-screen overflow-auto">
+                  <Tabs defaultValue="uniform" className="mt-4">
+                    <TabsList className="grid w-full grid-cols-2">
+                      <TabsTrigger value="uniform">Uniform</TabsTrigger>
+                      <TabsTrigger value="academicGown">
+                        Academic Gown
+                      </TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="uniform" className="mt-4">
+                      <SheetTitle>Add a new uniform production</SheetTitle>
+                      <SheetDescription>
+                        Click submit when you&apos;re done.
+                      </SheetDescription>
+                      <AddProduction />
+                    </TabsContent>
+                    <TabsContent value="academicGown" className="mt-4">
+                      <SheetTitle>
+                        Add a new academic gown production
+                      </SheetTitle>
+                      <SheetDescription>
+                        Click submit when you&apos;re done.
+                      </SheetDescription>
+                    </TabsContent>
+                  </Tabs>
+                </SheetContent>
+              </Sheet>
+            ) : (
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button>
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    Add Production
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-h-[550px] overflow-auto">
+                  <Tabs defaultValue="uniform" className="mt-4">
+                    <TabsList className="grid w-full grid-cols-2">
+                      <TabsTrigger value="uniform">Uniform</TabsTrigger>
+                      <TabsTrigger value="academicGown">
+                        Academic Gown
+                      </TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="uniform" className="mt-4">
+                      <DialogTitle>Add a new uniform production</DialogTitle>
+                      <DialogDescription>
+                        Click submit when you&apos;re done.
+                      </DialogDescription>
+                      <AddProduction />
+                    </TabsContent>
+                    <TabsContent value="academicGown" className="mt-4">
+                      <DialogTitle>
+                        Add a new academic gown production
+                      </DialogTitle>
+                      <DialogDescription>
+                        Click submit when you&apos;re done.
+                      </DialogDescription>
+                    </TabsContent>
+                  </Tabs>
+                </DialogContent>
+              </Dialog>
+            )}
           </Tooltip>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

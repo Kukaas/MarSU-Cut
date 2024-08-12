@@ -20,10 +20,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { SheetClose, SheetTitle } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { AddProductionSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { DialogClose } from "@radix-ui/react-dialog";
 import { Tooltip } from "antd";
 import axios from "axios";
 import { format } from "date-fns";
@@ -72,8 +72,8 @@ const AddProduction = () => {
       setAddProductionLoading(false);
       toast.error("Uh oh! Something went wrong", {
         action: {
-            label: "Ok",
-        }
+          label: "Ok",
+        },
       });
     }
   };
@@ -84,11 +84,11 @@ const AddProduction = () => {
   };
 
   return (
-    <div className="grid gap-4 py-2">
+    <div className="grid gap-6 py-2">
       <div className="w-full">
         <Form {...productionForm}>
           <form onSubmit={productionForm.handleSubmit(handleAddProduction)}>
-            <div className="flex space-x-4">
+            <div className="flex w-full justify-between gap-2">
               <FormField
                 control={productionForm.control}
                 name="level"
@@ -325,7 +325,7 @@ const AddProduction = () => {
                 </FormItem>
               )}
             />
-
+            <SheetTitle className="mt-4">Raw Materials Used</SheetTitle>
             <div className="space-y-4 mt-2">
               {fields.map((field, index) => (
                 <div key={field.id} className="flex items-center space-x-4">
@@ -391,9 +391,9 @@ const AddProduction = () => {
               </div>
             </div>
             <div className="flex items-center justify-end gap-2 mt-4">
-              <DialogClose>
+              <SheetClose>
                 <Button variant="outline">Cancel</Button>
-              </DialogClose>
+              </SheetClose>
               <Button onClick={handleButtonClick} type="button">
                 {addProductionLoading ? (
                   <span className="loading-dots">Adding</span>
