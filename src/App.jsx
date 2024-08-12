@@ -37,7 +37,6 @@ const DashboardWrapper = () => {
     "orders",
     "rentals",
     "commercial-job",
-    "academic-inventory",
     "productions",
   ];
 

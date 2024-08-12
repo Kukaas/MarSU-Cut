@@ -12,7 +12,6 @@ import {
   Store,
   Package2Icon,
   PackageOpen,
-  Shirt,
   LineChart,
   PieChart,
   BarChart,
@@ -180,17 +179,6 @@ const SideBarAdmin = () => {
                     >
                       <PackageOpen className="h-4 w-4" />
                       Finished Product
-                    </Link>
-                    <Link
-                      to="/dashboard?tab=academic-inventory"
-                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                        isActive("/dashboard?tab=academic-inventory")
-                          ? "bg-muted text-primary"
-                          : "text-muted-foreground hover:text-primary"
-                      }`}
-                    >
-                      <Shirt className="h-4 w-4" />
-                      Accademics
                     </Link>
                   </div>
                 </AccordionContent>

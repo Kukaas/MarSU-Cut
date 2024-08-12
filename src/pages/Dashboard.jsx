@@ -15,7 +15,6 @@ import DashArchiveOrders from "@/components/components/dash-components/admin/Das
 import DashArchiveRentals from "@/components/components/dash-components/admin/DashArchiveRentals";
 import DashUsers from "@/components/components/dash-components/admin/DashUsers";
 import PropTypes from 'prop-types'
-import DashAcademicInventory from "@/components/components/dash-components/admin/DashAcademicInventory";
 import DashProductions from "@/components/components/dash-components/admin/DashProductions";
 import DashCommercialJob from "@/components/components/dash-components/admin/DashCommercialJob";
 import SideBarAdmin from "@/components/components/SideBarAdmin";
@@ -63,8 +62,6 @@ const Dashboard = ({ tab }) => {
         return <DashRental />;
       case "commercial-job":
         return <DashCommercial />;
-      case "academic-inventory":
-        return <DashAcademicInventory />;
       case "productions":
         return <DashProductions />;
       default:

@@ -32,7 +32,6 @@ const AddNewProduct = () => {
       productType: "",
       size: "",
       quantity: 0,
-      price: 0,
     },
   });
 
@@ -197,26 +196,6 @@ const AddNewProduct = () => {
                     field.onChange(value !== "" ? parseFloat(value) : "");
                   }}
                   placeholder="Quantity"
-                  className="w-full"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={addNewProductForm.control}
-          name="price"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Price</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  {...field}
-                  value={field.value ? parseFloat(field.value) : ""}
-                  onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                  placeholder="Price"
                   className="w-full"
                 />
               </FormControl>

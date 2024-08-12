@@ -31,8 +31,7 @@ const EditProduct = ({ selectedProduct }) => {
       level: selectedProduct.level,
       productType: selectedProduct.productType,
       size: selectedProduct.size,
-      price: selectedProduct.price,
-      quantity: selectedProduct.quantity,
+      quantity: selectedProduct.quantity
     },
   });
 
@@ -56,7 +55,6 @@ const EditProduct = ({ selectedProduct }) => {
           productType: "",
           size: "",
           price: 0,
-          quantity: 0,
         });
       }
     } catch (error) {
@@ -203,26 +201,6 @@ const EditProduct = ({ selectedProduct }) => {
                     field.onChange(value !== "" ? parseFloat(value) : "");
                   }}
                   placeholder="Quantity"
-                  className="w-full"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={editProductForm.control}
-          name="price"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Price</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  {...field}
-                  value={field.value ? parseFloat(field.value) : ""}
-                  onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                  placeholder="Price"
                   className="w-full"
                 />
               </FormControl>

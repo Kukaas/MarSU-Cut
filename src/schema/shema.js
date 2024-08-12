@@ -122,7 +122,6 @@ export const AddNewProductSchema = z.object({
     .string()
     .min(3, { message: "Product Type must be at least 3 characters" }),
   size: z.string().min(1, { message: "Size must be at least 1 characters" }),
-  price: z.number().int().nonnegative(),
   quantity: z.number().int().nonnegative(),
 });
 
@@ -132,7 +131,6 @@ export const EditProductSchema = z.object({
     .string()
     .min(3, { message: "Product Type must be at least 3 characters" }),
   size: z.string().min(1, { message: "Size must be at least 1 characters" }),
-  price: z.number().int().nonnegative(),
   quantity: z.number().int().nonnegative(),
 });
 

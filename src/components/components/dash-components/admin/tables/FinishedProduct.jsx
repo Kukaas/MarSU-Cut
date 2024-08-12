@@ -117,10 +117,6 @@ const FinishedProduct = () => {
       header: "Quantity",
     },
     {
-      accessorKey: "price",
-      header: "Price",
-    },
-    {
       accessorKey: "status",
       header: "Status",
       cell: ({ row }) => {

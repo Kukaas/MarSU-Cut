@@ -55,14 +55,6 @@ const MenuAdmin = () => {
                 Raw Materials
                 <DropdownMenuShortcut>⇧⌘RM</DropdownMenuShortcut>
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
-                  navigate("/dashboard?tab=academic-inventory");
-                }}
-              >
-                Academic Inventory
-                <DropdownMenuShortcut>⇧⌘RM</DropdownMenuShortcut>
-              </DropdownMenuItem>
             </DropdownMenuSubContent>
           </DropdownMenuPortal>
         </DropdownMenuSub>
