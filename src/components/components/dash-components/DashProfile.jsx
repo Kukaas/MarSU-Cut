@@ -169,11 +169,7 @@ const DashProfile = () => {
         dispatch(updateSuccess(data));
         message.success("Profile updated successfully");
         // Reset the form with updated values
-        formUpdateProfile.reset({
-          photo: data.photo,
-          name: data.name,
-          email: data.email,
-        });
+        formUpdateProfile.reset();
         setImageUploadProgress(false);
       }
     } catch (error) {
