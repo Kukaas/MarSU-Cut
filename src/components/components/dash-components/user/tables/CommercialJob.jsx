@@ -1,4 +1,4 @@
-import { Spin, Tooltip } from "antd";
+import { Spin, Tooltip, Typography } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Input } from "@/components/ui/input";
 import {
@@ -39,7 +39,6 @@ import {
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { Checkbox } from "@/components/ui/checkbox";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import CreateCommercialOrder from "@/components/components/forms/CreateCommercialOrder";
 import { toast } from "sonner";
@@ -104,28 +103,6 @@ const CommercialJob = () => {
   };
 
   const columns = [
-    {
-      id: "select",
-      header: ({ table }) => (
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-    },
     {
       accessorKey: "idNumber",
       header: "ID Number",
@@ -245,7 +222,10 @@ const CommercialJob = () => {
         />
       }
     >
-      <div className="w-full p-4 h-screen">
+      <div className="w-full p-5 h-screen">
+        <Typography.Title level={2} className="text-black dark:text-white">
+          Commercial Job Orders
+        </Typography.Title>
         <div className="flex items-center py-4 justify-between">
           <Input
             placeholder="Filter Student Numbers..."

@@ -29,8 +29,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Spin, Tooltip } from "antd";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Spin, Tooltip, Typography } from "antd";
 import {
   Dialog,
   DialogContent,
@@ -113,28 +112,6 @@ function Rentals() {
   };
 
   const columns = [
-    {
-      id: "select",
-      header: ({ table }) => (
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-    },
     {
       accessorKey: "idNumber",
       header: "ID Number",
@@ -285,7 +262,10 @@ function Rentals() {
         <LoadingOutlined className="dark:text-white" style={{ fontSize: 48 }} />
       }
     >
-      <div className="w-full p-4 h-screen">
+      <div className="w-full p-5 h-screen">
+        <Typography.Title level={2} className="text-black dark:text-white">
+          Rentals
+        </Typography.Title>
         <div className="flex items-center py-4 justify-between">
           <Input
             placeholder="Filter Student Numbers..."

@@ -11,7 +11,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -30,7 +29,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Spin, Tooltip, Typography } from "antd";
+import { Badge, Spin, Tooltip, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
 import { ArrowDownLeft } from "lucide-react";
 import { toast } from "sonner";
@@ -144,28 +143,6 @@ function ArchiveOrders() {
 
   const columns = [
     {
-      id: "select",
-      header: ({ table }) => (
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-    },
-    {
       accessorKey: "studentNumber",
       header: "Student Number",
     },
@@ -261,37 +238,46 @@ function ArchiveOrders() {
       accessorKey: "status",
       header: () => <span className="font-bold">Status</span>,
       cell: ({ row }) => {
-        const status = row.getValue("status");
-        let bgColor, textColor;
+        const statusStyles = {
+          APPROVED: {
+            color: "#2b4cbe",
+            badgeText: "Approved",
+          },
+          MEASURED: {
+            color: "#c09000",
+            badgeText: "Measured",
+          },
+          DONE: {
+            color: "purple",
+            badgeText: "Done",
+          },
+          CLAIMED: {
+            color: "green",
+            badgeText: "Claimed",
+          },
+          default: {
+            color: "pink",
+            badgeText: "Unknown",
+          },
+        };
 
-        switch (status) {
-          case "APPROVED":
-            bgColor = "bg-blue-500";
-            textColor = "text-white";
-            break;
-          case "MEASURED":
-            bgColor = "bg-orange-500";
-            textColor = "text-white";
-            break;
-          case "DONE":
-            bgColor = "bg-purple-500";
-            textColor = "text-white";
-            break;
-          case "CLAIMED":
-            bgColor = "bg-green-500";
-            textColor = "text-white";
-            break;
-          default:
-            bgColor = "bg-pink-500";
-            textColor = "text-white";
-        }
+        const status = row.getValue("status");
+        const { color, badgeText } =
+          statusStyles[status] || statusStyles.default;
 
         return (
-          <div
-            className={`capitalize ${bgColor} ${textColor} p-2 rounded-lg flex items-center justify-center h-full font-semibold`}
-          >
-            {status}
-          </div>
+          <Badge
+            count={badgeText}
+            color={color}
+            style={{
+              backgroundColor: color,
+              fontWeight: "bold",
+              fontSize: 14,
+              height: 24,
+              padding: "0 8px",
+              width: "auto",
+            }}
+          />
         );
       },
     },

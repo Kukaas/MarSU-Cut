@@ -33,7 +33,6 @@ import {
 import { Spin, Tooltip, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
 import { ArrowDownLeft } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 
 function ArchiveRentals() {
@@ -222,28 +221,6 @@ function ArchiveRentals() {
   };
 
   const columns = [
-    {
-      id: "select",
-      header: ({ table }) => (
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-    },
     {
       accessorKey: "idNumber",
       header: "ID Number",
