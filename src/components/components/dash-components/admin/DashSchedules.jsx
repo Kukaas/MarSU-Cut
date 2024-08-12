@@ -14,6 +14,7 @@ import { CustomCalendar } from "./CustomCalendar";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet";
+import { Typography } from "antd";
 
 const DashSchedules = () => {
   const [schedules, setSchedules] = useState({});
@@ -76,11 +77,16 @@ const DashSchedules = () => {
   };
 
   return (
-    <div className="w-full h-screen flex items-center justify-center overflow-x-auto">
+    <div className="w-full p-5">
+      <Typography.Title level={2} className="text-black dark:text-white">
+        Schedules
+      </Typography.Title>
+      <div className="w-full h-screen flex items-center justify-center overflow-x-auto">
       <Helmet>
         <title>MarSU Cut | Schedules</title>
         <meta name="description" content="" />
       </Helmet>
+      
       {loading ? (
         <div>Loading...</div>
       ) : (
@@ -116,6 +122,7 @@ const DashSchedules = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+    </div>
     </div>
   );
 };

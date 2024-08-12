@@ -1,4 +1,4 @@
-import { Spin, Tooltip } from "antd";
+import { Spin, Tooltip, Typography } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -281,7 +281,10 @@ const CommercialJob = () => {
         />
       }
     >
-      <div className="w-full p-4 h-screen">
+      <div className="w-full p-5 h-screen">
+        <Typography.Title level={2} className="text-black dark:text-white">
+          Commercial Job Orders
+        </Typography.Title>
         <div className="flex items-center py-4 justify-between">
           <Input
             placeholder="Filter Student Numbers..."

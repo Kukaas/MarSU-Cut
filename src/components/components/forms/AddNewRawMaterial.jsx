@@ -36,7 +36,7 @@ const AddNewRawMaterial = () => {
         values
       );
 
-      if (res.status === 201) {
+      if (res.status === 200) {
         setAddRawMaterialLoading(false)
         toast.success("Raw material added successfully", {
             action: {

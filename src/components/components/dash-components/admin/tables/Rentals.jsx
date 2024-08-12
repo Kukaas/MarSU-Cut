@@ -30,7 +30,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Spin, Tooltip } from "antd";
+import { Spin, Tooltip, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
 import { ArchiveIcon } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -263,7 +263,7 @@ function Rentals() {
     {
       accessorKey: "quantity",
       header: "Quantity",
-    },  
+    },
     {
       accessorKey: "rentalDate",
       header: "Rental Date",
@@ -410,7 +410,10 @@ function Rentals() {
         <LoadingOutlined className="dark:text-white" style={{ fontSize: 48 }} />
       }
     >
-      <div className="w-full p-4 h-screen">
+      <div className="w-full p-5 h-screen">
+        <Typography.Title level={2} className="text-black dark:text-white">
+          Rentals
+        </Typography.Title>
         <div className="flex items-center py-4 justify-between">
           <Input
             placeholder="Filter Student Numbers..."

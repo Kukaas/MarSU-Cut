@@ -32,7 +32,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Tooltip } from "antd";
+import { Tooltip, Typography } from "antd";
 import { ChevronDownIcon, PlusCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -279,7 +279,10 @@ const RawMaterials = () => {
 
   return (
     <div className="overflow-x-auto">
-      <div className="w-full p-4 h-screen">
+      <div className="w-full p-5 h-screen">
+      <Typography.Title level={2} className="text-black dark:text-white">
+        Raw Materials
+        </Typography.Title>
         <div className="flex items-center py-4 justify-between">
           <Input
             placeholder="Filter by product type..."

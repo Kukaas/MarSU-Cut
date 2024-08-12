@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/table";
 import axios from "axios";
 import { Input } from "@/components/ui/input";
+import { Typography } from "antd";
 
 const Users = () => {
   const [data, setData] = useState([]);
@@ -164,7 +165,10 @@ const Users = () => {
   };
 
   return (
-    <div className="w-full p-4 h-screen">
+    <div className="w-full p-5 h-screen">
+      <Typography.Title level={2} className="text-black dark:text-white">
+        Users
+      </Typography.Title>
       <div className="flex items-center py-4 justify-between">
         <Input
           placeholder="Filter Name..."

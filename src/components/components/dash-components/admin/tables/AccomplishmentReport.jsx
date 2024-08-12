@@ -1,4 +1,4 @@
-import { Spin, Tooltip } from "antd";
+import { Spin, Tooltip, Typography } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import {
@@ -372,8 +372,11 @@ const AccomplishmentReport = () => {
         <LoadingOutlined className="dark:text-white" style={{ fontSize: 48 }} />
       }
     >
-      <div className="w-full p-4 h-screen">
-        <div className="flex items-center py-4 justify-between overflow-y-auto">
+      <div className="w-full p-5 h-screen">
+      <Typography.Title level={2} className="text-black dark:text-white">
+        Accomplishment Report
+        </Typography.Title>
+        <div className="flex items-center justify-between overflow-y-auto">
           <div className={cn("grid gap-2")}>
             <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
               <Tooltip
