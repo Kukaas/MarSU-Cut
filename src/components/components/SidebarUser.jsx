@@ -1,10 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
-import { Package2, Bell, Home, ShoppingCart, Shirt, Building2Icon } from "lucide-react";
+import { Bell, Home, ShoppingCart, Shirt, Building2Icon } from "lucide-react";
 import { Button } from "../ui/button";
+import { useSelector } from "react-redux";
 
 const SidebarUser = () => {
   const location = useLocation();
   const currentPath = location.pathname + location.search;
+  const { currentUser } = useSelector((state) => state.user);
 
   const isActive = (path) => currentPath === path;
 
@@ -12,9 +14,15 @@ const SidebarUser = () => {
     <div className="flex h-screen flex-col gap-2 w-[250px] border-r-2">
       <div className="flex h-full max-h-screen flex-col gap-5">
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
-          <Link to="/" className="flex items-center gap-2 font-semibold">
-            <Package2 className="h-6 w-6" />
-          </Link>
+          <div className="flex items-center gap-2 text-sm">
+            <span className="font-semibold">
+              {" "}
+              {currentUser?.name?.split(" ")[0]} |
+            </span>
+            <span className="text-gray-300">
+              {currentUser.isAdmin ? "Admin" : "User"}
+            </span>
+          </div>
           <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
             <Bell className="h-4 w-4" />
             <span className="sr-only">Toggle notifications</span>

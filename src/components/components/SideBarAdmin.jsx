@@ -1,6 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
 import {
-  Package2,
   Bell,
   Home,
   ShoppingCart,
@@ -25,10 +24,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../ui/accordion";
+import { useSelector } from "react-redux";
 
 const SideBarAdmin = () => {
   const location = useLocation();
   const currentPath = location.pathname + location.search;
+  const { currentUser } = useSelector((state) => state.user);
 
   const isActive = (path) => currentPath === path;
 
@@ -36,9 +37,15 @@ const SideBarAdmin = () => {
     <div className="flex h-[800px] flex-col gap-2 w-[250px] border-r-2 light:mt-2">
       <div className="flex h-full max-h-screen flex-col gap-5">
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
-          <Link to="/" className="flex items-center gap-2 font-semibold">
-            <Package2 className="h-6 w-6" />
-          </Link>
+          <div className="flex items-center gap-2 text-sm">
+            <span className="font-semibold">
+              {" "}
+              {currentUser?.name?.split(" ")[0]} |
+            </span>
+            <span className="text-gray-300">
+              {currentUser.isAdmin ? "Admin" : "User"}
+            </span>
+          </div>
           <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
             <Bell className="h-4 w-4" />
             <span className="sr-only">Toggle notifications</span>
@@ -199,7 +206,7 @@ const SideBarAdmin = () => {
                       ? "text-primary"
                       : "text-muted-foreground hover:text-primary"
                   }`}
-                >   
+                >
                   <div className="flex items-center gap-2">
                     <LineChart className="h-4 w-4" />
                     Reports
