@@ -30,7 +30,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Spin, Tooltip, Typography } from "antd";
+import { Badge, Spin, Tooltip, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
 import { ArchiveIcon } from "lucide-react";
 import { toast } from "sonner";
@@ -38,9 +38,7 @@ import { toast } from "sonner";
 function Rentals() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [loadingApprove, setLoadingApprove] = useState(false);
-  const [loadingReturned, setLoadingReturned] = useState(false);
-  const [loadingArchive, setLoadingArchive] = useState(false);
+  const [loadingUpdate, setLoadingUpdate] = useState(false);
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
@@ -83,17 +81,56 @@ function Rentals() {
     fetchRentals();
   }, []);
 
+  const handleReject = async (rental) => {
+    try {
+      setLoadingUpdate(true);
+      const res = await axios.put(
+        `https://marsu.cut.server.kukaas.tech/api/v1/rental/update/${rental._id}`,
+        { status: "REJECTED" }
+      );
+
+      if (res.status === 200) {
+        setLoadingUpdate(false);
+        toast.success(
+          `Rental of ${rental.coordinatorName} is rejected successfully!`,
+          {
+            action: {
+              label: "Ok",
+            },
+          }
+        );
+
+        // Update the data in the state
+        setData((prevData) => {
+          return prevData.map((item) => {
+            if (item._id === rental._id) {
+              return { ...item, status: "REJECTED" };
+            }
+
+            return item;
+          });
+        });
+      } else {
+        toastError();
+        setLoadingUpdate(false);
+      }
+    } catch (error) {
+      toastError();
+      setLoadingUpdate(false);
+    }
+  };
+
   // Update the status of the rental to approved
   const handleApprove = async (rental) => {
     try {
-      setLoadingApprove(true);
+      setLoadingUpdate(true);
       const res = await axios.put(
         `https://marsu.cut.server.kukaas.tech/api/v1/rental/update/${rental._id}`,
         { status: "APPROVED" }
       );
 
       if (res.status === 200) {
-        setLoadingApprove(false);
+        setLoadingUpdate(false);
         toast.success(
           `Rental of ${rental.studentName} is approved successfully!`,
           {
@@ -115,25 +152,66 @@ function Rentals() {
         });
       } else {
         toastError();
-        setLoadingApprove(false);
+        setLoadingUpdate(false);
       }
     } catch (error) {
       toastError();
-      setLoadingApprove(false);
+      setLoadingUpdate(false);
+    }
+  };
+
+  const handleGiven = async (rental) => {
+    try {
+      setLoadingUpdate(true);
+      const res = await axios.put(
+        `https://marsu.cut.server.kukaas.tech/api/v1/rental/update/${rental._id}`,
+        {
+          status: "GIVEN",
+        }
+      );
+
+      if (res.status === 200) {
+        setLoadingUpdate(false);
+        toast.success(`Rental of ${rental.coordnatorName} is given!`, {
+          action: {
+            label: "Ok",
+          },
+        });
+
+        // Update the data in the state
+        setData((prevData) => {
+          return prevData.map((item) => {
+            if (item._id === rental._id) {
+              return { ...item, status: "GIVEN" }; // Correct status update
+            }
+            return item;
+          });
+        });
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        toast.error(error.response.data.message); // Correct error handling
+      } else {
+        toast.error("An unexpected error occurred."); // Handle other errors
+      }
+      setLoadingUpdate(false);
     }
   };
 
   // Update the status of the rental to returned
   const handleReturn = async (rental) => {
     try {
-      setLoadingReturned(true);
+      setLoadingUpdate(true);
       const res = await axios.put(
-        `https://marsu.cut.server.kukaas.tech/api/v1/rental/return/${rental._id}`
+        `https://marsu.cut.server.kukaas.tech/api/v1/rental/update/${rental._id}`,
+        {
+          status: "RETURNED",
+        }
       );
 
       if (res.status === 200) {
-        setLoadingReturned(false);
-        toast.success(`Rental of ${rental.studentName} is returned!`, {
+        setLoadingUpdate(false);
+        toast.success(`Rental of ${rental.coordinatorName} is returned!`, {
           action: {
             label: "Ok",
           },
@@ -151,18 +229,18 @@ function Rentals() {
         });
       } else {
         toastError();
-        setLoadingReturned(false);
+        setLoadingUpdate(false);
       }
     } catch (error) {
       toastError();
-      setLoadingReturned(false);
+      setLoadingUpdate(false);
     }
   };
 
   // Archive the rental
   const handleArchive = async (rental) => {
     try {
-      setLoadingArchive(true);
+      setLoadingUpdate(true);
       const res = await axios.put(
         `https://marsu.cut.server.kukaas.tech/api/v1/rental/archive/update/${rental._id}`,
         {
@@ -171,7 +249,7 @@ function Rentals() {
       );
 
       if (res.status === 200) {
-        setLoadingArchive(false);
+        setLoadingUpdate(false);
         toast.success(
           `Rental of ${rental.studentName} is archived successfully!`,
           {
@@ -186,12 +264,12 @@ function Rentals() {
         });
       } else {
         toastError();
-        setLoadingArchive(false);
+        setLoadingUpdate(false);
       }
     } catch (error) {
       {
         toastError();
-        setLoadingArchive(false);
+        setLoadingUpdate(false);
       }
     }
   };
@@ -268,32 +346,51 @@ function Rentals() {
     },
     {
       accessorKey: "status",
-      header: "Status",
-      key: "status",
+      header: () => <span className="font-bold">Status</span>,
       cell: ({ row }) => {
+        const statusStyles = {
+          APPROVED: {
+            color: "#2b4cbe",
+            badgeText: "Approved",
+          },
+          REJECTED: {
+            color: "red",
+            badgeText: "Rejected",
+          },
+          GIVEN: {
+            color: "#c09000",
+            badgeText: "Given",
+          },
+          PENDING: {
+            color: "red",
+            badgeText: "Pending",
+          },
+          RETURNED: {
+            color: "#008000",
+            badgeText: "Returned",
+          },
+          default: {
+            color: "pink",
+            badgeText: "Unknown",
+          },
+        };
+    
         const status = row.getValue("status");
-        let bgColor, textColor;
-
-        switch (status) {
-          case "APPROVED":
-            bgColor = "bg-blue-500";
-            textColor = "text-white";
-            break;
-          case "RETURNED":
-            bgColor = "bg-green-500";
-            textColor = "text-white";
-            break;
-          default:
-            bgColor = "bg-pink-500";
-            textColor = "text-white";
-        }
-
+        const { color, badgeText } = statusStyles[status] || statusStyles.default;
+    
         return (
-          <div
-            className={`capitalize ${bgColor} ${textColor} p-2 rounded-lg flex items-center justify-center h-full font-semibold`}
-          >
-            {status}
-          </div>
+          <Badge
+            count={badgeText}
+            color={color}
+            style={{
+              backgroundColor: color,
+              fontWeight: "bold",
+              fontSize: 14,
+              height: 24,
+              padding: "0 8px",
+              width: "auto",
+            }}
+          />
         );
       },
     },
@@ -325,8 +422,14 @@ function Rentals() {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
+              <DropdownMenuItem onClick={() => handleReject(rental)}>
+                  Reject
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => handleApprove(rental)}>
                   Approve
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleGiven(rental)}>
+                  Given
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => handleReturn(rental)}>
                   Returned
@@ -382,7 +485,7 @@ function Rentals() {
 
   return (
     <Spin
-      spinning={loadingApprove || loadingReturned || loadingArchive}
+      spinning={loadingUpdate}
       indicator={
         <LoadingOutlined className="dark:text-white" style={{ fontSize: 48 }} />
       }
@@ -394,10 +497,10 @@ function Rentals() {
         <div className="flex items-center py-4 justify-between">
           <Input
             placeholder="Filter Student Numbers..."
-            value={table.getColumn("studentNumber")?.getFilterValue() || ""}
+            value={table.getColumn("coordinatorName")?.getFilterValue() || ""}
             onChange={(event) =>
               table
-                .getColumn("studentNumber")
+                .getColumn("coordinatorName")
                 ?.setFilterValue(event.target.value)
             }
             className="max-w-sm"

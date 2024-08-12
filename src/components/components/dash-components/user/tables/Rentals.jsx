@@ -29,7 +29,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Spin, Tooltip, Typography } from "antd";
+import { Badge, Spin, Tooltip, Typography } from "antd";
 import {
   Dialog,
   DialogContent,
@@ -155,32 +155,52 @@ function Rentals() {
     },
     {
       accessorKey: "status",
-      header: "Status",
-      key: "status",
+      header: () => <span className="font-bold">Status</span>,
       cell: ({ row }) => {
-        const status = row.getValue("status");
-        let bgColor, textColor;
+        const statusStyles = {
+          APPROVED: {
+            color: "#2b4cbe",
+            badgeText: "Approved",
+          },
+          REJECTED: {
+            color: "red",
+            badgeText: "Rejected",
+          },
+          GIVEN: {
+            color: "#c09000",
+            badgeText: "Given",
+          },
+          PENDING: {
+            color: "red",
+            badgeText: "Pending",
+          },
+          RETURNED: {
+            color: "#008000",
+            badgeText: "Returned",
+          },
+          default: {
+            color: "pink",
+            badgeText: "Unknown",
+          },
+        };
 
-        switch (status) {
-          case "APPROVED":
-            bgColor = "bg-blue-500";
-            textColor = "text-white";
-            break;
-          case "RETURNED":
-            bgColor = "bg-green-500";
-            textColor = "text-white";
-            break;
-          default:
-            bgColor = "bg-pink-500";
-            textColor = "text-white";
-        }
+        const status = row.getValue("status");
+        const { color, badgeText } =
+          statusStyles[status] || statusStyles.default;
 
         return (
-          <div
-            className={`capitalize ${bgColor} ${textColor} p-2 rounded-lg flex items-center justify-center h-full font-semibold`}
-          >
-            {status}
-          </div>
+          <Badge
+            count={badgeText}
+            color={color}
+            style={{
+              backgroundColor: color,
+              fontWeight: "bold",
+              fontSize: 14,
+              height: 24,
+              padding: "0 8px",
+              width: "auto",
+            }}
+          />
         );
       },
     },
@@ -211,7 +231,7 @@ function Rentals() {
                 Copy Rental ID
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => handleDelete(rental)}>
+              <DropdownMenuItem onClick={() => handleDelete(rental)} disabled={["APPROVED", "GIVEN", "RETURNED"]}>
                 <span className="text-red-500 hover:text-red-400">Delete</span>
               </DropdownMenuItem>
             </DropdownMenuContent>

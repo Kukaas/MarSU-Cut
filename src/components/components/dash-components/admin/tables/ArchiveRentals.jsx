@@ -30,7 +30,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Spin, Tooltip, Typography } from "antd";
+import { Badge, Spin, Tooltip, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
 import { ArrowDownLeft } from "lucide-react";
 import { toast } from "sonner";
@@ -39,6 +39,7 @@ function ArchiveRentals() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingApprove, setLoadingApprove] = useState(false);
+  const [loadingReject, setLoadingReject] = useState(false);
   const [loadingReturned, setLoadingReturned] = useState(false);
   const [loadingArchive, setLoadingArchive] = useState(false);
   const [sorting, setSorting] = useState([]);
@@ -79,6 +80,45 @@ function ArchiveRentals() {
     fetchRentals();
   }, []);
 
+  const handleReject = async (rental) => {
+    try {
+      setLoadingReject(true);
+      const res = await axios.put(
+        `https://marsu.cut.server.kukaas.tech/api/v1/rental/update/${rental._id}`,
+        { status: "REJECTED" }
+      );
+
+      if (res.status === 200) {
+        setLoadingReject(false);
+        toast.success(
+          `Rental of ${rental.coordinatorName} is rejected successfully!`,
+          {
+            action: {
+              label: "Ok",
+            },
+          }
+        );
+
+        // Update the data in the state
+        setData((prevData) => {
+          return prevData.map((item) => {
+            if (item._id === rental._id) {
+              return { ...item, status: "REJECTED" };
+            }
+
+            return item;
+          });
+        });
+      } else {
+        toastError();
+        setLoadingReject(false);
+      }
+    } catch (error) {
+      toastError();
+      setLoadingReject(false);
+    }
+  };
+
   // Update the status of the rental to approved
   const handleApprove = async (rental) => {
     try {
@@ -91,7 +131,7 @@ function ArchiveRentals() {
       if (res.status === 200) {
         setLoadingApprove(false);
         toast.success(
-          `Rental of ${rental.studentName} is approved successfully!`,
+          `Rental of ${rental.coordinatorName} is approved successfully!`,
           {
             action: {
               label: "Ok",
@@ -119,17 +159,58 @@ function ArchiveRentals() {
     }
   };
 
+  const handleGiven = async (rental) => {
+    try {
+      setLoadingReturned(true);
+      const res = await axios.put(
+        `https://marsu.cut.server.kukaas.tech/api/v1/rental/update/${rental._id}`,
+        {
+          status: "GIVEN",
+        }
+      );
+
+      if (res.status === 200) {
+        setLoadingReturned(false);
+        toast.success(`Rental of ${rental.coordnatorName} is given!`, {
+          action: {
+            label: "Ok",
+          },
+        });
+
+        // Update the data in the state
+        setData((prevData) => {
+          return prevData.map((item) => {
+            if (item._id === rental._id) {
+              return { ...item, status: "GIVEN" }; // Correct status update
+            }
+            return item;
+          });
+        });
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        toast.error(error.response.data.message); // Correct error handling
+      } else {
+        toast.error("An unexpected error occurred."); // Handle other errors
+      }
+      setLoadingReturned(false);
+    }
+  };
+
   // Update the status of the rental to returned
   const handleReturn = async (rental) => {
     try {
       setLoadingReturned(true);
       const res = await axios.put(
-        `https://marsu.cut.server.kukaas.tech/api/v1/rental/return/${rental._id}`
+        `https://marsu.cut.server.kukaas.tech/api/v1/rental/update/${rental._id}`,
+        {
+          status: "RETURNED",
+        }
       );
 
       if (res.status === 200) {
         setLoadingReturned(false);
-        toast.success(`Rental of ${rental.studentName} is returned!`, {
+        toast.success(`Rental of ${rental.coordinatorName} is returned!`, {
           action: {
             label: "Ok",
           },
@@ -169,7 +250,7 @@ function ArchiveRentals() {
       if (res.status === 200) {
         setLoadingArchive(false);
         toast.success(
-          `Rental of ${rental.studentName} is unarchived successfully!`,
+          `Rental of ${rental.coordinatorName} is unarchived successfully!`,
           {
             action: {
               label: "Ok",
@@ -201,7 +282,7 @@ function ArchiveRentals() {
 
       if (res.status === 200) {
         toast.success(
-          `Rental of ${rental.studentName} is deleted successfully!`,
+          `Rental of ${rental.coordinatorName} is deleted successfully!`,
           {
             action: {
               label: "Ok",
@@ -264,32 +345,52 @@ function ArchiveRentals() {
     },
     {
       accessorKey: "status",
-      header: "Status",
-      key: "status",
+      header: () => <span className="font-bold">Status</span>,
       cell: ({ row }) => {
-        const status = row.getValue("status");
-        let bgColor, textColor;
+        const statusStyles = {
+          APPROVED: {
+            color: "#2b4cbe",
+            badgeText: "Approved",
+          },
+          REJECTED: {
+            color: "red",
+            badgeText: "Rejected",
+          },
+          GIVEN: {
+            color: "#c09000",
+            badgeText: "Given",
+          },
+          PENDING: {
+            color: "red",
+            badgeText: "Pending",
+          },
+          RETURNED: {
+            color: "#008000",
+            badgeText: "Returned",
+          },
+          default: {
+            color: "pink",
+            badgeText: "Unknown",
+          },
+        };
 
-        switch (status) {
-          case "APPROVED":
-            bgColor = "bg-blue-500";
-            textColor = "text-white";
-            break;
-          case "RETURNED":
-            bgColor = "bg-green-500";
-            textColor = "text-white";
-            break;
-          default:
-            bgColor = "bg-pink-500";
-            textColor = "text-white";
-        }
+        const status = row.getValue("status");
+        const { color, badgeText } =
+          statusStyles[status] || statusStyles.default;
 
         return (
-          <div
-            className={`capitalize ${bgColor} ${textColor} p-2 rounded-lg flex items-center justify-center h-full font-semibold`}
-          >
-            {status}
-          </div>
+          <Badge
+            count={badgeText}
+            color={color}
+            style={{
+              backgroundColor: color,
+              fontWeight: "bold",
+              fontSize: 14,
+              height: 24,
+              padding: "0 8px",
+              width: "auto",
+            }}
+          />
         );
       },
     },
@@ -321,8 +422,14 @@ function ArchiveRentals() {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
+                <DropdownMenuItem onClick={() => handleReject(rental)}>
+                  Reject
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => handleApprove(rental)}>
                   Approve
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleGiven(rental)}>
+                  Given
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => handleReturn(rental)}>
                   Returned
@@ -378,7 +485,9 @@ function ArchiveRentals() {
 
   return (
     <Spin
-      spinning={loadingApprove || loadingReturned || loadingArchive}
+      spinning={
+        loadingReject || loadingApprove || loadingReturned || loadingArchive
+      }
       indicator={
         <LoadingOutlined className="dark:text-white" style={{ fontSize: 48 }} />
       }
@@ -390,10 +499,10 @@ function ArchiveRentals() {
         <div className="flex items-center py-4 justify-between">
           <Input
             placeholder="Filter Student Numbers..."
-            value={table.getColumn("studentNumber")?.getFilterValue() || ""}
+            value={table.getColumn("coordinatorName")?.getFilterValue() || ""}
             onChange={(event) =>
               table
-                .getColumn("studentNumber")
+                .getColumn("coordinatorName")
                 ?.setFilterValue(event.target.value)
             }
             className="max-w-sm"
