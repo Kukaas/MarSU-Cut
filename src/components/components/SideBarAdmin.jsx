@@ -41,7 +41,7 @@ const SideBarAdmin = () => {
               {" "}
               {currentUser?.name?.split(" ")[0]} |
             </span>
-            <span className="text-gray-300">
+            <span className="text-gray-400">
               {currentUser.isAdmin ? "Admin" : "User"}
             </span>
           </div>

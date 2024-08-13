@@ -119,7 +119,7 @@ const AddNewProduct = () => {
                       "PANTS",
                       "BLOUSE",
                       "PE TSHIRT",
-                      "PE JOGGING PANT",
+                      "JPANTS",
                     ].map((type) => (
                       <DropdownMenuItem
                         key={type}
@@ -165,6 +165,17 @@ const AddNewProduct = () => {
                       "S26",
                       "S27",
                       "S28+",
+                      "S33+34",
+                      "S35",
+                      "S36",
+                      "S37",
+                      "S38+40",
+                      "S42+45",
+                      "2XL",
+                      "XS/S",
+                      "M/L",
+                      "XL",
+                      "XXL",
                     ].map((size) => (
                       <DropdownMenuItem
                         key={size}
