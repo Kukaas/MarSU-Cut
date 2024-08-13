@@ -1,4 +1,4 @@
-import { Spin, Tooltip, Typography } from "antd";
+import { Badge, Spin, Tooltip, Typography } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Input } from "@/components/ui/input";
 import {
@@ -117,31 +117,40 @@ const CommercialJob = () => {
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: () => <span className="font-bold">Status</span>,
       cell: ({ row }) => {
-        const status = row.getValue("status");
-        let bgColor, textColor;
+        const statusStyles = {
+          APPROVED: {
+            color: "#2b4cbe",
+            badgeText: "Approved",
+          },
+          PENDING: {
+            color: "red",
+            badgeText: "Pending",
+          },
+          default: {
+            color: "gray",
+            badgeText: "Unknown",
+          },
+        };
 
-        switch (status) {
-          case "APPROVED":
-            bgColor = "bg-blue-500";
-            textColor = "text-white";
-            break;
-          case "DONE":
-            bgColor = "bg-purple-500";
-            textColor = "text-white";
-            break;
-          default:
-            bgColor = "bg-pink-500";
-            textColor = "text-white";
-        }
+        const status = row.getValue("status");
+        const { color, badgeText } =
+          statusStyles[status] || statusStyles.default;
 
         return (
-          <div
-            className={`capitalize ${bgColor} ${textColor} p-2 rounded-lg flex items-center justify-center h-full font-semibold`}
-          >
-            {status}
-          </div>
+          <Badge  
+            count={badgeText}
+            color={color}
+            style={{
+              backgroundColor: color,
+              fontWeight: "bold",
+              fontSize: 14,
+              height: 24,
+              padding: "0 8px",
+              width: "auto",
+            }}
+          />
         );
       },
     },

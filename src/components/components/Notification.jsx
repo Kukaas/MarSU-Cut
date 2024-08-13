@@ -73,7 +73,9 @@ const Notification = () => {
         setUnreadNotifications(updatedUnreadNotifications);
         setReadNotifications([...readNotifications, notification]);
 
-        navigate("/dashboard?tab=orders-admin");
+        if (currentUser.isAdmin) {
+          navigate("/dashboard?tab=orders-admin");
+        }
       } else {
         toast.error("Failed to mark notification as read.");
       }
@@ -89,7 +91,11 @@ const Notification = () => {
       );
 
       if (res.status === 200) {
-        toast.success("Notification deleted.");
+        toast.success("Notification deleted.", {
+          action: {
+            label: "Ok",
+          },
+        });
 
         // Update state
         const updatedReadNotifications = readNotifications.filter(
@@ -97,10 +103,18 @@ const Notification = () => {
         );
         setReadNotifications(updatedReadNotifications);
       } else {
-        toast.error("Failed to delete notification.");
+        toast.error("Failed to delete notification.", {
+          action: {
+            label: "Ok",
+          },
+        });
       }
     } catch (error) {
-      toast.error("Failed to delete notification.");
+      toast.error("Failed to delete notification.", {
+        action: {
+          label: "Ok",
+        },
+      });
     }
   };
 
