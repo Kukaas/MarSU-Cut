@@ -168,7 +168,7 @@ const Notification = () => {
           <TabsTrigger value="unread">Unread</TabsTrigger>
           <TabsTrigger value="read">Read</TabsTrigger>
         </TabsList>
-        <TabsContent value="unread">
+        <TabsContent value="unread" className="h-screen overflow-x-auto">
           <SheetTitle className="mt-5">Unread</SheetTitle>
           <SheetDescription className="mt-2">
             {unreadNotifications.length === 0
@@ -198,7 +198,7 @@ const Notification = () => {
             {loading ? "Marking..." : "Mark all as read"}
           </Button>
         </TabsContent>
-        <TabsContent value="read">
+        <TabsContent value="read" className="h-screen overflow-x-auto">
           <SheetTitle className="mt-5">Read</SheetTitle>
           <SheetDescription className="mt-2">
             You have no read notifications.
