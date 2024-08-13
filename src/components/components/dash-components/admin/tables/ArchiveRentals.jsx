@@ -498,7 +498,7 @@ function ArchiveRentals() {
         </Typography.Title>
         <div className="flex items-center py-4 justify-between">
           <Input
-            placeholder="Filter Student Numbers..."
+            placeholder="Search by Coordinator Name..."
             value={table.getColumn("coordinatorName")?.getFilterValue() || ""}
             onChange={(event) =>
               table

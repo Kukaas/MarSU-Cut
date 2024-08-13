@@ -32,7 +32,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Tooltip, Typography } from "antd";
+import { Badge, Tooltip, Typography } from "antd";
 import { ChevronDownIcon, PlusCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -118,32 +118,40 @@ const FinishedProduct = () => {
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: () => <span className="font-bold">Status</span>,
       cell: ({ row }) => {
-        const status = row.getValue("status");
-        let bgColor, textColor;
+        const statusStyles = {
+          "Out of Stock": {
+            color: "red",
+            badgeText: "Out of Stock",
+          },
+          "In Stock": {
+            color: "green",
+            badgeText: "In Stock",
+          },
+          default: {
+            color: "gray",
+            badgeText: "Unknown",
+          },
+        };
 
-        switch (status) {
-          case "In Stock":
-            bgColor = "bg-green-500";
-            textColor = "text-white";
-            break;
-          case "Out of Stock":
-            bgColor = "bg-red-500";
-            textColor = "text-white";
-            break;
-          default:
-            bgColor = "bg-gray-500";
-            textColor = "text-white";
-            break;
-        }
+        const status = row.getValue("status");
+        const { color, badgeText } =
+          statusStyles[status] || statusStyles.default;
 
         return (
-          <div
-            className={`capitalize ${bgColor} ${textColor} p-2 rounded-lg flex items-center justify-center h-full font-semibold`}
-          >
-            {status}
-          </div>
+          <Badge
+            count={badgeText}
+            color={color}
+            style={{
+              backgroundColor: color,
+              fontWeight: "bold",
+              fontSize: 14,
+              height: 24,
+              padding: "0 8px",
+              width: "auto",
+            }}
+          />
         );
       },
     },

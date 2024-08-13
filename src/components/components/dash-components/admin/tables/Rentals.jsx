@@ -132,7 +132,7 @@ function Rentals() {
       if (res.status === 200) {
         setLoadingUpdate(false);
         toast.success(
-          `Rental of ${rental.studentName} is approved successfully!`,
+          `Rental of ${rental.coordinatorName} is approved successfully!`,
           {
             action: {
               label: "Ok",
@@ -251,7 +251,7 @@ function Rentals() {
       if (res.status === 200) {
         setLoadingUpdate(false);
         toast.success(
-          `Rental of ${rental.studentName} is archived successfully!`,
+          `Rental of ${rental.coordinatorName} is archived successfully!`,
           {
             action: {
               label: "Ok",
@@ -283,7 +283,7 @@ function Rentals() {
 
       if (res.status === 200) {
         toast.success(
-          `Rental of ${rental.studentName} is deleted successfully!`,
+          `Rental of ${rental.coordinatorName} is deleted successfully!`,
           {
             action: {
               label: "Ok",

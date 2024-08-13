@@ -11,7 +11,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -222,28 +221,6 @@ function Orders() {
 
   const columns = [
     {
-      id: "select",
-      header: ({ table }) => (
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-    },
-    {
       accessorKey: "studentNumber",
       header: "Student Number",
     },
@@ -311,17 +288,17 @@ function Orders() {
               <div key={index}>
                 {item.productType === "LOGO" ||
                 item.productType === "NECKTIE" ? (
-                  <>
-                    <span className="font-semibold">{item.productType}</span> -{" "}
-                    <span className="font-semibold">{item.quantity}</span>
-                  </>
+                  <div className="flex flex-row gap-2">
+                    <span className="font-semibold text-xs">{item.productType}</span> -{" "}
+                    <span className="font-semibold text-xs">{item.quantity}</span>
+                  </div>
                 ) : (
-                  <>
-                    <span className="font-bold">{item.level}</span>:{" "}
-                    <span className="font-semibold">{item.productType}</span> -{" "}
-                    <span className="font-semibold">{item.size}</span> -{" "}
-                    <span className="font-semibold">{item.quantity}</span>
-                  </>
+                  <div className="flex flex-row ">
+                    <span className="font-bold text-xs">{item.level}:</span>{" "}
+                    <span className="font-semibold text-xs">{item.productType}</span> -{" "}
+                    <span className="font-semibold text-xs">{item.size}</span> -{" "}
+                    <span className="font-semibold text-xs">{item.quantity}</span>
+                  </div>
                 )}
               </div>
             ))}
@@ -337,7 +314,7 @@ function Orders() {
           (acc, item) => acc + parseFloat(item.totalPrice || 0),
           0
         );
-        return `Php${totalPrice.toFixed(2)}`;
+        return `₱${totalPrice.toFixed(2)}`;
       },
     },
     {
@@ -499,7 +476,7 @@ function Orders() {
         </Typography.Title>
         <div className="flex items-center py-4 justify-between">
           <Input
-            placeholder="Filter Student Numbers..."
+            placeholder="Search Student Number..."
             value={table.getColumn("studentNumber")?.getFilterValue() || ""}
             onChange={(event) =>
               table

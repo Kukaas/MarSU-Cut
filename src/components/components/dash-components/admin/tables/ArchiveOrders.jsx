@@ -231,7 +231,7 @@ function ArchiveOrders() {
           (acc, item) => acc + parseFloat(item.totalPrice || 0),
           0
         );
-        return `Php${totalPrice.toFixed(2)}`; // Format as currency
+        return `₱${totalPrice.toFixed(2)}`; // Format as currency
       },
     },
     {
@@ -363,7 +363,7 @@ function ArchiveOrders() {
         </Typography.Title>
         <div className="flex items-center py-4">
           <Input
-            placeholder="Filter Student Numbers..."
+            placeholder="Search by Student Number..."
             value={table.getColumn("studentNumber")?.getFilterValue() || ""}
             onChange={(event) =>
               table
