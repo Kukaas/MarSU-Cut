@@ -76,6 +76,7 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
   }
+  
  
   .dark {
     --chart-1: 220 70% 50%;
@@ -84,4 +85,14 @@
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
+}
+
+@layer components {
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+}
+
+.status-badge {
+  @apply flex-center truncate w-fit gap-1 rounded-2xl border-[1.5px] py-[2px] pl-1.5 pr-2;
 }

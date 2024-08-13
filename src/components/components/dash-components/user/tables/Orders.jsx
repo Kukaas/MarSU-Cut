@@ -29,7 +29,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge, Spin, Tooltip, Typography } from "antd";
+import { Spin, Tooltip, Typography } from "antd";
 import { PlusCircle } from "lucide-react";
 import { useSelector } from "react-redux";
 import {
@@ -202,7 +202,7 @@ function Orders() {
       cell: ({ row }) => {
         const statusStyles = {
           APPROVED: {
-            color: "#2b4cbe",
+            color: "blue",
             badgeText: "Approved",
           },
           MEASURED: {
@@ -210,11 +210,11 @@ function Orders() {
             badgeText: "Measured",
           },
           DONE: {
-            color: "purple",
+            color: "blue",
             badgeText: "Done",
           },
           CLAIMED: {
-            color: "green",
+            color: "#31a900",
             badgeText: "Claimed",
           },
           PENDING: {
@@ -232,18 +232,15 @@ function Orders() {
           statusStyles[status] || statusStyles.default;
 
         return (
-          <Badge
-            count={badgeText}
-            color={color}
-            style={{
-              backgroundColor: color,
-              fontWeight: "bold",
-              fontSize: 14,
-              height: 24,
-              padding: "0 8px",
-              width: "auto",
-            }}
-          />
+          <div className="status-badge">
+            <div
+              className="size-2 rounded-full"
+              style={{ backgroundColor: color }}
+            />
+            <p className="text-[12px] font-semibold" style={{ color }}>
+              {badgeText}
+            </p>
+          </div>
         );
       },
     },

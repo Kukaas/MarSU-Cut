@@ -29,7 +29,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge, Spin, Tooltip, Typography } from "antd";
+import { Spin, Tooltip, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
 import { ArrowDownLeft } from "lucide-react";
 import { toast } from "sonner";
@@ -248,11 +248,11 @@ function ArchiveOrders() {
             badgeText: "Measured",
           },
           DONE: {
-            color: "purple",
+            color: "blue",
             badgeText: "Done",
           },
           CLAIMED: {
-            color: "green",
+            color: "#31a900",
             badgeText: "Claimed",
           },
           default: {
@@ -266,18 +266,15 @@ function ArchiveOrders() {
           statusStyles[status] || statusStyles.default;
 
         return (
-          <Badge
-            count={badgeText}
-            color={color}
-            style={{
-              backgroundColor: color,
-              fontWeight: "bold",
-              fontSize: 14,
-              height: 24,
-              padding: "0 8px",
-              width: "auto",
-            }}
-          />
+          <div className="status-badge">
+            <div
+              className="size-2 rounded-full"
+              style={{ backgroundColor: color }}
+            />
+            <p className="text-[12px] font-semibold" style={{ color }}>
+              {badgeText}
+            </p>
+          </div>
         );
       },
     },

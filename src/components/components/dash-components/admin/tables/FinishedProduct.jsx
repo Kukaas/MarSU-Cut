@@ -32,7 +32,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Badge, Tooltip, Typography } from "antd";
+import { Tooltip, Typography } from "antd";
 import { ChevronDownIcon, PlusCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -140,18 +140,15 @@ const FinishedProduct = () => {
           statusStyles[status] || statusStyles.default;
 
         return (
-          <Badge
-            count={badgeText}
-            color={color}
-            style={{
-              backgroundColor: color,
-              fontWeight: "bold",
-              fontSize: 14,
-              height: 24,
-              padding: "0 8px",
-              width: "auto",
-            }}
-          />
+          <div className="status-badge">
+            <div
+              className="size-2 rounded-full"
+              style={{ backgroundColor: color }}
+            />
+            <p className="text-[12px] font-semibold" style={{ color }}>
+              {badgeText}
+            </p>
+          </div>
         );
       },
     },

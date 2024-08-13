@@ -29,7 +29,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge, Spin, Tooltip, Typography } from "antd";
+import { Spin, Tooltip, Typography } from "antd";
 import {
   Dialog,
   DialogContent,
@@ -159,7 +159,7 @@ function Rentals() {
       cell: ({ row }) => {
         const statusStyles = {
           APPROVED: {
-            color: "#2b4cbe",
+            color: "blue",
             badgeText: "Approved",
           },
           REJECTED: {
@@ -175,7 +175,7 @@ function Rentals() {
             badgeText: "Pending",
           },
           RETURNED: {
-            color: "#008000",
+            color: "#31a900",
             badgeText: "Returned",
           },
           default: {
@@ -189,18 +189,15 @@ function Rentals() {
           statusStyles[status] || statusStyles.default;
 
         return (
-          <Badge
-            count={badgeText}
-            color={color}
-            style={{
-              backgroundColor: color,
-              fontWeight: "bold",
-              fontSize: 14,
-              height: 24,
-              padding: "0 8px",
-              width: "auto",
-            }}
-          />
+          <div className="status-badge">
+            <div
+              className="size-2 rounded-full"
+              style={{ backgroundColor: color }}
+            />
+            <p className="text-[12px] font-semibold" style={{ color }}>
+              {badgeText}
+            </p>
+          </div>
         );
       },
     },
@@ -231,7 +228,10 @@ function Rentals() {
                 Copy Rental ID
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => handleDelete(rental)} disabled={["APPROVED", "GIVEN", "RETURNED"]}>
+              <DropdownMenuItem
+                onClick={() => handleDelete(rental)}
+                disabled={["APPROVED", "GIVEN", "RETURNED"]}
+              >
                 <span className="text-red-500 hover:text-red-400">Delete</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
