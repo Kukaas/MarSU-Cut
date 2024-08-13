@@ -208,7 +208,6 @@ const Notification = () => {
               key={readNotifications.id}
               className="p-4 border rounded-md border-gray-400 mt-2 overflow-x-auto cursor-pointer"
             >
-              <div className="flex flex-row gap-2">
                 <div className="flex gap-2 flex-col">
                   <SheetTitle className="text-sm">
                     {readNotifications?.title}
@@ -221,19 +220,11 @@ const Notification = () => {
                   </SheetDescription>
                 </div>
                 <Tooltip title="Delete notification">
-                  <Trash
-                    className="text-red-400"
-                    width={30}
-                    height={30}
-                    onClick={() => {
-                      handleDeleteNotification(readNotifications);
-                    }}
-                  >
-                    Delete
-                  </Trash>
+                  <Button variant="destructive" className="mt-2 h-6 w-6 relative" onClick={() => handleDeleteNotification(readNotifications)}>
+                    <Trash className="h-4 w-4 absolute"/>
+                  </Button>
                 </Tooltip>
               </div>
-            </div>
           ))}
           <Button
             className="mt-5"

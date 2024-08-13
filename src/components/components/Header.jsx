@@ -1,7 +1,7 @@
 import { Button } from "../ui/button";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 
-import { Menu, Moon, Sun } from "lucide-react";
+import { Bell, Menu, Moon, Sun } from "lucide-react";
 import { useTheme } from "./ThemProvider";
 import {
   NavigationMenu,
@@ -34,6 +34,7 @@ import {
   SheetHeader,
   SheetTrigger,
 } from "../ui/sheet";
+import Notification from "./Notification";
 
 const Header = () => {
   const { setTheme } = useTheme();
@@ -42,6 +43,41 @@ const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
+  const [unreadNotifications, setUnreadNotifications] = useState([]);
+
+  useEffect(() => {
+    if (currentUser) {
+      const fetchNotifications = async () => {
+        try {
+          const res = await axios.get(
+            `https://marsu.cut.server.kukaas.tech/api/v1/user/notifications/${currentUser?._id}`
+          );
+          const notificationsData = res.data;
+
+          // Check if notificationsData contains notifications array
+          if (Array.isArray(notificationsData.notifications)) {
+            const notifications = notificationsData.notifications;
+
+            const unread = notifications.filter(
+              (notification) => !notification.read
+            );
+
+            // Update state
+            setUnreadNotifications(unread);
+          } else {
+            console.error(
+              "Notifications is not an array:",
+              notificationsData.notifications
+            );
+          }
+        } catch (error) {
+          console.error("Error fetching notifications:", error);
+        }
+      };
+
+      fetchNotifications();
+    }
+  }, [currentUser?._id, currentUser]);
 
   // Check screen size
   useEffect(() => {
@@ -117,6 +153,30 @@ const Header = () => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+
+          {currentUser && isSmallScreen && (
+            <Sheet>
+              <SheetTrigger>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-10 w-10 relative"
+                >
+                  <Bell className="h-4 w-4" />
+                  <span className="sr-only">Toggle notifications</span>
+                  {unreadNotifications && unreadNotifications.length > 0 && (
+                    <span className="absolute top-0 right-0 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                      {unreadNotifications.length}
+                    </span>
+                  )}
+                </Button>
+              </SheetTrigger>
+              <SheetContent>
+                <Notification />
+              </SheetContent>
+            </Sheet>
+          )}
+
           {currentUser && (
             <DropdownMenu className="">
               <DropdownMenuTrigger asChild>
@@ -156,6 +216,7 @@ const Header = () => {
               </DropdownMenuContent>
             </DropdownMenu>
           )}
+
           {/* Admin */}
           {isSmallScreen && currentUser && currentUser.isAdmin ? (
             <DropdownMenu>

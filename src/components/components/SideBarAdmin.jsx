@@ -69,7 +69,8 @@ const SideBarAdmin = () => {
     };
 
     fetchNotifications();
-  }, [currentUser._id]);
+  }
+  , [currentUser._id]);
 
   return (
     <div className="flex h-[800px] flex-col gap-2 w-[250px] border-r-2 light:mt-2">
