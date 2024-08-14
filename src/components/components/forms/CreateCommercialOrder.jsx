@@ -43,9 +43,7 @@ const CreateCommercialOrder = () => {
       if (res.status === 201) {
         setCommercialOrderLoading(false);
         toast.success("Commercial order created successfully", {
-          action: {
-            label: "Ok",
-          },
+          
         });
 
         commercialJobForm.reset();

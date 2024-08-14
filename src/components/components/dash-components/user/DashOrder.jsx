@@ -27,7 +27,7 @@ const DashOrder = () => {
         <meta name="description" content="" />
       </Helmet>
       <Orders />
-      <Toaster  closeButton richColors />
+      <Toaster position="top-right"  closeButton richColors />
     </div>
   );
 };

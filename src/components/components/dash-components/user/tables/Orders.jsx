@@ -88,9 +88,7 @@ function Orders() {
       if (res.status === 200) {
         setLoadingDelete(false);
         toast.success(`The order with ID ${order._id} has been deleted.`, {
-          action: {
-            label: "Ok",
-          },
+          
         });
 
         // Update the data in the state

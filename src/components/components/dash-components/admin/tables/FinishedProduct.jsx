@@ -86,9 +86,7 @@ const FinishedProduct = () => {
           prevData.filter((product) => product._id !== selectedProduct._id)
         );
         toast.success("Product deleted successfully!", {
-          action: {
-            label: "Ok",
-          },
+          
         });
       }
     } catch (error) {

@@ -48,9 +48,7 @@ const AddNewProduct = () => {
       if (res.status === 201) {
         setAddNewProductLoading(false);
         toast.success("Product added successfully!", {
-          action: {
-            label: "Ok",
-          },
+          
         });
         addNewProductForm.reset();
       }

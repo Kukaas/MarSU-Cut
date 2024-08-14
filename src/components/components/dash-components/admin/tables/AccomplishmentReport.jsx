@@ -167,9 +167,7 @@ const AccomplishmentReport = () => {
         setIsDialogOpen(false);
         setUpdateLoading(false);
         toast.success("Accomplishment report updated successfully!", {
-          action: {
-            label: "Ok",
-          },
+          
         });
         setData((prevData) => {
           return prevData.map((item) => {
@@ -202,9 +200,7 @@ const AccomplishmentReport = () => {
         toast.success(
           `Accomplishment with ID ${accomplishment._id} is deleted successfully!`,
           {
-            action: {
-              label: "Ok",
-            },
+
           }
         );
         setData((prevData) => {

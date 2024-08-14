@@ -81,9 +81,7 @@ function ArchiveOrders() {
         toast.success(
           `Order of ${order.studentName} is unarchived successfully!`,
           {
-            action: {
-              label: "Ok",
-            },
+
           }
         );
 
@@ -115,9 +113,7 @@ function ArchiveOrders() {
         toast.success(
           `Order of ${order.studentName} is deleted successfully!`,
           {
-            action: {
-              label: "Ok",
-            },
+
           }
         );
 

@@ -1,4 +1,4 @@
-import { message, notification } from "antd";
+import { notification } from "antd";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -22,6 +22,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { toast, Toaster } from "sonner";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -59,13 +60,15 @@ const ResetPassword = () => {
     if (!currentEmail) return navigate("/forgot-password");
 
     if (!values.password || !values.confirmPassword)
-      return message.error("Please fill in all fields");
+      return toast.error("Please fill in all fields");
 
     if (values.password !== values.confirmPassword)
-      return message.error("Passwords do not match");
+      return toast.error("Passwords do not match", {
+        description: "Please check your password"
+    });
 
     if (values.password.length < 8)
-      return message.error("Password must be at least 8 characters long");
+      return toast.error("Password must be at least 8 characters long");
 
     try {
       setLoading(true);
@@ -90,12 +93,12 @@ const ResetPassword = () => {
         navigate("/sign-in");
       } else {
         setLoading(false);
-        message.error(res.data.message);
+        toast.error(res.data.message);
         dispatch(forgotPasswordSuccess(currentEmail));
       }
     } catch (error) {
       setLoading(false);
-      message.error(error.response.data.message);
+      toast.error(error.response.data.message);
       dispatch(forgotPasswordSuccess(currentEmail));
     }
   };
@@ -190,6 +193,7 @@ const ResetPassword = () => {
           </Form>
         </div>
       </div>
+      <Toaster position="top-right" closeButton richColors />
     </div>
   );
 };

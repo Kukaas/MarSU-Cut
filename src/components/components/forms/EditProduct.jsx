@@ -48,9 +48,7 @@ const EditProduct = ({ selectedProduct }) => {
       if (res.status === 200) {
         setEditProductLoading(false);
         toast.success("Product updated successfully!", {
-          action: {
-            label: "Ok",
-          },
+          
         });
         editProductForm.reset({
           level: "",

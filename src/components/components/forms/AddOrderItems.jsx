@@ -372,9 +372,7 @@ const AddOrderItems = ({ selectedOrder }) => {
 
     if (res.status === 200) {
       toast.success(`The student ${selectedOrder.studentName} is measured`, {
-        action: {
-          label: "Ok",
-        },
+        description: "The items have been to the order",
       });
     } else {
       Toaster();

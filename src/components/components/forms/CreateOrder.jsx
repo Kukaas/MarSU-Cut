@@ -152,9 +152,7 @@ const CreateOrder = () => {
         form.reset();
         toast.success("Order submitted successfully!", {
           description: "Please wait for the admin to approve your order.",
-          action: {
-            label: "Ok",
-          },
+          
         });
 
         // Clear the file input

@@ -87,9 +87,7 @@ const RawMaterials = () => {
           prevData.filter((product) => product._id !== selectedRawMaterial._id)
         );
         toast.success("Product deleted successfully!", {
-          action: {
-            label: "Ok",
-          },
+          
         });
       }
     } catch (error) {

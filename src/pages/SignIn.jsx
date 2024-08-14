@@ -1,4 +1,3 @@
-import { message } from "antd";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -20,6 +19,7 @@ import { LoginSchema } from "@/schema/shema";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Helmet } from "react-helmet";
+import { toast, Toaster } from "sonner";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -53,7 +53,7 @@ const SignIn = () => {
   // Handle login
   const handleLogin = async (values) => {
     if (!values.email || !values.password) {
-      message.error("Please fill all the fields");
+      toast.error("Please fill all the fields");
       return;
     }
     try {
@@ -73,7 +73,6 @@ const SignIn = () => {
       if (res.status === 200) {
         setLoading(false);
         dispatch(loginSuccess(data));
-        message.success("Signin success");
         localStorage.setItem("token", data.token);
         if (data.isAdmin) {
           navigate("/dashboard?tab=home-admin");
@@ -85,15 +84,21 @@ const SignIn = () => {
       setLoading(false);
       if (error.response && error.response.status === 404) {
         setLoading(false);
-        message.error("User not found");
-        dispatch(loginFail(error.response.data.message));
+        toast.error("User not found", {
+          description: "Please check your email and password",
+        });
+        dispatch(loginFail(error.response.message));
       } else if (error.response && error.response.status === 401) {
         setLoading(false);
-        message.error("Wrong email or password");
+        toast.error("Wrong email or password", {
+          description: "Please check your email and password",
+        });
         dispatch(loginFail(error.response.data.message));
       } else if (error.response && error.response.status === 403) {
         setLoading(false);
-        message.error("Email Not Verified: Please Verify Your Email Address");
+        toast.error("Email Not Verified: Please Verify Your Email Address", {
+          description: "Please check your email to verify your account.",
+        });
         dispatch(loginFail(error.response.data.message));
       } else {
         setLoading(false);
@@ -207,6 +212,7 @@ const SignIn = () => {
           </div>
         </div>
       </div>
+      <Toaster position="top-right" closeButton richColors />
     </div>
   );
 };

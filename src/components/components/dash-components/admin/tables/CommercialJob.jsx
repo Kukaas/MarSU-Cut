@@ -87,9 +87,7 @@ const CommercialJob = () => {
         toast.success(
           `Commercial job with ID ${commercial._id} has been approved.`,
           {
-            action: {
-              label: "Ok",
-            },
+
           }
         );
       }
@@ -113,9 +111,7 @@ const CommercialJob = () => {
         toast.success(
           `Commercial job with ID ${commercial._id} has been deleted.`,
           {
-            action: {
-              label: "Ok",
-            },
+
           }
         );
       }

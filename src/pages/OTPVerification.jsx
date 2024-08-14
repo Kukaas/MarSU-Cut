@@ -1,4 +1,4 @@
-import { message, notification } from "antd";
+import {  notification } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -22,6 +22,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { toast, Toaster } from "sonner";
 
 const OTPVerification = () => {
   const navigate = useNavigate();
@@ -110,10 +111,10 @@ const OTPVerification = () => {
         });
         dispatch(forgotPasswordSuccess(currentEmail));
       } else {
-        message.error(res.data.message);
+        toast.error(res.data.message);
       }
     } catch (error) {
-      message.error(error.response.data.message);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -130,7 +131,12 @@ const OTPVerification = () => {
   const handleSubmitOTP = async (values) => {
     try {
       setLoading(true);
-      if (!values.otp) return message.error("OTP is required");
+      if (!values.otp) {
+        setLoading(false)
+        return toast.error("OTP is required", {
+          description: "Please enter the OTP sent to your email.",
+        });
+      }
       const res = await axios.post(
         "https://marsu.cut.server.kukaas.tech/api/v1/auth/verify-otp",
         { email: currentEmail, otp: values.otp },
@@ -142,15 +148,15 @@ const OTPVerification = () => {
       if (res.status === 200) {
         setLoading(false);
         dispatch(forgotPasswordSuccess(currentEmail));
-        message.success("OTP verified successfully");
+        toast.success("OTP verified successfully");
         navigate(`/reset-password/${hashedEmail}`);
       } else {
         setLoading(false);
-        message.error(res.data.message);
+        toast.error(res.data.message);
       }
     } catch (error) {
       setLoading(false);
-      message.error(error.response.data.message);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -226,6 +232,7 @@ const OTPVerification = () => {
           </div>
         </div>
       </div>
+      <Toaster position="top-right" closeButton richColors />
     </div>
   );
 };

@@ -87,17 +87,13 @@ const CommercialJob = () => {
         toast.success(
           `Commercial job with ID ${commercial._id} has been deleted.`,
           {
-            action: {
-              label: "Ok",
-            },
+
           }
         );
       }
     } catch (error) {
       toast.error("Uh oh! Something went wrong", {
-        action: {
-          label: "Ok",
-        },
+        
       });
     }
   };

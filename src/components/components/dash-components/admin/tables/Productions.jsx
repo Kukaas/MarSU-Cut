@@ -105,9 +105,7 @@ const Productions = () => {
       if (res.status === 200) {
         setOpenDeleteDialog(false);
         toast.success(`Produxtion with ID ${selectedProduction._id} deleted.`, {
-          action: {
-            label: "Ok",
-          },
+          
         });
 
         setData((prevData) => {

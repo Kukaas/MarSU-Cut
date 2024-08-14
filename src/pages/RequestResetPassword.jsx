@@ -1,4 +1,4 @@
-import { message, Spin, notification } from "antd";
+import { Spin, notification } from "antd";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -24,6 +24,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { toast, Toaster } from "sonner";
 
 const RequestResetPassword = () => {
   const dispatch = useDispatch();
@@ -42,7 +43,7 @@ const RequestResetPassword = () => {
   const handleSendOTP = async (values) => {
     // Hash email
     const hashedEmail = SHA256(values.email).toString();
-    if (!values.email) return message.error("Email is required");
+    if (!values.email) return toast.error("Email is required");
     try {
       setLoading(true);
       dispatch(forgotPasswordStart());
@@ -67,12 +68,16 @@ const RequestResetPassword = () => {
         navigate(`/otp-verification/${hashedEmail}`);
       } else {
         setLoading(false);
-        message.error("Email is not registered");
+        toast.error("Email is not registered", {
+          description: "Please enter a valid email",
+        });
         dispatch(forgotPasswordFail());
       }
     } catch (error) {
       setLoading(false);
-      message.error("Email is not registered");
+      toast.error("Email is not registered", {
+        description: "Please enter a valid email",
+      });
       dispatch(forgotPasswordFail());
     }
   };
@@ -142,6 +147,7 @@ const RequestResetPassword = () => {
           </div>
         </div>
       )}
+      <Toaster position="top-right" closeButton richColors />
     </div>
   );
 };

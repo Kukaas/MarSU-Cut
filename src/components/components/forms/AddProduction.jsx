@@ -64,9 +64,7 @@ const AddProduction = () => {
       if (res.status === 201) {
         setAddProductionLoading(false);
         toast.success("Production added successfully", {
-          action: {
-            label: "Ok",
-          },
+          
         });
       }
     } catch (error) {

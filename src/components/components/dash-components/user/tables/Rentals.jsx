@@ -96,9 +96,7 @@ function Rentals() {
         toast.success(
           `Rental whith rental ID ${rental._id} has been deleted!`,
           {
-            action: {
-              label: "Ok",
-            },
+
           }
         );
 

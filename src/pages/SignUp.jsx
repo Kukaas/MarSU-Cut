@@ -14,10 +14,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { message, notification } from "antd";
 import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet";
+import { toast, Toaster } from "sonner";
+import { notification } from "antd";
 
 const SignUp = () => {
   const [loading, setLoading] = useState(false);
@@ -56,17 +57,17 @@ const SignUp = () => {
   // Handle register
   const handleRegister = async (values) => {
     if (values.email && values.email.includes(" ")) {
-      message.error("Email cannot contain spaces");
+      toast.error("Email cannot contain spaces");
       return;
     }
 
     if (values.password && values.password.includes(" ")) {
-      message.error("Password cannot contain spaces");
+      toast.error("Password cannot contain spaces");
       return;
     }
 
     if (values.password && values.password.length < 6) {
-      message.error("Password must be at least 8 characters long");
+      toast.error("Password must be at least 8 characters long");
       return;
     }
 
@@ -78,13 +79,15 @@ const SignUp = () => {
       !values.password ||
       !values.confirmPassword
     ) {
-      message.error("Please fill out all fields");
+      toast.error("Please fill out all fields");
       setLoading(false);
       return;
     }
 
     if (values.password !== values.confirmPassword) {
-      message.error("Passwords do not match");
+      toast.error("Passwords do not match", {
+        description: "Please make sure your passwords match.",
+      });
       setLoading(false);
       return;
     }
@@ -98,24 +101,30 @@ const SignUp = () => {
       );
 
       if (res.status === 200) {
-        notification.success({
-          message: "Success",
-          description: "An email has been sent to you for verification.",
-          pauseOnHover: false,
-          showProgress: true,
-        });
         navigate("/sign-in");
+        notification.success({
+          message: "Registration successful",
+          description: "Please check your email for verification.",
+          closable: true,
+          duration: 5,
+        })
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
         setLoading(false);
-        message.error("Email is already taken");
+        toast.error("Email is already taken", {
+          description: "Please try another email.",
+        });
       } else if (error.response && error.response.status === 401) {
         setLoading(false);
-        message.error("Name already taken");
+        toast.error("Name already taken", {
+          description: "Please try another name.",
+        });
       } else {
         setLoading(false);
-        message.error("Something went wrong. Please try again later.");
+        toast.error("Something went wrong. Please try again later.", {
+          description: "Please try again later.",
+        });
       }
     } finally {
       setLoading(false);
@@ -253,6 +262,7 @@ const SignUp = () => {
           </div>
         </div>
       </div>
+      <Toaster position="top-right" closeButton richColors />
     </div>
   );
 };

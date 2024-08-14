@@ -74,9 +74,7 @@ const ChangePassword = () => {
     } catch (error) {
       if (error.response.status === 400) {
         toast.error("Old password does not match", {
-          action: {
-            label: "Ok",
-          },
+          
         });
       }
 

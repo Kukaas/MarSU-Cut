@@ -91,9 +91,7 @@ function Rentals() {
         toast.success(
           `Rental of ${rental.coordinatorName} is rejected successfully!`,
           {
-            action: {
-              label: "Ok",
-            },
+
           }
         );
 
@@ -131,9 +129,7 @@ function Rentals() {
         toast.success(
           `Rental of ${rental.coordinatorName} is approved successfully!`,
           {
-            action: {
-              label: "Ok",
-            },
+
           }
         );
 
@@ -170,9 +166,7 @@ function Rentals() {
       if (res.status === 200) {
         setLoadingUpdate(false);
         toast.success(`Rental of ${rental.coordnatorName} is given!`, {
-          action: {
-            label: "Ok",
-          },
+          
         });
 
         // Update the data in the state
@@ -209,9 +203,7 @@ function Rentals() {
       if (res.status === 200) {
         setLoadingUpdate(false);
         toast.success(`Rental of ${rental.coordinatorName} is returned!`, {
-          action: {
-            label: "Ok",
-          },
+          
         });
 
         // Update the data in the state
@@ -250,9 +242,7 @@ function Rentals() {
         toast.success(
           `Rental of ${rental.coordinatorName} is archived successfully!`,
           {
-            action: {
-              label: "Ok",
-            },
+
           }
         );
 
@@ -284,9 +274,7 @@ function Rentals() {
         toast.success(
           `Rental of ${rental.coordinatorName} is deleted successfully!`,
           {
-            action: {
-              label: "Ok",
-            },
+
           }
         );
         // Update the data in the state

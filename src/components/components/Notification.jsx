@@ -61,9 +61,7 @@ const Notification = () => {
 
       if (res.status === 200) {
         toast.success("Notification marked as read.", {
-          action: {
-            label: "Ok",
-          },
+          
         });
 
         // Update state
@@ -92,9 +90,7 @@ const Notification = () => {
 
       if (res.status === 200) {
         toast.success("Notification deleted.", {
-          action: {
-            label: "Ok",
-          },
+          
         });
 
         // Update state
@@ -104,16 +100,11 @@ const Notification = () => {
         setReadNotifications(updatedReadNotifications);
       } else {
         toast.error("Failed to delete notification.", {
-          action: {
-            label: "Ok",
-          },
         });
       }
     } catch (error) {
       toast.error("Failed to delete notification.", {
-        action: {
-          label: "Ok",
-        },
+        
       });
     }
   };

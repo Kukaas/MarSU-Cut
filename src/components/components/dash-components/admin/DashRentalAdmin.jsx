@@ -25,7 +25,7 @@ const DashRentalAdmin = () => {
         <meta name="description" content="" />
       </Helmet>
       <Rentals />
-      <Toaster  closeButton richColors />
+      <Toaster closeButton richColors />
     </div>
   );
 };

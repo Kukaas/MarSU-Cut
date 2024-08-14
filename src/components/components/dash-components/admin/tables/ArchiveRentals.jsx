@@ -89,9 +89,7 @@ function ArchiveRentals() {
         toast.success(
           `Rental of ${rental.coordinatorName} is unarchived successfully!`,
           {
-            action: {
-              label: "Ok",
-            },
+
           }
         );
 
@@ -123,9 +121,7 @@ function ArchiveRentals() {
         toast.success(
           `Rental of ${rental.coordinatorName} is deleted successfully!`,
           {
-            action: {
-              label: "Ok",
-            },
+
           }
         );
         // Update the data in the state

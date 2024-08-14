@@ -37,9 +37,7 @@ const CreateAccomplishment = () => {
     if (res.status === 201) {
       setLoading(false);
       toast.success("Accomplishment report created successfully!", {
-        action: {
-          label: "Ok",
-        },
+        
       });
       form.reset();
     } else {
