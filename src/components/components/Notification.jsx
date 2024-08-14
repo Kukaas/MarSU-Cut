@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import { Trash } from "lucide-react";
+import { Loader2, Trash } from "lucide-react";
 import { Tooltip } from "antd";
 
 const Notification = () => {
@@ -144,19 +144,23 @@ const Notification = () => {
 
   const handleDeleteAllNotification = async () => {
     try {
+      setLoading(true);
       const res = await axios.delete(
         `https://marsu.cut.server.kukaas.tech/api/v1/user/notifications/${currentUser._id}`
       );
 
       if (res.status === 200) {
+        setLoading(false);
         toast.success("All notifications deleted.");
 
         // Update state
         setReadNotifications([]);
       } else {
+        setLoading(false);
         toast.error("Failed to delete all notifications.");
       }
     } catch (error) {
+      setLoading(false);
       toast.error("Failed to delete all notifications.");
     }
   };
@@ -194,8 +198,19 @@ const Notification = () => {
               </SheetDescription>
             </div>
           ))}
-          <Button className="mt-5" onClick={handleMarkAllNotificationsAsRead} unreadNotification={unreadNotifications}>
-            {loading ? "Marking..." : "Mark all as read"}
+          <Button
+            className="mt-5"
+            onClick={handleMarkAllNotificationsAsRead}
+            unreadNotification={unreadNotifications}
+          >
+            {loading ? (
+              <div className="flex items-center">
+                <Loader2 className="mr-2 animate-spin" />
+                <span>Marking as read</span>
+              </div>
+            ) : (
+              "Mark all as read"
+            )}
           </Button>
         </TabsContent>
         <TabsContent value="read" className="h-screen overflow-x-auto">
@@ -208,30 +223,41 @@ const Notification = () => {
               key={readNotifications.id}
               className="p-4 border rounded-md border-gray-400 mt-2 overflow-x-auto cursor-pointer"
             >
-                <div className="flex gap-2 flex-col">
-                  <SheetTitle className="text-sm">
-                    {readNotifications?.title}
-                  </SheetTitle>
-                  <SheetDescription className="text-sm">
-                    {readNotifications?.message}
-                  </SheetDescription>
-                  <SheetDescription className="text-xs text-gray-400">
-                    {readNotifications?.createdAt}
-                  </SheetDescription>
-                </div>
-                <Tooltip title="Delete notification">
-                  <Button variant="destructive" className="mt-2 h-6 w-6 relative" onClick={() => handleDeleteNotification(readNotifications)}>
-                    <Trash className="h-4 w-4 absolute"/>
-                  </Button>
-                </Tooltip>
+              <div className="flex gap-2 flex-col">
+                <SheetTitle className="text-sm">
+                  {readNotifications?.title}
+                </SheetTitle>
+                <SheetDescription className="text-sm">
+                  {readNotifications?.message}
+                </SheetDescription>
+                <SheetDescription className="text-xs text-gray-400">
+                  {readNotifications?.createdAt}
+                </SheetDescription>
               </div>
+              <Tooltip title="Delete notification">
+                <Button
+                  variant="destructive"
+                  className="mt-2 h-6 w-6 relative"
+                  onClick={() => handleDeleteNotification(readNotifications)}
+                >
+                  <Trash className="h-4 w-4 absolute" />
+                </Button>
+              </Tooltip>
+            </div>
           ))}
           <Button
             className="mt-5"
             variant="destructive"
             onClick={handleDeleteAllNotification}
           >
-            Delete all
+            {loading ? (
+              <div className="flex items-center">
+                <Loader2 className="mr-2 animate-spin" />
+                <span>Deleting</span>
+              </div>
+            ) : (
+              "Delete all"
+            )}
           </Button>
         </TabsContent>
       </Tabs>

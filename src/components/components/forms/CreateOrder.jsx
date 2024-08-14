@@ -245,17 +245,30 @@ const CreateOrder = () => {
                 <FormItem>
                   <FormLabel>Upload Receipt</FormLabel>
                   <FormControl>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-10 pr-3 flex items-center text-sm leading-5">
-                        {!imageFileUrl ? (
-                          <UploadIcon className="h-4 w-4" />
-                        ) : (
+                    <div>
+                      <div className="flex items-center relative justify-between">
+                        {imageFileUrl ? (
                           <img
                             src={imageFileUrl}
                             alt="receipt"
-                            className="h-8 w-8"
+                            className="h-8 w-8 absolute ml-5"
                           />
+                        ) : (
+                          <UploadIcon className="h-5 w-5 absolute ml-5" />
                         )}
+                        <Button
+                          type="button"
+                          onClick={() => fileInputRef.current.click()}
+                          className="w-full flex justify-start"
+                          variant="outline"
+                        >
+                          <span className="truncate ml-12">
+                            {" "}
+                            {imageFile
+                              ? imageFile.name.slice(0, 20) + "..."
+                              : "Upload Receipt"}{" "}
+                          </span>
+                        </Button>
                       </div>
                       <Input
                         type="file"
@@ -264,7 +277,7 @@ const CreateOrder = () => {
                           handleImageChange(e);
                           // Field value will be set after upload is complete
                         }}
-                        className="block w-full text-sm text-gray-500"
+                        className="hidden"
                         ref={fileInputRef}
                       />
                     </div>

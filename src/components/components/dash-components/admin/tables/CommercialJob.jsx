@@ -1,4 +1,5 @@
-import { Tooltip, Typography } from "antd";
+import { Spin, Tooltip, Typography } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ArchiveIcon, ChevronDownIcon, Loader2 } from "lucide-react";
@@ -46,7 +47,6 @@ const CommercialJob = () => {
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -68,8 +68,7 @@ const CommercialJob = () => {
     fetchCommercialJob();
   }, [currentUser]);
 
-  const handleApprove = async (commercial, event) => {
-    event.preventDefault();
+  const handleApprove = async (commercial) => {
     try {
       setLoadingApprove(true);
       const res = await axios.put(
@@ -80,7 +79,6 @@ const CommercialJob = () => {
       );
 
       if (res.status === 200) {
-        setDropdownOpen(false);
         setLoadingApprove(false);
         const updatedData = data.map((item) =>
           item._id === commercial._id ? { ...item, status: "APPROVED" } : item
@@ -105,8 +103,7 @@ const CommercialJob = () => {
     }
   };
 
-  const handleDelete = async (commercial, event) => {
-    event.preventDefault();
+  const handleDelete = async (commercial) => {
     try {
       setLoadingDelete(true);
       const res = await axios.delete(
@@ -114,7 +111,6 @@ const CommercialJob = () => {
       );
 
       if (res.status === 200) {
-        setDropdownOpen(false);
         const updatedData = data.filter((item) => item._id !== commercial._id);
         setData(updatedData);
         setLoadingDelete(false);
@@ -192,7 +188,7 @@ const CommercialJob = () => {
         const commercial = row.original;
 
         return (
-          <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
+          <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
                 <span className="sr-only">Open menu</span>
@@ -209,7 +205,7 @@ const CommercialJob = () => {
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <DropdownMenuItem
-                  onClick={(event) => handleApprove(commercial, event)}
+                  onClick={() => handleApprove(commercial)}
                   disabled={loadingApprove}
                 >
                   {loadingApprove ? (
@@ -224,7 +220,7 @@ const CommercialJob = () => {
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onClick={(event) => handleDelete(commercial, event)}
+                onClick={() => handleDelete(commercial)}
                 disabled={loadingDelete}
               >
                 {loadingDelete ? (
@@ -281,7 +277,17 @@ const CommercialJob = () => {
     });
   };
   return (
-    <div>
+    <Spin
+      spinning={loadingDelete || loadingApprove}
+      indicator={
+        <LoadingOutlined
+          className="dark:text-white"
+          style={{
+            fontSize: 48,
+          }}
+        />
+      }
+    >
       <div className="w-full p-5 h-screen">
         <Typography.Title level={2} className="text-black dark:text-white">
           Commercial Job Orders
@@ -407,7 +413,7 @@ const CommercialJob = () => {
           </div>
         </div>
       </div>
-    </div>
+    </Spin>
   );
 };
 
