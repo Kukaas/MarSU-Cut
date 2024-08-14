@@ -133,7 +133,7 @@ const Header = () => {
                   <AvatarFallback>
                     {`${currentUser.name.split(" ")[0][0]}${
                       currentUser.name.split(" ").slice(-1)[0][0]
-                    }`}
+                    }`.toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>

@@ -59,7 +59,7 @@ const MenuUser = () => {
           <div className="flex items-center gap-2 text-sm">
             <span className="font-semibold">
               {" "}
-              {currentUser?.name?.split(" ")[0]} | 
+              {currentUser?.name?.split(" ")[0]} |
             </span>
             <span className="text-gray-300">
               {currentUser.isAdmin ? "Admin" : "User"}
@@ -88,50 +88,58 @@ const MenuUser = () => {
         </div>
         <div className="flex-1">
           <nav className="grid items-start px-3 text-sm font-medium lg:px-4 gap-2">
-            <Link
-              to="/dashboard?tab=home"
-              className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                isActive("/dashboard?tab=home")
-                  ? "bg-muted text-primary"
-                  : "text-muted-foreground hover:text-primary"
-              }`}
-            >
-              <Home className="h-4 w-4" />
-              Dashboard
-            </Link>
-            <Link
-              to="/dashboard?tab=orders"
-              className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                isActive("/dashboard?tab=orders")
-                  ? "bg-muted text-primary"
-                  : "text-muted-foreground hover:text-primary"
-              }`}
-            >
-              <ShoppingCart className="h-4 w-4" />
-              Orders
-            </Link>
-            <Link
-              to="/dashboard?tab=rentals"
-              className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                isActive("/dashboard?tab=rentals")
-                  ? "bg-muted text-primary"
-                  : "text-muted-foreground hover:text-primary"
-              }`}
-            >
-              <Shirt className="h-4 w-4" />
-              Rentals
-            </Link>
-            <Link
-              to="/dashboard?tab=commercial-job"
-              className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                isActive("/dashboard?tab=commercial-job")
-                  ? "bg-muted text-primary"
-                  : "text-muted-foreground hover:text-primary"
-              }`}
-            >
-              <Building2Icon className="h-4 w-4" />
-              Commercial Job
-            </Link>
+            <SheetTrigger asChild>
+              <Link
+                to="/dashboard?tab=home"
+                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                  isActive("/dashboard?tab=home")
+                    ? "bg-muted text-primary"
+                    : "text-muted-foreground hover:text-primary"
+                }`}
+              >
+                <Home className="h-4 w-4" />
+                Dashboard
+              </Link>
+            </SheetTrigger>
+            <SheetTrigger asChild>
+              <Link
+                to="/dashboard?tab=orders"
+                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                  isActive("/dashboard?tab=orders")
+                    ? "bg-muted text-primary"
+                    : "text-muted-foreground hover:text-primary"
+                }`}
+              >
+                <ShoppingCart className="h-4 w-4" />
+                Orders
+              </Link>
+            </SheetTrigger>
+            <SheetTrigger asChild>
+              <Link
+                to="/dashboard?tab=rentals"
+                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                  isActive("/dashboard?tab=rentals")
+                    ? "bg-muted text-primary"
+                    : "text-muted-foreground hover:text-primary"
+                }`}
+              >
+                <Shirt className="h-4 w-4" />
+                Rentals
+              </Link>
+            </SheetTrigger>
+            <SheetTrigger asChild>
+              <Link
+                to="/dashboard?tab=commercial-job"
+                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                  isActive("/dashboard?tab=commercial-job")
+                    ? "bg-muted text-primary"
+                    : "text-muted-foreground hover:text-primary"
+                }`}
+              >
+                <Building2Icon className="h-4 w-4" />
+                Commercial Job
+              </Link>
+            </SheetTrigger>
           </nav>
         </div>
       </div>

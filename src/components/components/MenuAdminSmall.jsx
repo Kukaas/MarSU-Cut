@@ -106,28 +106,32 @@ const MenuAdmin = () => {
         </div>
         <div className="flex-1">
           <nav className="grid items-start px-3 text-sm font-medium lg:px-4 gap-2">
-            <Link
-              to="/dashboard?tab=home-admin"
-              className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                isActive("/dashboard?tab=home-admin")
-                  ? "bg-muted text-primary"
-                  : "text-muted-foreground hover:text-primary"
-              }`}
-            >
-              <Home className="h-4 w-4" />
-              Dashboard
-            </Link>
-            <Link
-              to="/dashboard?tab=productions"
-              className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                isActive("/dashboard?tab=productions")
-                  ? "bg-muted text-primary"
-                  : "text-muted-foreground hover:text-primary"
-              }`}
-            >
-              <Package className="h-4 w-4" />
-              Productions
-            </Link>
+            <SheetTrigger asChild>
+              <Link
+                to="/dashboard?tab=home-admin"
+                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                  isActive("/dashboard?tab=home-admin")
+                    ? "bg-muted text-primary"
+                    : "text-muted-foreground hover:text-primary"
+                }`}
+              >
+                <Home className="h-4 w-4" />
+                Dashboard
+              </Link>
+            </SheetTrigger>
+            <SheetTrigger asChild>
+              <Link
+                to="/dashboard?tab=productions"
+                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                  isActive("/dashboard?tab=productions")
+                    ? "bg-muted text-primary"
+                    : "text-muted-foreground hover:text-primary"
+                }`}
+              >
+                <Package className="h-4 w-4" />
+                Productions
+              </Link>
+            </SheetTrigger>
             {/* Transactions */}
             <Accordion type="single" collapsible className="w-full rounded-lg">
               <AccordionItem value="item-1">
@@ -145,51 +149,59 @@ const MenuAdmin = () => {
                 </AccordionTrigger>
                 <AccordionContent className="px-4 py-2">
                   <div className="flex flex-col gap-1">
-                    <Link
-                      to="/dashboard?tab=orders-admin"
-                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                        isActive("/dashboard?tab=orders-admin")
-                          ? "bg-muted text-primary"
-                          : "text-muted-foreground hover:text-primary"
-                      }`}
-                    >
-                      <Clipboard className="h-4 w-4" />
-                      Orders
-                    </Link>
-                    <Link
-                      to="/dashboard?tab=rentals-admin"
-                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                        isActive("/dashboard?tab=rentals-admin")
-                          ? "bg-muted text-primary"
-                          : "text-muted-foreground hover:text-primary"
-                      }`}
-                    >
-                      <Badge className="h-4 w-4" />
-                      Rentals
-                    </Link>
-                    <Link
-                      to="/dashboard?tab=commercial-job-admin"
-                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                        isActive("/dashboard?tab=commercial-job-admin")
-                          ? "bg-muted text-primary"
-                          : "text-muted-foreground hover:text-primary"
-                      }`}
-                    >
-                      <Building className="h-4 w-4" />
-                      Commercial Job
-                    </Link>
+                    <SheetTrigger asChild>
+                      <Link
+                        to="/dashboard?tab=orders-admin"
+                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                          isActive("/dashboard?tab=orders-admin")
+                            ? "bg-muted text-primary"
+                            : "text-muted-foreground hover:text-primary"
+                        }`}
+                      >
+                        <Clipboard className="h-4 w-4" />
+                        Orders
+                      </Link>
+                    </SheetTrigger>
+                    <SheetTrigger asChild>
+                      <Link
+                        to="/dashboard?tab=rentals-admin"
+                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                          isActive("/dashboard?tab=rentals-admin")
+                            ? "bg-muted text-primary"
+                            : "text-muted-foreground hover:text-primary"
+                        }`}
+                      >
+                        <Badge className="h-4 w-4" />
+                        Rentals
+                      </Link>
+                    </SheetTrigger>
+                    <SheetTrigger asChild>
+                      <Link
+                        to="/dashboard?tab=commercial-job-admin"
+                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                          isActive("/dashboard?tab=commercial-job-admin")
+                            ? "bg-muted text-primary"
+                            : "text-muted-foreground hover:text-primary"
+                        }`}
+                      >
+                        <Building className="h-4 w-4" />
+                        Commercial Job
+                      </Link>
+                    </SheetTrigger>
                     <hr></hr>
-                    <Link
-                      to="/dashboard?tab=schedules"
-                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                        isActive("/dashboard?tab=schedules")
-                          ? "bg-muted text-primary"
-                          : "text-muted-foreground hover:text-primary"
-                      }`}
-                    >
-                      <Calendar className="h-4 w-4" />
-                      Schedules
-                    </Link>
+                    <SheetTrigger asChild>
+                      <Link
+                        to="/dashboard?tab=schedules"
+                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                          isActive("/dashboard?tab=schedules")
+                            ? "bg-muted text-primary"
+                            : "text-muted-foreground hover:text-primary"
+                        }`}
+                      >
+                        <Calendar className="h-4 w-4" />
+                        Schedules
+                      </Link>
+                    </SheetTrigger>
                   </div>
                 </AccordionContent>
               </AccordionItem>
@@ -212,28 +224,32 @@ const MenuAdmin = () => {
                 </AccordionTrigger>
                 <AccordionContent className="px-4 py-2">
                   <div className="flex flex-col gap-1">
-                    <Link
-                      to="/dashboard?tab=raw-materials"
-                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                        isActive("/dashboard?tab=raw-materials")
-                          ? "bg-muted text-primary"
-                          : "text-muted-foreground hover:text-primary"
-                      }`}
-                    >
-                      <Package2Icon className="h-4 w-4" />
-                      Raw Materials
-                    </Link>
-                    <Link
-                      to="/dashboard?tab=finished-products"
-                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                        isActive("/dashboard?tab=finished-products")
-                          ? "bg-muted text-primary"
-                          : "text-muted-foreground hover:text-primary"
-                      }`}
-                    >
-                      <PackageOpen className="h-4 w-4" />
-                      Finished Product
-                    </Link>
+                    <SheetTrigger asChild>
+                      <Link
+                        to="/dashboard?tab=raw-materials"
+                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                          isActive("/dashboard?tab=raw-materials")
+                            ? "bg-muted text-primary"
+                            : "text-muted-foreground hover:text-primary"
+                        }`}
+                      >
+                        <Package2Icon className="h-4 w-4" />
+                        Raw Materials
+                      </Link>
+                    </SheetTrigger>
+                    <SheetTrigger asChild>
+                      <Link
+                        to="/dashboard?tab=finished-products"
+                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                          isActive("/dashboard?tab=finished-products")
+                            ? "bg-muted text-primary"
+                            : "text-muted-foreground hover:text-primary"
+                        }`}
+                      >
+                        <PackageOpen className="h-4 w-4" />
+                        Finished Product
+                      </Link>
+                    </SheetTrigger>
                   </div>
                 </AccordionContent>
               </AccordionItem>
@@ -256,43 +272,49 @@ const MenuAdmin = () => {
                 </AccordionTrigger>
                 <AccordionContent className="px-4 py-2">
                   <div className="flex flex-col gap-1">
-                    <Link
-                      to="/dashboard?tab=accomplishment-report"
-                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                        isActive("/dashboard?tab=accomplishment-report")
-                          ? "bg-muted text-primary"
-                          : "text-muted-foreground hover:text-primary"
-                      }`}
-                    >
-                      <PieChart className="h-4 w-4" />
-                      Accomplishment Report
-                    </Link>
-                    <Link
-                      to="/dashboard?tab=sales-report"
-                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                        isActive("/dashboard?tab=sales-report")
-                          ? "bg-muted text-primary"
-                          : "text-muted-foreground hover:text-primary"
-                      }`}
-                    >
-                      <BarChart className="h-4 w-4" />
-                      Sales Report
-                    </Link>
+                    <SheetTrigger asChild>
+                      <Link
+                        to="/dashboard?tab=accomplishment-report"
+                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                          isActive("/dashboard?tab=accomplishment-report")
+                            ? "bg-muted text-primary"
+                            : "text-muted-foreground hover:text-primary"
+                        }`}
+                      >
+                        <PieChart className="h-4 w-4" />
+                        Accomplishment Report
+                      </Link>
+                    </SheetTrigger>
+                    <SheetTrigger asChild>
+                      <Link
+                        to="/dashboard?tab=sales-report"
+                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                          isActive("/dashboard?tab=sales-report")
+                            ? "bg-muted text-primary"
+                            : "text-muted-foreground hover:text-primary"
+                        }`}
+                      >
+                        <BarChart className="h-4 w-4" />
+                        Sales Report
+                      </Link>
+                    </SheetTrigger>
                   </div>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
-            <Link
-              to="/dashboard?tab=all-users"
-              className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                isActive("/dashboard?tab=all-users")
-                  ? "bg-muted text-primary"
-                  : "text-muted-foreground hover:text-primary"
-              }`}
-            >
-              <Users className="h-4 w-4" />
-              Users
-            </Link>
+            <SheetTrigger asChild>
+              <Link
+                to="/dashboard?tab=all-users"
+                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                  isActive("/dashboard?tab=all-users")
+                    ? "bg-muted text-primary"
+                    : "text-muted-foreground hover:text-primary"
+                }`}
+              >
+                <Users className="h-4 w-4" />
+                Users
+              </Link>
+            </SheetTrigger>
           </nav>
         </div>
       </div>
