@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -22,23 +21,28 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { app } from "@/firebase";
-import { CreateOrderSchema } from "@/schema/shema";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
 import { Progress } from "antd";
-import axios from "axios";
+
+// firebase
+import { app } from "@/firebase";
 import {
   getDownloadURL,
   getStorage,
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
+
+// others
+import { CreateOrderSchema } from "@/schema/shema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { Loader2, UploadIcon } from "lucide-react";
-import { toast } from "sonner";
 import { Toaster } from "@/lib/Toaster";
 
 const CreateOrder = () => {

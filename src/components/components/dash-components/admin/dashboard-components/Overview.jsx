@@ -5,9 +5,10 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
 const Overview = () => {
   const [overview, setOverview] = useState([]);

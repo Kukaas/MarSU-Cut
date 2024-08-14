@@ -1,12 +1,4 @@
-import {
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-
+// UI
 import {
   Table,
   TableBody,
@@ -16,9 +8,21 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+
+// tanstack
+import {
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+
 import { useEffect, useState } from "react";
-import TableLoading from "./loading-components/TableLoading";
 import axios from "axios";
+
+import TableLoading from "./loading-components/TableLoading";
 
 const RecentSales = () => {
   const [recentOrders, setRecentOrders] = useState([]);

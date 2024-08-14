@@ -1,16 +1,5 @@
-import {  notification } from "antd";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  forgotPasswordStart,
-  forgotPasswordSuccess,
-} from "../redux/forgotPassword/forgotPassword";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { SHA256 } from "crypto-js";
-import { useForm } from "react-hook-form";
-import { OTPVerificationSchema } from "@/schema/shema";
-import { zodResolver } from "@hookform/resolvers/zod";
+// Ui import
+import { toast, Toaster } from "sonner";
 import {
   Form,
   FormControl,
@@ -21,8 +10,27 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+
+// icon
+import {  notification } from "antd";
 import { Loader2 } from "lucide-react";
-import { toast, Toaster } from "sonner";
+
+// redux
+import { useDispatch, useSelector } from "react-redux";
+import {
+  forgotPasswordStart,
+  forgotPasswordSuccess,
+} from "../redux/forgotPassword/forgotPassword";
+
+// Libraries
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { SHA256 } from "crypto-js";
+import { useForm } from "react-hook-form";
+import { OTPVerificationSchema } from "@/schema/shema";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { useEffect, useState } from "react";
 
 const OTPVerification = () => {
   const navigate = useNavigate();

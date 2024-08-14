@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import FinishedProduct from "./tables/FinishedProduct";
 import { Helmet } from "react-helmet";
+
+import FinishedProduct from "./tables/FinishedProduct";
 
 const DashFinishedProduct = () => {
   const navigate = useNavigate();

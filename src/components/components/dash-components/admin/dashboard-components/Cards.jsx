@@ -1,6 +1,3 @@
-import { useEffect, useState } from "react";
-import Overview from "./Overview";
-import RecentSales from "./RecentSales";
 import {
   Card,
   CardContent,
@@ -8,10 +5,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import CardLoading from "./loading-components/CardLoading";
-import axios from "axios";
+
 import { PhilippinePeso, Shirt, ShoppingBasket } from "lucide-react";
+
+import axios from "axios";
+import { useEffect, useState } from "react";
 import CountUp from "react-countup";
+
+import CardLoading from "./loading-components/CardLoading";
+import Overview from "./Overview";
+import RecentSales from "./RecentSales";
 
 const Cards = () => {
   const [loading, setLoading] = useState(true);

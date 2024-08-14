@@ -1,12 +1,17 @@
-import { useEffect, useState } from "react";
+// UI
 import { SheetDescription, SheetTitle } from "../ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import axios from "axios";
-import { useSelector } from "react-redux";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+
+// icons
 import { Loader2, Trash } from "lucide-react";
+
+// others
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { Tooltip } from "antd";
 
 const Notification = () => {

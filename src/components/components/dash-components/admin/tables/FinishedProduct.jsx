@@ -1,4 +1,4 @@
-import AddNewProduct from "@/components/components/forms/AddNewProduct";
+// UI
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -15,7 +15,6 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -24,6 +23,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
+import { Tooltip, Typography } from "antd";
+
+import { ChevronDownIcon, Loader2, PlusCircle } from "lucide-react";
+
+// tanstack
 import {
   flexRender,
   getCoreRowModel,
@@ -32,13 +38,14 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Tooltip, Typography } from "antd";
-import { ChevronDownIcon, Loader2, PlusCircle } from "lucide-react";
+
+// others
 import { useEffect, useState } from "react";
 import axios from "axios";
-import EditProduct from "@/components/components/forms/EditProduct";
-import { toast } from "sonner";
 import { Toaster } from "@/lib/Toaster";
+
+import EditProduct from "@/components/components/forms/EditProduct";
+import AddNewProduct from "@/components/components/forms/AddNewProduct";
 
 const FinishedProduct = () => {
   const [data, setData] = useState([]);

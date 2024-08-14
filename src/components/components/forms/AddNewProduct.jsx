@@ -1,5 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { DialogClose } from "@/components/ui/dialog";
+// UI
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,15 +13,21 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
+
+// icons
+import { Loader2 } from "lucide-react";
+
+// others
 import { Toaster } from "@/lib/Toaster";
 import { AddNewProductSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 
 const AddNewProduct = () => {
   const [addNewProductLoading, setAddNewProductLoading] = useState(false);

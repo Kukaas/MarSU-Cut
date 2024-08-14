@@ -1,5 +1,5 @@
-import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 const PageNotFound = () => {

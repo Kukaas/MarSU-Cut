@@ -1,11 +1,16 @@
-import { Link, useLocation } from "react-router-dom";
-import { Bell, Home, ShoppingCart, Shirt, Building2Icon } from "lucide-react";
+// UI
 import { Button } from "../ui/button";
-import { useSelector } from "react-redux";
-import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import Notification from "./Notification";
-import { useEffect, useState } from "react";
+import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
+
+// icons
+import { Bell, Home, ShoppingCart, Shirt, Building2Icon } from "lucide-react";
+
+// others
 import axios from "axios";
+import { Link, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
 const MenuUser = () => {
   const location = useLocation();

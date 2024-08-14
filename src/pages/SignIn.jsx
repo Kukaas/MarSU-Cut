@@ -1,9 +1,4 @@
-import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { loginFail, loginStart, loginSuccess } from "../redux/user/userSlice";
-import { useEffect, useState } from "react";
+// UI
 import {
   Form,
   FormControl,
@@ -13,13 +8,24 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { toast, Toaster } from "sonner";
+import { Button } from "@/components/ui/button";
+
+// icons
 import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react";
+
+// redux
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { loginFail, loginStart, loginSuccess } from "../redux/user/userSlice";
+
+import axios from "axios";
+import { Helmet } from "react-helmet";
+import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginSchema } from "@/schema/shema";
 import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import { Helmet } from "react-helmet";
-import { toast, Toaster } from "sonner";
 
 const SignIn = () => {
   const navigate = useNavigate();

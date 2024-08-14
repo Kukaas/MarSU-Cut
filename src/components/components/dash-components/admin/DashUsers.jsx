@@ -1,9 +1,9 @@
-import { ToastProvider } from "@/components/ui/toast";
-import Users from "./tables/Users";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { Helmet } from "react-helmet";
+
+import Users from "./tables/Users";
 
 const DashUsers = () => {
   const navigate = useNavigate();
@@ -25,9 +25,7 @@ const DashUsers = () => {
         <title>MarSU Cut | Users</title>
         <meta name="description" content="" />
       </Helmet>
-      <ToastProvider>
-        <Users />
-      </ToastProvider>
+      <Users />
     </div>
   );
 };

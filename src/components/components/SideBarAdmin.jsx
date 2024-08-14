@@ -1,4 +1,15 @@
-import { Link, useLocation } from "react-router-dom";
+// UI
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../ui/accordion";
+import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
+import { Button } from "../ui/button";
+import { Toaster } from "sonner";
+
+// icons
 import {
   Bell,
   Home,
@@ -16,19 +27,14 @@ import {
   PieChart,
   BarChart,
 } from "lucide-react";
-import { Button } from "../ui/button";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "../ui/accordion";
+
+// others
 import { useSelector } from "react-redux";
-import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
-import Notification from "./Notification";
-import { Toaster } from "sonner";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Link, useLocation } from "react-router-dom";
+
+import Notification from "./Notification";
 
 const SideBarAdmin = () => {
   const location = useLocation();

@@ -1,18 +1,4 @@
-import { Spin, notification } from "antd";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  forgotPasswordFail,
-  forgotPasswordStart,
-  forgotPasswordSuccess,
-} from "../redux/forgotPassword/forgotPassword";
-import { useState } from "react";
-import { SHA256 } from "crypto-js";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { RequestResetPasswordSchema } from "@/schema/shema";
+// Ui import
 import {
   Form,
   FormControl,
@@ -23,8 +9,30 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
 import { toast, Toaster } from "sonner";
+
+// Icons
+import { Spin, notification } from "antd";
+import { Loader2 } from "lucide-react";
+import { Link } from "react-router-dom";
+
+// redux
+import { useDispatch, useSelector } from "react-redux";
+import {
+  forgotPasswordFail,
+  forgotPasswordStart,
+  forgotPasswordSuccess,
+} from "../redux/forgotPassword/forgotPassword";
+
+//Libraries
+import axios from "axios";
+import { SHA256 } from "crypto-js";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { RequestResetPasswordSchema } from "@/schema/shema";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const RequestResetPassword = () => {
   const dispatch = useDispatch();

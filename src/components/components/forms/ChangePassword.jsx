@@ -1,5 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { DialogClose } from "@/components/ui/dialog";
+// UI
 import {
   Form,
   FormControl,
@@ -9,15 +8,21 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { DialogClose } from "@/components/ui/dialog";
+import { toast } from "sonner";
+import { message } from "antd";
+
+// icons
+import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react";
+
+// others
 import { ResetPasswordSchemaProfile } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { message } from "antd";
 import axios from "axios";
-import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
-import { toast } from "sonner";
 
 const ChangePassword = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);

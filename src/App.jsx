@@ -1,5 +1,6 @@
-
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+
 import Header from "./components/components/Header";
 import WelcomePage from "./pages/WelcomePage";
 import SignUp from "./pages/SignUp";
@@ -12,7 +13,6 @@ import OTPVerification from "./pages/OTPVerification";
 import ResetPassword from "./pages/ResetPassword";
 import PageNotFound from "./components/components/PageNotFound";
 import "./App.css";
-import { useSelector } from "react-redux";
 
 // Wrapper component to extract tab from URL and pass it as a prop
 const DashboardWrapper = () => {

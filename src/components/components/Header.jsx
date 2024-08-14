@@ -1,16 +1,5 @@
+// Ui imports
 import { Button } from "../ui/button";
-import { Link, NavLink, useNavigate } from "react-router-dom";
-
-import { Menu, Moon, Sun } from "lucide-react";
-import { useTheme } from "./ThemProvider";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuList,
-} from "../ui/navigation-menu";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,12 +10,6 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import axios from "axios";
-import { logout } from "@/redux/user/userSlice";
-import { message } from "antd";
-
-import MenuAdmin from "./MenuAdmin";
-import MenuUser from "./MenuUser";
 import {
   Sheet,
   SheetClose,
@@ -35,6 +18,29 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "../ui/sheet";
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuList,
+} from "../ui/navigation-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+
+// Navigation imports
+import { Link, NavLink, useNavigate } from "react-router-dom";
+
+// Icons import
+import { Menu, Moon, Sun } from "lucide-react";
+import { message } from "antd";
+
+// Other imports
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { logout } from "@/redux/user/userSlice";
+
+import { useTheme } from "./ThemProvider";
+import MenuAdmin from "./MenuAdminSmall";
+import MenuUser from "./MenuUserSmall";
 
 const Header = () => {
   const { setTheme } = useTheme();

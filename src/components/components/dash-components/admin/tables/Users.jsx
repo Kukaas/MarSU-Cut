@@ -1,20 +1,10 @@
-import { useEffect, useState } from "react";
-import {
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+// UI
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { CheckCheckIcon, ChevronDownIcon, XIcon } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -23,9 +13,24 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import axios from "axios";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Typography } from "antd";
+
+import { CheckCheckIcon, ChevronDownIcon, XIcon } from "lucide-react";
+
+// tanstack
+import {
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const Users = () => {
   const [data, setData] = useState([]);

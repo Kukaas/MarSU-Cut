@@ -1,5 +1,4 @@
-import AddProduction from "@/components/components/forms/AddProduction";
-import { Button } from "@/components/ui/button";
+// UI
 import {
   Dialog,
   DialogClose,
@@ -15,7 +14,6 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import {
   Sheet,
   SheetContent,
@@ -32,7 +30,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Toaster } from "@/lib/Toaster";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Tooltip, Typography } from "antd";
+import { toast } from "sonner";
+
+import { ChevronDownIcon, Loader2, PlusCircle } from "lucide-react";
+
+// tanstack
 import {
   flexRender,
   getCoreRowModel,
@@ -41,11 +46,13 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Tooltip, Typography } from "antd";
+
+// others
+import { Toaster } from "@/lib/Toaster";
 import axios from "axios";
-import { ChevronDownIcon, Loader2, PlusCircle } from "lucide-react";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
+
+import AddProduction from "@/components/components/forms/AddProduction";
 
 const Productions = () => {
   const [loading, setLoading] = useState(true);
@@ -104,9 +111,10 @@ const Productions = () => {
 
       if (res.status === 200) {
         setOpenDeleteDialog(false);
-        toast.success(`Produxtion with ID ${selectedProduction._id} deleted.`, {
-          
-        });
+        toast.success(
+          `Produxtion with ID ${selectedProduction._id} deleted.`,
+          {}
+        );
 
         setData((prevData) => {
           return prevData.filter(

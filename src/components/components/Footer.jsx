@@ -1,4 +1,7 @@
+// UI
 import { Layout, Row, Col, Typography } from "antd";
+
+// icons
 import {
   FacebookFilled,
   InstagramFilled,
@@ -7,6 +10,7 @@ import {
   PhoneFilled,
   MailFilled,
 } from "@ant-design/icons";
+
 import { Link } from "react-router-dom";
 
 const { Footer } = Layout;

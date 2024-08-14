@@ -1,14 +1,18 @@
-import { Button } from "@/components/ui/button";
-import PropTypes from "prop-types";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
+// UI
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { PopoverClose } from "@radix-ui/react-popover";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+
+import { PopoverClose } from "@radix-ui/react-popover";
+
+// libraries
+import PropTypes from "prop-types";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 function DownloadButton({ selectedDate, filteredData }) {
   const toastError = () => {

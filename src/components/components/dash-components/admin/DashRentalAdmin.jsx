@@ -1,8 +1,9 @@
-import Rentals from "./tables/Rentals";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { Helmet } from "react-helmet";
+
+import Rentals from "./tables/Rentals";
 
 const DashRentalAdmin = () => {
   const navigate = useNavigate();

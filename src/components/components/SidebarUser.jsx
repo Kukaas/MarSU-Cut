@@ -1,11 +1,17 @@
-import { Link, useLocation } from "react-router-dom";
-import { Bell, Home, ShoppingCart, Shirt, Building2Icon } from "lucide-react";
-import { Button } from "../ui/button";
-import { useSelector } from "react-redux";
+// UI
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
-import Notification from "./Notification";
-import { useEffect, useState } from "react";
+import { Button } from "../ui/button";
+
+// Icons
+import { Bell, Home, ShoppingCart, Shirt, Building2Icon } from "lucide-react";
+
+// others
+import { useSelector } from "react-redux";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+
+import Notification from "./Notification";
 
 const SidebarUser = () => {
   const location = useLocation();

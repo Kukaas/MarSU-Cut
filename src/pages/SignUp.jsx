@@ -1,3 +1,4 @@
+// UI
 import {
   Form,
   FormControl,
@@ -6,19 +7,24 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { toast, Toaster } from "sonner";
+import { notification } from "antd";
+
+// icons
+import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react";
+
+// others
 import { RegisterSchema } from "@/schema/shema";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet";
-import { toast, Toaster } from "sonner";
-import { notification } from "antd";
+
 
 const SignUp = () => {
   const [loading, setLoading] = useState(false);

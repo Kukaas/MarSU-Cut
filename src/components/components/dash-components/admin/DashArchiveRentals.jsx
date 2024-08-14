@@ -1,8 +1,9 @@
-import ArchiveRentals from "./tables/ArchiveRentals";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { Helmet } from "react-helmet";
+
+import ArchiveRentals from "./tables/ArchiveRentals";
 
 const DashArchiveRentals = () => {
   const navigate = useNavigate();

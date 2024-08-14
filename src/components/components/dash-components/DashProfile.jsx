@@ -1,25 +1,4 @@
-import { Alert, Avatar, message, notification } from "antd";
-import { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  deleteObject,
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytesResumable,
-} from "firebase/storage";
-import { CircularProgressbar } from "react-circular-progressbar";
-import "react-circular-progressbar/dist/styles.css";
-import axios from "axios";
-
-import { useNavigate } from "react-router-dom";
-import { app } from "@/firebase";
-import {
-  logout,
-  updateFail,
-  updateStart,
-  updateSuccess,
-} from "@/redux/user/userSlice";
+// UI
 import {
   Form,
   FormControl,
@@ -28,12 +7,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useForm } from "react-hook-form";
-import { UpdateProfileSchema } from "@/schema/shema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import SkeletonProfile from "../SkeletonProfile";
 import {
   Dialog,
   DialogClose,
@@ -43,11 +16,46 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import ChangePassword from "../forms/ChangePassword";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Alert, Avatar, message, notification } from "antd";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "sonner";
+
+// firebase
+import {
+  deleteObject,
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { app } from "@/firebase";
+
+import {
+  logout,
+  updateFail,
+  updateStart,
+  updateSuccess,
+} from "@/redux/user/userSlice";
+
+import { CircularProgressbar } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+
+// others
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { UpdateProfileSchema } from "@/schema/shema";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import { Helmet } from "react-helmet";
 import { Loader2 } from "lucide-react";
 import { Toaster } from "@/lib/Toaster";
-import { toast } from "sonner";
+
+import SkeletonProfile from "../SkeletonProfile";
+import ChangePassword from "../forms/ChangePassword";
 
 const DashProfile = () => {
   const navigate = useNavigate();

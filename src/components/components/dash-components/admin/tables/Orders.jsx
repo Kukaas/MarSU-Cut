@@ -1,15 +1,11 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { ChevronDownIcon, DotsHorizontalIcon } from "@radix-ui/react-icons";
+// UI
 import {
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -20,7 +16,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -29,20 +24,32 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Spin, Tooltip, Typography } from "antd";
+import { toast } from "sonner";
+
+import { ChevronDownIcon, DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { LoadingOutlined } from "@ant-design/icons";
+
+// tanstack
+import {
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+
+// others
 import { useNavigate } from "react-router-dom";
 import { ArchiveIcon } from "lucide-react";
-import { toast } from "sonner";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import AddOrderItems from "../../../forms/AddOrderItems";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { Toaster } from "@/lib/Toaster";
+
+import AddOrderItems from "../../../forms/AddOrderItems";
 
 function Orders() {
   const [data, setData] = useState([]);

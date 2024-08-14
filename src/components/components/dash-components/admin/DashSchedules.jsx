@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+// UI
 import {
   Dialog,
   DialogContent,
@@ -9,12 +8,17 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Typography } from "antd";
+
+// others
 import moment from "moment";
-import { CustomCalendar } from "./CustomCalendar";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet";
-import { Typography } from "antd";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+import { CustomCalendar } from "./CustomCalendar";
 
 const DashSchedules = () => {
   const [schedules, setSchedules] = useState({});

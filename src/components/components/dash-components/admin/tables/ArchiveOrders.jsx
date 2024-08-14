@@ -1,15 +1,4 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { ChevronDownIcon, DotsHorizontalIcon } from "@radix-ui/react-icons";
-import {
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
+// UI
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -28,11 +17,29 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Spin, Tooltip, Typography } from "antd";
-import { LoadingOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
-import { ArrowDownLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { Spin, Tooltip, Typography } from "antd";
+
+// icons
+import { LoadingOutlined } from "@ant-design/icons";
+import { ChevronDownIcon, DotsHorizontalIcon } from "@radix-ui/react-icons";
+import { ArrowDownLeft } from "lucide-react";
+
+// tanstack
+import {
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+
+// others
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { Toaster } from "@/lib/Toaster";
 
 function ArchiveOrders() {

@@ -1,16 +1,4 @@
-import { notification } from "antd";
-import { useSelector } from "react-redux";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import {
-  forgotPasswordFail,
-  forgotPasswordSuccess,
-} from "../redux/forgotPassword/forgotPassword";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ResetPasswordSchema } from "@/schema/shema";
+// UI
 import {
   Form,
   FormControl,
@@ -20,9 +8,28 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast, Toaster } from "sonner";
+import { notification } from "antd";
+
+// icons
+import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react";
+
+// redux
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import {
+  forgotPasswordFail,
+  forgotPasswordSuccess,
+} from "../redux/forgotPassword/forgotPassword";
+
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ResetPasswordSchema } from "@/schema/shema";
+
 
 const ResetPassword = () => {
   const navigate = useNavigate();
