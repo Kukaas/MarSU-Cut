@@ -54,7 +54,9 @@ const ChangePassword = () => {
 
   const handleChangePassword = async (values) => {
     if (values.newPassword !== values.confirmPassword) {
-      message.error("Passwords do not match");
+      toast.error("Passwords do not match", {
+        description: "Please check you password and confirm password"
+      });
       setLoading(false);
       return;
     }
@@ -72,14 +74,14 @@ const ChangePassword = () => {
       );
 
       if (res.status === 200) {
-        message.success("Password changed successfully");
+        toast.success("Password changed successfully");
         formChangePassword.reset();
         setLoading(false);
       }
     } catch (error) {
       if (error.response.status === 400) {
         toast.error("Old password does not match", {
-          
+          description: "Please input your old password."
         });
       }
 

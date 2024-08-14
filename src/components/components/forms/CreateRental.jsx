@@ -37,7 +37,7 @@ import { format } from "date-fns";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
-import { Toaster } from "@/lib/Toaster";
+import ToasterError from "@/lib/Toaster";
 
 const CreateRental = () => {
   const [loading, setLoading] = useState(false);
@@ -86,7 +86,7 @@ const CreateRental = () => {
       }
     } catch (error) {
       setLoading(false);
-      Toaster();
+      ToasterError();
     }
   };
 

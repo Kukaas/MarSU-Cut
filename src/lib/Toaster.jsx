@@ -1,9 +1,11 @@
 import { toast } from "sonner";
 
-export const Toaster = () => {
+const ToasterError = () => {
   toast.error("Uh oh! Something went wrong", {
     action: {
       label: "Ok",
     },
   });
 };
+
+export default ToasterError;

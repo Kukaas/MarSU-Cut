@@ -26,7 +26,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import PropTypes from "prop-types";
-import { Toaster } from "@/lib/Toaster";
+import ToasterError from "@/lib/Toaster";
 
 const AddOrderItems = ({ selectedOrder }) => {
   const [loadingAddItems, setLoadingAddItems] = useState(false);
@@ -379,7 +379,7 @@ const AddOrderItems = ({ selectedOrder }) => {
         description: "The items have been added to the order",
       });
     } else {
-      Toaster();
+      ToasterError();
     }
 
     setLoadingAddItems(false);

@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
 // others
-import { Toaster } from "@/lib/Toaster";
+import ToasterError from "@/lib/Toaster";
 import { AddRawMaterialsSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
@@ -43,13 +43,12 @@ const AddNewRawMaterial = () => {
 
       if (res.status === 200) {
         setAddRawMaterialLoading(false);
-        toast.success("Raw material added successfully", {
-          
-        });
+        toast.success("Raw material added successfully");
+        addRawMaterialForm.reset()
       }
     } catch (error) {
       setAddRawMaterialLoading(false);
-      Toaster();
+      ToasterError();
     }
   };
 

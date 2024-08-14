@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { Helmet } from "react-helmet";
+import { Toaster } from "sonner";
 
 const DashOrder = () => {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ const DashOrder = () => {
         <meta name="description" content="" />
       </Helmet>
       <Orders />
+      <Toaster position="top-right" richColors closeButton/>
     </div>
   );
 };

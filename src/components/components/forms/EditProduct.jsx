@@ -21,7 +21,7 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
 // others
-import { Toaster } from "@/lib/Toaster";
+import ToasterError from "@/lib/Toaster";
 import { EditProductSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
@@ -63,7 +63,7 @@ const EditProduct = ({ selectedProduct }) => {
         });
       }
     } catch (error) {
-      Toaster();
+      ToasterError();
     }
   };
 

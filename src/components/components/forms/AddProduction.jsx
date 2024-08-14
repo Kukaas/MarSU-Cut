@@ -29,7 +29,7 @@ import { Tooltip } from "antd";
 import { CalendarIcon, Loader2, MinusCircle, PlusCircle } from "lucide-react";
 
 // others
-import { Toaster } from "@/lib/Toaster";
+import ToasterError from "@/lib/Toaster";
 import { cn } from "@/lib/utils";
 import { AddProductionSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -73,7 +73,7 @@ const AddProduction = () => {
       }
     } catch (error) {
       setAddProductionLoading(false);
-      Toaster();
+      ToasterError();
     }
   };
 

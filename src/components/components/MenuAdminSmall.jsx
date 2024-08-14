@@ -26,7 +26,6 @@ import {
 import { useSelector } from "react-redux";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import Notification from "./Notification";
-import { Toaster } from "sonner";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -297,7 +296,6 @@ const MenuAdmin = () => {
           </nav>
         </div>
       </div>
-      <Toaster closeButton richColors />
     </div>
   );
 };

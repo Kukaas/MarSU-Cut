@@ -48,7 +48,7 @@ import {
 } from "@tanstack/react-table";
 
 // others
-import { Toaster } from "@/lib/Toaster";
+import ToasterError from "@/lib/Toaster";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -123,7 +123,7 @@ const Productions = () => {
         });
       }
     } catch (error) {
-      Toaster();
+      ToasterError();
     } finally {
       setDeleteLoading(false);
     }

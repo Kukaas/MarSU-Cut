@@ -1,4 +1,3 @@
-import { Toaster } from "./components/ui/toaster.jsx";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
@@ -15,7 +14,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <PersistGate persistor={persistor}>
         <Provider store={store}>
           <App />
-          <Toaster />
+
         </Provider>
       </PersistGate>
     </ThemeProvider>

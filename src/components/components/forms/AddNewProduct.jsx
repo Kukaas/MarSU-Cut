@@ -22,7 +22,7 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
 // others
-import { Toaster } from "@/lib/Toaster";
+import ToasterError from "@/lib/Toaster";
 import { AddNewProductSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
@@ -52,14 +52,12 @@ const AddNewProduct = () => {
 
       if (res.status === 201) {
         setAddNewProductLoading(false);
-        toast.success("Product added successfully!", {
-          
-        });
+        toast.success("Product added successfully!");
         addNewProductForm.reset();
       }
     } catch (error) {
       console.log(error);
-      Toaster();
+      ToasterError();
     }
   };
 

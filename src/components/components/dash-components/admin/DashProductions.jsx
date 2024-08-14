@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import Productions from "./tables/Productions";
+import { Toaster } from "sonner";
 
 const DashProductions = () => {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ const DashProductions = () => {
         <meta name="description" content="" />
       </Helmet>
       <Productions />
+      <Toaster position="top-right" richColors closeButton/>
     </div>
   );
 };

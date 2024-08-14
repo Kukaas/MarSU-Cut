@@ -42,7 +42,7 @@ import {
 // others
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Toaster } from "@/lib/Toaster";
+import ToasterError from "@/lib/Toaster";
 
 import EditRawMaterial from "@/components/components/forms/EditRawMaterial";
 import AddNewRawMaterial from "@/components/components/forms/AddNewRawMaterial";
@@ -98,7 +98,7 @@ const RawMaterials = () => {
         });
       }
     } catch (error) {
-      Toaster();
+      ToasterError();
       setOpenDeleteDialog(false);
       setDeleteLoading(false);
     }

@@ -21,7 +21,7 @@ import { Button } from "@/components/ui/button";
 import { Alert, Avatar, message, notification } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "sonner";
+import { toast, Toaster } from "sonner";
 
 // firebase
 import {
@@ -52,10 +52,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Helmet } from "react-helmet";
 import { Loader2 } from "lucide-react";
-import { Toaster } from "@/lib/Toaster";
 
 import SkeletonProfile from "../SkeletonProfile";
 import ChangePassword from "../forms/ChangePassword";
+import ToasterError from "@/lib/Toaster";
 
 const DashProfile = () => {
   const navigate = useNavigate();
@@ -186,7 +186,7 @@ const DashProfile = () => {
     } catch (error) {
       dispatch(updateFail());
       setUpdateProfileLoading(false);
-      Toaster();
+      ToasterError();
     }
   };
 
@@ -222,7 +222,7 @@ const DashProfile = () => {
       }
     } catch (error) {
       setLoading(false);
-      Toaster();
+      ToasterError();
     }
   };
 
@@ -391,6 +391,7 @@ const DashProfile = () => {
           </Form>
         </div>
       )}
+      <Toaster richColors position="top-right" closeButton />
     </div>
   );
 };

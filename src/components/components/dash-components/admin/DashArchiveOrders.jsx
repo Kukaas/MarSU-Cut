@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 
 import ArchiveOrders from "./tables/ArchiveOrders";
+import { Toaster } from "sonner";
 
 const DashArchiveOrders = () => {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ const DashArchiveOrders = () => {
         <meta name="description" content="" />
       </Helmet>
       <ArchiveOrders />
+      <Toaster position="top-right" richColors closeButton/>
     </div>
   );
 };

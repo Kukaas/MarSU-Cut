@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 
 import AccomplishmentReport from "./tables/AccomplishmentReport";
+import { Toaster } from "sonner";
 
 const DashAccomplishmentReport = () => {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ const DashAccomplishmentReport = () => {
         <meta name="description" content="" />
       </Helmet>
       <AccomplishmentReport />
+      <Toaster position="top-right" richColors closeButton/>
     </div>
   );
 };

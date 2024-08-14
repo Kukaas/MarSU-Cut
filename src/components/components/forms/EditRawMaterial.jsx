@@ -21,7 +21,7 @@ import { useForm } from "react-hook-form";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import axios from "axios";
-import { Toaster } from "@/lib/Toaster";
+import ToasterError from "@/lib/Toaster";
 
 const EditRawMaterial = ({ selectedRawMaterial }) => {
   const [editRawMaterialLoading, setEditRawMaterialLoading] = useState(false);
@@ -51,7 +51,7 @@ const EditRawMaterial = ({ selectedRawMaterial }) => {
         editRawMaterialForm.reset();
       }
     } catch (error) {
-      Toaster();
+      ToasterError();
     }
   };
 

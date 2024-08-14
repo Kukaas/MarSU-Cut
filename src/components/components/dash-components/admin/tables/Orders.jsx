@@ -47,7 +47,7 @@ import { useNavigate } from "react-router-dom";
 import { ArchiveIcon } from "lucide-react";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Toaster } from "@/lib/Toaster";
+import ToasterError from "@/lib/Toaster";
 
 import AddOrderItems from "../../../forms/AddOrderItems";
 
@@ -76,7 +76,7 @@ function Orders() {
       } catch (error) {
         setLoading(false);
         setData([]);
-        Toaster();
+        ToasterError();
       }
     };
     fetchOrders();
@@ -102,10 +102,10 @@ function Orders() {
           )
         );
       } else {
-        Toaster();
+        ToasterError();
       }
     } catch (error) {
-      Toaster();
+      ToasterError();
     } finally {
       setLoadingUpdate(false);
     }
@@ -131,10 +131,10 @@ function Orders() {
         );
       } else {
         setLoadingUpdate(false);
-        Toaster();
+        ToasterError();
       }
     } catch (error) {
-      Toaster();
+      ToasterError();
     } finally {
       setLoadingUpdate(false);
     }
@@ -160,10 +160,10 @@ function Orders() {
         );
       } else {
         setLoadingUpdate(false);
-        Toaster();
+        ToasterError();
       }
     } catch (error) {
-      Toaster();
+      ToasterError();
     } finally {
       setLoadingUpdate(false);
     }
@@ -185,11 +185,11 @@ function Orders() {
           prevData.filter((item) => item._id !== order._id)
         );
       } else {
-        Toaster();
+        ToasterError();
       }
     } catch (error) {
       setLoadingUpdate(false);
-      Toaster();
+      ToasterError();
     } finally {
       setLoadingUpdate(false);
     }
@@ -209,10 +209,10 @@ function Orders() {
           prevData.filter((item) => item._id !== order._id)
         );
       } else {
-        Toaster();
+        ToasterError();
       }
     } catch (error) {
-      Toaster();
+      ToasterError();
       setLoadingUpdate(false);
     } finally {
       setLoadingUpdate(false);

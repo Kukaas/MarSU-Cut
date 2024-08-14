@@ -42,7 +42,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Toaster } from "@/lib/Toaster";
+import ToasterError from "@/lib/Toaster";
 
 const CommercialJob = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -100,7 +100,7 @@ const CommercialJob = () => {
       }
     } catch (error) {
       setLoadingUpdate(false);
-      Toaster();
+      ToasterError();
     }
   };
 
@@ -123,7 +123,7 @@ const CommercialJob = () => {
         );
       }
     } catch (error) {
-      Toaster();
+      ToasterError();
       setLoadingUpdate(false);
     }
   };

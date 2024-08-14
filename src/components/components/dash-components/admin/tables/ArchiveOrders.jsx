@@ -40,7 +40,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Toaster } from "@/lib/Toaster";
+import ToasterError from "@/lib/Toaster";
 
 function ArchiveOrders() {
   const [data, setData] = useState([]);
@@ -96,12 +96,12 @@ function ArchiveOrders() {
           return prevData.filter((item) => item._id !== order._id);
         });
       } else {
-        Toaster();
+        ToasterError();
         setLoadingUpdate(false);
       }
     } catch (error) {
       {
-        Toaster();
+        ToasterError();
         setLoadingUpdate(false);
       }
     }
@@ -130,11 +130,11 @@ function ArchiveOrders() {
         });
       } else {
         setLoadingUpdate(false);
-        Toaster();
+        ToasterError();
       }
     } catch (error) {
       setLoadingUpdate(false);
-      Toaster();
+      ToasterError();
     }
   };
 

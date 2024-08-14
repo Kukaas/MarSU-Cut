@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 
 import ArchiveRentals from "./tables/ArchiveRentals";
+import { Toaster } from "sonner";
 
 const DashArchiveRentals = () => {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ const DashArchiveRentals = () => {
         <meta name="description" content="" />
       </Helmet>
       <ArchiveRentals />
+      <Toaster position="top-right" richColors closeButton/>
     </div>
   );
 };

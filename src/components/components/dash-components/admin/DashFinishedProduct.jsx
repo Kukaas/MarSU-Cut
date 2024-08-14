@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
 import FinishedProduct from "./tables/FinishedProduct";
+import { Toaster } from "sonner";
 
 const DashFinishedProduct = () => {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ const DashFinishedProduct = () => {
         <meta name="description" content="" />
       </Helmet>
       <FinishedProduct />
+      <Toaster position="top-right" richColors closeButton/>
     </div>
   );
 };

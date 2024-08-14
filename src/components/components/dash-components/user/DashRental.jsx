@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { Helmet } from "react-helmet";
+import { Toaster } from "sonner";
 
 const DashRental = () => {
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ const DashRental = () => {
         <meta name="description" content="" />
       </Helmet>
       <Rentals />
+      <Toaster position="top-right" richColors closeButton/>
     </div>
   );
 };

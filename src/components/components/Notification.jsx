@@ -2,7 +2,7 @@
 import { SheetDescription, SheetTitle } from "../ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Button } from "../ui/button";
-import { toast } from "sonner";
+import { toast, Toaster } from "sonner";
 
 // icons
 import { Loader2, Trash } from "lucide-react";
@@ -252,6 +252,7 @@ const Notification = () => {
           </Button>
         </TabsContent>
       </Tabs>
+      <Toaster position="top-center" richColors closeButton/>
     </>
   );
 };

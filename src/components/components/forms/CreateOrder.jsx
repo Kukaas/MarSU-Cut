@@ -43,7 +43,7 @@ import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { Loader2, UploadIcon } from "lucide-react";
-import { Toaster } from "@/lib/Toaster";
+import ToasterError from "@/lib/Toaster";
 
 const CreateOrder = () => {
   const [imageFile, setImageFile] = useState(null);
@@ -167,7 +167,7 @@ const CreateOrder = () => {
     } catch (error) {
       setLoading(false);
       setLoading(false);
-      Toaster();
+      ToasterError();
     }
   };
 

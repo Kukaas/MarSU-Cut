@@ -40,7 +40,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Toaster } from "@/lib/Toaster";
+import ToasterError from "@/lib/Toaster";
 
 function ArchiveRentals() {
   const [data, setData] = useState([]);
@@ -104,12 +104,12 @@ function ArchiveRentals() {
           return prevData.filter((item) => item._id !== rental._id);
         });
       } else {
-        Toaster();
+        ToasterError();
         setLoadingUpdate(false);
       }
     } catch (error) {
       {
-        Toaster();
+        ToasterError();
         setLoadingUpdate(false);
       }
     }
@@ -136,11 +136,11 @@ function ArchiveRentals() {
           return prevData.filter((item) => item._id !== rental._id);
         });
       } else {
-        Toaster();
+        ToasterError();
         setLoadingUpdate(false);
       }
     } catch (error) {
-      Toaster();
+      ToasterError();
       setLoadingUpdate(false);
     }
   };

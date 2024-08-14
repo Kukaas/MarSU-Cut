@@ -7,7 +7,6 @@ import {
 } from "../ui/accordion";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
-import { Toaster } from "sonner";
 
 // icons
 import {
@@ -304,7 +303,6 @@ const SideBarAdmin = () => {
           </nav>
         </div>
       </div>
-      <Toaster closeButton richColors />
     </div>
   );
 };

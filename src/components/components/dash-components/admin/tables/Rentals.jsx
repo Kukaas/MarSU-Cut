@@ -39,7 +39,7 @@ import {
 
 // others
 import { useNavigate } from "react-router-dom";
-import { Toaster } from "@/lib/Toaster";
+import ToasterError from "@/lib/Toaster";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -113,11 +113,11 @@ function Rentals() {
           });
         });
       } else {
-        Toaster();
+        ToasterError();
         setLoadingUpdate(false);
       }
     } catch (error) {
-      Toaster();
+      ToasterError();
       setLoadingUpdate(false);
     }
   };
@@ -151,11 +151,11 @@ function Rentals() {
           });
         });
       } else {
-        Toaster();
+        ToasterError();
         setLoadingUpdate(false);
       }
     } catch (error) {
-      Toaster();
+      ToasterError();
       setLoadingUpdate(false);
     }
   };
@@ -224,11 +224,11 @@ function Rentals() {
           });
         });
       } else {
-        Toaster();
+        ToasterError();
         setLoadingUpdate(false);
       }
     } catch (error) {
-      Toaster();
+      ToasterError();
       setLoadingUpdate(false);
     }
   };
@@ -257,12 +257,12 @@ function Rentals() {
           return prevData.filter((item) => item._id !== rental._id);
         });
       } else {
-        Toaster();
+        ToasterError();
         setLoadingUpdate(false);
       }
     } catch (error) {
       {
-        Toaster();
+        ToasterError();
         setLoadingUpdate(false);
       }
     }
@@ -289,11 +289,11 @@ function Rentals() {
           return prevData.filter((item) => item._id !== rental._id);
         });
       } else {
-        Toaster();
+        ToasterError();
         setLoadingUpdate(false);
       }
     } catch (error) {
-      Toaster();
+      ToasterError();
       setLoadingUpdate(false);
     }
   };

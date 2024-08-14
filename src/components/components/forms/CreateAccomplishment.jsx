@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
 // others
-import { Toaster } from "@/lib/Toaster";
+import ToasterError from "@/lib/Toaster";
 import { CreateAccomplishmentSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
@@ -45,7 +45,7 @@ const CreateAccomplishment = () => {
       });
       form.reset();
     } else {
-      Toaster();
+      ToasterError();
       setLoading(false);
     }
   };

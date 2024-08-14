@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import CommercialJob from "./tables/CommercialJob";
+import { Toaster } from "sonner";
 
 const DashCommercialJob = () => {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ const DashCommercialJob = () => {
         <meta name="description" content="" />
       </Helmet>
       <CommercialJob />
+      <Toaster position="top-right" richColors closeButton/>
     </div>
   );
 };
