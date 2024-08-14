@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
 const OTPVerification = () => {
   const navigate = useNavigate();
@@ -189,9 +190,13 @@ const OTPVerification = () => {
               <Button
                 type="submit"
                 className="w-full mt-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white text-lg hover:bg-gradient-to-r hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600"
+                disabled={loading}
               >
                 {loading ? (
-                  <span className="loading-dots">Verifying OTP</span>
+                  <div className="flex items-center">
+                    <Loader2 className="mr-2 animate-spin" />
+                    <span>Verifying OTP</span>
+                  </div>
                 ) : (
                   "Verify OTP"
                 )}

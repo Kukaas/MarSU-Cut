@@ -94,7 +94,12 @@ function Rentals() {
       if (res.status === 200) {
         setLoadingDelete(false);
         toast.success(
-          `Rental whith rental ID ${rental._id} has been deleeted!`
+          `Rental whith rental ID ${rental._id} has been deleted!`,
+          {
+            action: {
+              label: "Ok",
+            },
+          }
         );
 
         // Update the data in the state
@@ -230,7 +235,9 @@ function Rentals() {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => handleDelete(rental)}
-                disabled={["APPROVED", "GIVEN", "RETURNED"]}
+                disabled={["APPROVED", "GIVEN", "RETURNED"].includes(
+                  rental.status
+                )}
               >
                 <span className="text-red-500 hover:text-red-400">Delete</span>
               </DropdownMenuItem>

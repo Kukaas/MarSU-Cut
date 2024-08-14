@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { ChevronDownIcon, DotsHorizontalIcon } from "@radix-ui/react-icons";
-import { LoadingOutlined } from "@ant-design/icons";
 import {
   flexRender,
   getCoreRowModel,
@@ -15,7 +14,6 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -30,23 +28,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Spin, Tooltip, Typography } from "antd";
+import { Tooltip, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
-import { ArrowDownLeft } from "lucide-react";
+import { ArrowDownLeft, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 function ArchiveRentals() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [loadingApprove, setLoadingApprove] = useState(false);
-  const [loadingReject, setLoadingReject] = useState(false);
-  const [loadingReturned, setLoadingReturned] = useState(false);
-  const [loadingArchive, setLoadingArchive] = useState(false);
+  const [loadingUnarchive, setLoadingUnarchive] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState(false);
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
   const [currentPage, setCurrentPage] = useState(0);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
   const toastError = () => {
@@ -80,166 +77,11 @@ function ArchiveRentals() {
     fetchRentals();
   }, []);
 
-  const handleReject = async (rental) => {
-    try {
-      setLoadingReject(true);
-      const res = await axios.put(
-        `https://marsu.cut.server.kukaas.tech/api/v1/rental/update/${rental._id}`,
-        { status: "REJECTED" }
-      );
-
-      if (res.status === 200) {
-        setLoadingReject(false);
-        toast.success(
-          `Rental of ${rental.coordinatorName} is rejected successfully!`,
-          {
-            action: {
-              label: "Ok",
-            },
-          }
-        );
-
-        // Update the data in the state
-        setData((prevData) => {
-          return prevData.map((item) => {
-            if (item._id === rental._id) {
-              return { ...item, status: "REJECTED" };
-            }
-
-            return item;
-          });
-        });
-      } else {
-        toastError();
-        setLoadingReject(false);
-      }
-    } catch (error) {
-      toastError();
-      setLoadingReject(false);
-    }
-  };
-
-  // Update the status of the rental to approved
-  const handleApprove = async (rental) => {
-    try {
-      setLoadingApprove(true);
-      const res = await axios.put(
-        `https://marsu.cut.server.kukaas.tech/api/v1/rental/update/${rental._id}`,
-        { status: "APPROVED" }
-      );
-
-      if (res.status === 200) {
-        setLoadingApprove(false);
-        toast.success(
-          `Rental of ${rental.coordinatorName} is approved successfully!`,
-          {
-            action: {
-              label: "Ok",
-            },
-          }
-        );
-
-        // Update the data in the state
-        setData((prevData) => {
-          return prevData.map((item) => {
-            if (item._id === rental._id) {
-              return { ...item, status: "APPROVED" };
-            }
-
-            return item;
-          });
-        });
-      } else {
-        toastError();
-        setLoadingApprove(false);
-      }
-    } catch (error) {
-      toastError();
-      setLoadingApprove(false);
-    }
-  };
-
-  const handleGiven = async (rental) => {
-    try {
-      setLoadingReturned(true);
-      const res = await axios.put(
-        `https://marsu.cut.server.kukaas.tech/api/v1/rental/update/${rental._id}`,
-        {
-          status: "GIVEN",
-        }
-      );
-
-      if (res.status === 200) {
-        setLoadingReturned(false);
-        toast.success(`Rental of ${rental.coordnatorName} is given!`, {
-          action: {
-            label: "Ok",
-          },
-        });
-
-        // Update the data in the state
-        setData((prevData) => {
-          return prevData.map((item) => {
-            if (item._id === rental._id) {
-              return { ...item, status: "GIVEN" }; // Correct status update
-            }
-            return item;
-          });
-        });
-      }
-    } catch (error) {
-      if (error.response && error.response.status === 400) {
-        toast.error(error.response.data.message); // Correct error handling
-      } else {
-        toast.error("An unexpected error occurred."); // Handle other errors
-      }
-      setLoadingReturned(false);
-    }
-  };
-
-  // Update the status of the rental to returned
-  const handleReturn = async (rental) => {
-    try {
-      setLoadingReturned(true);
-      const res = await axios.put(
-        `https://marsu.cut.server.kukaas.tech/api/v1/rental/update/${rental._id}`,
-        {
-          status: "RETURNED",
-        }
-      );
-
-      if (res.status === 200) {
-        setLoadingReturned(false);
-        toast.success(`Rental of ${rental.coordinatorName} is returned!`, {
-          action: {
-            label: "Ok",
-          },
-        });
-
-        // Update the data in the state
-        setData((prevData) => {
-          return prevData.map((item) => {
-            if (item._id === rental._id) {
-              return { ...item, status: "RETURNED" };
-            }
-
-            return item;
-          });
-        });
-      } else {
-        toastError();
-        setLoadingReturned(false);
-      }
-    } catch (error) {
-      toastError();
-      setLoadingReturned(false);
-    }
-  };
-
   // Archive the rental
-  const handleUnarchive = async (rental) => {
+  const handleUnarchive = async (rental, event) => {
+    event.preventDefault();
     try {
-      setLoadingArchive(true);
+      setLoadingUnarchive(true);
       const res = await axios.put(
         `https://marsu.cut.server.kukaas.tech/api/v1/rental/archive/update/${rental._id}`,
         {
@@ -248,7 +90,8 @@ function ArchiveRentals() {
       );
 
       if (res.status === 200) {
-        setLoadingArchive(false);
+        setDropdownOpen(false);
+        setLoadingUnarchive(false);
         toast.success(
           `Rental of ${rental.coordinatorName} is unarchived successfully!`,
           {
@@ -263,24 +106,28 @@ function ArchiveRentals() {
         });
       } else {
         toastError();
-        setLoadingArchive(false);
+        setLoadingUnarchive(false);
       }
     } catch (error) {
       {
         toastError();
-        setLoadingArchive(false);
+        setLoadingUnarchive(false);
       }
     }
   };
 
   // Delete the rental
-  const handleDelete = async (rental) => {
+  const handleDelete = async (rental, event) => {
+    event.preventDefault();
     try {
+      setLoadingDelete(true);
       const res = await axios.delete(
         `https://marsu.cut.server.kukaas.tech/api/v1/rental/${rental._id}`
       );
 
       if (res.status === 200) {
+        setLoadingDelete(false);
+        setDropdownOpen(false);
         toast.success(
           `Rental of ${rental.coordinatorName} is deleted successfully!`,
           {
@@ -295,9 +142,11 @@ function ArchiveRentals() {
         });
       } else {
         toastError();
+        setLoadingDelete(false);
       }
     } catch (error) {
       toastError();
+      setLoadingDelete(false);
     }
   };
 
@@ -403,7 +252,7 @@ function ArchiveRentals() {
         const rental = row.original;
 
         return (
-          <DropdownMenu>
+          <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
                 <span className="sr-only">Open menu</span>
@@ -418,26 +267,35 @@ function ArchiveRentals() {
                 Copy Rental ID
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem onClick={() => handleReject(rental)}>
-                  Reject
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleApprove(rental)}>
-                  Approve
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleGiven(rental)}>
-                  Given
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleReturn(rental)}>
-                  Returned
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => handleUnarchive(rental)}>
-                Unarchive
+              <DropdownMenuItem
+                onClick={(event) => handleUnarchive(rental, event)}
+                disabled={loadingUnarchive}
+              >
+                {loadingUnarchive ? (
+                  <div className="flex items-center">
+                    <Loader2 className="mr-2 animate-spin h-4 w-4" />
+                    <span>Unarchiving</span>
+                  </div>
+                ) : (
+                  "Unarchiving"
+                )}
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleDelete(rental)}>
-                <span className="text-red-500 hover:text-red-400">Delete</span>
+              <DropdownMenuItem
+                onClick={(event) => handleDelete(rental, event)}
+                disabled={loadingDelete}
+              >
+                {loadingDelete ? (
+                  <div className="flex items-center">
+                    <Loader2 className="mr-2 animate-spin h-4 w-4" />
+                    <span className="text-red-500 hover:text-red-400">
+                      Deleting
+                    </span>
+                  </div>
+                ) : (
+                  <span className="text-red-500 hover:text-red-400">
+                    Delete
+                  </span>
+                )}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -481,14 +339,7 @@ function ArchiveRentals() {
   };
 
   return (
-    <Spin
-      spinning={
-        loadingReject || loadingApprove || loadingReturned || loadingArchive
-      }
-      indicator={
-        <LoadingOutlined className="dark:text-white" style={{ fontSize: 48 }} />
-      }
-    >
+    <div>
       <div className="w-full p-5 h-screen">
         <Typography.Title level={2} className="text-black dark:text-white">
           Archive Rentals
@@ -616,7 +467,7 @@ function ArchiveRentals() {
           </div>
         </div>
       </div>
-    </Spin>
+    </div>
   );
 }
 

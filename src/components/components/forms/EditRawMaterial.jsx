@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 const EditRawMaterial = ({ selectedRawMaterial }) => {
   const [editRawMaterialLoading, setEditRawMaterialLoading] = useState(false);
@@ -109,9 +110,12 @@ const EditRawMaterial = ({ selectedRawMaterial }) => {
           <DialogClose>
             <Button variant="outline">Cancel</Button>
           </DialogClose>
-          <Button type="submit">
+          <Button type="submit" disabled={editRawMaterialLoading}>
             {editRawMaterialLoading ? (
-              <span className="loading-dots">Updating</span>
+              <div className="flex items-center">
+                <Loader2 className="mr-2 animate-spin" />
+                <span>Updating</span>
+              </div>
             ) : (
               "Update"
             )}

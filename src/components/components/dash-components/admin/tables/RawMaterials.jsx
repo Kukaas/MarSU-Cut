@@ -32,7 +32,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { Tooltip, Typography } from "antd";
-import { ChevronDownIcon, PlusCircle } from "lucide-react";
+import { ChevronDownIcon, Loader2, PlusCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
@@ -208,9 +208,13 @@ const RawMaterials = () => {
                     <Button
                       variant="destructive"
                       onClick={(event) => handleDelete(event)}
+                      disabled={deleteLoading}
                     >
                       {deleteLoading ? (
-                        <span className="loading-dots">Deleting</span>
+                        <div className="flex items-center">
+                          <Loader2 className="mr-2 animate-spin" />
+                          <span>Deleting</span>
+                        </div>
                       ) : (
                         "Delete"
                       )}

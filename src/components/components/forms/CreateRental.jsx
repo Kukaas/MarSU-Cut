@@ -30,7 +30,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { notification, Spin } from "antd";
 import axios from "axios";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
@@ -71,6 +71,7 @@ const CreateRental = () => {
 
       if (res.status === 201) {
         setLoading(false);
+        setDialogOpen(false);
         form.reset();
         notification.success({
           message: "Rental submitted successfully",
@@ -102,12 +103,12 @@ const CreateRental = () => {
         />
       }
     >
-      <div className="grid py-2">
+      <div className="grid">
         <div className="w-full">
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(handleCreateRental)}
-              className="space-y-1 w-full"
+              className="space-y-2 w-full"
             >
               <FormField
                 control={form.control}
@@ -289,13 +290,19 @@ const CreateRental = () => {
                     <Button
                       onClick={() => {
                         handleCreateRental(form.getValues());
-                        setDialogOpen(false);
                       }}
                       className="m-2"
                       variant="default"
                       disabled={loading}
                     >
-                      Submit Rental
+                      {loading ? (
+                        <div className="flex items-center">
+                          <Loader2 className="mr-2 animate-spin" />
+                          <span>Submitting</span>
+                        </div>
+                      ) : (
+                        "Submit"
+                      )}
                     </Button>
                   </div>
                 </DialogContent>

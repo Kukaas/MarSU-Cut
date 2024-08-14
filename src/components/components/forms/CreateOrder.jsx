@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { LoadingOutlined } from "@ant-design/icons";
 import {
   Dialog,
   DialogClose,
@@ -27,7 +26,7 @@ import { Input } from "@/components/ui/input";
 import { app } from "@/firebase";
 import { CreateOrderSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { message, notification, Progress, Spin } from "antd";
+import { message, notification, Progress } from "antd";
 import axios from "axios";
 import {
   getDownloadURL,
@@ -38,6 +37,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
+import { Loader2, UploadIcon } from "lucide-react";
 
 const CreateOrder = () => {
   const [imageFile, setImageFile] = useState(null);
@@ -115,7 +115,9 @@ const CreateOrder = () => {
     );
   };
 
-  const handleCreateOrder = async (values) => {
+  const handleCreateOrder = async (values, event) => {
+    event.preventDefault();
+    event.stopPropagation();
     if (imageFileUrl === null) {
       message.error(
         "Please fill all fields or the image is still uploading, please wait..."
@@ -140,6 +142,7 @@ const CreateOrder = () => {
       );
 
       if (res.status === 201) {
+        setDialogOpen(false);
         setProgress(0);
         setLoading(false);
         form.reset();
@@ -168,92 +171,93 @@ const CreateOrder = () => {
   };
 
   return (
-    <Spin
-      spinning={loading}
-      indicator={
-        <LoadingOutlined
-          className="dark:text-white"
-          style={{
-            fontSize: 48,
-          }}
-        />
-      }
-    >
-      <div className="grid gap-4 py-4">
-        <div className="w-full">
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(handleCreateOrder)}
-              className="space-y-1 w-full"
-            >
-              <FormField
-                control={form.control}
-                name="studentNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Student Number</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="eg.21B994" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="studentName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="eg.Jhon Doe" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="studentGender"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Gender</FormLabel>
-                    <FormControl>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            className="block w-full text-start"
-                            variant="outline"
-                          >
-                            {field.value || "Select Gender"}
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                          <DropdownMenuItem
-                            onSelect={() => field.onChange("Male")}
-                          >
-                            Male
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onSelect={() => field.onChange("Female")}
-                          >
-                            Female
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="receipt"
-                render={() => (
-                  <FormItem>
-                    <FormLabel>Upload Receipt</FormLabel>
-                    <FormControl>
-                      <input
+    <div className="grid gap-4 py-4">
+      <div className="w-full">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleCreateOrder)}
+            className="space-y-1 w-full"
+          >
+            <FormField
+              control={form.control}
+              name="studentNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Student Number</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="eg.21B994" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="studentName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="eg.Jhon Doe" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="studentGender"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Gender</FormLabel>
+                  <FormControl>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          className="block w-full text-start"
+                          variant="outline"
+                        >
+                          {field.value || "Select Gender"}
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuItem
+                          onSelect={() => field.onChange("Male")}
+                        >
+                          Male
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onSelect={() => field.onChange("Female")}
+                        >
+                          Female
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="receipt"
+              render={() => (
+                <FormItem>
+                  <FormLabel>Upload Receipt</FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-10 pr-3 flex items-center text-sm leading-5">
+                        {!imageFileUrl ? (
+                          <UploadIcon className="h-4 w-4" />
+                        ) : (
+                          <img
+                            src={imageFileUrl}
+                            alt="receipt"
+                            className="h-8 w-8"
+                          />
+                        )}
+                      </div>
+                      <Input
                         type="file"
                         accept="image/*"
                         onChange={(e) => {
@@ -263,11 +267,16 @@ const CreateOrder = () => {
                         className="block w-full text-sm text-gray-500"
                         ref={fileInputRef}
                       />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="flex flex-col">
+              <p className="text-sm text-gray-500">
+                Wait for the upload reach 100%
+              </p>
               <Progress
                 percent={progress}
                 status="active"
@@ -279,57 +288,59 @@ const CreateOrder = () => {
                   <span className="dark:text-white">{percent}%</span>
                 )}
               />
-              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button
-                    onClick={() => setDialogOpen(true)}
-                    variant="default"
-                    className="w-full"
-                  >
-                    Submit Order
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px] mx-auto">
-                  <DialogHeader>
-                    <DialogTitle>Confirm Submission</DialogTitle>
-                    <DialogDescription>
-                      <div>
-                        <p>Are you sure you want to submit these details?</p>
-                        <p className="mb-5 text-red-500">
-                          Once you submit you can&apos;t change the details.
-                        </p>
-                      </div>
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="flex justify-end">
-                    <DialogClose asChild>
-                      <Button variant="outline" className="m-2">
-                        Cancel
-                      </Button>
-                    </DialogClose>
-                    <Button
-                      onClick={() => {
-                        handleCreateOrder(form.getValues());
-                        setDialogOpen(false);
-                      }}
-                      className="m-2"
-                      variant="default"
-                      disabled={loading}
-                    >
-                      {loading ? (
-                        <span className="loading-dots">Submitting Order</span>
-                      ) : (
-                        "Submit Order"
-                      )}
+            </div>
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  onClick={() => setDialogOpen(true)}
+                  variant="default"
+                  className="w-full"
+                >
+                  Submit Order
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px] mx-auto">
+                <DialogHeader>
+                  <DialogTitle>Confirm Submission</DialogTitle>
+                  <DialogDescription>
+                    <div>
+                      <p>Are you sure you want to submit these details?</p>
+                      <p className="mb-5 text-red-500">
+                        Once you submit you can&apos;t change the details.
+                      </p>
+                    </div>
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="flex justify-end">
+                  <DialogClose asChild>
+                    <Button variant="outline" className="m-2">
+                      Cancel
                     </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
-            </form>
-          </Form>
-        </div>
+                  </DialogClose>
+                  <Button
+                    onClick={(event) => {
+                      handleCreateOrder(form.getValues(), event);
+                    }}
+                    className="m-2"
+                    variant="default"
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <div className="flex items-center">
+                        <Loader2 className="mr-2 animate-spin" />
+                        <span>Submitting</span>
+                      </div>
+                    ) : (
+                      "Submit Order"
+                    )}
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </form>
+        </Form>
       </div>
-    </Spin>
+    </div>
   );
 };
 

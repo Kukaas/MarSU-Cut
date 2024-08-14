@@ -12,6 +12,7 @@ import { AddCommercialJobSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogClose } from "@radix-ui/react-dialog";
 import axios from "axios";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
@@ -45,6 +46,8 @@ const CreateCommercialOrder = () => {
             label: "Ok",
           },
         });
+
+        commercialJobForm.reset();
       }
     } catch (error) {
       toast.error("Uh oh! Something went wrong", {
@@ -104,9 +107,12 @@ const CreateCommercialOrder = () => {
                   Cancel
                 </Button>
               </DialogClose>
-              <Button type="submit" className="mt-3">
+              <Button type="submit" className="mt-3" disabled={commercialOrderLoading}>
                 {commercialOrderLoading ? (
-                  <span className="loading-dots">Submitting</span>
+                  <div className="flex items-center">
+                    <Loader2 className="mr-2 animate-spin" />
+                    <span>Submitting</span>
+                  </div>
                 ) : (
                   "Submit"
                 )}

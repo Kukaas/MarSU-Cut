@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { ChevronDownIcon, DotsHorizontalIcon } from "@radix-ui/react-icons";
-import { LoadingOutlined } from "@ant-design/icons";
 import {
   flexRender,
   getCoreRowModel,
@@ -29,9 +28,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Spin, Tooltip, Typography } from "antd";
+import { Tooltip, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
-import { ArrowDownLeft } from "lucide-react";
+import { ArrowDownLeft, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 function ArchiveOrders() {
@@ -44,6 +43,7 @@ function ArchiveOrders() {
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
   const [currentPage, setCurrentPage] = useState(0);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
   const toastError = () => {
@@ -72,7 +72,8 @@ function ArchiveOrders() {
   }, []);
 
   // Unarchive orders
-  const handleUnarchive = async (order) => {
+  const handleUnarchive = async (order, event) => {
+    event.preventDefault();
     try {
       setLoadingUnarchive(true);
       const res = await axios.put(
@@ -83,6 +84,7 @@ function ArchiveOrders() {
       );
 
       if (res.status === 200) {
+        setDropdownOpen(false);
         toast.success(
           `Order of ${order.studentName} is unarchived successfully!`,
           {
@@ -109,7 +111,8 @@ function ArchiveOrders() {
   };
 
   // Function to handle delete
-  const handleDelete = async (order) => {
+  const handleDelete = async (order, event) => {
+    event.preventDefault();
     try {
       setLoadingDelete(true);
       const res = await axios.delete(
@@ -117,6 +120,7 @@ function ArchiveOrders() {
       );
 
       if (res.status === 200) {
+        setDropdownOpen(false);
         setLoadingDelete(false);
         toast.success(
           `Order of ${order.studentName} is deleted successfully!`,
@@ -255,8 +259,12 @@ function ArchiveOrders() {
             color: "#31a900",
             badgeText: "Claimed",
           },
+          PENDING: {
+            color: "red",
+            badgeText: "Pending",
+          },
           default: {
-            color: "pink",
+            color: "gray",
             badgeText: "Unknown",
           },
         };
@@ -285,7 +293,7 @@ function ArchiveOrders() {
         const order = row.original;
 
         return (
-          <DropdownMenu>
+          <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
                 <span className="sr-only">Open menu</span>
@@ -300,11 +308,35 @@ function ArchiveOrders() {
                 Copy Order ID
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => handleUnarchive(order)}>
-                Unarchive
+              <DropdownMenuItem
+                onClick={(event) => handleUnarchive(order, event)}
+                disabled={loadingUnarchive}
+              >
+                {loadingUnarchive ? (
+                  <div className="flex items-center">
+                    <Loader2 className="mr-2 animate-spin h-4 w-4" />
+                    <span>Unarchiving</span>
+                  </div>
+                ) : (
+                  "Unarchive"
+                )}
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleDelete(order)}>
-                <span className="text-red-500 hover:text-red-400">Delete</span>
+              <DropdownMenuItem
+                onClick={(event) => handleDelete(order, event)}
+                disabled={loadingDelete}
+              >
+                {loadingDelete ? (
+                  <div className="flex items-center">
+                    <Loader2 className="mr-2 animate-spin h-4 w-4" />
+                    <span className="text-red-500 hover:text-red-400">
+                      Deleting
+                    </span>
+                  </div>
+                ) : (
+                  <span className="text-red-500 hover:text-red-400">
+                    Delete
+                  </span>
+                )}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -348,12 +380,7 @@ function ArchiveOrders() {
   };
 
   return (
-    <Spin
-      spinning={loadingUnarchive || loadingDelete}
-      indicator={
-        <LoadingOutlined className="dark:text-white" style={{ fontSize: 48 }} />
-      }
-    >
+    <div>
       <div className="w-full p-5 h-screen">
         <Typography.Title level={2} className="text-black dark:text-white">
           Archive Orders
@@ -481,7 +508,7 @@ function ArchiveOrders() {
           </div>
         </div>
       </div>
-    </Spin>
+    </div>
   );
 }
 

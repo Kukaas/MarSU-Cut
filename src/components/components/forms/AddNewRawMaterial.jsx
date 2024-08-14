@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { AddRawMaterialsSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -30,22 +31,22 @@ const AddNewRawMaterial = () => {
 
   const handleAddRawMaterial = async (values) => {
     try {
-        setAddRawMaterialLoading(true)
+      setAddRawMaterialLoading(true);
       const res = await axios.post(
         "https://marsu.cut.server.kukaas.tech/api/v1/raw-materials/new",
         values
       );
 
       if (res.status === 200) {
-        setAddRawMaterialLoading(false)
+        setAddRawMaterialLoading(false);
         toast.success("Raw material added successfully", {
-            action: {
-                label: "Ok"
-            }
-        })
+          action: {
+            label: "Ok",
+          },
+        });
       }
     } catch (error) {
-        setAddRawMaterialLoading(false)
+      setAddRawMaterialLoading(false);
       toast.error("Uh oh! Something went wrong");
     }
   };
@@ -109,7 +110,10 @@ const AddNewRawMaterial = () => {
           </DialogClose>
           <Button type="submit" disabled={addRawMaterialLoading}>
             {addRawMaterialLoading ? (
-              <span className="loading-dots">Adding</span>
+              <div className="flex items-center">
+                <Loader2 className="mr-2 animate-spin" />
+                <span>Adding</span>
+              </div>
             ) : (
               "Add Material"
             )}

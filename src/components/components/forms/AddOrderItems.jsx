@@ -17,7 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Tooltip } from "antd";
 import axios from "axios";
-import { MinusCircle, PlusCircle } from "lucide-react";
+import { Loader2, MinusCircle, PlusCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -206,23 +206,11 @@ const AddOrderItems = ({ selectedOrder }) => {
       level === "SHS"
     ) {
       unitPrice = 328.5;
-    } else if (
-      productType === "JPANTS" &&
-      size === "S35" &&
-      level === "SHS"
-    ) {
+    } else if (productType === "JPANTS" && size === "S35" && level === "SHS") {
       unitPrice = 351;
-    } else if ( 
-      productType === "JPANTS" &&
-      size === "S36" &&
-      level === "SHS"
-    ) {
+    } else if (productType === "JPANTS" && size === "S36" && level === "SHS") {
       unitPrice = 396;
-    } else if (
-      productType === "JPANTS" &&
-      size === "S37" &&
-      level === "SHS"
-    ) {
+    } else if (productType === "JPANTS" && size === "S37" && level === "SHS") {
       unitPrice = 441;
     } else if (
       productType === "JPANTS" &&
@@ -345,16 +333,16 @@ const AddOrderItems = ({ selectedOrder }) => {
 
   const handleAddItems = async (values) => {
     setLoadingAddItems(true);
-  
+
     // Ensure orderItems is an array
     const orderItems = Array.isArray(values.orderItems)
       ? values.orderItems
       : [];
-  
+
     // Add additional items based on productType and update totalPrice
     const updatedOrderItems = orderItems.flatMap((item) => {
       const newItems = [item]; // Start with the original item
-  
+
       if (item.productType === "POLO") {
         newItems.push({
           level: "",
@@ -365,28 +353,26 @@ const AddOrderItems = ({ selectedOrder }) => {
           totalPrice: 100,
         });
       } else if (item.productType === "BLOUSE") {
-        newItems.push(
-          {
-            level: "",
-            size: "",
-            quantity: 1,
-            productType: "NECKTIE",
-            unitPrice: 200,
-            totalPrice: 200,
-          },
-        );
+        newItems.push({
+          level: "",
+          size: "",
+          quantity: 1,
+          productType: "NECKTIE",
+          unitPrice: 200,
+          totalPrice: 200,
+        });
       }
-  
+
       return newItems;
     });
-  
+
     const res = await axios.put(
       `https://marsu.cut.server.kukaas.tech/api/v1/order/add-item/${selectedOrder._id}`,
       {
         orderItems: updatedOrderItems,
       }
     );
-  
+
     if (res.status === 200) {
       toast.success(`The student ${selectedOrder.studentName} is measured`, {
         action: {
@@ -396,7 +382,7 @@ const AddOrderItems = ({ selectedOrder }) => {
     } else {
       toastError();
     }
-  
+
     setLoadingAddItems(false);
   };
 
@@ -607,7 +593,6 @@ const AddOrderItems = ({ selectedOrder }) => {
     );
   };
 
-
   OrderItemForm.propTypes = {
     index: PropTypes.number.isRequired,
     form: PropTypes.object.isRequired,
@@ -624,7 +609,7 @@ const AddOrderItems = ({ selectedOrder }) => {
             index={index}
             form={form}
             updateUnitPrice={updateUnitPrice}
-            remove={remove} 
+            remove={remove}
           />
         ))}
         <Tooltip title="Add fields">
@@ -651,12 +636,12 @@ const AddOrderItems = ({ selectedOrder }) => {
               Cancel
             </Button>
           </DialogClose>
-          <Button
-            type="submit"
-            className="mt-4"
-          >
+          <Button type="submit" className="mt-4" disabled={loadingAddItems}>
             {loadingAddItems ? (
-              <div className="loading-dots">Adding Items</div>
+              <div className="flex items-center">
+                <Loader2 className="mr-2 animate-spin" />
+                <span>Adding</span>
+              </div>
             ) : (
               "Add Items"
             )}

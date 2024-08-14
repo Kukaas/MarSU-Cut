@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { CreateAccomplishmentSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -86,9 +87,12 @@ const CreateAccomplishment = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" variant="default" className="w-full">
+            <Button type="submit" variant="default" className="w-full" disabled={loading}>
               {loading ? (
-                <span className="loading-dots">Creating</span>
+                <div className="flex items-center">
+                  <Loader2 className="mr-2 animate-spin" />
+                  <span>Creating</span>
+                </div>
               ) : (
                 "Create"
               )}

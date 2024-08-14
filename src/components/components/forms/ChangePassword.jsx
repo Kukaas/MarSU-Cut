@@ -13,7 +13,7 @@ import { ResetPasswordSchemaProfile } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { message } from "antd";
 import axios from "axios";
-import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
@@ -171,13 +171,20 @@ const ChangePassword = () => {
             <Button
               variant="outline"
               className="mr-2"
-              onClick={() =>  formChangePassword.reset()}
+              onClick={() => formChangePassword.reset()}
             >
               Cancel
             </Button>
           </DialogClose>
           <Button type="submit" disabled={loading}>
-            {loading ? "Changing Password..." : "Change Password"}
+            {loading ? (
+              <div className="flex items-center">
+                <Loader2 className="mr-2 animate-spin" />
+                <span>Changing Password</span>
+              </div>
+            ) : (
+              "Change Password"
+            )}
           </Button>
         </div>
       </form>

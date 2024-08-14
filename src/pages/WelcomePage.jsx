@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useSelector } from "react-redux";
@@ -33,8 +34,11 @@ const WelcomePage = () => {
     <div className="flex flex-col items-center justify-center min-h-screen mt-[-80px]">
       <Helmet>
         <title>MarSU Cut | Get Started</title>
-        <meta name="description" content="Welcome to MarSU Cut. We are glad to have you here. Login or Register to explore our features"/>
-        <meta name="keywords" content="marsu, marsu cut"/>
+        <meta
+          name="description"
+          content="Welcome to MarSU Cut. We are glad to have you here. Login or Register to explore our features"
+        />
+        <meta name="keywords" content="marsu, marsu cut" />
       </Helmet>
       <div className="p-3 max-w-3xl mx-auto text-center">
         <Link to="/" className="font-bold hover:text-current text-6xl ">
@@ -52,9 +56,13 @@ const WelcomePage = () => {
             className="w-full p-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white text-lg hover:bg-gradient-to-r hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600"
             size="lg"
             onClick={handleClicked}
+            disabled={loading}
           >
             {loading ? (
-              <span className="loading-dots">Get Started</span>
+              <div className="flex items-center">
+                <Loader2 className="mr-2 animate-spin" />
+                <span>Redirecting</span>
+              </div>
             ) : (
               "Get Started"
             )}

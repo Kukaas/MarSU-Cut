@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { EditProductSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import { Loader2 } from "lucide-react";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -31,7 +32,7 @@ const EditProduct = ({ selectedProduct }) => {
       level: selectedProduct.level,
       productType: selectedProduct.productType,
       size: selectedProduct.size,
-      quantity: selectedProduct.quantity
+      quantity: selectedProduct.quantity,
     },
   });
 
@@ -62,7 +63,7 @@ const EditProduct = ({ selectedProduct }) => {
       console.log(error);
     }
   };
-  
+
   return (
     <Form {...editProductForm}>
       <form
@@ -212,9 +213,12 @@ const EditProduct = ({ selectedProduct }) => {
           <DialogClose>
             <Button variant="outline">Cancel</Button>
           </DialogClose>
-          <Button type="submit">
+          <Button type="submit" disabled={editProductLoading}>
             {editProductLoading ? (
-              <span className="loading-dots">Updating</span>
+              <div className="flex items-center">
+                <Loader2 className="mr-2 animate-spin" />
+                <span>SUpdating</span>
+              </div>
             ) : (
               "Update"
             )}

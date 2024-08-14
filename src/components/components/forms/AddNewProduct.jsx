@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { AddNewProductSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -43,7 +44,7 @@ const AddNewProduct = () => {
         values
       );
 
-      if (res.status === 200) {
+      if (res.status === 201) {
         setAddNewProductLoading(false);
         toast.success("Product added successfully!", {
           action: {
@@ -148,7 +149,7 @@ const AddNewProduct = () => {
                       className="block w-full text-start"
                       variant="outline"
                     >
-                      {field.value || "Select product type"}
+                      {field.value || "Select a size"}
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="max-h-48 overflow-y-auto">
@@ -218,9 +219,12 @@ const AddNewProduct = () => {
           <DialogClose>
             <Button variant="outline">Cancel</Button>
           </DialogClose>
-          <Button type="submit">
+          <Button type="submit" disabled={addNewProductLoading}>
             {addNewProductLoading ? (
-              <span className="loading-dots">Adding</span>
+              <div className="flex items-center">
+                <Loader2 className="mr-2 animate-spin" />
+                <span>Adding</span>
+              </div>
             ) : (
               "Add Product"
             )}

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { ChevronDownIcon, DotsHorizontalIcon } from "@radix-ui/react-icons";
-import { LoadingOutlined } from "@ant-design/icons";
 import {
   flexRender,
   getCoreRowModel,
@@ -30,9 +29,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Spin, Tooltip, Typography } from "antd";
+import { Tooltip, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
-import { ArchiveIcon } from "lucide-react";
+import { ArchiveIcon, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -57,6 +56,7 @@ function Orders() {
   const [rowSelection, setRowSelection] = useState({});
   const [currentPage, setCurrentPage] = useState(0);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const navigate = useNavigate();
 
@@ -84,7 +84,8 @@ function Orders() {
     fetchOrders();
   }, []);
 
-  const handleApprove = async (order) => {
+  const handleApprove = async (order, event) => {
+    event.preventDefault();
     try {
       setLoadingApprove(true);
       const res = await axios.put(
@@ -93,6 +94,7 @@ function Orders() {
       );
 
       if (res.status === 200) {
+        setDropdownOpen(false);
         toast.success(
           `Order of ${order.studentName} is approved successfully!`,
           { action: { label: "Ok" } }
@@ -114,7 +116,8 @@ function Orders() {
     }
   };
 
-  const handleDone = async (order) => {
+  const handleDone = async (order, event) => {
+    event.preventDefault();
     try {
       setLoadingDone(true);
       const res = await axios.put(
@@ -123,6 +126,7 @@ function Orders() {
       );
 
       if (res.status === 200) {
+        setDropdownOpen(false);
         toast.success(`Order of ${order.studentName} is ready to be claimed!`, {
           action: { label: "Ok" },
         });
@@ -141,7 +145,8 @@ function Orders() {
     }
   };
 
-  const handleClaimed = async (order) => {
+  const handleClaimed = async (order, event) => {
+    event.preventDefault();
     try {
       setLoadingClaimed(true);
       const res = await axios.put(
@@ -150,6 +155,7 @@ function Orders() {
       );
 
       if (res.status === 200) {
+        setDropdownOpen(false);
         toast.success(`Order of ${order.studentName} is claimed!`, {
           action: { label: "Ok" },
         });
@@ -168,7 +174,8 @@ function Orders() {
     }
   };
 
-  const handleArchive = async (order) => {
+  const handleArchive = async (order, event) => {
+    event.preventDefault();
     try {
       setLoadingArchive(true);
       const res = await axios.put(
@@ -194,7 +201,8 @@ function Orders() {
     }
   };
 
-  const handleDelete = async (order) => {
+  const handleDelete = async (order, event) => {
+    event.preventDefault();
     try {
       setLoadingDelete(true);
       const res = await axios.delete(
@@ -202,6 +210,7 @@ function Orders() {
       );
 
       if (res.status === 200) {
+        setDropdownOpen(false);
         toast.success(
           `Order of ${order.studentName} is deleted successfully!`,
           { action: { label: "Ok" } }
@@ -214,8 +223,10 @@ function Orders() {
       }
     } catch (error) {
       toastError();
+      setDropdownOpen(false);
     } finally {
       setLoadingDelete(false);
+      setDropdownOpen(false);
     }
   };
 
@@ -382,7 +393,7 @@ function Orders() {
         const order = row.original;
 
         return (
-          <DropdownMenu>
+          <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
                 <span className="sr-only">Open menu</span>
@@ -398,8 +409,18 @@ function Orders() {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem onClick={() => handleApprove(order)}>
-                  Approve
+                <DropdownMenuItem
+                  onClick={(event) => handleApprove(order, event)}
+                  disabled={loadingApprove}
+                >
+                  {loadingApprove ? (
+                    <div className="flex items-center">
+                      <Loader2 className="mr-2 animate-spin h-4 w-4" />
+                      <span>Approving</span>
+                    </div>
+                  ) : (
+                    "Approve"
+                  )}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => {
@@ -409,19 +430,63 @@ function Orders() {
                 >
                   Measure
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleDone(order)}>
-                  Done
+                <DropdownMenuItem
+                  onClick={(event) => handleDone(order, event)}
+                  disabled={loadingDone}
+                >
+                  {loadingDone ? (
+                    <div className="flex items-center">
+                      <Loader2 className="mr-2 animate-spin h-4 w-4" />
+                      <span>Done</span>
+                    </div>
+                  ) : (
+                    "Done"
+                  )}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleClaimed(order)}>
-                  Claimed
+                <DropdownMenuItem
+                  onClick={(event) => handleClaimed(order, event)}
+                  disabled={loadingClaimed}
+                >
+                  {loadingClaimed ? (
+                    <div className="flex items-center">
+                      <Loader2 className="mr-2 animate-spin h-4 w-4" />
+                      <span>Claimed</span>
+                    </div>
+                  ) : (
+                    "Claimed"
+                  )}
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => handleArchive(order)}>
-                Archive
+              <DropdownMenuItem
+                onClick={(event) => handleArchive(order, event)}
+                disabled={loadingArchive}
+              >
+                {loadingArchive ? (
+                  <div className="flex items-center">
+                    <Loader2 className="mr-2 animate-spin h-4 w-4" />
+                    <span>Archiving</span>
+                  </div>
+                ) : (
+                  "Archive"
+                )}
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleDelete(order)}>
-                <span className="text-red-500 hover:text-red-400">Delete</span>
+              <DropdownMenuItem
+                onClick={(event) => handleDelete(order, event)}
+                disabled={loadingDelete}
+              >
+                {loadingDelete ? (
+                  <div className="flex items-center">
+                    <Loader2 className="mr-2 animate-spin h-4 w-4" />
+                    <span className="text-red-500 hover:text-red-400">
+                      Deleting
+                    </span>
+                  </div>
+                ) : (
+                  <span className="text-red-500 hover:text-red-400">
+                    Delete
+                  </span>
+                )}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -465,18 +530,7 @@ function Orders() {
   };
 
   return (
-    <Spin
-      spinning={
-        loadingApprove ||
-        loadingClaimed ||
-        loadingDone ||
-        loadingArchive ||
-        loadingDelete
-      }
-      indicator={
-        <LoadingOutlined className="dark:text-white" style={{ fontSize: 48 }} />
-      }
-    >
+    <div>
       <div className="w-full p-5 h-screen">
         <Typography.Title level={2} className="text-black dark:text-white">
           Orders
@@ -615,7 +669,7 @@ function Orders() {
           <AddOrderItems selectedOrder={selectedOrder} />
         </DialogContent>
       </Dialog>
-    </Spin>
+    </div>
   );
 }
 

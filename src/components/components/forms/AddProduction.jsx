@@ -27,7 +27,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Tooltip } from "antd";
 import axios from "axios";
 import { format } from "date-fns";
-import { CalendarIcon, MinusCircle, PlusCircle } from "lucide-react";
+import { CalendarIcon, Loader2, MinusCircle, PlusCircle } from "lucide-react";
 import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -396,7 +396,10 @@ const AddProduction = () => {
               </SheetClose>
               <Button onClick={handleButtonClick} type="button">
                 {addProductionLoading ? (
-                  <span className="loading-dots">Adding</span>
+                  <div className="flex items-center">
+                    <Loader2 className="mr-2 animate-spin" />
+                    <span>Adding</span>
+                  </div>
                 ) : (
                   "Add Production"
                 )}

@@ -45,6 +45,7 @@ import {
 } from "@/components/ui/dialog";
 import ChangePassword from "../forms/ChangePassword";
 import { Helmet } from "react-helmet";
+import { Loader2 } from "lucide-react";
 
 const DashProfile = () => {
   const navigate = useNavigate();
@@ -309,7 +310,10 @@ const DashProfile = () => {
                 disabled={updateProfileLoading}
               >
                 {updateProfileLoading ? (
-                  <span className="loading-dots">Updating Profile</span>
+                  <div className="flex items-center">
+                    <Loader2 className="mr-2 animate-spin" />
+                    <span>Updating Profile</span>
+                  </div>
                 ) : (
                   "Update Profile"
                 )}
@@ -357,9 +361,13 @@ const DashProfile = () => {
                       onClick={() => handleDeleteUser()}
                       className="m-2"
                       variant="destructive"
+                      disabled={loading}
                     >
                       {loading ? (
-                        <span className="loading-dots">Deleting Account</span>
+                        <div className="flex items-center">
+                          <Loader2 className="mr-2 animate-spin" />
+                          <span>Deleting Account</span>
+                        </div>
                       ) : (
                         "Delete Account"
                       )}
