@@ -88,6 +88,25 @@ const AccomplishmentReport = () => {
   };
 
   useEffect(() => {
+    const fetchAccomplishments = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get(
+          "https://marsu.cut.server.kukaas.tech/api/v1/accomplishment-report/all"
+        );
+
+        if (res.status === 200) {
+          const fetchedData = res.data.accomplishmentReports;
+          setData(fetchedData);
+          filterData(fetchedData, selectedDate); // Apply initial filter
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error(error);
+        setLoading(false);
+      }
+    };
+    
     fetchAccomplishments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -118,25 +137,6 @@ const AccomplishmentReport = () => {
       });
     }
   }, [selectedAccomplishment, formAccomplishment]);
-
-  const fetchAccomplishments = async () => {
-    try {
-      setLoading(true);
-      const res = await axios.get(
-        "https://marsu.cut.server.kukaas.tech/api/v1/accomplishment-report/all"
-      );
-
-      if (res.status === 200) {
-        const fetchedData = res.data.accomplishmentReports;
-        setData(fetchedData);
-        filterData(fetchedData, selectedDate); // Apply initial filter
-        setLoading(false);
-      }
-    } catch (error) {
-      console.error(error);
-      setLoading(false);
-    }
-  };
 
   const filterData = (data, dateRange) => {
     if (!dateRange) {
@@ -350,8 +350,8 @@ const AccomplishmentReport = () => {
       }
     >
       <div className="w-full p-5 h-screen">
-      <Typography.Title level={2} className="text-black dark:text-white">
-        Accomplishment Report
+        <Typography.Title level={2} className="text-black dark:text-white">
+          Accomplishment Report
         </Typography.Title>
         <div className="flex items-center justify-between overflow-y-auto">
           <div className={cn("grid gap-2")}>

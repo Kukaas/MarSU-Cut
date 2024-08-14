@@ -52,23 +52,23 @@ const RawMaterials = () => {
   const [selectedRawMaterial, setSelectedRawMaterial] = useState(null);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
-  const fetchRawMaterial = async () => {
-    try {
-      setLoading(true);
-      const res = await axios.get(
-        "https://marsu.cut.server.kukaas.tech/api/v1/raw-materials/all"
-      );
-
-      const data = res.data;
-      setData(data.rawMaterials);
-      setLoading(false);
-    } catch (error) {
-      console.error(error);
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchRawMaterial = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get(
+          "https://marsu.cut.server.kukaas.tech/api/v1/raw-materials/all"
+        );
+
+        const data = res.data;
+        setData(data.rawMaterials);
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+        setLoading(false);
+      }
+    };
+
     fetchRawMaterial();
   }, []);
 

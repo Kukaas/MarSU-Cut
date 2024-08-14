@@ -55,34 +55,34 @@ function Rentals() {
     toast.error("Uh oh! Something went wrong.");
   };
 
-  const fetchRentals = async () => {
-    setLoading(true);
-    try {
-      const res = await axios.get(
-        `https://marsu.cut.server.kukaas.tech/api/v1/rental/all/get`
-      );
-
-      const activeRentals = res.data.rentals.filter(
-        (rental) => !rental.isArchived
-      );
-
-      const rentalsWithPenalties = await Promise.all(
-        activeRentals.map(async (rental) => {
-          const penaltyRes = await axios.get(
-            `https://marsu.cut.server.kukaas.tech/api/v1/rental/penalty/${rental._id}`
-          );
-          return { ...rental, penalty: penaltyRes.data.penalty };
-        })
-      );
-      setData(rentalsWithPenalties);
-    } catch (error) {
-      console.error("Failed to fetch data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchRentals = async () => {
+      setLoading(true);
+      try {
+        const res = await axios.get(
+          `https://marsu.cut.server.kukaas.tech/api/v1/rental/all/get`
+        );
+
+        const activeRentals = res.data.rentals.filter(
+          (rental) => !rental.isArchived
+        );
+
+        const rentalsWithPenalties = await Promise.all(
+          activeRentals.map(async (rental) => {
+            const penaltyRes = await axios.get(
+              `https://marsu.cut.server.kukaas.tech/api/v1/rental/penalty/${rental._id}`
+            );
+            return { ...rental, penalty: penaltyRes.data.penalty };
+          })
+        );
+        setData(rentalsWithPenalties);
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchRentals();
   }, []);
 

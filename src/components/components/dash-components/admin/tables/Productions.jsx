@@ -71,24 +71,24 @@ const Productions = () => {
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
-  const fetchProductions = async () => {
-    try {
-      setLoading(true);
-      const res = await axios.get(
-        "https://marsu.cut.server.kukaas.tech/api/v1/production/all"
-      );
-
-      const data = res.data.productions;
-      if (res.status === 200) {
-        setData(data);
-        setLoading(false);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   useEffect(() => {
+    const fetchProductions = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get(
+          "https://marsu.cut.server.kukaas.tech/api/v1/production/all"
+        );
+
+        const data = res.data.productions;
+        if (res.status === 200) {
+          setData(data);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     fetchProductions();
   }, []);
 

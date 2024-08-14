@@ -50,30 +50,30 @@ function ArchiveRentals() {
     toast.error("Uh oh! Something went wrong.");
   };
 
-  const fetchRentals = async () => {
-    try {
-      setLoading(true);
-      const res = await axios.get(
-        `https://marsu.cut.server.kukaas.tech/api/v1/rental/archive/all`
-      );
-
-      // Fetch the penalties for each rental
-      const rentalsWithPenalties = await Promise.all(
-        res.data.rentals.map(async (rental) => {
-          const penaltyRes = await axios.get(
-            `https://marsu.cut.server.kukaas.tech/api/v1/rental/penalty/${rental._id}`
-          );
-          return { ...rental, penalty: penaltyRes.data.penalty };
-        })
-      );
-      setData(rentalsWithPenalties);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchRentals = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get(
+          `https://marsu.cut.server.kukaas.tech/api/v1/rental/archive/all`
+        );
+
+        // Fetch the penalties for each rental
+        const rentalsWithPenalties = await Promise.all(
+          res.data.rentals.map(async (rental) => {
+            const penaltyRes = await axios.get(
+              `https://marsu.cut.server.kukaas.tech/api/v1/rental/penalty/${rental._id}`
+            );
+            return { ...rental, penalty: penaltyRes.data.penalty };
+          })
+        );
+        setData(rentalsWithPenalties);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+      }
+    };
+
     fetchRentals();
   }, []);
 

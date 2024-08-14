@@ -1,4 +1,3 @@
-import { Checkbox } from "@/components/ui/checkbox";
 import { useEffect, useState } from "react";
 import {
   flexRender,
@@ -15,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, ChevronDownIcon, XCircle } from "lucide-react";
+import { CheckCheckIcon, ChevronDownIcon, XIcon } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -53,28 +52,6 @@ const Users = () => {
 
   const columns = [
     {
-      id: "select",
-      header: ({ table }) => (
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-    },
-    {
       id: "number",
       header: "No.",
       cell: ({ row }) => <div>{row.index + 1}</div>,
@@ -88,7 +65,7 @@ const Users = () => {
         <a target="_blank" rel="noopener noreferrer">
           <img
             src={row.getValue("photo")}
-            alt="Receipt"
+            alt="Profile"
             className="w-12 h-12 rounded-full"
           />
         </a>
@@ -108,9 +85,9 @@ const Users = () => {
       cell: ({ row }) => (
         <div>
           {row.original.verified ? (
-            <CheckCircle className="text-green-500" />
+            <CheckCheckIcon className="text-green-500" />
           ) : (
-            <XCircle className="text-red-500" />
+            <XIcon className="text-red-500" />
           )}
         </div>
       ),
@@ -121,9 +98,9 @@ const Users = () => {
       cell: ({ row }) => (
         <div>
           {row.original.isAdmin ? (
-            <CheckCircle className="text-green-500" />
+            <CheckCheckIcon className="text-green-500" />
           ) : (
-            <XCircle className="text-red-500" />
+            <XIcon className="text-red-500" />
           )}
         </div>
       ),

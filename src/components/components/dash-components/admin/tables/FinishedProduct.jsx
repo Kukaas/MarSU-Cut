@@ -52,23 +52,23 @@ const FinishedProduct = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
-  const fetchFinishedProduct = async () => {
-    try {
-      setLoading(true);
-      const res = await axios.get(
-        "https://marsu.cut.server.kukaas.tech/api/v1/finished-product/all"
-      );
-
-      const data = res.data;
-      setData(data.finishedProducts);
-      setLoading(false);
-    } catch (error) {
-      console.error(error);
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchFinishedProduct = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get(
+          "https://marsu.cut.server.kukaas.tech/api/v1/finished-product/all"
+        );
+
+        const data = res.data;
+        setData(data.finishedProducts);
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+        setLoading(false);
+      }
+    };
+    
     fetchFinishedProduct();
   }, []);
 

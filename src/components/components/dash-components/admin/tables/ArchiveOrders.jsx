@@ -50,25 +50,22 @@ function ArchiveOrders() {
     toast.error("Uh oh! Something went wrong.");
   };
 
-  const fetchArchivedOrders = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get(
-        "https://marsu.cut.server.kukaas.tech/api/v1/order/archive/all"
-      );
-      setLoading(false);
-      return response.data.orders;
-    } catch (error) {
-      setLoading(false);
-      return [];
-    }
-  };
-
   useEffect(() => {
-    fetchArchivedOrders().then((orders) => {
-      setData(orders);
-      setLoading(false);
-    });
+    const fetchArchivedOrders = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(
+          "https://marsu.cut.server.kukaas.tech/api/v1/order/archive/all"
+        );
+        setLoading(false);
+        return response.data.orders;
+      } catch (error) {
+        setLoading(false);
+        return [];
+      }
+    };
+
+    fetchArchivedOrders()
   }, []);
 
   // Unarchive orders
