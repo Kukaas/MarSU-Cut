@@ -172,7 +172,7 @@ const Notification = () => {
           <TabsTrigger value="unread">Unread</TabsTrigger>
           <TabsTrigger value="read">Read</TabsTrigger>
         </TabsList>
-        <TabsContent value="unread" className="h-screen overflow-x-auto">
+        <TabsContent value="unread" className="h-screen overflow-auto">
           <SheetTitle className="mt-5">Unread</SheetTitle>
           <SheetDescription className="mt-2">
             {unreadNotifications.length === 0

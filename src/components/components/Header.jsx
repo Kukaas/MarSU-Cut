@@ -156,7 +156,7 @@ const Header = () => {
 
           {currentUser && isSmallScreen && (
             <Sheet>
-              <SheetTrigger>
+              <SheetTrigger asChild>
                 <Button
                   variant="outline"
                   size="icon"

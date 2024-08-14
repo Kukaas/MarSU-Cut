@@ -61,7 +61,7 @@ const SidebarUser = () => {
             </span>
           </div>
           <Sheet>
-            <SheetTrigger>
+            <SheetTrigger asChild>
               <Button
                 variant="outline"
                 size="icon"

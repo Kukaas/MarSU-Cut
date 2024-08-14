@@ -86,7 +86,7 @@ const SideBarAdmin = () => {
             </span>
           </div>
           <Sheet>
-            <SheetTrigger>
+            <SheetTrigger asChild>
               <Button
                 variant="outline"
                 size="icon"
@@ -298,7 +298,7 @@ const SideBarAdmin = () => {
           </nav>
         </div>
       </div>
-      <Toaster richColors />
+      <Toaster closeButton richColors />
     </div>
   );
 };
