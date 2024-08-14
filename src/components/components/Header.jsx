@@ -1,7 +1,7 @@
 import { Button } from "../ui/button";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 
-import { Bell, Menu, Moon, Sun } from "lucide-react";
+import { Menu, Moon, Sun } from "lucide-react";
 import { useTheme } from "./ThemProvider";
 import {
   NavigationMenu,
@@ -32,9 +32,9 @@ import {
   SheetClose,
   SheetContent,
   SheetHeader,
+  SheetTitle,
   SheetTrigger,
 } from "../ui/sheet";
-import Notification from "./Notification";
 
 const Header = () => {
   const { setTheme } = useTheme();
@@ -43,41 +43,6 @@ const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
-  const [unreadNotifications, setUnreadNotifications] = useState([]);
-
-  useEffect(() => {
-    if (currentUser) {
-      const fetchNotifications = async () => {
-        try {
-          const res = await axios.get(
-            `https://marsu.cut.server.kukaas.tech/api/v1/user/notifications/${currentUser?._id}`
-          );
-          const notificationsData = res.data;
-
-          // Check if notificationsData contains notifications array
-          if (Array.isArray(notificationsData.notifications)) {
-            const notifications = notificationsData.notifications;
-
-            const unread = notifications.filter(
-              (notification) => !notification.read
-            );
-
-            // Update state
-            setUnreadNotifications(unread);
-          } else {
-            console.error(
-              "Notifications is not an array:",
-              notificationsData.notifications
-            );
-          }
-        } catch (error) {
-          console.error("Error fetching notifications:", error);
-        }
-      };
-
-      fetchNotifications();
-    }
-  }, [currentUser?._id, currentUser]);
 
   // Check screen size
   useEffect(() => {
@@ -154,29 +119,6 @@ const Header = () => {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {currentUser && isSmallScreen && (
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-10 w-10 relative"
-                >
-                  <Bell className="h-4 w-4" />
-                  <span className="sr-only">Toggle notifications</span>
-                  {unreadNotifications && unreadNotifications.length > 0 && (
-                    <span className="absolute top-0 right-0 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                      {unreadNotifications.length}
-                    </span>
-                  )}
-                </Button>
-              </SheetTrigger>
-              <SheetContent>
-                <Notification />
-              </SheetContent>
-            </Sheet>
-          )}
-
           {currentUser && (
             <DropdownMenu className="">
               <DropdownMenuTrigger asChild>
@@ -219,17 +161,25 @@ const Header = () => {
 
           {/* Admin */}
           {isSmallScreen && currentUser && currentUser.isAdmin ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+            <Sheet>
+              <SheetTrigger asChild>
                 <Button variant="outline">
                   <Menu />
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56 mt-5">
-                <DropdownMenuLabel>Menu</DropdownMenuLabel>
+              </SheetTrigger>
+              <SheetContent className="overflow-auto">
+                <SheetTitle>
+                  {" "}
+                  <div className="font-bold hover:text-current text-2xl text-center sm:text-left mt-8">
+                    <span className="px-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white">
+                      MarSU
+                    </span>{" "}
+                    Cut
+                  </div>
+                </SheetTitle>
                 <MenuAdmin />
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </SheetContent>
+            </Sheet>
           ) : (
             <>
               {isSmallScreen && !currentUser ? (
@@ -241,7 +191,7 @@ const Header = () => {
                     <SheetHeader className="mt-10">
                       <Link
                         to="/"
-                        className="font-bold hover:text-current text-3xl text-center sm:text-left"
+                        className="font-bold hover:text-current text-2xl text-center sm:text-left"
                       >
                         <span className="px-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white">
                           MarSU
@@ -302,17 +252,25 @@ const Header = () => {
           {/* User */}
           {isSmallScreen && currentUser?.isAdmin === false && (
             <>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
+              <Sheet>
+                <SheetTrigger asChild>
                   <Button variant="outline">
                     <Menu />
                   </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56 mt-5">
-                  <DropdownMenuLabel>Menu</DropdownMenuLabel>
+                </SheetTrigger>
+                <SheetContent className="overflow-auto">
+                  <SheetTitle>
+                    {" "}
+                    <div className="font-bold hover:text-current text-2xl text-center sm:text-left mt-8">
+                      <span className="px-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white">
+                        MarSU
+                      </span>{" "}
+                      Cut
+                    </div>
+                  </SheetTitle>
                   <MenuUser />
-                </DropdownMenuContent>
-              </DropdownMenu>
+                </SheetContent>
+              </Sheet>
             </>
           )}
         </div>
