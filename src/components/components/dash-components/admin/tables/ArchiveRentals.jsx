@@ -28,23 +28,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Tooltip, Typography } from "antd";
+import { Spin, Tooltip, Typography } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { ArrowDownLeft, Loader2 } from "lucide-react";
+import { ArrowDownLeft } from "lucide-react";
 import { toast } from "sonner";
 import { Toaster } from "@/lib/Toaster";
 
 function ArchiveRentals() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [loadingUnarchive, setLoadingUnarchive] = useState(false);
-  const [loadingDelete, setLoadingDelete] = useState(false);
+  const [loadingUpdate, setLoadingUpdate] = useState(false);
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
   const [currentPage, setCurrentPage] = useState(0);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -75,10 +74,9 @@ function ArchiveRentals() {
   }, []);
 
   // Archive the rental
-  const handleUnarchive = async (rental, event) => {
-    event.preventDefault();
+  const handleUnarchive = async (rental) => {
     try {
-      setLoadingUnarchive(true);
+      setLoadingUpdate(true);
       const res = await axios.put(
         `https://marsu.cut.server.kukaas.tech/api/v1/rental/archive/update/${rental._id}`,
         {
@@ -87,8 +85,7 @@ function ArchiveRentals() {
       );
 
       if (res.status === 200) {
-        setDropdownOpen(false);
-        setLoadingUnarchive(false);
+        setLoadingUpdate(false);
         toast.success(
           `Rental of ${rental.coordinatorName} is unarchived successfully!`,
           {
@@ -103,28 +100,26 @@ function ArchiveRentals() {
         });
       } else {
         Toaster();
-        setLoadingUnarchive(false);
+        setLoadingUpdate(false);
       }
     } catch (error) {
       {
         Toaster();
-        setLoadingUnarchive(false);
+        setLoadingUpdate(false);
       }
     }
   };
 
   // Delete the rental
-  const handleDelete = async (rental, event) => {
-    event.preventDefault();
+  const handleDelete = async (rental) => {
     try {
-      setLoadingDelete(true);
+      setLoadingUpdate(true);
       const res = await axios.delete(
         `https://marsu.cut.server.kukaas.tech/api/v1/rental/${rental._id}`
       );
 
       if (res.status === 200) {
-        setLoadingDelete(false);
-        setDropdownOpen(false);
+        setLoadingUpdate(false);
         toast.success(
           `Rental of ${rental.coordinatorName} is deleted successfully!`,
           {
@@ -139,11 +134,11 @@ function ArchiveRentals() {
         });
       } else {
         Toaster();
-        setLoadingDelete(false);
+        setLoadingUpdate(false);
       }
     } catch (error) {
       Toaster();
-      setLoadingDelete(false);
+      setLoadingUpdate(false);
     }
   };
 
@@ -249,7 +244,7 @@ function ArchiveRentals() {
         const rental = row.original;
 
         return (
-          <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
+          <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
                 <span className="sr-only">Open menu</span>
@@ -264,35 +259,11 @@ function ArchiveRentals() {
                 Copy Rental ID
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={(event) => handleUnarchive(rental, event)}
-                disabled={loadingUnarchive}
-              >
-                {loadingUnarchive ? (
-                  <div className="flex items-center">
-                    <Loader2 className="mr-2 animate-spin h-4 w-4" />
-                    <span>Unarchiving</span>
-                  </div>
-                ) : (
-                  "Unarchiving"
-                )}
+              <DropdownMenuItem onClick={() => handleUnarchive(rental)}>
+                Unarchive
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={(event) => handleDelete(rental, event)}
-                disabled={loadingDelete}
-              >
-                {loadingDelete ? (
-                  <div className="flex items-center">
-                    <Loader2 className="mr-2 animate-spin h-4 w-4" />
-                    <span className="text-red-500 hover:text-red-400">
-                      Deleting
-                    </span>
-                  </div>
-                ) : (
-                  <span className="text-red-500 hover:text-red-400">
-                    Delete
-                  </span>
-                )}
+              <DropdownMenuItem onClick={() => handleDelete(rental)}>
+                <span className="text-red-500 hover:text-red-400">Delete</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -336,7 +307,17 @@ function ArchiveRentals() {
   };
 
   return (
-    <div>
+    <Spin
+      spinning={loadingUpdate}
+      indicator={
+        <LoadingOutlined
+          className="dark:text-white"
+          style={{
+            fontSize: 48,
+          }}
+        />
+      }
+    >
       <div className="w-full p-5 h-screen">
         <Typography.Title level={2} className="text-black dark:text-white">
           Archive Rentals
@@ -464,7 +445,7 @@ function ArchiveRentals() {
           </div>
         </div>
       </div>
-    </div>
+    </Spin>
   );
 }
 

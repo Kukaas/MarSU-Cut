@@ -46,8 +46,8 @@ import { toast } from "sonner";
 function Orders() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [sorting, setSorting] = useState([]);
   const [loadingDelete, setLoadingDelete] = useState(false);
+  const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
@@ -276,17 +276,7 @@ function Orders() {
                   order.status
                 )}
               >
-                <span
-                  className={`text-red-500 hover:text-red-400 ${
-                    ["APPROVED", "MEASURED", "DONE", "CLAIMED"].includes(
-                      order.status
-                    )
-                      ? "opacity-50 cursor-not-allowed"
-                      : ""
-                  }`}
-                >
-                  Delete
-                </span>
+                <span className="text-red-400">Delete</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

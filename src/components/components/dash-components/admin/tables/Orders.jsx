@@ -29,9 +29,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Tooltip, Typography } from "antd";
+import { Spin, Tooltip, Typography } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { ArchiveIcon, Loader2 } from "lucide-react";
+import { ArchiveIcon } from "lucide-react";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -46,18 +47,13 @@ import { Toaster } from "@/lib/Toaster";
 function Orders() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [loadingApprove, setLoadingApprove] = useState(false);
-  const [loadingDone, setLoadingDone] = useState(false);
-  const [loadingClaimed, setLoadingClaimed] = useState(false);
-  const [loadingArchive, setLoadingArchive] = useState(false);
-  const [loadingDelete, setLoadingDelete] = useState(false);
+  const [loadingUpdate, setLoadingUpdate] = useState(false);
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
   const [currentPage, setCurrentPage] = useState(0);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const navigate = useNavigate();
 
@@ -79,17 +75,15 @@ function Orders() {
     fetchOrders();
   }, []);
 
-  const handleApprove = async (order, event) => {
-    event.preventDefault();
+  const handleApprove = async (order) => {
     try {
-      setLoadingApprove(true);
+      setLoadingUpdate(true);
       const res = await axios.put(
         `https://marsu.cut.server.kukaas.tech/api/v1/order/update/student/${order._id}`,
         { status: "APPROVED" }
       );
 
       if (res.status === 200) {
-        setDropdownOpen(false);
         toast.success(
           `Order of ${order.studentName} is approved successfully!`,
           { action: { label: "Ok" } }
@@ -107,21 +101,20 @@ function Orders() {
     } catch (error) {
       Toaster();
     } finally {
-      setLoadingApprove(false);
+      setLoadingUpdate(false);
     }
   };
 
-  const handleDone = async (order, event) => {
-    event.preventDefault();
+  const handleDone = async (order) => {
     try {
-      setLoadingDone(true);
+      setLoadingUpdate(true);
       const res = await axios.put(
         `https://marsu.cut.server.kukaas.tech/api/v1/order/update/student/${order._id}`,
         { status: "DONE" }
       );
 
       if (res.status === 200) {
-        setDropdownOpen(false);
+        setLoadingUpdate(false);
         toast.success(`Order of ${order.studentName} is ready to be claimed!`, {
           action: { label: "Ok" },
         });
@@ -131,26 +124,26 @@ function Orders() {
           )
         );
       } else {
+        setLoadingUpdate(false);
         Toaster();
       }
     } catch (error) {
       Toaster();
     } finally {
-      setLoadingDone(false);
+      setLoadingUpdate(false);
     }
   };
 
-  const handleClaimed = async (order, event) => {
-    event.preventDefault();
+  const handleClaimed = async (order) => {
     try {
-      setLoadingClaimed(true);
+      setLoadingUpdate(true);
       const res = await axios.put(
         `https://marsu.cut.server.kukaas.tech/api/v1/order/update/student/${order._id}`,
         { status: "CLAIMED" }
       );
 
       if (res.status === 200) {
-        setDropdownOpen(false);
+        setLoadingUpdate(false);
         toast.success(`Order of ${order.studentName} is claimed!`, {
           action: { label: "Ok" },
         });
@@ -160,19 +153,19 @@ function Orders() {
           )
         );
       } else {
+        setLoadingUpdate(false);
         Toaster();
       }
     } catch (error) {
       Toaster();
     } finally {
-      setLoadingClaimed(false);
+      setLoadingUpdate(false);
     }
   };
 
-  const handleArchive = async (order, event) => {
-    event.preventDefault();
+  const handleArchive = async (order) => {
     try {
-      setLoadingArchive(true);
+      setLoadingUpdate(true);
       const res = await axios.put(
         `https://marsu.cut.server.kukaas.tech/api/v1/order/archive/update/${order._id}`,
         { isArchived: true }
@@ -190,22 +183,22 @@ function Orders() {
         Toaster();
       }
     } catch (error) {
+      setLoadingUpdate(false);
       Toaster();
     } finally {
-      setLoadingArchive(false);
+      setLoadingUpdate(false);
     }
   };
 
-  const handleDelete = async (order, event) => {
-    event.preventDefault();
+  const handleDelete = async (order) => {
     try {
-      setLoadingDelete(true);
+      setLoadingUpdate(true);
       const res = await axios.delete(
         `https://marsu.cut.server.kukaas.tech/api/v1/order/student/delete/${order._id}`
       );
 
       if (res.status === 200) {
-        setDropdownOpen(false);
+        setLoadingUpdate(false);
         toast.success(
           `Order of ${order.studentName} is deleted successfully!`,
           { action: { label: "Ok" } }
@@ -218,10 +211,9 @@ function Orders() {
       }
     } catch (error) {
       Toaster();
-      setDropdownOpen(false);
+      setLoadingUpdate(false);
     } finally {
-      setLoadingDelete(false);
-      setDropdownOpen(false);
+      setLoadingUpdate(false);
     }
   };
 
@@ -388,7 +380,7 @@ function Orders() {
         const order = row.original;
 
         return (
-          <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
+          <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
                 <span className="sr-only">Open menu</span>
@@ -404,18 +396,8 @@ function Orders() {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem
-                  onClick={(event) => handleApprove(order, event)}
-                  disabled={loadingApprove}
-                >
-                  {loadingApprove ? (
-                    <div className="flex items-center">
-                      <Loader2 className="mr-2 animate-spin h-4 w-4" />
-                      <span>Approving</span>
-                    </div>
-                  ) : (
-                    "Approve"
-                  )}
+                <DropdownMenuItem onClick={() => handleApprove(order)}>
+                  Approve
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => {
@@ -425,63 +407,19 @@ function Orders() {
                 >
                   Measure
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={(event) => handleDone(order, event)}
-                  disabled={loadingDone}
-                >
-                  {loadingDone ? (
-                    <div className="flex items-center">
-                      <Loader2 className="mr-2 animate-spin h-4 w-4" />
-                      <span>Done</span>
-                    </div>
-                  ) : (
-                    "Done"
-                  )}
+                <DropdownMenuItem onClick={() => handleDone(order)}>
+                  Done
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={(event) => handleClaimed(order, event)}
-                  disabled={loadingClaimed}
-                >
-                  {loadingClaimed ? (
-                    <div className="flex items-center">
-                      <Loader2 className="mr-2 animate-spin h-4 w-4" />
-                      <span>Claimed</span>
-                    </div>
-                  ) : (
-                    "Claimed"
-                  )}
+                <DropdownMenuItem onClick={() => handleClaimed(order)}>
+                  Claimed
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={(event) => handleArchive(order, event)}
-                disabled={loadingArchive}
-              >
-                {loadingArchive ? (
-                  <div className="flex items-center">
-                    <Loader2 className="mr-2 animate-spin h-4 w-4" />
-                    <span>Archiving</span>
-                  </div>
-                ) : (
-                  "Archive"
-                )}
+              <DropdownMenuItem onClick={() => handleArchive(order)}>
+                Archive
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={(event) => handleDelete(order, event)}
-                disabled={loadingDelete}
-              >
-                {loadingDelete ? (
-                  <div className="flex items-center">
-                    <Loader2 className="mr-2 animate-spin h-4 w-4" />
-                    <span className="text-red-500 hover:text-red-400">
-                      Deleting
-                    </span>
-                  </div>
-                ) : (
-                  <span className="text-red-500 hover:text-red-400">
-                    Delete
-                  </span>
-                )}
+              <DropdownMenuItem onClick={() => handleDelete(order)}>
+                <span className="text-red-500 hover:text-red-400">Delete</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -525,7 +463,17 @@ function Orders() {
   };
 
   return (
-    <div>
+    <Spin
+      spinning={loadingUpdate}
+      indicator={
+        <LoadingOutlined
+          className="dark:text-white"
+          style={{
+            fontSize: 48,
+          }}
+        />
+      }
+    >
       <div className="w-full p-5 h-screen">
         <Typography.Title level={2} className="text-black dark:text-white">
           Orders
@@ -664,7 +612,7 @@ function Orders() {
           <AddOrderItems selectedOrder={selectedOrder} />
         </DialogContent>
       </Dialog>
-    </div>
+    </Spin>
   );
 }
 

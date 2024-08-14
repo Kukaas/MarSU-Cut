@@ -2,7 +2,7 @@ import { Spin, Tooltip, Typography } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ArchiveIcon, ChevronDownIcon, Loader2 } from "lucide-react";
+import { ArchiveIcon, ChevronDownIcon } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -40,8 +40,7 @@ import { Toaster } from "@/lib/Toaster";
 const CommercialJob = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [loading, setLoading] = useState(true);
-  const [loadingApprove, setLoadingApprove] = useState(false);
-  const [loadingDelete, setLoadingDelete] = useState(false);
+  const [loadingUpdate, setLoadingUpdate] = useState(false);
   const [data, setData] = useState([]);
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
@@ -71,7 +70,7 @@ const CommercialJob = () => {
 
   const handleApprove = async (commercial) => {
     try {
-      setLoadingApprove(true);
+      setLoadingUpdate(true);
       const res = await axios.put(
         `https://marsu.cut.server.kukaas.tech/api/v1/commercial-job/update/${commercial._id}`,
         {
@@ -80,7 +79,7 @@ const CommercialJob = () => {
       );
 
       if (res.status === 200) {
-        setLoadingApprove(false);
+        setLoadingUpdate(false);
         const updatedData = data.map((item) =>
           item._id === commercial._id ? { ...item, status: "APPROVED" } : item
         );
@@ -95,14 +94,14 @@ const CommercialJob = () => {
         );
       }
     } catch (error) {
-      setLoadingApprove(false);
+      setLoadingUpdate(false);
       Toaster();
     }
   };
 
   const handleDelete = async (commercial) => {
     try {
-      setLoadingDelete(true);
+      setLoadingUpdate(true);
       const res = await axios.delete(
         `https://marsu.cut.server.kukaas.tech/api/v1/commercial-job/${commercial._id}`
       );
@@ -110,7 +109,7 @@ const CommercialJob = () => {
       if (res.status === 200) {
         const updatedData = data.filter((item) => item._id !== commercial._id);
         setData(updatedData);
-        setLoadingDelete(false);
+        setLoadingUpdate(false);
         toast.success(
           `Commercial job with ID ${commercial._id} has been deleted.`,
           {
@@ -122,6 +121,7 @@ const CommercialJob = () => {
       }
     } catch (error) {
       Toaster();
+      setLoadingUpdate(false);
     }
   };
 
@@ -197,37 +197,13 @@ const CommercialJob = () => {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem
-                  onClick={() => handleApprove(commercial)}
-                  disabled={loadingApprove}
-                >
-                  {loadingApprove ? (
-                    <div className="flex items-center">
-                      <Loader2 className="mr-2 animate-spin h-4 w-4" />
-                      <span>Approving</span>
-                    </div>
-                  ) : (
-                    "Approve"
-                  )}
+                <DropdownMenuItem onClick={() => handleApprove(commercial)}>
+                  Approve
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => handleDelete(commercial)}
-                disabled={loadingDelete}
-              >
-                {loadingDelete ? (
-                  <div className="flex items-center">
-                    <Loader2 className="mr-2 animate-spin h-4 w-4" />
-                    <span className="text-red-500 hover:text-red-400">
-                      Deleting
-                    </span>
-                  </div>
-                ) : (
-                  <span className="text-red-500 hover:text-red-400">
-                    Delete
-                  </span>
-                )}
+              <DropdownMenuItem onClick={() => handleDelete(commercial)}>
+                <span className="text-red-500 hover:text-red-400">Delete</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -271,7 +247,7 @@ const CommercialJob = () => {
   };
   return (
     <Spin
-      spinning={loadingDelete || loadingApprove}
+      spinning={loadingUpdate}
       indicator={
         <LoadingOutlined
           className="dark:text-white"

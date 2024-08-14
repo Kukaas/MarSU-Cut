@@ -28,23 +28,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Tooltip, Typography } from "antd";
+import { Spin, Tooltip, Typography } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { ArrowDownLeft, Loader2 } from "lucide-react";
+import { ArrowDownLeft } from "lucide-react";
 import { toast } from "sonner";
 import { Toaster } from "@/lib/Toaster";
 
 function ArchiveOrders() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [loadingUnarchive, setLoadingUnarchive] = useState(false);
-  const [loadingDelete, setLoadingDelete] = useState(false);
+  const [loadingUpdate, setLoadingUpdate] = useState(false);
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
   const [currentPage, setCurrentPage] = useState(0);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -54,22 +53,22 @@ function ArchiveOrders() {
         const response = await axios.get(
           "https://marsu.cut.server.kukaas.tech/api/v1/order/archive/all"
         );
-        setLoading(false);
-        return response.data.orders;
+        setData(response.data.orders);
       } catch (error) {
+        console.error("Error fetching orders:", error);
+      } finally {
         setLoading(false);
-        return [];
       }
     };
-
-    fetchArchivedOrders()
+  
+    fetchArchivedOrders();
   }, []);
+  
 
   // Unarchive orders
-  const handleUnarchive = async (order, event) => {
-    event.preventDefault();
+  const handleUnarchive = async (order) => {
     try {
-      setLoadingUnarchive(true);
+      setLoadingUpdate(true);
       const res = await axios.put(
         `https://marsu.cut.server.kukaas.tech/api/v1/order/archive/update/${order._id}`,
         {
@@ -78,7 +77,7 @@ function ArchiveOrders() {
       );
 
       if (res.status === 200) {
-        setDropdownOpen(false);
+        setLoadingUpdate(false);
         toast.success(
           `Order of ${order.studentName} is unarchived successfully!`,
           {
@@ -87,35 +86,32 @@ function ArchiveOrders() {
             },
           }
         );
-        setLoadingUnarchive(false);
 
         setData((prevData) => {
           return prevData.filter((item) => item._id !== order._id);
         });
       } else {
         Toaster();
-        setLoadingUnarchive(false);
+        setLoadingUpdate(false);
       }
     } catch (error) {
       {
-        setLoadingUnarchive(false);
         Toaster();
+        setLoadingUpdate(false);
       }
     }
   };
 
   // Function to handle delete
-  const handleDelete = async (order, event) => {
-    event.preventDefault();
+  const handleDelete = async (order) => {
     try {
-      setLoadingDelete(true);
+      setLoadingUpdate(true);
       const res = await axios.delete(
         `https://marsu.cut.server.kukaas.tech/api/v1/order/student/delete/${order._id}`
       );
 
       if (res.status === 200) {
-        setDropdownOpen(false);
-        setLoadingDelete(false);
+        setLoadingUpdate(false);
         toast.success(
           `Order of ${order.studentName} is deleted successfully!`,
           {
@@ -130,11 +126,11 @@ function ArchiveOrders() {
           return prevData.filter((item) => item._id !== order._id);
         });
       } else {
-        setLoadingDelete(false);
+        setLoadingUpdate(false);
         Toaster();
       }
     } catch (error) {
-      setLoadingDelete(false);
+      setLoadingUpdate(false);
       Toaster();
     }
   };
@@ -287,7 +283,7 @@ function ArchiveOrders() {
         const order = row.original;
 
         return (
-          <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
+          <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
                 <span className="sr-only">Open menu</span>
@@ -302,35 +298,11 @@ function ArchiveOrders() {
                 Copy Order ID
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={(event) => handleUnarchive(order, event)}
-                disabled={loadingUnarchive}
-              >
-                {loadingUnarchive ? (
-                  <div className="flex items-center">
-                    <Loader2 className="mr-2 animate-spin h-4 w-4" />
-                    <span>Unarchiving</span>
-                  </div>
-                ) : (
-                  "Unarchive"
-                )}
+              <DropdownMenuItem onClick={() => handleUnarchive(order)}>
+                Unarchive
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={(event) => handleDelete(order, event)}
-                disabled={loadingDelete}
-              >
-                {loadingDelete ? (
-                  <div className="flex items-center">
-                    <Loader2 className="mr-2 animate-spin h-4 w-4" />
-                    <span className="text-red-500 hover:text-red-400">
-                      Deleting
-                    </span>
-                  </div>
-                ) : (
-                  <span className="text-red-500 hover:text-red-400">
-                    Delete
-                  </span>
-                )}
+              <DropdownMenuItem onClick={() => handleDelete(order)}>
+                <span className="text-red-500 hover:text-red-400">Delete</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -374,7 +346,17 @@ function ArchiveOrders() {
   };
 
   return (
-    <div>
+    <Spin
+      spinning={loadingUpdate}
+      indicator={
+        <LoadingOutlined
+          className="dark:text-white"
+          style={{
+            fontSize: 48,
+          }}
+        />
+      }
+    >
       <div className="w-full p-5 h-screen">
         <Typography.Title level={2} className="text-black dark:text-white">
           Archive Orders
@@ -502,7 +484,7 @@ function ArchiveOrders() {
           </div>
         </div>
       </div>
-    </div>
+    </Spin>
   );
 }
 
