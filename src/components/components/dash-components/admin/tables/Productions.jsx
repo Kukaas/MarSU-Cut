@@ -278,7 +278,7 @@ const Productions = () => {
         <Typography.Title level={2} className="text-black dark:text-white">
           Productions
         </Typography.Title>
-        <div className="flex items-center py-4 justify-between">
+        <div className="flex items-center py-4 justify-between gap-2">
           <Input
             placeholder="Filter by product type..."
             value={table.getColumn("productType")?.getFilterValue() || ""}

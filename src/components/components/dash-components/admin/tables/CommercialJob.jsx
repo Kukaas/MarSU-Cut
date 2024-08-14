@@ -85,7 +85,7 @@ const CommercialJob = () => {
         );
         setData(updatedData);
         toast.success(
-          `Commercial job with ID ${commercial._id} has been approved.`,
+          `Commercial job order of ${commercial.cbName} has been approved.`,
           {
 
           }
@@ -109,7 +109,7 @@ const CommercialJob = () => {
         setData(updatedData);
         setLoadingUpdate(false);
         toast.success(
-          `Commercial job with ID ${commercial._id} has been deleted.`,
+          `Commercial job order of ${commercial.cbName} has been deleted.`,
           {
 
           }

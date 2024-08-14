@@ -1,4 +1,3 @@
-import { Toaster } from "sonner";
 import Rentals from "./tables/Rentals";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -26,7 +25,6 @@ const DashRental = () => {
         <meta name="description" content="" />
       </Helmet>
       <Rentals />
-      <Toaster position="tope-right"  closeButton richColors />
     </div>
   );
 };

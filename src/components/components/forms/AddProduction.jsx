@@ -63,9 +63,8 @@ const AddProduction = () => {
 
       if (res.status === 201) {
         setAddProductionLoading(false);
-        toast.success("Production added successfully", {
-          
-        });
+        toast.success("Production added successfully");
+        productionForm.reset()
       }
     } catch (error) {
       setAddProductionLoading(false);

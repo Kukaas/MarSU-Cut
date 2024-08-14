@@ -43,7 +43,7 @@ const CreateCommercialOrder = () => {
       if (res.status === 201) {
         setCommercialOrderLoading(false);
         toast.success("Commercial order created successfully", {
-          
+          description: "Wait for the admin to approve your order."
         });
 
         commercialJobForm.reset();

@@ -1,4 +1,3 @@
-import { Toaster } from "sonner";
 import Orders from "./tables/Orders";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -26,7 +25,6 @@ const DashOrderAdmin = () => {
         <meta name="description" content="" />
       </Helmet>
       <Orders />
-      <Toaster  closeButton richColors />
     </div>
   );
 };

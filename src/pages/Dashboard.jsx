@@ -21,6 +21,7 @@ import SideBarAdmin from "@/components/components/SideBarAdmin";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import SidebarUser from "@/components/components/SidebarUser";
+import { Toaster } from "sonner";
 
 const Dashboard = ({ tab }) => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
@@ -88,6 +89,7 @@ const Dashboard = ({ tab }) => {
       <div className="flex-1">
         {renderContent()}
       </div>
+      <Toaster richColors closeButton/>
     </div>
   );
 };

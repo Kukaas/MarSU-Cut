@@ -1,4 +1,3 @@
-import { Toaster } from "sonner";
 import Orders from "./tables/Orders";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -11,9 +10,7 @@ const DashOrder = () => {
 
   useEffect(() => {
     if (currentUser && currentUser.isAdmin) {
-      navigate(
-        "/dashboard?tab=home-admin"
-      );
+      navigate("/dashboard?tab=home-admin");
     } else if (currentUser && currentUser.isAdmin === false) {
       navigate("/dashboard?tab=orders");
     } else {
@@ -27,7 +24,6 @@ const DashOrder = () => {
         <meta name="description" content="" />
       </Helmet>
       <Orders />
-      <Toaster position="top-right"  closeButton richColors />
     </div>
   );
 };

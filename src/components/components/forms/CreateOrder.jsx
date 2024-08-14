@@ -26,7 +26,7 @@ import { Input } from "@/components/ui/input";
 import { app } from "@/firebase";
 import { CreateOrderSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { message, Progress } from "antd";
+import { Progress } from "antd";
 import axios from "axios";
 import {
   getDownloadURL,
@@ -123,7 +123,7 @@ const CreateOrder = () => {
     event.preventDefault();
     event.stopPropagation();
     if (imageFileUrl === null) {
-      message.error(
+      toast.error(
         "Please fill all fields or the image is still uploading, please wait..."
       );
       return;

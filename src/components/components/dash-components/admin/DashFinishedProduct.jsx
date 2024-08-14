@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import FinishedProduct from "./tables/FinishedProduct";
-import { Toaster } from "sonner";
 import { Helmet } from "react-helmet";
 
 const DashFinishedProduct = () => {
@@ -26,7 +25,6 @@ const DashFinishedProduct = () => {
         <meta name="description" content="" />
       </Helmet>
       <FinishedProduct />
-      <Toaster  closeButton richColors />
     </div>
   );
 };

@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import RawMaterials from "./tables/RawMaterials";
-import { Toaster } from "sonner";
 import { Helmet } from "react-helmet";
 
 const DashRawMaterials = () => {
@@ -26,7 +25,6 @@ const DashRawMaterials = () => {
         <meta name="description" content="" />
       </Helmet>
       <RawMaterials />
-      <Toaster  closeButton richColors />
     </div>
   );
 };

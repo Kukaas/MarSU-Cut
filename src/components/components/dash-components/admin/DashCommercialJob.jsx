@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Toaster } from "sonner";
 import CommercialJob from "./tables/CommercialJob";
 
 const DashCommercialJob = () => {
@@ -26,7 +25,6 @@ const DashCommercialJob = () => {
         <meta name="description" content="" />
       </Helmet>
       <CommercialJob />
-      <Toaster  closeButton richColors />
     </div>
   );
 };

@@ -1,4 +1,3 @@
-import { Toaster } from "sonner";
 import ArchiveOrders from "./tables/ArchiveOrders";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -26,7 +25,6 @@ const DashArchiveOrders = () => {
         <meta name="description" content="" />
       </Helmet>
       <ArchiveOrders />
-      <Toaster  closeButton richColors />
     </div>
   );
 };

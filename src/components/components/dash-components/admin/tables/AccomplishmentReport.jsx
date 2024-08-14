@@ -10,7 +10,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { CalendarIcon, PlusCircle } from "lucide-react";
+import { CalendarIcon, Loader2, PlusCircle } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -106,7 +106,7 @@ const AccomplishmentReport = () => {
         setLoading(false);
       }
     };
-    
+
     fetchAccomplishments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -166,9 +166,7 @@ const AccomplishmentReport = () => {
       if (res.status === 200) {
         setIsDialogOpen(false);
         setUpdateLoading(false);
-        toast.success("Accomplishment report updated successfully!", {
-          
-        });
+        toast.success("Accomplishment report updated successfully!", {});
         setData((prevData) => {
           return prevData.map((item) => {
             if (item._id === selectedAccomplishment._id) {
@@ -199,9 +197,7 @@ const AccomplishmentReport = () => {
         setLoadingDelete(false);
         toast.success(
           `Accomplishment with ID ${accomplishment._id} is deleted successfully!`,
-          {
-
-          }
+          {}
         );
         setData((prevData) => {
           return prevData.filter((item) => item._id !== accomplishment._id);
@@ -573,9 +569,12 @@ const AccomplishmentReport = () => {
                     Cancel
                   </Button>
                 </DialogClose>
-                <Button type="submit" className="mt-4">
+                <Button type="submit" className="mt-4" disabled={updateLoading}>
                   {updateLoading ? (
-                    <div className="loading-dots">Saving changes</div>
+                    <div className="flex items-center">
+                      <Loader2 className="mr-2 animate-spin" />
+                      <span>Saving</span>
+                    </div>
                   ) : (
                     "Save Changes"
                   )}

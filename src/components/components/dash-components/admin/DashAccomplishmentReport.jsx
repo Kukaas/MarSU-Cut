@@ -1,4 +1,3 @@
-import { Toaster } from "sonner";
 import AccomplishmentReport from "./tables/AccomplishmentReport";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -26,7 +25,6 @@ const DashAccomplishmentReport = () => {
         <meta name="description" content="" />
       </Helmet>
       <AccomplishmentReport />
-      <Toaster  closeButton richColors />
     </div>
   );
 };

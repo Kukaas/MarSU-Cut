@@ -294,10 +294,10 @@ function Rentals() {
         <div className="flex items-center py-4 justify-between">
           <Input
             placeholder="Filter Student Numbers..."
-            value={table.getColumn("studentNumber")?.getFilterValue() || ""}
+            value={table.getColumn("coordinatorName")?.getFilterValue() || ""}
             onChange={(event) =>
               table
-                .getColumn("studentNumber")
+                .getColumn("coordinatorName")
                 ?.setFilterValue(event.target.value)
             }
             className="max-w-sm"

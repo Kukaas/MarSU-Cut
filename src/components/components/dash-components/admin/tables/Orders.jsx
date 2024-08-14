@@ -85,8 +85,7 @@ function Orders() {
 
       if (res.status === 200) {
         toast.success(
-          `Order of ${order.studentName} is approved successfully!`,
-          
+          `Order of ${order.studentName} is approved successfully!`
         );
         setData((prevData) =>
           prevData.map((item) =>
@@ -115,7 +114,9 @@ function Orders() {
 
       if (res.status === 200) {
         setLoadingUpdate(false);
-        toast.success(`Order of ${order.studentName} is ready to be claimed!`, );
+        toast.success(`Order of ${order.studentName} is ready to be claimed!`, {
+          action: { label: "Ok" },
+        });
         setData((prevData) =>
           prevData.map((item) =>
             item._id === order._id ? { ...item, status: "DONE" } : item
@@ -142,7 +143,9 @@ function Orders() {
 
       if (res.status === 200) {
         setLoadingUpdate(false);
-        toast.success(`Order of ${order.studentName} is claimed!`, );
+        toast.success(`Order of ${order.studentName} is claimed!`, {
+          action: { label: "Ok" },
+        });
         setData((prevData) =>
           prevData.map((item) =>
             item._id === order._id ? { ...item, status: "CLAIMED" } : item
@@ -169,8 +172,7 @@ function Orders() {
 
       if (res.status === 200) {
         toast.success(
-          `Order of ${order.studentName} is archived successfully!`,
-          
+          `Order of ${order.studentName} is archived successfully!`
         );
         setData((prevData) =>
           prevData.filter((item) => item._id !== order._id)
@@ -195,10 +197,7 @@ function Orders() {
 
       if (res.status === 200) {
         setLoadingUpdate(false);
-        toast.success(
-          `Order of ${order.studentName} is deleted successfully!`,
-          
-        );
+        toast.success(`Order of ${order.studentName} is deleted successfully!`);
         setData((prevData) =>
           prevData.filter((item) => item._id !== order._id)
         );

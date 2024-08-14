@@ -1,4 +1,3 @@
-import { Toaster } from "sonner";
 import ArchiveRentals from "./tables/ArchiveRentals";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -26,7 +25,6 @@ const DashArchiveRentals = () => {
         <meta name="description" content="" />
       </Helmet>
       <ArchiveRentals />
-      <Toaster  closeButton richColors />
     </div>
   );
 };

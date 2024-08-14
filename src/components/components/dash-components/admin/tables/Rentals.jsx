@@ -165,7 +165,7 @@ function Rentals() {
 
       if (res.status === 200) {
         setLoadingUpdate(false);
-        toast.success(`Rental of ${rental.coordnatorName} is given!`, {
+        toast.success(`Rental of ${rental.coordinatorName} is given!`, {
           
         });
 
@@ -488,7 +488,7 @@ function Rentals() {
         </Typography.Title>
         <div className="flex items-center py-4 justify-between">
           <Input
-            placeholder="Filter Student Numbers..."
+            placeholder="Search by coordinator name ..."
             value={table.getColumn("coordinatorName")?.getFilterValue() || ""}
             onChange={(event) =>
               table

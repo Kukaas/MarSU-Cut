@@ -60,9 +60,7 @@ const Notification = () => {
       );
 
       if (res.status === 200) {
-        toast.success("Notification marked as read.", {
-          
-        });
+        toast.success("Notification marked as read.", {});
 
         // Update state
         const updatedUnreadNotifications = unreadNotifications.filter(
@@ -90,7 +88,7 @@ const Notification = () => {
 
       if (res.status === 200) {
         toast.success("Notification deleted.", {
-          
+          description: `Notification with ID "${notification._id}" has been deleted.`,
         });
 
         // Update state
@@ -99,13 +97,10 @@ const Notification = () => {
         );
         setReadNotifications(updatedReadNotifications);
       } else {
-        toast.error("Failed to delete notification.", {
-        });
+        toast.error("Failed to delete notification.", {});
       }
     } catch (error) {
-      toast.error("Failed to delete notification.", {
-        
-      });
+      toast.error("Failed to delete notification.", {});
     }
   };
 

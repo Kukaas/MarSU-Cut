@@ -47,6 +47,7 @@ import ChangePassword from "../forms/ChangePassword";
 import { Helmet } from "react-helmet";
 import { Loader2 } from "lucide-react";
 import { Toaster } from "@/lib/Toaster";
+import { toast } from "sonner";
 
 const DashProfile = () => {
   const navigate = useNavigate();
@@ -169,7 +170,7 @@ const DashProfile = () => {
       if (res.status === 200) {
         setUpdateProfileLoading(false);
         dispatch(updateSuccess(data));
-        message.success("Profile updated successfully");
+        toast.success("Profile updated successfully");
         // Reset the form with updated values
         formUpdateProfile.reset();
         setImageUploadProgress(false);
