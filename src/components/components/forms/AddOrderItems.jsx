@@ -22,13 +22,10 @@ import { useEffect, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import PropTypes from "prop-types";
+import { Toaster } from "@/lib/Toaster";
 
 const AddOrderItems = ({ selectedOrder }) => {
   const [loadingAddItems, setLoadingAddItems] = useState(false);
-
-  const toastError = () => {
-    toast.error("Uh oh! Something went wrong.");
-  };
 
   const form = useForm({
     defaultValues: {
@@ -380,7 +377,7 @@ const AddOrderItems = ({ selectedOrder }) => {
         },
       });
     } else {
-      toastError();
+      Toaster();
     }
 
     setLoadingAddItems(false);

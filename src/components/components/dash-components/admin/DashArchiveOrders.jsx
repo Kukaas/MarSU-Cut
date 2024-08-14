@@ -26,7 +26,7 @@ const DashArchiveOrders = () => {
         <meta name="description" content="" />
       </Helmet>
       <ArchiveOrders />
-      <Toaster richColors />
+      <Toaster position="top-right" closeButton richColors />
     </div>
   );
 };

@@ -15,6 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Toaster } from "@/lib/Toaster";
 import { AddNewProductSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
@@ -55,7 +56,7 @@ const AddNewProduct = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error("Uh oh! Something went wrong");
+      Toaster();
     }
   };
 

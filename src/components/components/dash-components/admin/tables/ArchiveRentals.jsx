@@ -32,6 +32,7 @@ import { Tooltip, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
 import { ArrowDownLeft, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { Toaster } from "@/lib/Toaster";
 
 function ArchiveRentals() {
   const [data, setData] = useState([]);
@@ -45,10 +46,6 @@ function ArchiveRentals() {
   const [currentPage, setCurrentPage] = useState(0);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
-
-  const toastError = () => {
-    toast.error("Uh oh! Something went wrong.");
-  };
 
   useEffect(() => {
     const fetchRentals = async () => {
@@ -105,12 +102,12 @@ function ArchiveRentals() {
           return prevData.filter((item) => item._id !== rental._id);
         });
       } else {
-        toastError();
+        Toaster();
         setLoadingUnarchive(false);
       }
     } catch (error) {
       {
-        toastError();
+        Toaster();
         setLoadingUnarchive(false);
       }
     }
@@ -141,11 +138,11 @@ function ArchiveRentals() {
           return prevData.filter((item) => item._id !== rental._id);
         });
       } else {
-        toastError();
+        Toaster();
         setLoadingDelete(false);
       }
     } catch (error) {
-      toastError();
+      Toaster();
       setLoadingDelete(false);
     }
   };

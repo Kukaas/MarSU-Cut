@@ -35,6 +35,7 @@ import { useSelector } from "react-redux";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { Toaster } from "@/lib/Toaster";
 
 const CommercialJob = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -95,11 +96,7 @@ const CommercialJob = () => {
       }
     } catch (error) {
       setLoadingApprove(false);
-      toast.error("Uh oh! Something went wrong", {
-        action: {
-          label: "Ok",
-        },
-      });
+      Toaster();
     }
   };
 
@@ -124,11 +121,7 @@ const CommercialJob = () => {
         );
       }
     } catch (error) {
-      toast.error("Uh oh! Something went wrong", {
-        action: {
-          label: "Ok",
-        },
-      });
+      Toaster();
     }
   };
 

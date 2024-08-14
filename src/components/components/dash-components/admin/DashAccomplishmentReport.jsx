@@ -26,7 +26,7 @@ const DashAccomplishmentReport = () => {
         <meta name="description" content="" />
       </Helmet>
       <AccomplishmentReport />
-      <Toaster richColors />
+      <Toaster position="top-right" closeButton richColors />
     </div>
   );
 };

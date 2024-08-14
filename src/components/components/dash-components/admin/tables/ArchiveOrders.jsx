@@ -32,6 +32,7 @@ import { Tooltip, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
 import { ArrowDownLeft, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { Toaster } from "@/lib/Toaster";
 
 function ArchiveOrders() {
   const [data, setData] = useState([]);
@@ -45,10 +46,6 @@ function ArchiveOrders() {
   const [currentPage, setCurrentPage] = useState(0);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
-
-  const toastError = () => {
-    toast.error("Uh oh! Something went wrong.");
-  };
 
   useEffect(() => {
     const fetchArchivedOrders = async () => {
@@ -96,13 +93,13 @@ function ArchiveOrders() {
           return prevData.filter((item) => item._id !== order._id);
         });
       } else {
-        toastError();
+        Toaster();
         setLoadingUnarchive(false);
       }
     } catch (error) {
       {
         setLoadingUnarchive(false);
-        toastError();
+        Toaster();
       }
     }
   };
@@ -134,11 +131,11 @@ function ArchiveOrders() {
         });
       } else {
         setLoadingDelete(false);
-        toastError();
+        Toaster();
       }
     } catch (error) {
       setLoadingDelete(false);
-      toastError();
+      Toaster();
     }
   };
 

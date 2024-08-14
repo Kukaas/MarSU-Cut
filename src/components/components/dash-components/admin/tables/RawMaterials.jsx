@@ -38,6 +38,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import EditRawMaterial from "@/components/components/forms/EditRawMaterial";
 import AddNewRawMaterial from "@/components/components/forms/AddNewRawMaterial";
+import { Toaster } from "@/lib/Toaster";
 
 const RawMaterials = () => {
   const [data, setData] = useState([]);
@@ -92,10 +93,9 @@ const RawMaterials = () => {
         });
       }
     } catch (error) {
-      toast.error("Uh oh! Something went wrong");
+      Toaster();
       setOpenDeleteDialog(false);
       setDeleteLoading(false);
-      console.error(error);
     }
   };
 

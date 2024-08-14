@@ -46,6 +46,7 @@ import {
 import ChangePassword from "../forms/ChangePassword";
 import { Helmet } from "react-helmet";
 import { Loader2 } from "lucide-react";
+import { Toaster } from "@/lib/Toaster";
 
 const DashProfile = () => {
   const navigate = useNavigate();
@@ -176,6 +177,7 @@ const DashProfile = () => {
     } catch (error) {
       dispatch(updateFail());
       setUpdateProfileLoading(false);
+      Toaster();
     }
   };
 
@@ -211,6 +213,7 @@ const DashProfile = () => {
       }
     } catch (error) {
       setLoading(false);
+      Toaster();
     }
   };
 

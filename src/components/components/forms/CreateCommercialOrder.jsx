@@ -8,6 +8,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Toaster } from "@/lib/Toaster";
 import { AddCommercialJobSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogClose } from "@radix-ui/react-dialog";
@@ -50,11 +51,7 @@ const CreateCommercialOrder = () => {
         commercialJobForm.reset();
       }
     } catch (error) {
-      toast.error("Uh oh! Something went wrong", {
-        action: {
-          label: "Ok",
-        },
-      });
+      Toaster();
     }
   };
 

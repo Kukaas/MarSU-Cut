@@ -32,6 +32,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Toaster } from "@/lib/Toaster";
 import {
   flexRender,
   getCoreRowModel,
@@ -116,7 +117,7 @@ const Productions = () => {
         });
       }
     } catch (error) {
-      console.error(error);
+      Toaster();
     } finally {
       setDeleteLoading(false);
     }

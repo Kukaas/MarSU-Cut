@@ -21,6 +21,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { SheetClose, SheetTitle } from "@/components/ui/sheet";
+import { Toaster } from "@/lib/Toaster";
 import { cn } from "@/lib/utils";
 import { AddProductionSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -70,11 +71,7 @@ const AddProduction = () => {
       }
     } catch (error) {
       setAddProductionLoading(false);
-      toast.error("Uh oh! Something went wrong", {
-        action: {
-          label: "Ok",
-        },
-      });
+      Toaster();
     }
   };
 

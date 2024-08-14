@@ -9,6 +9,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Toaster } from "@/lib/Toaster";
 import { AddRawMaterialsSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
@@ -47,7 +48,7 @@ const AddNewRawMaterial = () => {
       }
     } catch (error) {
       setAddRawMaterialLoading(false);
-      toast.error("Uh oh! Something went wrong");
+      Toaster();
     }
   };
 

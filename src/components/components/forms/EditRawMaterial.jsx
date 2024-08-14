@@ -17,6 +17,7 @@ import { useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { Toaster } from "@/lib/Toaster";
 
 const EditRawMaterial = ({ selectedRawMaterial }) => {
   const [editRawMaterialLoading, setEditRawMaterialLoading] = useState(false);
@@ -48,8 +49,7 @@ const EditRawMaterial = ({ selectedRawMaterial }) => {
         editRawMaterialForm.reset();
       }
     } catch (error) {
-      setEditRawMaterialLoading(false);
-      toast.error("Uh oh! Something went wrong");
+      Toaster();
     }
   };
 

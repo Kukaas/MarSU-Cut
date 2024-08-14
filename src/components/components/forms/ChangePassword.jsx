@@ -17,6 +17,7 @@ import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
+import { toast } from "sonner";
 
 const ChangePassword = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -72,7 +73,11 @@ const ChangePassword = () => {
       }
     } catch (error) {
       if (error.response.status === 400) {
-        message.error("Old password does not match");
+        toast.error("Old password does not match", {
+          action: {
+            label: "Ok",
+          },
+        });
       }
 
       if (error.response.status === 500) {

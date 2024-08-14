@@ -38,6 +38,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import EditProduct from "@/components/components/forms/EditProduct";
 import { toast } from "sonner";
+import { Toaster } from "@/lib/Toaster";
 
 const FinishedProduct = () => {
   const [data, setData] = useState([]);
@@ -64,7 +65,6 @@ const FinishedProduct = () => {
         setData(data.finishedProducts);
         setLoading(false);
       } catch (error) {
-        console.error(error);
         setLoading(false);
       }
     };
@@ -92,10 +92,9 @@ const FinishedProduct = () => {
         });
       }
     } catch (error) {
-      toast.error("Uh oh! Something went wrong");
+      Toaster();
       setOpenDeleteDialog(false);
       setDeleteLoading(false);
-      console.error(error);
     }
   };
 

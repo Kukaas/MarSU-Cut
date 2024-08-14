@@ -8,6 +8,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Toaster } from "@/lib/Toaster";
 import { CreateAccomplishmentSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
@@ -42,7 +43,7 @@ const CreateAccomplishment = () => {
       });
       form.reset();
     } else {
-      toast.error("Uh oh! Something went wrong");
+      Toaster();
       setLoading(false);
     }
   };

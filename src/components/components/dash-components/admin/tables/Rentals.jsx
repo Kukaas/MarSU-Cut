@@ -33,6 +33,7 @@ import { Tooltip, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
 import { ArchiveIcon, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { Toaster } from "@/lib/Toaster";
 
 function Rentals() {
   const [data, setData] = useState([]);
@@ -50,10 +51,6 @@ function Rentals() {
   const [currentPage, setCurrentPage] = useState(0);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
-
-  const toastError = () => {
-    toast.error("Uh oh! Something went wrong.");
-  };
 
   useEffect(() => {
     const fetchRentals = async () => {
@@ -118,11 +115,11 @@ function Rentals() {
           });
         });
       } else {
-        toastError();
+        Toaster();
         setLoadingReject(false);
       }
     } catch (error) {
-      toastError();
+      Toaster();
       setLoadingReject(false);
     }
   };
@@ -160,11 +157,11 @@ function Rentals() {
           });
         });
       } else {
-        toastError();
+        Toaster();
         setLoadingApprove(false);
       }
     } catch (error) {
-      toastError();
+      Toaster();
       setLoadingApprove(false);
     }
   };
@@ -241,11 +238,11 @@ function Rentals() {
           });
         });
       } else {
-        toastError();
+        Toaster();
         setLoadingReturn(false);
       }
     } catch (error) {
-      toastError();
+      Toaster();
       setLoadingReturn(false);
     }
   };
@@ -278,12 +275,12 @@ function Rentals() {
           return prevData.filter((item) => item._id !== rental._id);
         });
       } else {
-        toastError();
+        Toaster();
         setLoadingArchive(false);
       }
     } catch (error) {
       {
-        toastError();
+        Toaster();
         setLoadingArchive(false);
       }
     }
@@ -314,10 +311,10 @@ function Rentals() {
           return prevData.filter((item) => item._id !== rental._id);
         });
       } else {
-        toastError();
+        Toaster();
       }
     } catch (error) {
-      toastError();
+      Toaster();
     }
   };
 

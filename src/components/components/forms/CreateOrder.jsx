@@ -26,7 +26,7 @@ import { Input } from "@/components/ui/input";
 import { app } from "@/firebase";
 import { CreateOrderSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { message, notification, Progress } from "antd";
+import { message, Progress } from "antd";
 import axios from "axios";
 import {
   getDownloadURL,
@@ -38,6 +38,8 @@ import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { Loader2, UploadIcon } from "lucide-react";
+import { toast } from "sonner";
+import { Toaster } from "@/lib/Toaster";
 
 const CreateOrder = () => {
   const [imageFile, setImageFile] = useState(null);
@@ -65,10 +67,12 @@ const CreateOrder = () => {
       // Check if file size exceeds 2MB
       if (file.size > 2 * 1024 * 1024) {
         // Display notification
-        notification.error({
-          message: "File too large",
-          description: "The file size exceeds the maximum limit of 2MB.",
-        });
+        toast.error("File too large!", {
+          description: "File should not exceeds 2MB.",
+          action: {
+            label: "Ok"
+          }
+        })
         return; // Stop the function if file is too large
       }
       // Create a URL for the image
@@ -146,11 +150,11 @@ const CreateOrder = () => {
         setProgress(0);
         setLoading(false);
         form.reset();
-        notification.success({
-          message: "Order submitted successfully",
-          description: "Wait for the admin to schedule your measurement.",
-          pauseOnHover: false,
-          showProgress: true,
+        toast.success("Order submitted successfully!", {
+          description: "Please wait for the admin to approve your order.",
+          action: {
+            label: "Ok",
+          },
         });
 
         // Clear the file input
@@ -161,12 +165,7 @@ const CreateOrder = () => {
     } catch (error) {
       setLoading(false);
       setLoading(false);
-      notification.error({
-        message: "Failed to submit order",
-        description: "Please try again later.",
-        pauseOnHover: false,
-        showProgress: true,
-      });
+      Toaster();
     }
   };
 

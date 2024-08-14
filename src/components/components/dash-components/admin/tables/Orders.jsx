@@ -41,6 +41,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import AddOrderItems from "../../../forms/AddOrderItems";
+import { Toaster } from "@/lib/Toaster";
 
 function Orders() {
   const [data, setData] = useState([]);
@@ -60,12 +61,6 @@ function Orders() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const navigate = useNavigate();
 
-  const toastError = () => {
-    toast.error("Uh oh! Something went wrong.", {
-      action: { label: "Ok" },
-    });
-  };
-
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -78,7 +73,7 @@ function Orders() {
       } catch (error) {
         setLoading(false);
         setData([]);
-        toastError();
+        Toaster();
       }
     };
     fetchOrders();
@@ -107,10 +102,10 @@ function Orders() {
           )
         );
       } else {
-        toastError();
+        Toaster();
       }
     } catch (error) {
-      toastError();
+      Toaster();
     } finally {
       setLoadingApprove(false);
     }
@@ -136,10 +131,10 @@ function Orders() {
           )
         );
       } else {
-        toastError();
+        Toaster();
       }
     } catch (error) {
-      toastError();
+      Toaster();
     } finally {
       setLoadingDone(false);
     }
@@ -165,10 +160,10 @@ function Orders() {
           )
         );
       } else {
-        toastError();
+        Toaster();
       }
     } catch (error) {
-      toastError();
+      Toaster();
     } finally {
       setLoadingClaimed(false);
     }
@@ -192,10 +187,10 @@ function Orders() {
           prevData.filter((item) => item._id !== order._id)
         );
       } else {
-        toastError();
+        Toaster();
       }
     } catch (error) {
-      toastError();
+      Toaster();
     } finally {
       setLoadingArchive(false);
     }
@@ -219,10 +214,10 @@ function Orders() {
           prevData.filter((item) => item._id !== order._id)
         );
       } else {
-        toastError();
+        Toaster();
       }
     } catch (error) {
-      toastError();
+      Toaster();
       setDropdownOpen(false);
     } finally {
       setLoadingDelete(false);

@@ -26,7 +26,7 @@ const DashArchiveRentals = () => {
         <meta name="description" content="" />
       </Helmet>
       <ArchiveRentals />
-      <Toaster richColors />
+      <Toaster position="top-right" closeButton richColors />
     </div>
   );
 };

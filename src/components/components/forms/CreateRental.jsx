@@ -34,6 +34,8 @@ import { CalendarIcon, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
+import { Toaster } from "@/lib/Toaster";
+import { toast } from "sonner";
 
 const CreateRental = () => {
   const [loading, setLoading] = useState(false);
@@ -73,6 +75,12 @@ const CreateRental = () => {
         setLoading(false);
         setDialogOpen(false);
         form.reset();
+        toast.success("Rental submitted successfully!", {
+          description: "Wait for the admin to approve you rental",
+          action: {
+            label: "Ok"
+          }
+        })
         notification.success({
           message: "Rental submitted successfully",
           description: "Wait for the admin to approve your rental.",
@@ -82,12 +90,7 @@ const CreateRental = () => {
       }
     } catch (error) {
       setLoading(false);
-      notification.error({
-        message: "Failed to submit order",
-        description: "Please try again later.",
-        pauseOnHover: false,
-        showProgress: true,
-      });
+      Toaster();
     }
   };
 
