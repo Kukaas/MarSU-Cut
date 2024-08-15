@@ -604,7 +604,7 @@ function Orders() {
         </div>
       </div>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent>
+        <DialogContent className="overflow-auto">
           <DialogHeader>
             <DialogTitle>Add Order Items</DialogTitle>
             <DialogDescription>

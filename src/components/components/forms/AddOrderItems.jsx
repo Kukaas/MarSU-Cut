@@ -340,6 +340,32 @@ const AddOrderItems = ({ selectedOrder }) => {
       ? values.orderItems
       : [];
 
+    if (orderItems.length === 0) {
+      toast.error("No items to add to the order", {
+        description: "Please add items to the order",
+      });
+      setLoadingAddItems(false);
+      return;
+    }
+
+    if (orderItems.some((item) => item.quantity === 0)) {
+      toast.error("Invalid quantity", {
+        description: "Quantity must be greater than 0",
+      });
+      setLoadingAddItems(false);
+      return;
+    }
+
+    if (
+      !orderItems.some((item) => item.productType && item.size && item.level)
+    ) {
+      toast.error("Missing input", {
+        description: "Please fill in all the fields",
+      });
+      setLoadingAddItems(false);
+      return;
+    }
+
     // Add additional items based on productType and update totalPrice
     const updatedOrderItems = orderItems.flatMap((item) => {
       const newItems = [item]; // Start with the original item
@@ -401,7 +427,10 @@ const AddOrderItems = ({ selectedOrder }) => {
     }, [level, productType, size, index, updateUnitPrice]);
 
     return (
-      <div key={index} className="flex gap-4 w-full items-center">
+      <div
+        key={index}
+        className="flex gap-4 w-full justify-between items-center overflow-auto"
+      >
         <Controller
           control={form.control}
           name={`orderItems[${index}].level`}
@@ -555,7 +584,10 @@ const AddOrderItems = ({ selectedOrder }) => {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Tooltip title="Unit Price" className="cursor-pointer">
+                <Tooltip
+                  title="Unit Price"
+                  className="cursor-pointer w-12 overflow-y-auto"
+                >
                   <Input
                     {...field}
                     placeholder="Unit Price"
@@ -575,7 +607,10 @@ const AddOrderItems = ({ selectedOrder }) => {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Tooltip title="Quantity" className="cursor-pointer">
+                <Tooltip
+                  title="Quantity"
+                  className="cursor-pointer w-12 overflow-y-auto"
+                >
                   <Input {...field} placeholder="Quantity" type="number" />
                 </Tooltip>
               </FormControl>
@@ -585,7 +620,7 @@ const AddOrderItems = ({ selectedOrder }) => {
         />
         <MinusCircle
           onClick={() => remove(index)}
-          style={{ width: "50px", height: "50px" }} // Adjust the size as needed
+          style={{ width: "25px", height: "25px" }} // Adjust the size as needed
           className="cursor-pointer"
         />
       </div>
@@ -601,7 +636,10 @@ const AddOrderItems = ({ selectedOrder }) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-full">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-4 w-full overflow-auto"
+      >
         {fields.map((field, index) => (
           <OrderItemForm
             key={field.id}
