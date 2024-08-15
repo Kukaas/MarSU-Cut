@@ -12,7 +12,6 @@ import {
 } from "../ui/dropdown-menu";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetHeader,
   SheetTitle,
@@ -26,10 +25,10 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 // Navigation imports
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 // Icons import
-import { Menu, Moon, Sun } from "lucide-react";
+import { Home, LogInIcon, Menu, Moon, Sun } from "lucide-react";
 import { message } from "antd";
 
 // Other imports
@@ -44,11 +43,14 @@ import MenuUser from "./MenuUserSmall";
 
 const Header = () => {
   const { setTheme } = useTheme();
+  const location = useLocation();
+  const currentPath = location.pathname + location.search;
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
+  const isActive = (path) => currentPath === path;
 
   // Check screen size
   useEffect(() => {
@@ -207,27 +209,32 @@ const Header = () => {
                     </SheetHeader>
                     <div className="grid gap-4 py-4">
                       <div className="flex flex-col gap-5 items-center justify-center mt-5">
-                        <NavLink
-                          to="/"
-                          className={({ isActive }) =>
-                            isActive
-                              ? "border-b-2 border-blue-500"
-                              : "border-b border-gray-300"
-                          }
-                        >
-                          <SheetClose>Home</SheetClose>
-                        </NavLink>
-
-                        <NavLink
-                          to="/sign-in"
-                          className={({ isActive }) =>
-                            isActive
-                              ? "border-b-2 border-blue-500"
-                              : "border-b border-gray-300"
-                          }
-                        >
-                          <SheetClose>Signin</SheetClose>
-                        </NavLink>
+                        <SheetTrigger asChild>
+                          <Link
+                            to="/"
+                            className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                              isActive("/")
+                                ? "bg-muted text-primary w-full flex items-center justify-center"
+                                : "text-muted-foreground hover:text-primary"
+                            }`}
+                          >
+                            <Home className="h-4 w-4" />
+                            Home
+                          </Link>
+                        </SheetTrigger>
+                        <SheetTrigger asChild>
+                          <Link
+                            to="/sign-in"
+                            className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                              isActive("/sign-in")
+                                ? "bg-muted text-primary w-full flex items-center justify-center"
+                                : "text-muted-foreground hover:text-primary"
+                            }`}
+                          >
+                            <LogInIcon className="h-4 w-4" />
+                            Sign in
+                          </Link>
+                        </SheetTrigger>
                       </div>
                     </div>
                   </SheetContent>

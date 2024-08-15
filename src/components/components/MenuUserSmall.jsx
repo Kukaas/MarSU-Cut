@@ -55,14 +55,11 @@ const MenuUser = () => {
   return (
     <div className="flex h-screen flex-col gap-2 w-full mt-2">
       <div className="flex h-full max-h-screen flex-col gap-5">
-        <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
+        <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6 gap-3">
           <div className="flex items-center gap-2 text-sm">
             <span className="font-semibold">
               {" "}
-              {currentUser?.name?.split(" ")[0]} |
-            </span>
-            <span className="text-gray-300">
-              {currentUser.isAdmin ? "Admin" : "User"}
+              {currentUser?.name?.split(" ")[0]}
             </span>
           </div>
           <Sheet>
