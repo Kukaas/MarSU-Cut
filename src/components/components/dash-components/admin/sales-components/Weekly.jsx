@@ -34,10 +34,12 @@ const Weekly = () => {
             {
               week: previousWeek.week,
               totalRevenue: previousWeek.totalRevenue,
+              totalOrders: previousWeek.totalOrders,
             },
             {
               week: currentWeek.week,
               totalRevenue: currentWeek.totalRevenue,
+              totalOrders: currentWeek.totalOrders,
             },
           ]);
         }
@@ -56,9 +58,16 @@ const Weekly = () => {
     totalRevenue: {
       label: "Total Revenue: ₱",
     },
+    totalOrders: {
+      label: "Total Orders",
+    },
   };
 
   const formatCurrency = (value) => `₱${value.toLocaleString()}`;
+
+  // Define colors for the bars
+  const revenueColor = "#8884d8"; // Blue for totalRevenue
+  const ordersColor = "#82ca9d"; // Green for totalOrders
 
   return (
     <>
@@ -82,7 +91,13 @@ const Weekly = () => {
             <ChartTooltip content={<ChartTooltipContent />} />
             <Bar
               dataKey="totalRevenue"
-              fill="currentColor"
+              fill={revenueColor}
+              radius={5}
+              barSize={30}
+            />
+            <Bar
+              dataKey="totalOrders"
+              fill={ordersColor}
               radius={5}
               barSize={30}
             />

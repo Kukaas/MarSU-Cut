@@ -64,6 +64,10 @@ const Overview = () => {
     },
   };
 
+  // Define colors for the bars
+  const currentMonthColor = "#8884d8"; // Blue for current month sales
+  const lastMonthColor = "#82ca9d"; // Green for last month sales
+
   return (
     <>
       {chartData.length > 0 ? (
@@ -78,8 +82,12 @@ const Overview = () => {
             />
             <ChartTooltip content={<ChartTooltipContent />} />
             <ChartLegend content={<ChartLegendContent />} />
-            <Bar dataKey="currentMonthSales" fill="currentColor" radius={3} />
-            <Bar dataKey="lastMonthSales" fill="currentColor" radius={3} />
+            <Bar
+              dataKey="currentMonthSales"
+              fill={currentMonthColor}
+              radius={3}
+            />
+            <Bar dataKey="lastMonthSales" fill={lastMonthColor} radius={3} />
           </BarChart>
         </ChartContainer>
       ) : (

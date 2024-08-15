@@ -34,10 +34,12 @@ const Monthly = () => {
             {
               month: previousMonth.month,
               totalRevenue: previousMonth.totalRevenue,
+              totalOrders: previousMonth.totalOrders,
             },
             {
               month: currentMonth.month,
               totalRevenue: currentMonth.totalRevenue,
+              totalOrders: currentMonth.totalOrders,
             },
           ]);
         }
@@ -56,37 +58,52 @@ const Monthly = () => {
     totalRevenue: {
       label: "Total Revenue: ₱",
     },
+    totalOrders: {
+      label: "Total Orders",
+    },
   };
 
   const formatCurrency = (value) => `₱${value.toLocaleString()}`;
 
+  // Define colors for the bars
+  const revenueColor = "#8884d8"; // Blue for totalRevenue
+  const ordersColor = "#82ca9d"; // Green for totalOrders
+
   return (
     <>
       {comparisonData.length > 0 ? (
-        <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
-          <BarChart data={comparisonData}>
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="month"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-            />
-            <YAxis
-              dataKey="totalRevenue"
-              tickLine={false}
-              tickMargin={10}
-              tickFormatter={formatCurrency}
-            />
-            <ChartTooltip content={<ChartTooltipContent />} />
-            <Bar
-              dataKey="totalRevenue"
-              fill="currentColor"
-              radius={5}
-              barSize={30}
-            />
-          </BarChart>
-        </ChartContainer>
+        <div className="space-y-8">
+          <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+            <BarChart data={comparisonData}>
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="month"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={false}
+              />
+              <YAxis
+                dataKey="totalRevenue"
+                tickLine={false}
+                tickMargin={10}
+                tickFormatter={formatCurrency}
+              />
+              <ChartTooltip content={<ChartTooltipContent />} />
+              <Bar
+                dataKey="totalRevenue"
+                fill={revenueColor}
+                radius={5}
+                barSize={30}
+              />
+              <Bar
+                dataKey="totalOrders"
+                fill={ordersColor}
+                radius={5}
+                barSize={30}
+              />
+            </BarChart>
+          </ChartContainer>
+        </div>
       ) : (
         <div className="min-h-[400px] w-full flex items-center justify-center">
           <p className="text-gray-400 mt-20 text-lg">No data available</p>

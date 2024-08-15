@@ -26,6 +26,12 @@ const Cards = () => {
   const [totalProductionsThisYear, setTotalProductionsThisYear] = useState(0);
   const [totalProductionsThisMonth, setTotalProductionsThisMonth] = useState(0);
   const [totalProductionsLastMonth, setTotalProductionsLastMonth] = useState(0);
+  const [salesPerformance, setSalesPerformance] = useState({
+    totalRevenue: 0,
+    revenueDifference: 0,
+    performanceStatus: "",
+    percentageDifference: null,
+  });
   const [totalRevenue, setTotalRevenue] = useState(0);
 
   useEffect(() => {
@@ -221,6 +227,48 @@ const Cards = () => {
     fetchTotalRevenueThisYear();
   }, []);
 
+  useEffect(() => {
+    const fetchSalesPerformance = async () => {
+      try {
+        const res = await axios.get(
+          "https://marsu.cut.server.kukaas.tech/api/v1/sales-report/sales-performance"
+        );
+
+        if (res.status === 200 && res.data.success) {
+          const {
+            performance,
+            previousYearPerformance,
+            revenueDifference,
+            performanceStatus,
+          } = res.data;
+          const { totalRevenue } = performance;
+          const { totalRevenue: previousTotalRevenue } =
+            previousYearPerformance;
+
+          let percentageDifference = null;
+          if (previousTotalRevenue > 0) {
+            percentageDifference =
+              ((totalRevenue - previousTotalRevenue) / previousTotalRevenue) *
+              100;
+          }
+
+          setSalesPerformance({
+            totalRevenue,
+            revenueDifference,
+            performanceStatus,
+            percentageDifference,
+          });
+          setLoading(false);
+        }
+      } catch (error) {
+        setLoading(false);
+        console.error(error);
+      }
+    };
+
+    fetchSalesPerformance();
+  }, []);
+
   const calculatePercentageChangeOrders = (current, previous) => {
     if (
       typeof current !== "number" ||
@@ -299,7 +347,8 @@ const Cards = () => {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Orders | <span className="text-muted-foreground">This Month</span>
+                  Orders |{" "}
+                  <span className="text-muted-foreground">This Month</span>
                 </CardTitle>
                 <ShoppingBasket className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
@@ -317,7 +366,8 @@ const Cards = () => {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Rentals | <span className="text-muted-foreground">This Year</span>
+                  Rentals |{" "}
+                  <span className="text-muted-foreground">This Year</span>
                 </CardTitle>
                 <Shirt className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
@@ -335,7 +385,8 @@ const Cards = () => {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Product Produced | <span className="text-muted-foreground">This Year</span>
+                  Product Produced |{" "}
+                  <span className="text-muted-foreground">This Year</span>
                 </CardTitle>
                 <Shirt className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
@@ -353,16 +404,26 @@ const Cards = () => {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Total Revenue | <span className="text-muted-foreground">This Year</span>
+                  Total Revenue |{" "}
+                  <span className="text-muted-foreground">This Year</span>
                 </CardTitle>
                 <PhilippinePeso className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  <CountUp end={totalRevenue} duration={2} prefix="₱"/>
+                  <CountUp end={totalRevenue} duration={2} prefix="₱" />
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  +201 since last hour
+                  {salesPerformance.percentageDifference !== null ? (
+                    <>
+                      {salesPerformance.performanceStatus === "up" ? "+" : "-"}
+                      {`${salesPerformance.percentageDifference.toFixed(
+                        2
+                      )}% from last year`}
+                    </>
+                  ) : (
+                    "No data from last year"
+                  )}
                 </p>
               </CardContent>
             </Card>

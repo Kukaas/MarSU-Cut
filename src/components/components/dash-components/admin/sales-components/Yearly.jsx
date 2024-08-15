@@ -34,10 +34,12 @@ const Yearly = () => {
             {
               year: previousYear.year,
               totalRevenue: previousYear.totalRevenue,
+              totalOrders: previousYear.totalOrders,
             },
             {
               year: currentYear.year,
               totalRevenue: currentYear.totalRevenue,
+              totalOrders: currentYear.totalOrders,
             },
           ]);
         }
@@ -56,9 +58,16 @@ const Yearly = () => {
     totalRevenue: {
       label: "Total Revenue: ₱",
     },
+    totalOrders: {
+      label: "Total Orders",
+    },
   };
 
   const formatCurrency = (value) => `₱${value.toLocaleString()}`;
+
+  // Define colors for the bars
+  const revenueColor = "#8884d8"; // Blue for totalRevenue
+  const ordersColor = "#82ca9d"; // Green for totalOrders
 
   return (
     <>
@@ -82,7 +91,13 @@ const Yearly = () => {
             <ChartTooltip content={<ChartTooltipContent />} />
             <Bar
               dataKey="totalRevenue"
-              fill="currentColor"
+              fill={revenueColor}
+              radius={5}
+              barSize={80}
+            />
+            <Bar
+              dataKey="totalOrders"
+              fill={ordersColor}
               radius={5}
               barSize={80}
             />
