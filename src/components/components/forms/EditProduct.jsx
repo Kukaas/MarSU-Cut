@@ -52,9 +52,7 @@ const EditProduct = ({ selectedProduct }) => {
 
       if (res.status === 200) {
         setEditProductLoading(false);
-        toast.success("Product updated successfully!", {
-          
-        });
+        toast.success("Product updated successfully!", {});
         editProductForm.reset({
           level: "",
           productType: "",
@@ -220,7 +218,7 @@ const EditProduct = ({ selectedProduct }) => {
             {editProductLoading ? (
               <div className="flex items-center">
                 <Loader2 className="mr-2 animate-spin" />
-                <span>SUpdating</span>
+                <span>Updating</span>
               </div>
             ) : (
               "Update"
