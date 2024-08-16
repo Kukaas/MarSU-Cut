@@ -13,6 +13,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { Tooltip } from "antd";
 import { token } from "@/lib/token";
+import { BASE_URL } from "@/lib/api";
 
 const Notification = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -24,7 +25,7 @@ const Notification = () => {
     const fetchNotifications = async () => {
       try {
         const res = await axios.get(
-          `https://marsu.cut.server.kukaas.tech/api/v1/user/notifications/${currentUser._id}`,
+          `${BASE_URL}/api/v1/user/notifications/${currentUser._id}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -67,7 +68,7 @@ const Notification = () => {
   const handleReadNotification = async (notification) => {
     try {
       const res = await axios.put(
-        `https://marsu.cut.server.kukaas.tech/api/v1/user/notifications/${currentUser._id}/${notification._id}`
+        `${BASE_URL}/api/v1/user/notifications/${currentUser._id}/${notification._id}`
       );
 
       if (res.status === 200) {
@@ -90,7 +91,7 @@ const Notification = () => {
   const handleDeleteNotification = async (notification) => {
     try {
       const res = await axios.delete(
-        `https://marsu.cut.server.kukaas.tech/api/v1/user/notifications/${currentUser._id}/${notification._id}`,
+        `${BASE_URL}/api/v1/user/notifications/${currentUser._id}/${notification._id}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -122,7 +123,7 @@ const Notification = () => {
     try {
       setLoading(true);
       const res = await axios.put(
-        `https://marsu.cut.server.kukaas.tech/api/v1/user/notifications/${currentUser._id}`,
+        `${BASE_URL}/api/v1/user/notifications/${currentUser._id}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -153,7 +154,7 @@ const Notification = () => {
     try {
       setLoading(true);
       const res = await axios.delete(
-        `https://marsu.cut.server.kukaas.tech/api/v1/user/notifications/${currentUser._id}`,
+        `${BASE_URL}/api/v1/user/notifications/${currentUser._id}`,
         {
           headers: {
             "Content-Type": "application/json",

@@ -44,6 +44,7 @@ import { useSelector } from "react-redux";
 import { toast } from "sonner";
 import { token } from "@/lib/token";
 import ToasterError from "@/lib/Toaster";
+import { BASE_URL } from "@/lib/api";
 
 function Rentals() {
   const [data, setData] = useState([]);
@@ -61,7 +62,7 @@ function Rentals() {
     const fetchData = async () => {
       setLoading(true);
       const res = await axios.get(
-        `https://marsu.cut.server.kukaas.tech/api/v1/rental/${currentUser._id}`,
+        `${BASE_URL}/api/v1/rental/${currentUser._id}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -75,7 +76,7 @@ function Rentals() {
       const rentalsWithPenalties = await Promise.all(
         res.data.rental.map(async (rental) => {
           const penaltyRes = await axios.get(
-            `https://marsu.cut.server.kukaas.tech/api/v1/rental/penalty/${rental._id}`,
+            `${BASE_URL}/api/v1/rental/penalty/${rental._id}`,
             {
               headers: {
                 "Content-Type": "application/json",
@@ -100,7 +101,7 @@ function Rentals() {
     try {
       setLoadingDelete(true);
       const res = await axios.delete(
-        `https://marsu.cut.server.kukaas.tech/api/v1/rental/${rental._id}`,
+        `${BASE_URL}/api/v1/rental/${rental._id}`,
         {
           headers: {
             "Content-Type": "application/json",

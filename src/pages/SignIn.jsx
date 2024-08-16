@@ -26,6 +26,7 @@ import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginSchema } from "@/schema/shema";
 import { useForm } from "react-hook-form";
+import { BASE_URL } from "@/lib/api";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -65,14 +66,10 @@ const SignIn = () => {
     try {
       setLoading(true);
       dispatch(loginStart());
-      const res = await axios.post(
-        "https://marsu.cut.server.kukaas.tech/api/v1/auth/sign-in",
-        values,
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      );
+      const res = await axios.post(`${BASE_URL}/api/v1/auth/sign-in`, values, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      });
 
       const data = res.data;
 

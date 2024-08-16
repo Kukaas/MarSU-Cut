@@ -22,6 +22,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { token } from "@/lib/token";
+import { BASE_URL } from "@/lib/api";
 
 const CreateCommercialOrder = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -31,7 +32,7 @@ const CreateCommercialOrder = () => {
     try {
       setCommercialOrderLoading(true);
       const res = await axios.post(
-        "https://marsu.cut.server.kukaas.tech/api/v1/commercial-job/create",
+        `${BASE_URL}/api/v1/commercial-job/create`,
         {
           userId: currentUser._id,
           idNumber: values.idNumber,

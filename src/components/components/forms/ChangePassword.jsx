@@ -24,6 +24,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { token } from "@/lib/token";
+import { BASE_URL } from "@/lib/api";
 
 const ChangePassword = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -65,7 +66,7 @@ const ChangePassword = () => {
     try {
       setLoading(true);
       const res = await axios.put(
-        `https://marsu.cut.server.kukaas.tech/api/v1/user/update/password/${currentUser?._id}`,
+        `${BASE_URL}/api/v1/user/update/password/${currentUser?._id}`,
         values,
         {
           headers: {

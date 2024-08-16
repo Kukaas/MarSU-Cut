@@ -38,6 +38,7 @@ import { format } from "date-fns";
 import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { token } from "@/lib/token";
+import { BASE_URL } from "@/lib/api";
 
 const AddProduction = () => {
   const [addProductionLoading, setAddProductionLoading] = useState(false);
@@ -63,7 +64,7 @@ const AddProduction = () => {
     try {
       setAddProductionLoading(true);
       const res = await axios.post(
-        "https://marsu.cut.server.kukaas.tech/api/v1/production/create",
+        `${BASE_URL}/api/v1/production/create`,
         values,
         {
           headers: {

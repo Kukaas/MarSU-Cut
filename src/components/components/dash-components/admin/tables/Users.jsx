@@ -32,6 +32,7 @@ import {
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { token } from "@/lib/token";
+import { BASE_URL } from "@/lib/api";
 
 const Users = () => {
   const [data, setData] = useState([]);
@@ -44,16 +45,13 @@ const Users = () => {
 
   const fetchData = async () => {
     setLoading(true);
-    const result = await axios.get(
-      "https://marsu.cut.server.kukaas.tech/api/v1/user/all",
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        withCredentials: true,
-      }
-    );
+    const result = await axios.get(`${BASE_URL}/api/v1/user/all`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      withCredentials: true,
+    });
     const sortedData = result.data.sort((a, b) => a.name.localeCompare(b.name));
     setData(sortedData);
     setLoading(false);

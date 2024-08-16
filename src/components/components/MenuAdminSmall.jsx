@@ -29,6 +29,7 @@ import Notification from "./Notification";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { token } from "@/lib/token";
+import { BASE_URL } from "@/lib/api";
 
 const MenuAdmin = () => {
   const location = useLocation();
@@ -43,7 +44,7 @@ const MenuAdmin = () => {
     const fetchNotifications = async () => {
       try {
         const res = await axios.get(
-          `https://marsu.cut.server.kukaas.tech/api/v1/user/notifications/${currentUser._id}`,
+          `${BASE_URL}/api/v1/user/notifications/${currentUser._id}`,
           {
             headers: {
               "Content-Type": "application/json",

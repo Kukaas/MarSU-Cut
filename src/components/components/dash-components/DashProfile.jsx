@@ -57,6 +57,7 @@ import SkeletonProfile from "../SkeletonProfile";
 import ChangePassword from "../forms/ChangePassword";
 import ToasterError from "@/lib/Toaster";
 import { token } from "@/lib/token";
+import { BASE_URL } from "@/lib/api";
 
 const DashProfile = () => {
   const navigate = useNavigate();
@@ -166,7 +167,7 @@ const DashProfile = () => {
         values.photo = imageFileUrl;
       }
       const res = await axios.put(
-        `https://marsu.cut.server.kukaas.tech/api/v1/user/update/${currentUser?._id}`,
+        `${BASE_URL}/api/v1/user/update/${currentUser?._id}`,
         values,
         {
           headers: {
@@ -199,7 +200,7 @@ const DashProfile = () => {
     try {
       setLoading(true);
       const res = await axios.delete(
-        `https://marsu.cut.server.kukaas.tech/api/v1/user/delete/${currentUser?._id}`,
+        `${BASE_URL}/api/v1/user/delete/${currentUser?._id}`,
 
         {
           headers: {

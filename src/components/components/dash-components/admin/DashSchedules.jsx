@@ -20,6 +20,7 @@ import axios from "axios";
 
 import { CustomCalendar } from "./CustomCalendar";
 import { token } from "@/lib/token";
+import { BASE_URL } from "@/lib/api";
 
 const DashSchedules = () => {
   const [schedules, setSchedules] = useState({});
@@ -44,7 +45,7 @@ const DashSchedules = () => {
     const fetchSchedules = async () => {
       setLoading(true);
       const response = await axios.get(
-        "https://marsu.cut.server.kukaas.tech/api/v1/order/schedule/all",
+        `${BASE_URL}/api/v1/order/schedule/all`,
         {
           headers: {
             "Content-Type": "application/json",

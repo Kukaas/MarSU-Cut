@@ -45,6 +45,7 @@ import { useSelector } from "react-redux";
 import { Loader2, UploadIcon } from "lucide-react";
 import ToasterError from "@/lib/Toaster";
 import { token } from "@/lib/token";
+import { BASE_URL } from "@/lib/api";
 
 const CreateOrder = () => {
   const [imageFile, setImageFile] = useState(null);
@@ -137,7 +138,7 @@ const CreateOrder = () => {
     try {
       setLoading(true);
       const res = await axios.post(
-        "https://marsu.cut.server.kukaas.tech/api/v1/order/student/create",
+        `${BASE_URL}/api/v1/order/student/create`,
         {
           ...values,
           receipt: imageFileUrl,

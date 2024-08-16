@@ -21,6 +21,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { token } from "@/lib/token";
+import { BASE_URL } from "@/lib/api";
 
 const AddNewRawMaterial = () => {
   const [addRawMaterialLoading, setAddRawMaterialLoading] = useState(false);
@@ -38,7 +39,7 @@ const AddNewRawMaterial = () => {
     try {
       setAddRawMaterialLoading(true);
       const res = await axios.post(
-        "https://marsu.cut.server.kukaas.tech/api/v1/raw-materials/new",
+        `${BASE_URL}/api/v1/raw-materials/new`,
         values,
         {
           headers: {

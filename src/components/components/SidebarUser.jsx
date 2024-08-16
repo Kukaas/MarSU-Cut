@@ -13,6 +13,7 @@ import { Link, useLocation } from "react-router-dom";
 
 import Notification from "./Notification";
 import { token } from "@/lib/token";
+import { BASE_URL } from "@/lib/api";
 
 const SidebarUser = () => {
   const location = useLocation();
@@ -26,7 +27,7 @@ const SidebarUser = () => {
     const fetchNotifications = async () => {
       try {
         const res = await axios.get(
-          `https://marsu.cut.server.kukaas.tech/api/v1/user/notifications/${currentUser._id}`,
+          `${BASE_URL}/api/v1/user/notifications/${currentUser._id}`,
           {
             headers: {
               "Content-Type": "application/json",

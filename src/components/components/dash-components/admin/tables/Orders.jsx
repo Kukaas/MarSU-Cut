@@ -51,6 +51,7 @@ import ToasterError from "@/lib/Toaster";
 
 import AddOrderItems from "../../../forms/AddOrderItems";
 import { token } from "@/lib/token";
+import { BASE_URL } from "@/lib/api";
 
 function Orders() {
   const [data, setData] = useState([]);
@@ -69,16 +70,13 @@ function Orders() {
     const fetchOrders = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(
-          "https://marsu.cut.server.kukaas.tech/api/v1/order/all",
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-          }
-        );
+        const response = await axios.get(`${BASE_URL}/api/v1/order/all`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        });
         setLoading(false);
         setData(response.data.orders.filter((order) => !order.isArchived));
       } catch (error) {
@@ -94,7 +92,7 @@ function Orders() {
     try {
       setLoadingUpdate(true);
       const res = await axios.put(
-        `https://marsu.cut.server.kukaas.tech/api/v1/order/update/student/${order._id}`,
+        `${BASE_URL}/api/v1/order/update/student/${order._id}`,
         { status: "APPROVED" },
         {
           headers: {
@@ -130,7 +128,7 @@ function Orders() {
     try {
       setLoadingUpdate(true);
       const res = await axios.put(
-        `https://marsu.cut.server.kukaas.tech/api/v1/order/update/student/${order._id}`,
+        `${BASE_URL}/api/v1/order/update/student/${order._id}`,
         { status: "DONE" },
         {
           headers: {
@@ -166,7 +164,7 @@ function Orders() {
     try {
       setLoadingUpdate(true);
       const res = await axios.put(
-        `https://marsu.cut.server.kukaas.tech/api/v1/order/update/student/${order._id}`,
+        `${BASE_URL}/api/v1/order/update/student/${order._id}`,
         { status: "CLAIMED" },
         {
           headers: {
@@ -202,7 +200,7 @@ function Orders() {
     try {
       setLoadingUpdate(true);
       const res = await axios.put(
-        `https://marsu.cut.server.kukaas.tech/api/v1/order/archive/update/${order._id}`,
+        `${BASE_URL}/api/v1/order/archive/update/${order._id}`,
         { isArchived: true },
         {
           headers: {
@@ -235,7 +233,7 @@ function Orders() {
     try {
       setLoadingUpdate(true);
       const res = await axios.delete(
-        `https://marsu.cut.server.kukaas.tech/api/v1/order/student/delete/${order._id}`,
+        `${BASE_URL}/api/v1/order/student/delete/${order._id}`,
         {
           headers: {
             "Content-Type": "application/json",

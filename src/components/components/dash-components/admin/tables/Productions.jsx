@@ -54,6 +54,7 @@ import { useEffect, useState } from "react";
 
 import AddProduction from "@/components/components/forms/AddProduction";
 import { token } from "@/lib/token";
+import { BASE_URL } from "@/lib/api";
 
 const Productions = () => {
   const [loading, setLoading] = useState(true);
@@ -84,16 +85,13 @@ const Productions = () => {
     const fetchProductions = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(
-          "https://marsu.cut.server.kukaas.tech/api/v1/production/all",
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-          }
-        );
+        const res = await axios.get(`${BASE_URL}/api/v1/production/all`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        });
 
         const data = res.data.productions;
         if (res.status === 200) {
@@ -114,7 +112,7 @@ const Productions = () => {
 
     try {
       const res = await axios.delete(
-        `https://marsu.cut.server.kukaas.tech/api/v1/production/delete/${selectedProduction._id}`,
+        `${BASE_URL}/api/v1/production/delete/${selectedProduction._id}`,
         {
           headers: {
             "Content-Type": "application/json",

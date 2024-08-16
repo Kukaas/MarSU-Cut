@@ -29,6 +29,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { token } from "@/lib/token";
+import { BASE_URL } from "@/lib/api";
 
 const AddNewProduct = () => {
   const [addNewProductLoading, setAddNewProductLoading] = useState(false);
@@ -47,7 +48,7 @@ const AddNewProduct = () => {
     try {
       setAddNewProductLoading(true);
       const res = await axios.post(
-        "https://marsu.cut.server.kukaas.tech/api/v1/finished-product/create",
+        `${BASE_URL}/api/v1/finished-product/create`,
         values,
         {
           headers: {

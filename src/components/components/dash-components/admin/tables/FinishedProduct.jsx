@@ -47,6 +47,7 @@ import ToasterError from "@/lib/Toaster";
 import EditProduct from "@/components/components/forms/EditProduct";
 import AddNewProduct from "@/components/components/forms/AddNewProduct";
 import { token } from "@/lib/token";
+import { BASE_URL } from "@/lib/api";
 
 const FinishedProduct = () => {
   const [data, setData] = useState([]);
@@ -65,16 +66,13 @@ const FinishedProduct = () => {
     const fetchFinishedProduct = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(
-          "https://marsu.cut.server.kukaas.tech/api/v1/finished-product/all",
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-          }
-        );
+        const res = await axios.get(`${BASE_URL}/api/v1/finished-product/all`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        });
 
         const data = res.data;
         setData(data.finishedProducts);
@@ -91,7 +89,7 @@ const FinishedProduct = () => {
     try {
       setDeleteLoading(true);
       const res = await axios.delete(
-        `https://marsu.cut.server.kukaas.tech/api/v1/finished-product/delete/${selectedProduct._id}`,
+        `${BASE_URL}/api/v1/finished-product/delete/${selectedProduct._id}`,
         {
           headers: {
             "Content-Type": "application/json",

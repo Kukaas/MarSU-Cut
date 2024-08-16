@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 // icon
-import {  notification } from "antd";
+import { notification } from "antd";
 import { Loader2 } from "lucide-react";
 
 // redux
@@ -31,6 +31,7 @@ import { OTPVerificationSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useEffect, useState } from "react";
+import { BASE_URL } from "@/lib/api";
 
 const OTPVerification = () => {
   const navigate = useNavigate();
@@ -102,7 +103,7 @@ const OTPVerification = () => {
     try {
       dispatch(forgotPasswordStart());
       const res = await axios.post(
-        "https://marsu.cut.server.kukaas.tech/api/v1/auth/send-otp",
+        `${BASE_URL}/api/v1/auth/send-otp`,
         { email: currentEmail },
         {
           headers: { "Content-Type": "application/json" },
@@ -140,7 +141,7 @@ const OTPVerification = () => {
     try {
       setLoading(true);
       if (!values.otp) {
-        setLoading(false)
+        setLoading(false);
         return toast.error("OTP is required", {
           description: "Please enter the OTP sent to your email.",
         });

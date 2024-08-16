@@ -43,6 +43,7 @@ import ToasterError from "@/lib/Toaster";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { token } from "@/lib/token";
+import { BASE_URL } from "@/lib/api";
 
 function Rentals() {
   const [data, setData] = useState([]);
@@ -59,16 +60,13 @@ function Rentals() {
     const fetchRentals = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(
-          `https://marsu.cut.server.kukaas.tech/api/v1/rental/all/get`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-          }
-        );
+        const res = await axios.get(`${BASE_URL}/api/v1/rental/all/get`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        });
 
         const activeRentals = res.data.rentals.filter(
           (rental) => !rental.isArchived
@@ -77,7 +75,7 @@ function Rentals() {
         const rentalsWithPenalties = await Promise.all(
           activeRentals.map(async (rental) => {
             const penaltyRes = await axios.get(
-              `https://marsu.cut.server.kukaas.tech/api/v1/rental/penalty/${rental._id}`,
+              `${BASE_URL}/api/v1/rental/penalty/${rental._id}`,
               {
                 headers: {
                   "Content-Type": "application/json",
@@ -104,7 +102,7 @@ function Rentals() {
     try {
       setLoadingUpdate(true);
       const res = await axios.put(
-        `https://marsu.cut.server.kukaas.tech/api/v1/rental/update/${rental._id}`,
+        `${BASE_URL}/api/v1/rental/update/${rental._id}`,
         { status: "REJECTED" },
         {
           headers: {
@@ -146,7 +144,7 @@ function Rentals() {
     try {
       setLoadingUpdate(true);
       const res = await axios.put(
-        `https://marsu.cut.server.kukaas.tech/api/v1/rental/update/${rental._id}`,
+        `${BASE_URL}/api/v1/rental/update/${rental._id}`,
         { status: "APPROVED" },
         {
           headers: {
@@ -187,7 +185,7 @@ function Rentals() {
     try {
       setLoadingUpdate(true);
       const res = await axios.put(
-        `https://marsu.cut.server.kukaas.tech/api/v1/rental/update/${rental._id}`,
+        `${BASE_URL}/api/v1/rental/update/${rental._id}`,
         {
           status: "GIVEN",
         },
@@ -229,7 +227,7 @@ function Rentals() {
     try {
       setLoadingUpdate(true);
       const res = await axios.put(
-        `https://marsu.cut.server.kukaas.tech/api/v1/rental/update/${rental._id}`,
+        `${BASE_URL}/api/v1/rental/update/${rental._id}`,
         {
           status: "RETURNED",
         },
@@ -271,7 +269,7 @@ function Rentals() {
     try {
       setLoadingUpdate(true);
       const res = await axios.put(
-        `https://marsu.cut.server.kukaas.tech/api/v1/rental/archive/update/${rental._id}`,
+        `${BASE_URL}/api/v1/rental/archive/update/${rental._id}`,
         {
           isArchived: true,
         },
@@ -310,7 +308,7 @@ function Rentals() {
     try {
       setLoadingUpdate(true);
       const res = await axios.delete(
-        `https://marsu.cut.server.kukaas.tech/api/v1/rental/${rental._id}`,
+        `${BASE_URL}/api/v1/rental/${rental._id}`,
         {
           headers: {
             "Content-Type": "application/json",

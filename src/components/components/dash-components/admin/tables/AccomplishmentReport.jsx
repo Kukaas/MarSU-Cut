@@ -70,6 +70,7 @@ import { useEffect, useState } from "react";
 import DownloadButton from "./DownloadButton";
 import CreateAccomplishment from "../../../forms/CreateAccomplishment";
 import { token } from "@/lib/token";
+import { BASE_URL } from "@/lib/api";
 
 const AccomplishmentReport = () => {
   const [data, setData] = useState([]);
@@ -101,7 +102,7 @@ const AccomplishmentReport = () => {
       try {
         setLoading(true);
         const res = await axios.get(
-          "https://marsu.cut.server.kukaas.tech/api/v1/accomplishment-report/all",
+          `${BASE_URL}/api/v1/accomplishment-report/all`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -176,7 +177,7 @@ const AccomplishmentReport = () => {
       event.stopPropagation();
       setUpdateLoading(true);
       const res = await axios.put(
-        `https://marsu.cut.server.kukaas.tech/api/v1/accomplishment-report/update/${selectedAccomplishment._id}`,
+        `${BASE_URL}/api/v1/accomplishment-report/update/${selectedAccomplishment._id}`,
         values,
         {
           headers: {
@@ -214,7 +215,7 @@ const AccomplishmentReport = () => {
     try {
       setLoadingDelete(true);
       const res = await axios.delete(
-        `https://marsu.cut.server.kukaas.tech/api/v1/accomplishment-report/delete/${accomplishment._id}`,
+        `${BASE_URL}/api/v1/accomplishment-report/delete/${accomplishment._id}`,
         {
           headers: {
             "Content-Type": "application/json",

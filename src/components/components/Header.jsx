@@ -40,6 +40,7 @@ import { logout } from "@/redux/user/userSlice";
 import { useTheme } from "./ThemProvider";
 import MenuAdmin from "./MenuAdminSmall";
 import MenuUser from "./MenuUserSmall";
+import { BASE_URL } from "@/lib/api";
 
 const Header = () => {
   const { setTheme } = useTheme();
@@ -70,12 +71,9 @@ const Header = () => {
       event.preventDefault(); // Prevent default button action
       event.stopPropagation(); // Stop event from propagating and closing the dropdown
       setIsLoggingOut(true);
-      const res = await axios.post(
-        "https://marsu.cut.server.kukaas.tech/api/v1/auth/logout",
-        {
-          withCredentials: true,
-        }
-      );
+      const res = await axios.post(`${BASE_URL}/api/v1/auth/logout`, {
+        withCredentials: true,
+      });
       if (res.status === 200) {
         setIsLoggingOut(false);
         dispatch(logout());

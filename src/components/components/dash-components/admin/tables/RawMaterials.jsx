@@ -47,6 +47,7 @@ import ToasterError from "@/lib/Toaster";
 import EditRawMaterial from "@/components/components/forms/EditRawMaterial";
 import AddNewRawMaterial from "@/components/components/forms/AddNewRawMaterial";
 import { token } from "@/lib/token";
+import { BASE_URL } from "@/lib/api";
 
 const RawMaterials = () => {
   const [data, setData] = useState([]);
@@ -65,16 +66,13 @@ const RawMaterials = () => {
     const fetchRawMaterial = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(
-          "https://marsu.cut.server.kukaas.tech/api/v1/raw-materials/all",
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-          }
-        );
+        const res = await axios.get(`${BASE_URL}/api/v1/raw-materials/all`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        });
 
         const data = res.data;
         setData(data.rawMaterials);
@@ -92,7 +90,7 @@ const RawMaterials = () => {
     try {
       setDeleteLoading(true);
       const res = await axios.delete(
-        `https://marsu.cut.server.kukaas.tech/api/v1/raw-materials/delete/${selectedRawMaterial._id}`,
+        `${BASE_URL}/api/v1/raw-materials/delete/${selectedRawMaterial._id}`,
         {
           headers: {
             "Content-Type": "application/json",

@@ -29,7 +29,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ResetPasswordSchema } from "@/schema/shema";
-
+import { BASE_URL } from "@/lib/api";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -71,8 +71,8 @@ const ResetPassword = () => {
 
     if (values.password !== values.confirmPassword)
       return toast.error("Passwords do not match", {
-        description: "Please check your password"
-    });
+        description: "Please check your password",
+      });
 
     if (values.password.length < 8)
       return toast.error("Password must be at least 8 characters long");
@@ -80,7 +80,7 @@ const ResetPassword = () => {
     try {
       setLoading(true);
       const res = await axios.post(
-        "https://marsu.cut.server.kukaas.tech/api/v1/auth/reset-password",
+        `${BASE_URL}/api/v1/auth/reset-password`,
         { email: currentEmail, ...values },
         {
           headers: { "Content-Type": "application/json" },

@@ -42,6 +42,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import ToasterError from "@/lib/Toaster";
 import { token } from "@/lib/token";
+import { BASE_URL } from "@/lib/api";
 
 function ArchiveOrders() {
   const [data, setData] = useState([]);
@@ -59,7 +60,7 @@ function ArchiveOrders() {
       try {
         setLoading(true);
         const response = await axios.get(
-          "https://marsu.cut.server.kukaas.tech/api/v1/order/archive/all",
+          `${BASE_URL}/api/v1/order/archive/all`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -84,7 +85,7 @@ function ArchiveOrders() {
     try {
       setLoadingUpdate(true);
       const res = await axios.put(
-        `https://marsu.cut.server.kukaas.tech/api/v1/order/archive/update/${order._id}`,
+        `${BASE_URL}/api/v1/order/archive/update/${order._id}`,
         {
           isArchived: false,
         },
@@ -124,7 +125,7 @@ function ArchiveOrders() {
     try {
       setLoadingUpdate(true);
       const res = await axios.delete(
-        `https://marsu.cut.server.kukaas.tech/api/v1/order/student/delete/${order._id}`,
+        `${BASE_URL}/api/v1/order/student/delete/${order._id}`,
         {
           headers: {
             "Content-Type": "application/json",

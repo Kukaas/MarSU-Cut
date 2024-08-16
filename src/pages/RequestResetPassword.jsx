@@ -33,6 +33,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { RequestResetPasswordSchema } from "@/schema/shema";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "@/lib/api";
 
 const RequestResetPassword = () => {
   const dispatch = useDispatch();
@@ -55,14 +56,10 @@ const RequestResetPassword = () => {
     try {
       setLoading(true);
       dispatch(forgotPasswordStart());
-      const res = await axios.post(
-        "https://marsu.cut.server.kukaas.tech/api/v1/auth/send-otp",
-        values,
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      );
+      const res = await axios.post(`${BASE_URL}/api/v1/auth/send-otp`, values, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      });
 
       if (res.status === 200) {
         setLoading(false);

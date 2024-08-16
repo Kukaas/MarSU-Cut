@@ -12,6 +12,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { token } from "@/lib/token";
+import { BASE_URL } from "@/lib/api";
 
 const MenuUser = () => {
   const location = useLocation();
@@ -25,7 +26,7 @@ const MenuUser = () => {
     const fetchNotifications = async () => {
       try {
         const res = await axios.get(
-          `https://marsu.cut.server.kukaas.tech/api/v1/user/notifications/${currentUser._id}`,
+          `${BASE_URL}/api/v1/user/notifications/${currentUser._id}`,
           {
             headers: {
               "Content-Type": "application/json",

@@ -44,6 +44,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ToasterError from "@/lib/Toaster";
 import { token } from "@/lib/token";
+import { BASE_URL } from "@/lib/api";
 
 const CommercialJob = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -60,16 +61,13 @@ const CommercialJob = () => {
   useEffect(() => {
     const fetchCommercialJob = async () => {
       try {
-        const res = await axios.get(
-          `https://marsu.cut.server.kukaas.tech/api/v1/commercial-job/all`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-          }
-        );
+        const res = await axios.get(`${BASE_URL}/api/v1/commercial-job/all`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        });
         const data = res.data;
         if (res.status === 200) {
           setData(data.commercialOrders);
@@ -87,7 +85,7 @@ const CommercialJob = () => {
     try {
       setLoadingUpdate(true);
       const res = await axios.put(
-        `https://marsu.cut.server.kukaas.tech/api/v1/commercial-job/update/${commercial._id}`,
+        `${BASE_URL}/api/v1/commercial-job/update/${commercial._id}`,
         {
           status: "APPROVED",
         },
@@ -121,7 +119,7 @@ const CommercialJob = () => {
     try {
       setLoadingUpdate(true);
       const res = await axios.delete(
-        `https://marsu.cut.server.kukaas.tech/api/v1/commercial-job/${commercial._id}`,
+        `${BASE_URL}/api/v1/commercial-job/${commercial._id}`,
         {
           headers: {
             "Content-Type": "application/json",

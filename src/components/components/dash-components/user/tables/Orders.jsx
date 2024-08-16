@@ -43,6 +43,7 @@ import {
 import CreateOrder from "../../../forms/CreateOrder";
 import { toast } from "sonner";
 import { token } from "@/lib/token";
+import { BASE_URL } from "@/lib/api";
 
 function Orders() {
   const [data, setData] = useState([]);
@@ -65,7 +66,7 @@ function Orders() {
       setLoading(true);
       try {
         const res = await axios.get(
-          `https://marsu.cut.server.kukaas.tech/api/v1/order/student/${currentUser._id}`,
+          `${BASE_URL}/api/v1/order/student/${currentUser._id}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -90,7 +91,7 @@ function Orders() {
     try {
       setLoadingDelete(true);
       const res = await axios.delete(
-        `https://marsu.cut.server.kukaas.tech/api/v1/order/student/delete/${order._id}`,
+        `${BASE_URL}/api/v1/order/student/delete/${order._id}`,
         {
           headers: {
             "Content-Type": "application/json",

@@ -28,6 +28,7 @@ import { Controller, useFieldArray, useForm } from "react-hook-form";
 import PropTypes from "prop-types";
 import ToasterError from "@/lib/Toaster";
 import { token } from "@/lib/token";
+import { BASE_URL } from "@/lib/api";
 
 const AddOrderItems = ({ selectedOrder }) => {
   const [loadingAddItems, setLoadingAddItems] = useState(false);
@@ -395,7 +396,7 @@ const AddOrderItems = ({ selectedOrder }) => {
     });
 
     const res = await axios.put(
-      `https://marsu.cut.server.kukaas.tech/api/v1/order/add-item/${selectedOrder._id}`,
+      `${BASE_URL}/api/v1/order/add-item/${selectedOrder._id}`,
       {
         orderItems: updatedOrderItems,
       },

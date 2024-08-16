@@ -24,7 +24,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet";
-
+import { BASE_URL } from "@/lib/api";
 
 const SignUp = () => {
   const [loading, setLoading] = useState(false);
@@ -98,13 +98,9 @@ const SignUp = () => {
       return;
     }
     try {
-      const res = await axios.post(
-        "https://marsu.cut.server.kukaas.tech/api/v1/auth/sign-up",
-        values,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      const res = await axios.post(`${BASE_URL}/api/v1/auth/sign-up`, values, {
+        headers: { "Content-Type": "application/json" },
+      });
 
       if (res.status === 200) {
         navigate("/sign-in");
@@ -113,7 +109,7 @@ const SignUp = () => {
           description: "Please check your email for verification.",
           closable: true,
           duration: 5,
-        })
+        });
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {

@@ -23,6 +23,7 @@ import { useState } from "react";
 import axios from "axios";
 import ToasterError from "@/lib/Toaster";
 import { token } from "@/lib/token";
+import { BASE_URL } from "@/lib/api";
 
 const EditRawMaterial = ({ selectedRawMaterial }) => {
   const [editRawMaterialLoading, setEditRawMaterialLoading] = useState(false);
@@ -40,7 +41,7 @@ const EditRawMaterial = ({ selectedRawMaterial }) => {
     try {
       setEditRawMaterialLoading(true);
       const res = await axios.put(
-        `https://marsu.cut.server.kukaas.tech/api/v1/raw-materials/update/${selectedRawMaterial._id}`,
+        `${BASE_URL}/api/v1/raw-materials/update/${selectedRawMaterial._id}`,
         values,
         {
           headers: {

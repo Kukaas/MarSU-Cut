@@ -39,6 +39,7 @@ import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import ToasterError from "@/lib/Toaster";
 import { token } from "@/lib/token";
+import { BASE_URL } from "@/lib/api";
 
 const CreateRental = () => {
   const [loading, setLoading] = useState(false);
@@ -62,7 +63,7 @@ const CreateRental = () => {
     try {
       setLoading(true);
       const res = await axios.post(
-        "https://marsu.cut.server.kukaas.tech/api/v1/rental/create",
+        `${BASE_URL}/api/v1/rental/create`,
         {
           ...values,
           coordinatorEmail: currentUser.email,
