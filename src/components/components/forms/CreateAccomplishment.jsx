@@ -20,6 +20,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { token } from "@/lib/token";
 
 const CreateAccomplishment = () => {
   const [loading, setLoading] = useState();
@@ -33,18 +34,25 @@ const CreateAccomplishment = () => {
   });
 
   const handleCreateAccomplishment = async (values) => {
-    setLoading(true);
-    const res = await axios.post(
-      "https://marsu.cut.server.kukaas.tech/api/v1/accomplishment-report/create",
-      values
-    );
-    if (res.status === 201) {
-      setLoading(false);
-      toast.success("Accomplishment report created successfully!", {
-        
-      });
-      form.reset();
-    } else {
+    try {
+      setLoading(true);
+      const res = await axios.post(
+        "https://marsu.cut.server.kukaas.tech/api/v1/accomplishment-report/create",
+        values,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+      if (res.status === 201) {
+        setLoading(false);
+        toast.success("Accomplishment report created successfully!");
+        form.reset();
+      }
+    } catch (error) {
       ToasterError();
       setLoading(false);
     }
@@ -90,7 +98,12 @@ const CreateAccomplishment = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" variant="default" className="w-full" disabled={loading}>
+            <Button
+              type="submit"
+              variant="default"
+              className="w-full"
+              disabled={loading}
+            >
               {loading ? (
                 <div className="flex items-center">
                   <Loader2 className="mr-2 animate-spin" />

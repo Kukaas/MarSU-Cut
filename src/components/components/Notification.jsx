@@ -2,7 +2,7 @@
 import { SheetDescription, SheetTitle } from "../ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Button } from "../ui/button";
-import { toast } from "sonner";
+import { toast, Toaster } from "sonner";
 
 // icons
 import { Loader2, Trash } from "lucide-react";
@@ -11,21 +11,27 @@ import { Loader2, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { Tooltip } from "antd";
+import { token } from "@/lib/token";
 
 const Notification = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [readNotifications, setReadNotifications] = useState([]);
   const [unreadNotifications, setUnreadNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
         const res = await axios.get(
-          `https://marsu.cut.server.kukaas.tech/api/v1/user/notifications/${currentUser._id}`
+          `https://marsu.cut.server.kukaas.tech/api/v1/user/notifications/${currentUser._id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
         );
         const notificationsData = res.data;
 
@@ -73,10 +79,6 @@ const Notification = () => {
         );
         setUnreadNotifications(updatedUnreadNotifications);
         setReadNotifications([...readNotifications, notification]);
-
-        if (currentUser.isAdmin) {
-          navigate("/dashboard?tab=orders-admin");
-        }
       } else {
         toast.error("Failed to mark notification as read.");
       }
@@ -88,7 +90,14 @@ const Notification = () => {
   const handleDeleteNotification = async (notification) => {
     try {
       const res = await axios.delete(
-        `https://marsu.cut.server.kukaas.tech/api/v1/user/notifications/${currentUser._id}/${notification._id}`
+        `https://marsu.cut.server.kukaas.tech/api/v1/user/notifications/${currentUser._id}/${notification._id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
       );
 
       if (res.status === 200) {
@@ -113,7 +122,14 @@ const Notification = () => {
     try {
       setLoading(true);
       const res = await axios.put(
-        `https://marsu.cut.server.kukaas.tech/api/v1/user/notifications/${currentUser._id}`
+        `https://marsu.cut.server.kukaas.tech/api/v1/user/notifications/${currentUser._id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
       );
 
       if (res.status === 200) {
@@ -137,7 +153,14 @@ const Notification = () => {
     try {
       setLoading(true);
       const res = await axios.delete(
-        `https://marsu.cut.server.kukaas.tech/api/v1/user/notifications/${currentUser._id}`
+        `https://marsu.cut.server.kukaas.tech/api/v1/user/notifications/${currentUser._id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
       );
 
       if (res.status === 200) {
@@ -207,7 +230,11 @@ const Notification = () => {
         <TabsContent value="read" className="h-screen overflow-x-auto">
           <SheetTitle className="mt-5">Read</SheetTitle>
           <SheetDescription className="mt-2">
-            You have no read notifications.
+            {readNotifications.length === 0
+              ? "You have no read notifications."
+              : readNotifications.length === 1
+              ? "You have 1 read notification."
+              : `You have ${readNotifications.length} read notifications.`}
           </SheetDescription>
           {readNotifications.map((readNotifications) => (
             <div
@@ -251,6 +278,7 @@ const Notification = () => {
             )}
           </Button>
         </TabsContent>
+        <Toaster position="top-center" richColors cloeButton />
       </Tabs>
     </>
   );

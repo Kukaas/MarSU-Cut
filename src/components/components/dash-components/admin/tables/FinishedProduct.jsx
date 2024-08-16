@@ -46,6 +46,7 @@ import ToasterError from "@/lib/Toaster";
 
 import EditProduct from "@/components/components/forms/EditProduct";
 import AddNewProduct from "@/components/components/forms/AddNewProduct";
+import { token } from "@/lib/token";
 
 const FinishedProduct = () => {
   const [data, setData] = useState([]);
@@ -65,7 +66,14 @@ const FinishedProduct = () => {
       try {
         setLoading(true);
         const res = await axios.get(
-          "https://marsu.cut.server.kukaas.tech/api/v1/finished-product/all"
+          "https://marsu.cut.server.kukaas.tech/api/v1/finished-product/all",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
         );
 
         const data = res.data;
@@ -75,7 +83,7 @@ const FinishedProduct = () => {
         setLoading(false);
       }
     };
-    
+
     fetchFinishedProduct();
   }, []);
 
@@ -83,7 +91,14 @@ const FinishedProduct = () => {
     try {
       setDeleteLoading(true);
       const res = await axios.delete(
-        `https://marsu.cut.server.kukaas.tech/api/v1/finished-product/delete/${selectedProduct._id}`
+        `https://marsu.cut.server.kukaas.tech/api/v1/finished-product/delete/${selectedProduct._id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
       );
 
       if (res.status === 200) {
@@ -92,9 +107,7 @@ const FinishedProduct = () => {
         setData((prevData) =>
           prevData.filter((product) => product._id !== selectedProduct._id)
         );
-        toast.success("Product deleted successfully!", {
-          
-        });
+        toast.success("Product deleted successfully!", {});
       }
     } catch (error) {
       ToasterError();

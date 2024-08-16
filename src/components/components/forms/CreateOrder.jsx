@@ -44,6 +44,7 @@ import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { Loader2, UploadIcon } from "lucide-react";
 import ToasterError from "@/lib/Toaster";
+import { token } from "@/lib/token";
 
 const CreateOrder = () => {
   const [imageFile, setImageFile] = useState(null);
@@ -74,9 +75,9 @@ const CreateOrder = () => {
         toast.error("File too large!", {
           description: "File should not exceeds 2MB.",
           action: {
-            label: "Ok"
-          }
-        })
+            label: "Ok",
+          },
+        });
         return; // Stop the function if file is too large
       }
       // Create a URL for the image
@@ -144,7 +145,10 @@ const CreateOrder = () => {
           studentEmail: currentUser.email,
         },
         {
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );
@@ -156,7 +160,6 @@ const CreateOrder = () => {
         form.reset();
         toast.success("Order submitted successfully!", {
           description: "Please wait for the admin to approve your order.",
-          
         });
 
         // Clear the file input

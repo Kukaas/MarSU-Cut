@@ -19,6 +19,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 import { CustomCalendar } from "./CustomCalendar";
+import { token } from "@/lib/token";
 
 const DashSchedules = () => {
   const [schedules, setSchedules] = useState({});
@@ -43,7 +44,14 @@ const DashSchedules = () => {
     const fetchSchedules = async () => {
       setLoading(true);
       const response = await axios.get(
-        "https://marsu.cut.server.kukaas.tech/api/v1/order/schedule/all"
+        "https://marsu.cut.server.kukaas.tech/api/v1/order/schedule/all",
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
       );
       const data = response.data.schedules;
       if (Array.isArray(data)) {
@@ -86,47 +94,47 @@ const DashSchedules = () => {
         Schedules
       </Typography.Title>
       <div className="w-full h-screen flex items-center justify-center overflow-x-auto">
-      <Helmet>
-        <title>MarSU Cut | Schedules</title>
-        <meta name="description" content="" />
-      </Helmet>
-      
-      {loading ? (
-        <div>Loading...</div>
-      ) : (
-        <CustomCalendar
-          mode="single"
-          className="w-full h-full"
-          schedules={schedules}
-          onDayClick={handleDayClick}
-        />
-      )}
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Schedule for {selectedDate}</DialogTitle>
-            <DialogDescription className="mt-3 dark:text-white text-black">
-              {students.length > 0 ? (
-                <ul>
-                  {students.map((student, index) => (
-                    <li className="mt-2" key={index}>
-                      {student}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="mt-2">No students scheduled for this day.</p>
-              )}
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={handleClose}>
-              Close
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </div>
+        <Helmet>
+          <title>MarSU Cut | Schedules</title>
+          <meta name="description" content="" />
+        </Helmet>
+
+        {loading ? (
+          <div>Loading...</div>
+        ) : (
+          <CustomCalendar
+            mode="single"
+            className="w-full h-full"
+            schedules={schedules}
+            onDayClick={handleDayClick}
+          />
+        )}
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Schedule for {selectedDate}</DialogTitle>
+              <DialogDescription className="mt-3 dark:text-white text-black">
+                {students.length > 0 ? (
+                  <ul>
+                    {students.map((student, index) => (
+                      <li className="mt-2" key={index}>
+                        {student}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="mt-2">No students scheduled for this day.</p>
+                )}
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button variant="outline" onClick={handleClose}>
+                Close
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
     </div>
   );
 };

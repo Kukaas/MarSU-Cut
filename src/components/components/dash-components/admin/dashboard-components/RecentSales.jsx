@@ -23,6 +23,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 import TableLoading from "./loading-components/TableLoading";
+import { token } from "@/lib/token";
 
 const RecentSales = () => {
   const [recentOrders, setRecentOrders] = useState([]);
@@ -36,7 +37,14 @@ const RecentSales = () => {
   const fetchRencentOrders = async () => {
     try {
       const res = await axios.get(
-        "https://marsu.cut.server.kukaas.tech/api/v1/order/recent"
+        "https://marsu.cut.server.kukaas.tech/api/v1/order/recent",
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
       );
 
       const data = res.data.orders;

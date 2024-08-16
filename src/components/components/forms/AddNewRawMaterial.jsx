@@ -20,6 +20,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { token } from "@/lib/token";
 
 const AddNewRawMaterial = () => {
   const [addRawMaterialLoading, setAddRawMaterialLoading] = useState(false);
@@ -38,13 +39,20 @@ const AddNewRawMaterial = () => {
       setAddRawMaterialLoading(true);
       const res = await axios.post(
         "https://marsu.cut.server.kukaas.tech/api/v1/raw-materials/new",
-        values
+        values,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
       );
 
-      if (res.status === 200) {
+      if (res.status === 201) {
         setAddRawMaterialLoading(false);
         toast.success("Raw material added successfully");
-        addRawMaterialForm.reset()
+        addRawMaterialForm.reset();
       }
     } catch (error) {
       setAddRawMaterialLoading(false);

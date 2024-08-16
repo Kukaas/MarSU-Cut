@@ -28,6 +28,7 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { token } from "@/lib/token";
 
 const EditProduct = ({ selectedProduct }) => {
   const [editProductLoading, setEditProductLoading] = useState(false);
@@ -47,7 +48,14 @@ const EditProduct = ({ selectedProduct }) => {
       setEditProductLoading(true);
       const res = await axios.put(
         `https://marsu.cut.server.kukaas.tech/api/v1/finished-product/update/${selectedProduct._id}`,
-        values
+        values,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
       );
 
       if (res.status === 200) {

@@ -27,6 +27,7 @@ import { useEffect, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import PropTypes from "prop-types";
 import ToasterError from "@/lib/Toaster";
+import { token } from "@/lib/token";
 
 const AddOrderItems = ({ selectedOrder }) => {
   const [loadingAddItems, setLoadingAddItems] = useState(false);
@@ -397,6 +398,13 @@ const AddOrderItems = ({ selectedOrder }) => {
       `https://marsu.cut.server.kukaas.tech/api/v1/order/add-item/${selectedOrder._id}`,
       {
         orderItems: updatedOrderItems,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
       }
     );
 

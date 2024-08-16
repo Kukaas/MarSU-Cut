@@ -41,6 +41,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import ToasterError from "@/lib/Toaster";
+import { token } from "@/lib/token";
 
 function ArchiveOrders() {
   const [data, setData] = useState([]);
@@ -58,7 +59,14 @@ function ArchiveOrders() {
       try {
         setLoading(true);
         const response = await axios.get(
-          "https://marsu.cut.server.kukaas.tech/api/v1/order/archive/all"
+          "https://marsu.cut.server.kukaas.tech/api/v1/order/archive/all",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
         );
         setData(response.data.orders);
       } catch (error) {
@@ -67,10 +75,9 @@ function ArchiveOrders() {
         setLoading(false);
       }
     };
-  
+
     fetchArchivedOrders();
   }, []);
-  
 
   // Unarchive orders
   const handleUnarchive = async (order) => {
@@ -80,6 +87,13 @@ function ArchiveOrders() {
         `https://marsu.cut.server.kukaas.tech/api/v1/order/archive/update/${order._id}`,
         {
           isArchived: false,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
         }
       );
 
@@ -87,9 +101,7 @@ function ArchiveOrders() {
         setLoadingUpdate(false);
         toast.success(
           `Order of ${order.studentName} is unarchived successfully!`,
-          {
-
-          }
+          {}
         );
 
         setData((prevData) => {
@@ -112,17 +124,19 @@ function ArchiveOrders() {
     try {
       setLoadingUpdate(true);
       const res = await axios.delete(
-        `https://marsu.cut.server.kukaas.tech/api/v1/order/student/delete/${order._id}`
+        `https://marsu.cut.server.kukaas.tech/api/v1/order/student/delete/${order._id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
       );
 
       if (res.status === 200) {
         setLoadingUpdate(false);
-        toast.success(
-          `Order of ${order.studentName} is deleted successfully!`,
-          {
-
-          }
-        );
+        toast.success(`Order of ${order.studentName} is deleted successfully!`);
 
         // Update the data in the state
         setData((prevData) => {

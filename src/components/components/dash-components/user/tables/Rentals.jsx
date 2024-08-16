@@ -42,6 +42,8 @@ import { PlusCircle } from "lucide-react";
 import CreateRental from "../../../forms/CreateRental";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
+import { token } from "@/lib/token";
+import ToasterError from "@/lib/Toaster";
 
 function Rentals() {
   const [data, setData] = useState([]);
@@ -54,23 +56,33 @@ function Rentals() {
   const [currentPage, setCurrentPage] = useState(0);
   const { currentUser } = useSelector((state) => state.user);
 
-  const toastError = () => {
-    toast.error("Uh oh! Something went wrong.");
-  };
-
   // Fetch the data
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       const res = await axios.get(
-        `https://marsu.cut.server.kukaas.tech/api/v1/rental/${currentUser._id}`
+        `https://marsu.cut.server.kukaas.tech/api/v1/rental/${currentUser._id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
       );
 
       // Fetch the penalties for each rental
       const rentalsWithPenalties = await Promise.all(
         res.data.rental.map(async (rental) => {
           const penaltyRes = await axios.get(
-            `https://marsu.cut.server.kukaas.tech/api/v1/rental/penalty/${rental._id}`
+            `https://marsu.cut.server.kukaas.tech/api/v1/rental/penalty/${rental._id}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              withCredentials: true,
+            }
           );
           return { ...rental, penalty: penaltyRes.data.penalty };
         })
@@ -88,16 +100,21 @@ function Rentals() {
     try {
       setLoadingDelete(true);
       const res = await axios.delete(
-        `https://marsu.cut.server.kukaas.tech/api/v1/rental/${rental._id}`
+        `https://marsu.cut.server.kukaas.tech/api/v1/rental/${rental._id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
       );
 
       if (res.status === 200) {
         setLoadingDelete(false);
         toast.success(
           `Rental whith rental ID ${rental._id} has been deleted!`,
-          {
-
-          }
+          {}
         );
 
         // Update the data in the state
@@ -105,11 +122,11 @@ function Rentals() {
           return prevData.filter((item) => item._id !== rental._id);
         });
       } else {
-        toastError();
+        ToasterError();
         setLoadingDelete(false);
       }
     } catch (error) {
-      toastError();
+      ToasterError();
       setLoadingDelete(false);
     }
   };

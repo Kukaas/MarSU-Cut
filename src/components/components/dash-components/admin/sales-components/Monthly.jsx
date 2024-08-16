@@ -3,6 +3,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { token } from "@/lib/token";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
@@ -13,7 +14,14 @@ const Monthly = () => {
   const fetchSalesbyMonth = async () => {
     try {
       const res = await axios.get(
-        "https://marsu.cut.server.kukaas.tech/api/v1/sales-report/sales-by-month"
+        "https://marsu.cut.server.kukaas.tech/api/v1/sales-report/sales-by-month",
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
       );
 
       const monthlySales = res.data.monthlySales;

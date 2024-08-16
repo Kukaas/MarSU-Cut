@@ -28,6 +28,7 @@ import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import Notification from "./Notification";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { token } from "@/lib/token";
 
 const MenuAdmin = () => {
   const location = useLocation();
@@ -42,7 +43,14 @@ const MenuAdmin = () => {
     const fetchNotifications = async () => {
       try {
         const res = await axios.get(
-          `https://marsu.cut.server.kukaas.tech/api/v1/user/notifications/${currentUser._id}`
+          `https://marsu.cut.server.kukaas.tech/api/v1/user/notifications/${currentUser._id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
         );
         const notificationsData = res.data;
 

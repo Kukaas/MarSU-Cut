@@ -41,6 +41,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import ToasterError from "@/lib/Toaster";
+import { token } from "@/lib/token";
 
 function ArchiveRentals() {
   const [data, setData] = useState([]);
@@ -58,14 +59,28 @@ function ArchiveRentals() {
       try {
         setLoading(true);
         const res = await axios.get(
-          `https://marsu.cut.server.kukaas.tech/api/v1/rental/archive/all`
+          `https://marsu.cut.server.kukaas.tech/api/v1/rental/archive/all`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
         );
 
         // Fetch the penalties for each rental
         const rentalsWithPenalties = await Promise.all(
           res.data.rentals.map(async (rental) => {
             const penaltyRes = await axios.get(
-              `https://marsu.cut.server.kukaas.tech/api/v1/rental/penalty/${rental._id}`
+              `https://marsu.cut.server.kukaas.tech/api/v1/rental/penalty/${rental._id}`,
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+                withCredentials: true,
+              }
             );
             return { ...rental, penalty: penaltyRes.data.penalty };
           })
@@ -88,6 +103,13 @@ function ArchiveRentals() {
         `https://marsu.cut.server.kukaas.tech/api/v1/rental/archive/update/${rental._id}`,
         {
           isArchived: false,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
         }
       );
 
@@ -95,9 +117,7 @@ function ArchiveRentals() {
         setLoadingUpdate(false);
         toast.success(
           `Rental of ${rental.coordinatorName} is unarchived successfully!`,
-          {
-
-          }
+          {}
         );
 
         setData((prevData) => {
@@ -120,16 +140,20 @@ function ArchiveRentals() {
     try {
       setLoadingUpdate(true);
       const res = await axios.delete(
-        `https://marsu.cut.server.kukaas.tech/api/v1/rental/${rental._id}`
+        `https://marsu.cut.server.kukaas.tech/api/v1/rental/${rental._id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
       );
 
       if (res.status === 200) {
         setLoadingUpdate(false);
         toast.success(
-          `Rental of ${rental.coordinatorName} is deleted successfully!`,
-          {
-
-          }
+          `Rental of ${rental.coordinatorName} is deleted successfully!`
         );
         // Update the data in the state
         setData((prevData) => {

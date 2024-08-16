@@ -34,6 +34,7 @@ import axios from "axios";
 import { Link, useLocation } from "react-router-dom";
 
 import Notification from "./Notification";
+import { token } from "@/lib/token";
 
 const SideBarAdmin = () => {
   const location = useLocation();
@@ -48,7 +49,14 @@ const SideBarAdmin = () => {
     const fetchNotifications = async () => {
       try {
         const res = await axios.get(
-          `https://marsu.cut.server.kukaas.tech/api/v1/user/notifications/${currentUser._id}`
+          `https://marsu.cut.server.kukaas.tech/api/v1/user/notifications/${currentUser._id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
         );
         const notificationsData = res.data;
 
@@ -74,8 +82,7 @@ const SideBarAdmin = () => {
     };
 
     fetchNotifications();
-  }
-  , [currentUser._id]);
+  }, [currentUser._id]);
 
   return (
     <div className="flex h-[800px] flex-col gap-2 w-[250px] border-r-2 light:mt-2">

@@ -38,6 +38,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import ToasterError from "@/lib/Toaster";
+import { token } from "@/lib/token";
 
 const CreateRental = () => {
   const [loading, setLoading] = useState(false);
@@ -68,7 +69,10 @@ const CreateRental = () => {
           userId: currentUser._id,
         },
         {
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );

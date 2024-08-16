@@ -42,6 +42,7 @@ import {
 } from "@/components/ui/dialog";
 import CreateOrder from "../../../forms/CreateOrder";
 import { toast } from "sonner";
+import { token } from "@/lib/token";
 
 function Orders() {
   const [data, setData] = useState([]);
@@ -64,7 +65,14 @@ function Orders() {
       setLoading(true);
       try {
         const res = await axios.get(
-          `https://marsu.cut.server.kukaas.tech/api/v1/order/student/${currentUser._id}`
+          `https://marsu.cut.server.kukaas.tech/api/v1/order/student/${currentUser._id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
         );
         setData(res.data.orders);
       } catch (error) {
@@ -82,14 +90,19 @@ function Orders() {
     try {
       setLoadingDelete(true);
       const res = await axios.delete(
-        `https://marsu.cut.server.kukaas.tech/api/v1/order/student/delete/${order._id}`
+        `https://marsu.cut.server.kukaas.tech/api/v1/order/student/delete/${order._id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
       );
 
       if (res.status === 200) {
         setLoadingDelete(false);
-        toast.success(`The order with ID ${order._id} has been deleted.`, {
-          
-        });
+        toast.success(`The order with ID ${order._id} has been deleted.`, {});
 
         // Update the data in the state
         setData((prevData) => {

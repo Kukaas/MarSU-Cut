@@ -37,6 +37,7 @@ import axios from "axios";
 import { format } from "date-fns";
 import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import { token } from "@/lib/token";
 
 const AddProduction = () => {
   const [addProductionLoading, setAddProductionLoading] = useState(false);
@@ -63,13 +64,20 @@ const AddProduction = () => {
       setAddProductionLoading(true);
       const res = await axios.post(
         "https://marsu.cut.server.kukaas.tech/api/v1/production/create",
-        values
+        values,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
       );
 
       if (res.status === 201) {
         setAddProductionLoading(false);
         toast.success("Production added successfully");
-        productionForm.reset()
+        productionForm.reset();
       }
     } catch (error) {
       setAddProductionLoading(false);

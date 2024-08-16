@@ -22,6 +22,7 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import axios from "axios";
 import ToasterError from "@/lib/Toaster";
+import { token } from "@/lib/token";
 
 const EditRawMaterial = ({ selectedRawMaterial }) => {
   const [editRawMaterialLoading, setEditRawMaterialLoading] = useState(false);
@@ -40,14 +41,19 @@ const EditRawMaterial = ({ selectedRawMaterial }) => {
       setEditRawMaterialLoading(true);
       const res = await axios.put(
         `https://marsu.cut.server.kukaas.tech/api/v1/raw-materials/update/${selectedRawMaterial._id}`,
-        values
+        values,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
       );
 
       if (res.status === 200) {
         setEditRawMaterialLoading(false);
-        toast.success("Raw material updated", {
-          
-        });
+        toast.success("Raw material updated", {});
         editRawMaterialForm.reset();
       }
     } catch (error) {

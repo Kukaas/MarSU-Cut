@@ -28,6 +28,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { token } from "@/lib/token";
 
 const AddNewProduct = () => {
   const [addNewProductLoading, setAddNewProductLoading] = useState(false);
@@ -43,11 +44,18 @@ const AddNewProduct = () => {
   });
 
   const handleAddNewProduct = async (values) => {
-    setAddNewProductLoading(true);
     try {
+      setAddNewProductLoading(true);
       const res = await axios.post(
         "https://marsu.cut.server.kukaas.tech/api/v1/finished-product/create",
-        values
+        values,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
       );
 
       if (res.status === 201) {

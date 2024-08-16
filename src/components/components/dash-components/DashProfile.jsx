@@ -56,6 +56,7 @@ import { Loader2 } from "lucide-react";
 import SkeletonProfile from "../SkeletonProfile";
 import ChangePassword from "../forms/ChangePassword";
 import ToasterError from "@/lib/Toaster";
+import { token } from "@/lib/token";
 
 const DashProfile = () => {
   const navigate = useNavigate();
@@ -168,7 +169,10 @@ const DashProfile = () => {
         `https://marsu.cut.server.kukaas.tech/api/v1/user/update/${currentUser?._id}`,
         values,
         {
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );
@@ -196,7 +200,12 @@ const DashProfile = () => {
       setLoading(true);
       const res = await axios.delete(
         `https://marsu.cut.server.kukaas.tech/api/v1/user/delete/${currentUser?._id}`,
+
         {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );

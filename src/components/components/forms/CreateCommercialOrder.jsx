@@ -21,6 +21,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
+import { token } from "@/lib/token";
 
 const CreateCommercialOrder = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -38,7 +39,10 @@ const CreateCommercialOrder = () => {
           cbEmail: currentUser.email,
         },
         {
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );
@@ -46,7 +50,7 @@ const CreateCommercialOrder = () => {
       if (res.status === 201) {
         setCommercialOrderLoading(false);
         toast.success("Commercial order created successfully", {
-          description: "Wait for the admin to approve your order."
+          description: "Wait for the admin to approve your order.",
         });
 
         commercialJobForm.reset();
@@ -105,7 +109,11 @@ const CreateCommercialOrder = () => {
                   Cancel
                 </Button>
               </DialogClose>
-              <Button type="submit" className="mt-3" disabled={commercialOrderLoading}>
+              <Button
+                type="submit"
+                className="mt-3"
+                disabled={commercialOrderLoading}
+              >
                 {commercialOrderLoading ? (
                   <div className="flex items-center">
                     <Loader2 className="mr-2 animate-spin" />

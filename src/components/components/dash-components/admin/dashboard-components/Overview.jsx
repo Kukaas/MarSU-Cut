@@ -9,6 +9,7 @@ import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { token } from "@/lib/token";
 
 const Overview = () => {
   const [overview, setOverview] = useState([]);
@@ -16,7 +17,14 @@ const Overview = () => {
   const fetchSalesOverView = async () => {
     try {
       const res = await axios.get(
-        "https://marsu.cut.server.kukaas.tech/api/v1/sales-report/overview"
+        "https://marsu.cut.server.kukaas.tech/api/v1/sales-report/overview",
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
       );
 
       const data = res.data.data;

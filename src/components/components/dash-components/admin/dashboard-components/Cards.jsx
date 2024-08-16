@@ -15,6 +15,7 @@ import CountUp from "react-countup";
 import CardLoading from "./loading-components/CardLoading";
 import Overview from "./Overview";
 import RecentSales from "./RecentSales";
+import { token } from "@/lib/token";
 
 const Cards = () => {
   const [loading, setLoading] = useState(true);
@@ -38,7 +39,14 @@ const Cards = () => {
     const fetchOrdersThisMonth = async () => {
       try {
         const res = await axios.get(
-          "https://marsu.cut.server.kukaas.tech/api/v1/order/this-month"
+          "https://marsu.cut.server.kukaas.tech/api/v1/order/this-month",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
         );
 
         const data = res.data.orders;
@@ -59,7 +67,14 @@ const Cards = () => {
     const fetchOrdersLastMonth = async () => {
       try {
         const res = await axios.get(
-          "https://marsu.cut.server.kukaas.tech/api/v1/order/last-month"
+          "https://marsu.cut.server.kukaas.tech/api/v1/order/last-month",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
         );
 
         const data = res.data.orders;
@@ -81,7 +96,14 @@ const Cards = () => {
     const fetchTotalOrdersThisYear = async () => {
       try {
         const res = await axios.get(
-          "https://marsu.cut.server.kukaas.tech/api/v1/order/this-year"
+          "https://marsu.cut.server.kukaas.tech/api/v1/order/this-year",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
         );
 
         const data = res.data.orders;
@@ -103,7 +125,14 @@ const Cards = () => {
     const fetchTotalRentalsThisYear = async () => {
       try {
         const res = await axios.get(
-          "https://marsu.cut.server.kukaas.tech/api/v1/rental/total/this-year"
+          "https://marsu.cut.server.kukaas.tech/api/v1/rental/total/this-year",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
         );
 
         const data = res.data.rentals;
@@ -125,7 +154,14 @@ const Cards = () => {
     const fetchRentalsLastYear = async () => {
       try {
         const res = await axios.get(
-          "https://marsu.cut.server.kukaas.tech/api/v1/rental/total/last-year"
+          "https://marsu.cut.server.kukaas.tech/api/v1/rental/total/last-year",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
         );
 
         const data = res.data.rentals;
@@ -147,7 +183,14 @@ const Cards = () => {
     const fetchTotalProductionsThisYear = async () => {
       try {
         const res = await axios.get(
-          "https://marsu.cut.server.kukaas.tech/api/v1/production/this-year"
+          "https://marsu.cut.server.kukaas.tech/api/v1/production/this-year",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
         );
 
         const data = res.data.totalQuantity;
@@ -168,7 +211,14 @@ const Cards = () => {
     const fetchTotalProductionsThisMonth = async () => {
       try {
         const res = await axios.get(
-          "https://marsu.cut.server.kukaas.tech/api/v1/production/this-month"
+          "https://marsu.cut.server.kukaas.tech/api/v1/production/this-month",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
         );
 
         const data = res.data.totalQuantity;
@@ -189,7 +239,14 @@ const Cards = () => {
     const fetchTotalProductionsLastMonth = async () => {
       try {
         const res = await axios.get(
-          "https://marsu.cut.server.kukaas.tech/api/v1/production/last-month"
+          "https://marsu.cut.server.kukaas.tech/api/v1/production/last-month",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
         );
 
         const data = res.data.totalQuantity;
@@ -210,7 +267,14 @@ const Cards = () => {
     const fetchTotalRevenueThisYear = async () => {
       try {
         const res = await axios.get(
-          "https://marsu.cut.server.kukaas.tech/api/v1/sales-report/this-year"
+          "https://marsu.cut.server.kukaas.tech/api/v1/sales-report/this-year",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
         );
 
         const data = res.data.totalRevenue;
@@ -231,7 +295,14 @@ const Cards = () => {
     const fetchSalesPerformance = async () => {
       try {
         const res = await axios.get(
-          "https://marsu.cut.server.kukaas.tech/api/v1/sales-report/sales-performance"
+          "https://marsu.cut.server.kukaas.tech/api/v1/sales-report/sales-performance",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
         );
 
         if (res.status === 200 && res.data.success) {

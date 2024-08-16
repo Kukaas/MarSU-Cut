@@ -23,6 +23,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
+import { token } from "@/lib/token";
 
 const ChangePassword = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -55,7 +56,7 @@ const ChangePassword = () => {
   const handleChangePassword = async (values) => {
     if (values.newPassword !== values.confirmPassword) {
       toast.error("Passwords do not match", {
-        description: "Please check you password and confirm password"
+        description: "Please check you password and confirm password",
       });
       setLoading(false);
       return;
@@ -63,12 +64,14 @@ const ChangePassword = () => {
 
     try {
       setLoading(true);
-
       const res = await axios.put(
         `https://marsu.cut.server.kukaas.tech/api/v1/user/update/password/${currentUser?._id}`,
         values,
         {
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );
@@ -81,7 +84,7 @@ const ChangePassword = () => {
     } catch (error) {
       if (error.response.status === 400) {
         toast.error("Old password does not match", {
-          description: "Please input your old password."
+          description: "Please input your old password.",
         });
       }
 

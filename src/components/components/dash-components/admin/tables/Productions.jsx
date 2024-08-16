@@ -53,6 +53,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 import AddProduction from "@/components/components/forms/AddProduction";
+import { token } from "@/lib/token";
 
 const Productions = () => {
   const [loading, setLoading] = useState(true);
@@ -84,7 +85,14 @@ const Productions = () => {
       try {
         setLoading(true);
         const res = await axios.get(
-          "https://marsu.cut.server.kukaas.tech/api/v1/production/all"
+          "https://marsu.cut.server.kukaas.tech/api/v1/production/all",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
         );
 
         const data = res.data.productions;
@@ -106,15 +114,19 @@ const Productions = () => {
 
     try {
       const res = await axios.delete(
-        `https://marsu.cut.server.kukaas.tech/api/v1/production/delete/${selectedProduction._id}`
+        `https://marsu.cut.server.kukaas.tech/api/v1/production/delete/${selectedProduction._id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
       );
 
       if (res.status === 200) {
         setOpenDeleteDialog(false);
-        toast.success(
-          `Produxtion with ID ${selectedProduction._id} deleted.`,
-          {}
-        );
+        toast.success(`Production with ID ${selectedProduction._id} deleted.`);
 
         setData((prevData) => {
           return prevData.filter(

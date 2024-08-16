@@ -42,6 +42,7 @@ import { useSelector } from "react-redux";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import CreateCommercialOrder from "@/components/components/forms/CreateCommercialOrder";
 import { toast } from "sonner";
+import { token } from "@/lib/token";
 
 const CommercialJob = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -58,7 +59,14 @@ const CommercialJob = () => {
     const fetchCommercialJob = async () => {
       try {
         const res = await axios.get(
-          `https://marsu.cut.server.kukaas.tech/api/v1/commercial-job/${currentUser._id}`
+          `https://marsu.cut.server.kukaas.tech/api/v1/commercial-job/${currentUser._id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
         );
         const data = res.data;
         if (res.status === 200) {
@@ -77,7 +85,14 @@ const CommercialJob = () => {
     try {
       setLoadingDelete(true);
       const res = await axios.delete(
-        `https://marsu.cut.server.kukaas.tech/api/v1/commercial-job/${commercial._id}`
+        `https://marsu.cut.server.kukaas.tech/api/v1/commercial-job/${commercial._id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
       );
 
       if (res.status === 200) {
@@ -86,15 +101,11 @@ const CommercialJob = () => {
         setLoadingDelete(false);
         toast.success(
           `Commercial job with ID ${commercial._id} has been deleted.`,
-          {
-
-          }
+          {}
         );
       }
     } catch (error) {
-      toast.error("Uh oh! Something went wrong", {
-        
-      });
+      toast.error("Uh oh! Something went wrong", {});
     }
   };
 

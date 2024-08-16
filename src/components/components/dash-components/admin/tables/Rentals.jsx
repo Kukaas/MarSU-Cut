@@ -42,6 +42,7 @@ import { useNavigate } from "react-router-dom";
 import ToasterError from "@/lib/Toaster";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { token } from "@/lib/token";
 
 function Rentals() {
   const [data, setData] = useState([]);
@@ -59,7 +60,14 @@ function Rentals() {
       setLoading(true);
       try {
         const res = await axios.get(
-          `https://marsu.cut.server.kukaas.tech/api/v1/rental/all/get`
+          `https://marsu.cut.server.kukaas.tech/api/v1/rental/all/get`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
         );
 
         const activeRentals = res.data.rentals.filter(
@@ -69,7 +77,14 @@ function Rentals() {
         const rentalsWithPenalties = await Promise.all(
           activeRentals.map(async (rental) => {
             const penaltyRes = await axios.get(
-              `https://marsu.cut.server.kukaas.tech/api/v1/rental/penalty/${rental._id}`
+              `https://marsu.cut.server.kukaas.tech/api/v1/rental/penalty/${rental._id}`,
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+                withCredentials: true,
+              }
             );
             return { ...rental, penalty: penaltyRes.data.penalty };
           })
@@ -90,16 +105,20 @@ function Rentals() {
       setLoadingUpdate(true);
       const res = await axios.put(
         `https://marsu.cut.server.kukaas.tech/api/v1/rental/update/${rental._id}`,
-        { status: "REJECTED" }
+        { status: "REJECTED" },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
       );
 
       if (res.status === 200) {
         setLoadingUpdate(false);
         toast.success(
-          `Rental of ${rental.coordinatorName} is rejected successfully!`,
-          {
-
-          }
+          `Rental of ${rental.coordinatorName} is rejected successfully!`
         );
 
         // Update the data in the state
@@ -128,16 +147,20 @@ function Rentals() {
       setLoadingUpdate(true);
       const res = await axios.put(
         `https://marsu.cut.server.kukaas.tech/api/v1/rental/update/${rental._id}`,
-        { status: "APPROVED" }
+        { status: "APPROVED" },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
       );
 
       if (res.status === 200) {
         setLoadingUpdate(false);
         toast.success(
-          `Rental of ${rental.coordinatorName} is approved successfully!`,
-          {
-
-          }
+          `Rental of ${rental.coordinatorName} is approved successfully!`
         );
 
         // Update the data in the state
@@ -167,14 +190,19 @@ function Rentals() {
         `https://marsu.cut.server.kukaas.tech/api/v1/rental/update/${rental._id}`,
         {
           status: "GIVEN",
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
         }
       );
 
       if (res.status === 200) {
         setLoadingUpdate(false);
-        toast.success(`Rental of ${rental.coordinatorName} is given!`, {
-          
-        });
+        toast.success(`Rental of ${rental.coordinatorName} is given!`);
 
         // Update the data in the state
         setData((prevData) => {
@@ -204,14 +232,19 @@ function Rentals() {
         `https://marsu.cut.server.kukaas.tech/api/v1/rental/update/${rental._id}`,
         {
           status: "RETURNED",
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
         }
       );
 
       if (res.status === 200) {
         setLoadingUpdate(false);
-        toast.success(`Rental of ${rental.coordinatorName} is returned!`, {
-          
-        });
+        toast.success(`Rental of ${rental.coordinatorName} is returned!`, {});
 
         // Update the data in the state
         setData((prevData) => {
@@ -241,16 +274,20 @@ function Rentals() {
         `https://marsu.cut.server.kukaas.tech/api/v1/rental/archive/update/${rental._id}`,
         {
           isArchived: true,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
         }
       );
 
       if (res.status === 200) {
         setLoadingUpdate(false);
         toast.success(
-          `Rental of ${rental.coordinatorName} is archived successfully!`,
-          {
-
-          }
+          `Rental of ${rental.coordinatorName} is archived successfully!`
         );
 
         setData((prevData) => {
@@ -273,16 +310,20 @@ function Rentals() {
     try {
       setLoadingUpdate(true);
       const res = await axios.delete(
-        `https://marsu.cut.server.kukaas.tech/api/v1/rental/${rental._id}`
+        `https://marsu.cut.server.kukaas.tech/api/v1/rental/${rental._id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
       );
 
       if (res.status === 200) {
         setLoadingUpdate(false);
         toast.success(
-          `Rental of ${rental.coordinatorName} is deleted successfully!`,
-          {
-
-          }
+          `Rental of ${rental.coordinatorName} is deleted successfully!`
         );
         // Update the data in the state
         setData((prevData) => {

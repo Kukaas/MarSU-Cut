@@ -46,6 +46,7 @@ import ToasterError from "@/lib/Toaster";
 
 import EditRawMaterial from "@/components/components/forms/EditRawMaterial";
 import AddNewRawMaterial from "@/components/components/forms/AddNewRawMaterial";
+import { token } from "@/lib/token";
 
 const RawMaterials = () => {
   const [data, setData] = useState([]);
@@ -65,7 +66,14 @@ const RawMaterials = () => {
       try {
         setLoading(true);
         const res = await axios.get(
-          "https://marsu.cut.server.kukaas.tech/api/v1/raw-materials/all"
+          "https://marsu.cut.server.kukaas.tech/api/v1/raw-materials/all",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
         );
 
         const data = res.data;
@@ -84,7 +92,14 @@ const RawMaterials = () => {
     try {
       setDeleteLoading(true);
       const res = await axios.delete(
-        `https://marsu.cut.server.kukaas.tech/api/v1/raw-materials/delete/${selectedRawMaterial._id}`
+        `https://marsu.cut.server.kukaas.tech/api/v1/raw-materials/delete/${selectedRawMaterial._id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
       );
 
       if (res.status === 200) {
@@ -93,9 +108,7 @@ const RawMaterials = () => {
         setData((prevData) =>
           prevData.filter((product) => product._id !== selectedRawMaterial._id)
         );
-        toast.success("Product deleted successfully!", {
-          
-        });
+        toast.success("Product deleted successfully!", {});
       }
     } catch (error) {
       ToasterError();

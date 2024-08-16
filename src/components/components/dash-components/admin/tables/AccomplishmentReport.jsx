@@ -69,6 +69,7 @@ import { useEffect, useState } from "react";
 
 import DownloadButton from "./DownloadButton";
 import CreateAccomplishment from "../../../forms/CreateAccomplishment";
+import { token } from "@/lib/token";
 
 const AccomplishmentReport = () => {
   const [data, setData] = useState([]);
@@ -100,7 +101,14 @@ const AccomplishmentReport = () => {
       try {
         setLoading(true);
         const res = await axios.get(
-          "https://marsu.cut.server.kukaas.tech/api/v1/accomplishment-report/all"
+          "https://marsu.cut.server.kukaas.tech/api/v1/accomplishment-report/all",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
         );
 
         if (res.status === 200) {
@@ -169,7 +177,14 @@ const AccomplishmentReport = () => {
       setUpdateLoading(true);
       const res = await axios.put(
         `https://marsu.cut.server.kukaas.tech/api/v1/accomplishment-report/update/${selectedAccomplishment._id}`,
-        values
+        values,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
       );
       if (res.status === 200) {
         setIsDialogOpen(false);
@@ -199,7 +214,14 @@ const AccomplishmentReport = () => {
     try {
       setLoadingDelete(true);
       const res = await axios.delete(
-        `https://marsu.cut.server.kukaas.tech/api/v1/accomplishment-report/delete/${accomplishment._id}`
+        `https://marsu.cut.server.kukaas.tech/api/v1/accomplishment-report/delete/${accomplishment._id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
       );
       if (res.status === 200) {
         setLoadingDelete(false);
