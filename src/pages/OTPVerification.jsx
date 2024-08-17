@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 // icon
-import { notification } from "antd";
+import { message, notification } from "antd";
 import { Loader2 } from "lucide-react";
 
 // redux
@@ -158,14 +158,17 @@ const OTPVerification = () => {
         "https://marsu.cut.server.kukaas.tech/api/v1/auth/verify-otp",
         { email: currentEmail, otp: values.otp },
         {
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
           withCredentials: true,
         }
       );
       if (res.status === 200) {
         setLoading(false);
         dispatch(forgotPasswordSuccess(currentEmail));
-        toast.success("OTP verified successfully");
+        message.success("OTP verified successfully");
         navigate(`/reset-password/${token}`, {
           replace: true,
         });

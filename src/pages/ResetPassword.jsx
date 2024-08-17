@@ -83,7 +83,10 @@ const ResetPassword = () => {
         `${BASE_URL}/api/v1/auth/reset-password`,
         { email: currentEmail, ...values },
         {
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
           withCredentials: true,
         }
       );
@@ -98,6 +101,7 @@ const ResetPassword = () => {
         });
         dispatch(forgotPasswordFail());
         navigate("/sign-in");
+        localStorage.removeItem("token");
       } else {
         setLoading(false);
         toast.error(res.data.message);

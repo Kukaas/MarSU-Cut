@@ -58,7 +58,7 @@ const RequestResetPassword = () => {
       return result.substring(0, length); // Truncate to the desired length
     };
 
-    const token = generateRandomToken(50);
+    const generatedToken = generateRandomToken(50);
 
     if (!values.email) return toast.error("Email is required");
 
@@ -79,9 +79,10 @@ const RequestResetPassword = () => {
           pauseOnHover: false,
           showProgress: true,
         });
-        navigate(`/otp-verification/${token}`, {
+        navigate(`/otp-verification/${generatedToken}`, {
           replace: true,
         });
+        localStorage.setItem("token", res.data.token);
       } else {
         setLoading(false);
         toast.error("Email is not registered", {
