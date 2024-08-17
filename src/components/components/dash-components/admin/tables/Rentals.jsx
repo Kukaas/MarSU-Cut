@@ -211,12 +211,16 @@ function Rentals() {
             return item;
           });
         });
+      } else {
+        ToasterError();
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
         toast.error(error.response.data.message); // Correct error handling
       } else {
-        toast.error("An unexpected error occurred."); // Handle other errors
+        ToasterError({
+          description: "Please check you internet connection and try again.",
+        }); // Handle other errors
       }
       setLoadingUpdate(false);
     }
@@ -242,7 +246,7 @@ function Rentals() {
 
       if (res.status === 200) {
         setLoadingUpdate(false);
-        toast.success(`Rental of ${rental.coordinatorName} is returned!`, {});
+        toast.success(`Rental of ${rental.coordinatorName} is returned!`);
 
         // Update the data in the state
         setData((prevData) => {
@@ -259,7 +263,9 @@ function Rentals() {
         setLoadingUpdate(false);
       }
     } catch (error) {
-      ToasterError();
+      ToasterError({
+        description: "Please check you internet connection and try again.",
+      });
       setLoadingUpdate(false);
     }
   };
@@ -297,7 +303,9 @@ function Rentals() {
       }
     } catch (error) {
       {
-        ToasterError();
+        ToasterError({
+          description: "Please check you internet connection and try again.",
+        });
         setLoadingUpdate(false);
       }
     }
@@ -332,7 +340,9 @@ function Rentals() {
         setLoadingUpdate(false);
       }
     } catch (error) {
-      ToasterError();
+      ToasterError({
+        description: "Please check you internet connection and try again.",
+      });
       setLoadingUpdate(false);
     }
   };

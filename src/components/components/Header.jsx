@@ -29,7 +29,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 
 // Icons import
 import { Home, LogInIcon, Menu, Moon, Sun } from "lucide-react";
-import { message } from "antd";
 
 // Other imports
 import { useEffect, useState } from "react";
@@ -38,9 +37,10 @@ import axios from "axios";
 import { logout } from "@/redux/user/userSlice";
 
 import { useTheme } from "./ThemProvider";
-import MenuAdmin from "./MenuAdminSmall";
-import MenuUser from "./MenuUserSmall";
 import { BASE_URL } from "@/lib/api";
+import ToasterError from "@/lib/Toaster";
+import { toast } from "sonner";
+import MenuSmallScreen from "./MenuSmallScreen";
 
 const Header = () => {
   const { setTheme } = useTheme();
@@ -78,11 +78,13 @@ const Header = () => {
         setIsLoggingOut(false);
         dispatch(logout());
         localStorage.removeItem("token");
-        message.success("Thank you for using our service. Come back soon!");
+        toast.success("Thank you for using our service. Come back soon!");
         navigate("/sign-in");
       }
     } catch (error) {
-      message.error("Something went wrong");
+      ToasterError({
+        description: "Please check your internet connection and try again.",
+      });
       setIsLoggingOut(false);
     }
   };
@@ -166,7 +168,7 @@ const Header = () => {
           )}
 
           {/* Admin */}
-          {isSmallScreen && currentUser && currentUser.isAdmin ? (
+          {isSmallScreen && currentUser ? (
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="outline">
@@ -183,7 +185,7 @@ const Header = () => {
                     Cut
                   </div>
                 </SheetTitle>
-                <MenuAdmin />
+                <MenuSmallScreen />
               </SheetContent>
             </Sheet>
           ) : (
@@ -257,31 +259,6 @@ const Header = () => {
                   )}
                 </>
               )}
-            </>
-          )}
-
-          {/* User */}
-          {isSmallScreen && currentUser?.isAdmin === false && (
-            <>
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="outline">
-                    <Menu />
-                  </Button>
-                </SheetTrigger>
-                <SheetContent className="overflow-auto">
-                  <SheetTitle>
-                    {" "}
-                    <div className="font-bold hover:text-current text-2xl text-center sm:text-left mt-8">
-                      <span className="px-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white">
-                        MarSU
-                      </span>{" "}
-                      Cut
-                    </div>
-                  </SheetTitle>
-                  <MenuUser />
-                </SheetContent>
-              </Sheet>
             </>
           )}
         </div>

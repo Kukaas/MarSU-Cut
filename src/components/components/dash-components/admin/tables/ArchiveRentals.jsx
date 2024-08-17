@@ -114,8 +114,7 @@ function ArchiveRentals() {
       if (res.status === 200) {
         setLoadingUpdate(false);
         toast.success(
-          `Rental of ${rental.coordinatorName} is unarchived successfully!`,
-          {}
+          `Rental of ${rental.coordinatorName} is unarchived successfully!`
         );
 
         setData((prevData) => {
@@ -126,10 +125,10 @@ function ArchiveRentals() {
         setLoadingUpdate(false);
       }
     } catch (error) {
-      {
-        ToasterError();
-        setLoadingUpdate(false);
-      }
+      ToasterError({
+        description: "Please check you internet connection and try again.",
+      });
+      setLoadingUpdate(false);
     }
   };
 
@@ -162,7 +161,9 @@ function ArchiveRentals() {
         setLoadingUpdate(false);
       }
     } catch (error) {
-      ToasterError();
+      ToasterError({
+        description: "Please check you internet connection and try again.",
+      });
       setLoadingUpdate(false);
     }
   };

@@ -113,10 +113,7 @@ function Rentals() {
 
       if (res.status === 200) {
         setLoadingDelete(false);
-        toast.success(
-          `Rental whith rental ID ${rental._id} has been deleted!`,
-          {}
-        );
+        toast.success(`Rental whith rental ID ${rental._id} has been deleted!`);
 
         // Update the data in the state
         setData((prevData) => {

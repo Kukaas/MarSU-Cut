@@ -15,19 +15,16 @@ import DashSalesReport from "@/components/components/dash-components/admin/DashS
 import DashArchiveOrders from "@/components/components/dash-components/admin/DashArchiveOrders";
 import DashArchiveRentals from "@/components/components/dash-components/admin/DashArchiveRentals";
 import DashUsers from "@/components/components/dash-components/admin/DashUsers";
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 import DashProductions from "@/components/components/dash-components/admin/DashProductions";
 import DashCommercialJob from "@/components/components/dash-components/admin/DashCommercialJob";
-import SideBarAdmin from "@/components/components/SideBarAdmin";
-import { useEffect, useState } from "react";
-import SidebarUser from "@/components/components/SidebarUser";
+import Sidebar from "@/components/components/Sidebar";
 
 // Other Imports
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
 const Dashboard = ({ tab }) => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
-  const {currentUser} = useSelector((state) => state.user);
 
   const renderContent = () => {
     switch (tab) {
@@ -72,25 +69,22 @@ const Dashboard = ({ tab }) => {
     }
   };
 
-    // Check screen size
-    useEffect(() => {
-      const checkScreenSize = () => {
-        setIsSmallScreen(window.innerWidth < 771);
-      };
-  
-      checkScreenSize();
-      window.addEventListener("resize", checkScreenSize);
-  
-      return () => window.removeEventListener("resize", checkScreenSize);
-    }, []);
+  // Check screen size
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsSmallScreen(window.innerWidth < 771);
+    };
+
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
 
   return (
     <div className="flex flex-col md:flex-row w-full">
-      {!isSmallScreen && currentUser.isAdmin && <SideBarAdmin />}
-      {!isSmallScreen && !currentUser.isAdmin && <SidebarUser />}
-      <div className="flex-1">
-        {renderContent()}
-      </div>
+      {!isSmallScreen && <Sidebar />}
+      <div className="flex-1">{renderContent()}</div>
     </div>
   );
 };

@@ -34,6 +34,7 @@ import { RequestResetPasswordSchema } from "@/schema/shema";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "@/lib/api";
+import ToasterError from "@/lib/Toaster";
 
 const RequestResetPassword = () => {
   const dispatch = useDispatch();
@@ -53,6 +54,7 @@ const RequestResetPassword = () => {
     // Hash email
     const hashedEmail = SHA256(values.email).toString();
     if (!values.email) return toast.error("Email is required");
+
     try {
       setLoading(true);
       dispatch(forgotPasswordStart());
@@ -80,8 +82,8 @@ const RequestResetPassword = () => {
       }
     } catch (error) {
       setLoading(false);
-      toast.error("Email is not registered", {
-        description: "Please enter a valid email",
+      ToasterError({
+        description: "Please check you internet connection and try again.",
       });
       dispatch(forgotPasswordFail());
     }
@@ -152,7 +154,7 @@ const RequestResetPassword = () => {
           </div>
         </div>
       )}
-      <Toaster position="top-right" closeButton richColors />
+      <Toaster position="top-center" closeButton richColors />
     </div>
   );
 };

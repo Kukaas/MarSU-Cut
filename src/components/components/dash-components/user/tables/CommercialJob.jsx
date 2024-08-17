@@ -101,12 +101,11 @@ const CommercialJob = () => {
         setData(updatedData);
         setLoadingDelete(false);
         toast.success(
-          `Commercial job with ID ${commercial._id} has been deleted.`,
-          {}
+          `Commercial job with ID ${commercial._id} has been deleted.`
         );
       }
     } catch (error) {
-      toast.error("Uh oh! Something went wrong", {});
+      toast.error("Uh oh! Something went wrong");
     }
   };
 

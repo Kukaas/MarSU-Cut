@@ -26,7 +26,7 @@ const DashCommercial = () => {
         <meta name="description" content="" />
       </Helmet>
       <CommercialJob />
-      <Toaster position="top-right" richColors closeButton/>
+      <Toaster position="top-center" richColors closeButton />
     </div>
   );
 };

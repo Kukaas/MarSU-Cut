@@ -105,10 +105,14 @@ const FinishedProduct = () => {
         setData((prevData) =>
           prevData.filter((product) => product._id !== selectedProduct._id)
         );
-        toast.success("Product deleted successfully!", {});
+        toast.success("Product deleted successfully!");
+      } else {
+        ToasterError();
       }
     } catch (error) {
-      ToasterError();
+      ToasterError({
+        description: "Please check you internet connection and try again.",
+      });
       setOpenDeleteDialog(false);
       setDeleteLoading(false);
     }

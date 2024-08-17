@@ -131,9 +131,13 @@ const Productions = () => {
             (production) => production._id !== selectedProduction._id
           );
         });
+      } else {
+        ToasterError();
       }
     } catch (error) {
-      ToasterError();
+      ToasterError({
+        description: "Please check you internet connection and try again.",
+      });
     } finally {
       setDeleteLoading(false);
     }

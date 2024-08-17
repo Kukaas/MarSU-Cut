@@ -27,7 +27,7 @@ const DashProductions = () => {
         <meta name="description" content="" />
       </Helmet>
       <Productions />
-      <Toaster position="top-right" richColors closeButton/>
+      <Toaster position="top-center" richColors closeButton />
     </div>
   );
 };
