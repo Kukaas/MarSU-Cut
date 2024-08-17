@@ -26,7 +26,6 @@ import {
 
 //Libraries
 import axios from "axios";
-import { SHA256 } from "crypto-js";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -51,8 +50,16 @@ const RequestResetPassword = () => {
 
   // Handle send OTP
   const handleSendOTP = async (values) => {
-    // Hash email
-    const hashedEmail = SHA256(values.email).toString();
+    const generateRandomToken = (length) => {
+      let result = "";
+      while (result.length < length) {
+        result += Math.random().toString(36).substring(2); // Concatenate random strings
+      }
+      return result.substring(0, length); // Truncate to the desired length
+    };
+
+    const token = generateRandomToken(50);
+
     if (!values.email) return toast.error("Email is required");
 
     try {
@@ -72,7 +79,9 @@ const RequestResetPassword = () => {
           pauseOnHover: false,
           showProgress: true,
         });
-        navigate(`/otp-verification/${hashedEmail}`);
+        navigate(`/otp-verification/${token}`, {
+          replace: true,
+        });
       } else {
         setLoading(false);
         toast.error("Email is not registered", {

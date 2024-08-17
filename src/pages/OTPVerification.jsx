@@ -25,7 +25,6 @@ import {
 // Libraries
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { SHA256 } from "crypto-js";
 import { useForm } from "react-hook-form";
 import { OTPVerificationSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -40,7 +39,6 @@ const OTPVerification = () => {
   const [resendLoading, setResendLoading] = useState(false);
   const [countdown, setCountdown] = useState(60);
   const { currentEmail } = useSelector((state) => state.forgotPasword);
-  const hashedEmail = SHA256(currentEmail).toString();
 
   // Redirect to forgot password page if email is not available
   useEffect(() => {
@@ -138,6 +136,16 @@ const OTPVerification = () => {
 
   // Handle OTP verification
   const handleSubmitOTP = async (values) => {
+    const generateRandomToken = (length) => {
+      let result = "";
+      while (result.length < length) {
+        result += Math.random().toString(36).substring(2); // Concatenate random strings
+      }
+      return result.substring(0, length); // Truncate to the desired length
+    };
+
+    const token = generateRandomToken(50);
+
     try {
       setLoading(true);
       if (!values.otp) {
@@ -158,7 +166,9 @@ const OTPVerification = () => {
         setLoading(false);
         dispatch(forgotPasswordSuccess(currentEmail));
         toast.success("OTP verified successfully");
-        navigate(`/reset-password/${hashedEmail}`);
+        navigate(`/reset-password/${token}`, {
+          replace: true,
+        });
       } else {
         setLoading(false);
         toast.error(res.data.message);

@@ -44,7 +44,7 @@ const DashboardWrapper = () => {
 };
 
 const App = () => {
-  const {currentUser} = useSelector((state) => state.user);
+  const { currentUser } = useSelector((state) => state.user);
   return (
     <BrowserRouter>
       <Header />
@@ -54,8 +54,14 @@ const App = () => {
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/forgot-password" element={<RequestResetPassword />} />
-        <Route path="/otp-verification/:hashedEmail" element={<OTPVerification />} />
-        <Route path="/reset-password/:hashedEmail" element={<ResetPassword />} />
+        <Route
+          path="/otp-verification/:randomToken"
+          element={<OTPVerification />}
+        />
+        <Route
+          path="/reset-password/:randomToken"
+          element={<ResetPassword />}
+        />
 
         {/* Private Routes */}
         <Route element={<PrivateRoute />}>
