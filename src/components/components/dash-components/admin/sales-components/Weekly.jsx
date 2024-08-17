@@ -3,6 +3,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { BASE_URL } from "@/lib/api";
 import { token } from "@/lib/token";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -11,54 +12,53 @@ import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 const Weekly = () => {
   const [comparisonData, setComparisonData] = useState([]);
 
-  const fetchSalesbyWeek = async () => {
-    try {
-      const res = await axios.get(
-        "https://marsu.cut.server.kukaas.tech/api/v1/sales-report/sales-by-week",
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        }
-      );
-
-      const weeklySales = res.data.weeklySales;
-
-      if (res.status === 200) {
-        const transformedData = Object.keys(weeklySales).map((week) => ({
-          week,
-          ...weeklySales[week],
-        }));
-        setComparisonData(transformedData);
-
-        // Prepare comparison data
-        const currentWeek = transformedData[transformedData.length - 1];
-        const previousWeek = transformedData[transformedData.length - 2];
-
-        if (currentWeek && previousWeek) {
-          setComparisonData([
-            {
-              week: previousWeek.week,
-              totalRevenue: previousWeek.totalRevenue,
-              totalOrders: previousWeek.totalOrders,
-            },
-            {
-              week: currentWeek.week,
-              totalRevenue: currentWeek.totalRevenue,
-              totalOrders: currentWeek.totalOrders,
-            },
-          ]);
-        }
-      }
-    } catch (error) {
-      console.error(error);
-      setComparisonData([]);
-    }
-  };
-
   useEffect(() => {
+    const fetchSalesbyWeek = async () => {
+      try {
+        const res = await axios.get(
+          `${BASE_URL}/api/v1/sales-report/sales-by-week`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
+        );
+
+        const weeklySales = res.data.weeklySales;
+
+        if (res.status === 200) {
+          const transformedData = Object.keys(weeklySales).map((week) => ({
+            week,
+            ...weeklySales[week],
+          }));
+          setComparisonData(transformedData);
+
+          // Prepare comparison data
+          const currentWeek = transformedData[transformedData.length - 1];
+          const previousWeek = transformedData[transformedData.length - 2];
+
+          if (currentWeek && previousWeek) {
+            setComparisonData([
+              {
+                week: previousWeek.week,
+                totalRevenue: previousWeek.totalRevenue,
+                totalOrders: previousWeek.totalOrders,
+              },
+              {
+                week: currentWeek.week,
+                totalRevenue: currentWeek.totalRevenue,
+                totalOrders: currentWeek.totalOrders,
+              },
+            ]);
+          }
+        }
+      } catch (error) {
+        console.error(error);
+        setComparisonData([]);
+      }
+    };
     fetchSalesbyWeek();
   }, []);
 

@@ -10,35 +10,35 @@ import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { token } from "@/lib/token";
+import { BASE_URL } from "@/lib/api";
 
 const Overview = () => {
   const [overview, setOverview] = useState([]);
 
-  const fetchSalesOverView = async () => {
-    try {
-      const res = await axios.get(
-        "https://marsu.cut.server.kukaas.tech/api/v1/sales-report/overview",
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        }
-      );
-
-      const data = res.data.data;
-
-      if (res.status === 200) {
-        setOverview(data);
-      }
-    } catch (error) {
-      console.log(error);
-      return [];
-    }
-  };
-
   useEffect(() => {
+    const fetchSalesOverView = async () => {
+      try {
+        const res = await axios.get(
+          `${BASE_URL}/api/v1/sales-report/overview`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
+        );
+
+        const data = res.data.data;
+
+        if (res.status === 200) {
+          setOverview(data);
+        }
+      } catch (error) {
+        console.log(error);
+        return [];
+      }
+    };
     fetchSalesOverView();
   }, []);
 

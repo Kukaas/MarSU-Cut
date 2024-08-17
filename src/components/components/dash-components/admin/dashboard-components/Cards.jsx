@@ -16,6 +16,7 @@ import CardLoading from "./loading-components/CardLoading";
 import Overview from "./Overview";
 import RecentSales from "./RecentSales";
 import { token } from "@/lib/token";
+import { BASE_URL } from "@/lib/api";
 
 const Cards = () => {
   const [loading, setLoading] = useState(true);
@@ -35,308 +36,254 @@ const Cards = () => {
   });
   const [totalRevenue, setTotalRevenue] = useState(0);
 
-  useEffect(() => {
-    const fetchOrdersThisMonth = async () => {
-      try {
-        const res = await axios.get(
-          "https://marsu.cut.server.kukaas.tech/api/v1/order/this-month",
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-          }
-        );
+  const fetchOrdersThisMonth = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/api/v1/order/this-month`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      });
 
-        const data = res.data.orders;
-        if (res.status === 200) {
-          setOrdersThisMonth(data);
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error(error);
+      const data = res.data.orders;
+      if (res.status === 200) {
+        setOrdersThisMonth(data);
         setLoading(false);
-        return [];
       }
-    };
-    fetchOrdersThisMonth();
-  }, []);
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+      return [];
+    }
+  };
+
+  const fetchOrdersLastMonth = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/api/v1/order/last-month`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      });
+
+      const data = res.data.orders;
+      if (res.status === 200) {
+        setOrdersLastMonth(data);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+      return [];
+    }
+  };
+
+  const fetchTotalOrdersThisYear = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/api/v1/order/this-year`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      });
+
+      const data = res.data.orders;
+      if (res.status === 200) {
+        setTotalOrdersThisYear(data);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+      return [];
+    }
+  };
+
+  const fetchTotalRentalsThisYear = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/api/v1/rental/total/this-year`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      });
+
+      const data = res.data.rentals;
+      if (res.status === 200) {
+        setTotalRentalsThisYear(data);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+      return [];
+    }
+  };
+
+  const fetchRentalsLastYear = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/api/v1/rental/total/last-year`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      });
+
+      const data = res.data.rentals;
+      if (res.status === 200) {
+        setTotalRentalsLastYear(data);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+      return [];
+    }
+  };
+
+  const fetchTotalProductionsThisYear = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/api/v1/production/this-year`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      });
+
+      const data = res.data.totalQuantity;
+      if (res.status === 200) {
+        setTotalProductionsThisYear(data);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
+  };
+
+  const fetchTotalProductionsThisMonth = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/api/v1/production/this-month`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      });
+
+      const data = res.data.totalQuantity;
+      if (res.status === 200) {
+        setTotalProductionsThisMonth(data);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
+  };
+
+  const fetchTotalProductionsLastMonth = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/api/v1/production/last-month`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      });
+
+      const data = res.data.totalQuantity;
+      if (res.status === 200) {
+        setTotalProductionsLastMonth(data);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
+  };
+
+  const fetchTotalRevenueThisYear = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/api/v1/sales-report/this-year`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      });
+
+      const data = res.data.totalRevenue;
+      if (res.status === 200) {
+        setTotalRevenue(data);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
+  };
+
+  const fetchSalesPerformance = async () => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}/api/v1/sales-report/sales-performance`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+
+      if (res.status === 200 && res.data.success) {
+        const {
+          performance,
+          previousYearPerformance,
+          revenueDifference,
+          performanceStatus,
+        } = res.data;
+        const { totalRevenue } = performance;
+        const { totalRevenue: previousTotalRevenue } = previousYearPerformance;
+
+        let percentageDifference = null;
+        if (previousTotalRevenue > 0) {
+          percentageDifference =
+            ((totalRevenue - previousTotalRevenue) / previousTotalRevenue) *
+            100;
+        }
+
+        setSalesPerformance({
+          totalRevenue,
+          revenueDifference,
+          performanceStatus,
+          percentageDifference,
+        });
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
-    const fetchOrdersLastMonth = async () => {
-      try {
-        const res = await axios.get(
-          "https://marsu.cut.server.kukaas.tech/api/v1/order/last-month",
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-          }
-        );
-
-        const data = res.data.orders;
-        if (res.status === 200) {
-          setOrdersLastMonth(data);
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error(error);
-        setLoading(false);
-        return [];
-      }
-    };
-
-    fetchOrdersLastMonth();
-  }, []);
-
-  useEffect(() => {
-    const fetchTotalOrdersThisYear = async () => {
-      try {
-        const res = await axios.get(
-          "https://marsu.cut.server.kukaas.tech/api/v1/order/this-year",
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-          }
-        );
-
-        const data = res.data.orders;
-        if (res.status === 200) {
-          setTotalOrdersThisYear(data);
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error(error);
-        setLoading(false);
-        return [];
-      }
-    };
-
     fetchTotalOrdersThisYear();
-  }, []);
-
-  useEffect(() => {
-    const fetchTotalRentalsThisYear = async () => {
-      try {
-        const res = await axios.get(
-          "https://marsu.cut.server.kukaas.tech/api/v1/rental/total/this-year",
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-          }
-        );
-
-        const data = res.data.rentals;
-        if (res.status === 200) {
-          setTotalRentalsThisYear(data);
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error(error);
-        setLoading(false);
-        return [];
-      }
-    };
-
+    fetchOrdersLastMonth();
+    fetchOrdersThisMonth();
     fetchTotalRentalsThisYear();
-  }, []);
-
-  useEffect(() => {
-    const fetchRentalsLastYear = async () => {
-      try {
-        const res = await axios.get(
-          "https://marsu.cut.server.kukaas.tech/api/v1/rental/total/last-year",
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-          }
-        );
-
-        const data = res.data.rentals;
-        if (res.status === 200) {
-          setTotalRentalsLastYear(data);
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error(error);
-        setLoading(false);
-        return [];
-      }
-    };
-
     fetchRentalsLastYear();
-  }, []);
-
-  useEffect(() => {
-    const fetchTotalProductionsThisYear = async () => {
-      try {
-        const res = await axios.get(
-          "https://marsu.cut.server.kukaas.tech/api/v1/production/this-year",
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-          }
-        );
-
-        const data = res.data.totalQuantity;
-        if (res.status === 200) {
-          setTotalProductionsThisYear(data);
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error(error);
-        setLoading(false);
-      }
-    };
-
     fetchTotalProductionsThisYear();
-  }, []);
-
-  useEffect(() => {
-    const fetchTotalProductionsThisMonth = async () => {
-      try {
-        const res = await axios.get(
-          "https://marsu.cut.server.kukaas.tech/api/v1/production/this-month",
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-          }
-        );
-
-        const data = res.data.totalQuantity;
-        if (res.status === 200) {
-          setTotalProductionsThisMonth(data);
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error(error);
-        setLoading(false);
-      }
-    };
-
     fetchTotalProductionsThisMonth();
-  }, []);
-
-  useEffect(() => {
-    const fetchTotalProductionsLastMonth = async () => {
-      try {
-        const res = await axios.get(
-          "https://marsu.cut.server.kukaas.tech/api/v1/production/last-month",
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-          }
-        );
-
-        const data = res.data.totalQuantity;
-        if (res.status === 200) {
-          setTotalProductionsLastMonth(data);
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error(error);
-        setLoading(false);
-      }
-    };
-
     fetchTotalProductionsLastMonth();
-  }, []);
-
-  useEffect(() => {
-    const fetchTotalRevenueThisYear = async () => {
-      try {
-        const res = await axios.get(
-          "https://marsu.cut.server.kukaas.tech/api/v1/sales-report/this-year",
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-          }
-        );
-
-        const data = res.data.totalRevenue;
-        if (res.status === 200) {
-          setTotalRevenue(data);
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error(error);
-        setLoading(false);
-      }
-    };
-
     fetchTotalRevenueThisYear();
-  }, []);
-
-  useEffect(() => {
-    const fetchSalesPerformance = async () => {
-      try {
-        const res = await axios.get(
-          "https://marsu.cut.server.kukaas.tech/api/v1/sales-report/sales-performance",
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-          }
-        );
-
-        if (res.status === 200 && res.data.success) {
-          const {
-            performance,
-            previousYearPerformance,
-            revenueDifference,
-            performanceStatus,
-          } = res.data;
-          const { totalRevenue } = performance;
-          const { totalRevenue: previousTotalRevenue } =
-            previousYearPerformance;
-
-          let percentageDifference = null;
-          if (previousTotalRevenue > 0) {
-            percentageDifference =
-              ((totalRevenue - previousTotalRevenue) / previousTotalRevenue) *
-              100;
-          }
-
-          setSalesPerformance({
-            totalRevenue,
-            revenueDifference,
-            performanceStatus,
-            percentageDifference,
-          });
-          setLoading(false);
-        }
-      } catch (error) {
-        setLoading(false);
-        console.error(error);
-      }
-    };
-
     fetchSalesPerformance();
   }, []);
 

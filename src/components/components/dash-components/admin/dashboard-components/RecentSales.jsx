@@ -24,6 +24,7 @@ import axios from "axios";
 
 import TableLoading from "./loading-components/TableLoading";
 import { token } from "@/lib/token";
+import { BASE_URL } from "@/lib/api";
 
 const RecentSales = () => {
   const [recentOrders, setRecentOrders] = useState([]);
@@ -34,32 +35,28 @@ const RecentSales = () => {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
 
-  const fetchRencentOrders = async () => {
-    try {
-      const res = await axios.get(
-        "https://marsu.cut.server.kukaas.tech/api/v1/order/recent",
-        {
+  useEffect(() => {
+    const fetchRencentOrders = async () => {
+      try {
+        const res = await axios.get(`${BASE_URL}/api/v1/order/recent`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
           withCredentials: true,
+        });
+
+        const data = res.data.orders;
+        if (res.status === 200) {
+          setRecentOrders(data);
+          setLoading(false);
         }
-      );
-
-      const data = res.data.orders;
-      if (res.status === 200) {
-        setRecentOrders(data);
+      } catch (error) {
+        console.error(error);
         setLoading(false);
+        return [];
       }
-    } catch (error) {
-      console.error(error);
-      setLoading(false);
-      return [];
-    }
-  };
-
-  useEffect(() => {
+    };
     fetchRencentOrders();
   }, []);
 

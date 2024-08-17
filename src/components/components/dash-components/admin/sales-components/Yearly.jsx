@@ -3,6 +3,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { BASE_URL } from "@/lib/api";
 import { token } from "@/lib/token";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -14,7 +15,7 @@ const Yearly = () => {
   const fetchSalesbyYear = async () => {
     try {
       const res = await axios.get(
-        "https://marsu.cut.server.kukaas.tech/api/v1/sales-report/sales-by-year",
+        `${BASE_URL}/api/v1/sales-report/sales-by-year`,
         {
           headers: {
             "Content-Type": "application/json",
