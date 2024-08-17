@@ -54,7 +54,7 @@ const EditRawMaterial = ({ selectedRawMaterial }) => {
 
       if (res.status === 200) {
         setEditRawMaterialLoading(false);
-        toast.success("Raw material updated", {});
+        toast.success("Raw material updated");
         editRawMaterialForm.reset();
       }
     } catch (error) {

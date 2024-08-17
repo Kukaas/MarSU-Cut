@@ -71,6 +71,7 @@ import DownloadButton from "./DownloadButton";
 import CreateAccomplishment from "../../../forms/CreateAccomplishment";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
+import ToasterError from "@/lib/Toaster";
 
 const AccomplishmentReport = () => {
   const [data, setData] = useState([]);
@@ -190,7 +191,7 @@ const AccomplishmentReport = () => {
       if (res.status === 200) {
         setIsDialogOpen(false);
         setUpdateLoading(false);
-        toast.success("Accomplishment report updated successfully!", {});
+        toast.success("Accomplishment report updated successfully!");
         setData((prevData) => {
           return prevData.map((item) => {
             if (item._id === selectedAccomplishment._id) {
@@ -201,11 +202,13 @@ const AccomplishmentReport = () => {
         });
         form.reset();
       } else {
-        toast.error("Uh oh! Something went wrong");
+        ToasterError();
         setUpdateLoading(false);
       }
     } catch (error) {
-      toast.error("Uh oh! Something went wrong");
+      ToasterError({
+        description: "Please check you internet connection and try again.",
+      });
       setUpdateLoading(false);
     }
   };
@@ -227,19 +230,20 @@ const AccomplishmentReport = () => {
       if (res.status === 200) {
         setLoadingDelete(false);
         toast.success(
-          `Accomplishment with ID ${accomplishment._id} is deleted successfully!`,
-          {}
+          `Accomplishment with ID ${accomplishment._id} is deleted successfully!`
         );
         setData((prevData) => {
           return prevData.filter((item) => item._id !== accomplishment._id);
         });
       } else {
         setLoadingDelete(false);
-        toast.error("uh oh! Something went wrong.");
+        ToasterError();
       }
     } catch (error) {
       setLoadingDelete(false);
-      toast.error("uh oh! Something went wrong.");
+      ToasterError({
+        description: "Please check you internet connection and try again.",
+      });
     }
   };
 

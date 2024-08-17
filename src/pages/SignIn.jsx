@@ -27,6 +27,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginSchema } from "@/schema/shema";
 import { useForm } from "react-hook-form";
 import { BASE_URL } from "@/lib/api";
+import ToasterError from "@/lib/Toaster";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -60,7 +61,9 @@ const SignIn = () => {
   // Handle login
   const handleLogin = async (values) => {
     if (!values.email || !values.password) {
-      toast.error("Please fill all the fields");
+      toast.error("Please fill all the fields", {
+        description: "All fields are required",
+      });
       return;
     }
     try {
@@ -111,6 +114,9 @@ const SignIn = () => {
               "The server took too long to respond. Please try again later."
           )
         );
+        ToasterError({
+          description: "Please check your internet connection and try again.",
+        });
       }
     }
   };
@@ -215,7 +221,7 @@ const SignIn = () => {
           </div>
         </div>
       </div>
-      <Toaster position="top-right" closeButton richColors />
+      <Toaster position="top-center" closeButton richColors />
     </div>
   );
 };

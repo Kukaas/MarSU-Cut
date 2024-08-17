@@ -101,8 +101,7 @@ function ArchiveOrders() {
       if (res.status === 200) {
         setLoadingUpdate(false);
         toast.success(
-          `Order of ${order.studentName} is unarchived successfully!`,
-          {}
+          `Order of ${order.studentName} is unarchived successfully!`
         );
 
         setData((prevData) => {
@@ -113,10 +112,10 @@ function ArchiveOrders() {
         setLoadingUpdate(false);
       }
     } catch (error) {
-      {
-        ToasterError();
-        setLoadingUpdate(false);
-      }
+      ToasterError({
+        description: "Please check you internet connection and try again.",
+      });
+      setLoadingUpdate(false);
     }
   };
 
@@ -149,7 +148,9 @@ function ArchiveOrders() {
       }
     } catch (error) {
       setLoadingUpdate(false);
-      ToasterError();
+      ToasterError({
+        description: "Please check you internet connection and try again.",
+      });
     }
   };
 

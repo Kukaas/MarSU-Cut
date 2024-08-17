@@ -27,7 +27,7 @@ const DashRawMaterials = () => {
         <meta name="description" content="" />
       </Helmet>
       <RawMaterials />
-      <Toaster position="top-right" richColors closeButton/>
+      <Toaster position="top-center" richColors closeButton />
     </div>
   );
 };

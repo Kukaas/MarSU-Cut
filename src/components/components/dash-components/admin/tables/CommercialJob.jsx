@@ -105,13 +105,16 @@ const CommercialJob = () => {
         );
         setData(updatedData);
         toast.success(
-          `Commercial job order of ${commercial.cbName} has been approved.`,
-          {}
+          `Commercial job order of ${commercial.cbName} has been approved.`
         );
+      } else {
+        ToasterError();
       }
     } catch (error) {
       setLoadingUpdate(false);
-      ToasterError();
+      ToasterError({
+        description: "Please check you internet connection and try again.",
+      });
     }
   };
 
@@ -134,12 +137,15 @@ const CommercialJob = () => {
         setData(updatedData);
         setLoadingUpdate(false);
         toast.success(
-          `Commercial job order of ${commercial.cbName} has been deleted.`,
-          {}
+          `Commercial job order of ${commercial.cbName} has been deleted.`
         );
+      } else {
+        ToasterError();
       }
     } catch (error) {
-      ToasterError();
+      ToasterError({
+        description: "Please check you internet connection and try again.",
+      });
       setLoadingUpdate(false);
     }
   };

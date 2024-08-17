@@ -27,7 +27,7 @@ const DashOrderAdmin = () => {
         <meta name="description" content="" />
       </Helmet>
       <Orders />
-      <Toaster position="top-right" richColors closeButton/>
+      <Toaster position="top-center" richColors closeButton />
     </div>
   );
 };

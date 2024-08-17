@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import { Tooltip } from "antd";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
+import ToasterError from "@/lib/Toaster";
 
 const Notification = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -84,7 +85,9 @@ const Notification = () => {
         toast.error("Failed to mark notification as read.");
       }
     } catch (error) {
-      toast.error("Failed to mark notification as read.");
+      ToasterError({
+        description: "Please check your internet connection and try again.",
+      });
     }
   };
 
@@ -112,10 +115,12 @@ const Notification = () => {
         );
         setReadNotifications(updatedReadNotifications);
       } else {
-        toast.error("Failed to delete notification.", {});
+        toast.error("Failed to delete notification.");
       }
     } catch (error) {
-      toast.error("Failed to delete notification.", {});
+      ToasterError({
+        description: "Please check your internet connection and try again.",
+      });
     }
   };
 
@@ -145,7 +150,9 @@ const Notification = () => {
         setLoading(false);
       }
     } catch (error) {
-      toast.error("Failed to mark all notifications as read.");
+      ToasterError({
+        description: "Please check your internet connection and try again.",
+      });
       setLoading(false);
     }
   };
@@ -176,7 +183,9 @@ const Notification = () => {
       }
     } catch (error) {
       setLoading(false);
-      toast.error("Failed to delete all notifications.");
+      ToasterError({
+        description: "Please check your internet connection and try again.",
+      });
     }
   };
 

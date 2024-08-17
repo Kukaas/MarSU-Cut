@@ -118,7 +118,9 @@ function Orders() {
         ToasterError();
       }
     } catch (error) {
-      ToasterError();
+      ToasterError({
+        description: "Please check you internet connection and try again.",
+      });
     } finally {
       setLoadingUpdate(false);
     }
@@ -141,9 +143,7 @@ function Orders() {
 
       if (res.status === 200) {
         setLoadingUpdate(false);
-        toast.success(`Order of ${order.studentName} is ready to be claimed!`, {
-          action: { label: "Ok" },
-        });
+        toast.success(`Order of ${order.studentName} is ready to be claimed!`);
         setData((prevData) =>
           prevData.map((item) =>
             item._id === order._id ? { ...item, status: "DONE" } : item
@@ -154,7 +154,9 @@ function Orders() {
         ToasterError();
       }
     } catch (error) {
-      ToasterError();
+      ToasterError({
+        description: "Please check you internet connection and try again.",
+      });
     } finally {
       setLoadingUpdate(false);
     }
@@ -177,9 +179,7 @@ function Orders() {
 
       if (res.status === 200) {
         setLoadingUpdate(false);
-        toast.success(`Order of ${order.studentName} is claimed!`, {
-          action: { label: "Ok" },
-        });
+        toast.success(`Order of ${order.studentName} is claimed!`);
         setData((prevData) =>
           prevData.map((item) =>
             item._id === order._id ? { ...item, status: "CLAIMED" } : item
@@ -190,7 +190,9 @@ function Orders() {
         ToasterError();
       }
     } catch (error) {
-      ToasterError();
+      ToasterError({
+        description: "Please check you internet connection and try again.",
+      });
     } finally {
       setLoadingUpdate(false);
     }
@@ -223,7 +225,9 @@ function Orders() {
       }
     } catch (error) {
       setLoadingUpdate(false);
-      ToasterError();
+      ToasterError({
+        description: "Please check you internet connection and try again.",
+      });
     } finally {
       setLoadingUpdate(false);
     }
@@ -253,7 +257,9 @@ function Orders() {
         ToasterError();
       }
     } catch (error) {
-      ToasterError();
+      ToasterError({
+        description: "Please check you internet connection and try again.",
+      });
       setLoadingUpdate(false);
     } finally {
       setLoadingUpdate(false);

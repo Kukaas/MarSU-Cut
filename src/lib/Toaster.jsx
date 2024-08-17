@@ -1,10 +1,8 @@
 import { toast } from "sonner";
 
-const ToasterError = () => {
+const ToasterError = ({ description }) => {
   toast.error("Uh oh! Something went wrong", {
-    action: {
-      label: "Ok",
-    },
+    description: description,
   });
 };
 

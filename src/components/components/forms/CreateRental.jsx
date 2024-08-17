@@ -84,9 +84,6 @@ const CreateRental = () => {
         form.reset();
         toast.success("Rental submitted successfully!", {
           description: "Wait for the admin to approve you rental",
-          action: {
-            label: "Ok",
-          },
         });
       }
     } catch (error) {

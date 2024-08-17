@@ -25,6 +25,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet";
 import { BASE_URL } from "@/lib/api";
+import ToasterError from "@/lib/Toaster";
 
 const SignUp = () => {
   const [loading, setLoading] = useState(false);
@@ -62,11 +63,6 @@ const SignUp = () => {
 
   // Handle register
   const handleRegister = async (values) => {
-    if (values.email && values.email.includes(" ")) {
-      toast.error("Email cannot contain spaces");
-      return;
-    }
-
     if (values.password && values.password.includes(" ")) {
       toast.error("Password cannot contain spaces");
       return;
@@ -77,27 +73,15 @@ const SignUp = () => {
       return;
     }
 
-    setLoading(true);
-
-    if (
-      !values.name ||
-      !values.email ||
-      !values.password ||
-      !values.confirmPassword
-    ) {
-      toast.error("Please fill out all fields");
-      setLoading(false);
-      return;
-    }
-
     if (values.password !== values.confirmPassword) {
       toast.error("Passwords do not match", {
-        description: "Please make sure your passwords match.",
+        description:
+          "Please make sure your password and confirm password match.",
       });
-      setLoading(false);
       return;
     }
     try {
+      setLoading(true);
       const res = await axios.post(`${BASE_URL}/api/v1/auth/sign-up`, values, {
         headers: { "Content-Type": "application/json" },
       });
@@ -124,8 +108,8 @@ const SignUp = () => {
         });
       } else {
         setLoading(false);
-        toast.error("Something went wrong. Please try again later.", {
-          description: "Please try again later.",
+        ToasterError({
+          description: "Please check your internet connection and try again.",
         });
       }
     } finally {
@@ -264,7 +248,7 @@ const SignUp = () => {
           </div>
         </div>
       </div>
-      <Toaster position="top-right" closeButton richColors />
+      <Toaster position="top-center" closeButton richColors />
     </div>
   );
 };

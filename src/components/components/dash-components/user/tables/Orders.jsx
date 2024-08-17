@@ -44,6 +44,7 @@ import CreateOrder from "../../../forms/CreateOrder";
 import { toast } from "sonner";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
+import ToasterError from "@/lib/Toaster";
 
 function Orders() {
   const [data, setData] = useState([]);
@@ -55,10 +56,6 @@ function Orders() {
   const [rowSelection, setRowSelection] = useState({});
   const [currentPage, setCurrentPage] = useState(0);
   const { currentUser } = useSelector((state) => state.user);
-
-  const toastError = () => {
-    toast.error("Uh oh! Something went wrong.");
-  };
 
   // Fetch the data
   useEffect(() => {
@@ -103,7 +100,7 @@ function Orders() {
 
       if (res.status === 200) {
         setLoadingDelete(false);
-        toast.success(`The order with ID ${order._id} has been deleted.`, {});
+        toast.success(`The order with ID ${order._id} has been deleted.`);
 
         // Update the data in the state
         setData((prevData) => {
@@ -111,11 +108,11 @@ function Orders() {
         });
       } else {
         setLoadingDelete(false);
-        toastError();
+        ToasterError();
       }
     } catch (error) {
       setLoadingDelete(false);
-      toastError();
+      ToasterError();
     }
   };
 

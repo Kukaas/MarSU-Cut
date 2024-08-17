@@ -401,7 +401,7 @@ const DashProfile = () => {
           </Form>
         </div>
       )}
-      <Toaster richColors position="top-right" closeButton />
+      <Toaster richColors position="top-center" closeButton />
     </div>
   );
 };
