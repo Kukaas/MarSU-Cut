@@ -226,6 +226,7 @@ const Notification = () => {
             className="mt-5"
             onClick={handleMarkAllNotificationsAsRead}
             unreadNotification={unreadNotifications}
+            disabled={loading}
           >
             {loading ? (
               <div className="flex items-center">
@@ -277,6 +278,7 @@ const Notification = () => {
             className="mt-5"
             variant="destructive"
             onClick={handleDeleteAllNotification}
+            disabled={loading}
           >
             {loading ? (
               <div className="flex items-center">

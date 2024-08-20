@@ -319,7 +319,7 @@ function Rentals() {
             }
             className="max-w-sm"
           />
-          <Tooltip title="Create Rentals">
+          <Tooltip title="Create an Order">
             <Dialog>
               <DialogTrigger asChild>
                 <Button variant="default" className="m-2">
@@ -327,9 +327,9 @@ function Rentals() {
                   Create
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
+              <DialogContent className="sm:max-w-[425px] overflow-auto">
                 <DialogHeader>
-                  <DialogTitle>Create a Rental</DialogTitle>
+                  <DialogTitle>Create a rental</DialogTitle>
                   <DialogDescription>
                     Click submit when you&apos;re done.
                   </DialogDescription>

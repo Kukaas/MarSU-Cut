@@ -49,6 +49,7 @@ import ToasterError from "@/lib/Toaster";
 function Orders() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
@@ -116,6 +117,11 @@ function Orders() {
         description: "Please check your internet connection and try again.",
       });
     }
+  };
+
+  const addNewOrder = (newOrder) => {
+    setData((prevData) => [newOrder, ...prevData]);
+    setIsDialogOpen(false);
   };
 
   const columns = [
@@ -339,6 +345,7 @@ function Orders() {
           style={{
             fontSize: 48,
           }}
+          x
         />
       }
     >
@@ -358,7 +365,7 @@ function Orders() {
             className="max-w-sm"
           />
           <Tooltip title="Create an Order">
-            <Dialog>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
                 <Button variant="default" className="m-2">
                   <PlusCircle size={20} className="mr-2" />
@@ -372,7 +379,7 @@ function Orders() {
                     Click submit when you&apos;re done.
                   </DialogDescription>
                 </DialogHeader>
-                <CreateOrder />
+                <CreateOrder addNewOrder={addNewOrder} />
               </DialogContent>
             </Dialog>
           </Tooltip>
