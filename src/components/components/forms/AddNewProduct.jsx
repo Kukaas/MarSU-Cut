@@ -66,7 +66,9 @@ const AddNewProduct = () => {
       }
     } catch (error) {
       console.log(error);
-      ToasterError();
+      ToasterError({
+        description: "Please check your internet connection and try again.",
+      });
     }
   };
 

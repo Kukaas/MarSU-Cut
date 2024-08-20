@@ -44,6 +44,7 @@ import CreateCommercialOrder from "@/components/components/forms/CreateCommercia
 import { toast } from "sonner";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
+import ToasterError from "@/lib/Toaster";
 
 const CommercialJob = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -105,7 +106,9 @@ const CommercialJob = () => {
         );
       }
     } catch (error) {
-      toast.error("Uh oh! Something went wrong");
+      ToasterError({
+        description: "Please check your internet connection and try again.",
+      });
     }
   };
 

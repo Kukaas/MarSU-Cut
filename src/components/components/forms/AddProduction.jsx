@@ -82,7 +82,9 @@ const AddProduction = () => {
       }
     } catch (error) {
       setAddProductionLoading(false);
-      ToasterError();
+      ToasterError({
+        description: "Please check your internet connection and try again.",
+      });
     }
   };
 

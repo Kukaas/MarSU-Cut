@@ -112,7 +112,9 @@ function Orders() {
       }
     } catch (error) {
       setLoadingDelete(false);
-      ToasterError();
+      ToasterError({
+        description: "Please check your internet connection and try again.",
+      });
     }
   };
 

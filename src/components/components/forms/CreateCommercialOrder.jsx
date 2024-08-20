@@ -57,7 +57,9 @@ const CreateCommercialOrder = () => {
         commercialJobForm.reset();
       }
     } catch (error) {
-      ToasterError();
+      ToasterError({
+        description: "Please check your internet connection and try again.",
+      });
     }
   };
 

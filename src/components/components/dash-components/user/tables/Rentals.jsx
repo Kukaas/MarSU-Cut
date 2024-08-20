@@ -124,7 +124,9 @@ function Rentals() {
         setLoadingDelete(false);
       }
     } catch (error) {
-      ToasterError();
+      ToasterError({
+        description: "Please check your internet connection and try again.",
+      });
       setLoadingDelete(false);
     }
   };

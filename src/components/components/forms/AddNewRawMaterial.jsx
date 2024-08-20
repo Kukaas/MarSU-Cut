@@ -57,7 +57,9 @@ const AddNewRawMaterial = () => {
       }
     } catch (error) {
       setAddRawMaterialLoading(false);
-      ToasterError();
+      ToasterError({
+        description: "Please check your internet connection and try again.",
+      });
     }
   };
 

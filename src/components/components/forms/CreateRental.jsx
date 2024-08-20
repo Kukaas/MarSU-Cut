@@ -88,7 +88,9 @@ const CreateRental = () => {
       }
     } catch (error) {
       setLoading(false);
-      ToasterError();
+      ToasterError({
+        description: "Please check your internet connection and try again.",
+      });
     }
   };
 

@@ -414,7 +414,9 @@ const AddOrderItems = ({ selectedOrder }) => {
         description: "The items have been added to the order",
       });
     } else {
-      ToasterError();
+      ToasterError({
+        description: "Please check your internet connection and try again.",
+      });
     }
 
     setLoadingAddItems(false);
