@@ -18,7 +18,7 @@ import { Helmet } from "react-helmet";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-import { CustomCalendar } from "./CustomCalendar";
+import { CustomCalendar } from "../../CustomCalendar";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 
@@ -89,6 +89,12 @@ const DashSchedules = () => {
     setStudents([]);
   };
 
+  const formattedDate = new Date(selectedDate).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
   return (
     <div className="w-full p-5">
       <Typography.Title level={2} className="text-black dark:text-white">
@@ -113,7 +119,7 @@ const DashSchedules = () => {
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Schedule for {selectedDate}</DialogTitle>
+              <DialogTitle>Schedule for {formattedDate}</DialogTitle>
               <DialogDescription className="mt-3 dark:text-white text-black">
                 {students.length > 0 ? (
                   <ul>

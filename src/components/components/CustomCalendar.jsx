@@ -1,4 +1,3 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DayPicker } from "react-day-picker";
 import PropTypes from "prop-types";
 import { cn } from "@/lib/utils";
@@ -48,10 +47,6 @@ function CustomCalendar({
           "aria-selected:bg-accent aria-selected:text-accent-foreground",
         day_hidden: "invisible",
         ...classNames,
-      }}
-      components={{
-        IconLeft: ({ ...props }) => <ChevronLeft className="h-10 w-10" />,
-        IconRight: ({ ...props }) => <ChevronRight className="h-10 w-10" />,
       }}
       {...props}
     />
