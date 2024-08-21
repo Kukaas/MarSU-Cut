@@ -17,14 +17,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -42,16 +34,6 @@ import { Spin, Tooltip, Typography } from "antd";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-
-// tanstack
-import {
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
 
 // icons
 import { LoadingOutlined } from "@ant-design/icons";
@@ -72,6 +54,7 @@ import CreateAccomplishment from "../../../forms/CreateAccomplishment";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import ToasterError from "@/lib/Toaster";
+import CustomTable from "@/components/components/CustomTable";
 
 const AccomplishmentReport = () => {
   const [data, setData] = useState([]);
@@ -79,11 +62,6 @@ const AccomplishmentReport = () => {
   const [loading, setLoading] = useState(false);
   const [updateLoading, setUpdateLoading] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
-  const [sorting, setSorting] = useState([]);
-  const [columnFilters, setColumnFilters] = useState([]);
-  const [columnVisibility, setColumnVisibility] = useState({});
-  const [rowSelection, setRowSelection] = useState({});
-  const [currentPage, setCurrentPage] = useState(0);
   const [selectedAccomplishment, setSelectedAccomplishment] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const form = useForm();
@@ -335,40 +313,6 @@ const AccomplishmentReport = () => {
     },
   ];
 
-  const table = useReactTable({
-    data: filteredData,
-    columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-      pagination: {
-        pageIndex: currentPage,
-        pageSize: 5,
-      },
-    },
-  });
-
-  const handlePreviousPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 0));
-  };
-
-  const handleNextPage = () => {
-    setCurrentPage((prevPage) => {
-      const maxPage = table.getPageCount() - 1;
-      return Math.min(prevPage + 1, maxPage);
-    });
-  };
-
   return (
     <Spin
       spinning={loadingDelete}
@@ -485,77 +429,8 @@ const AccomplishmentReport = () => {
           {loading ? (
             <div className="p-4">Loading...</div>
           ) : (
-            <Table>
-              <TableHeader>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => (
-                      <TableHead key={header.id}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </TableHead>
-                    ))}
-                  </TableRow>
-                ))}
-              </TableHeader>
-              <TableBody>
-                {table.getRowModel().rows.length ? (
-                  table.getRowModel().rows.map((row) => (
-                    <TableRow
-                      key={row.id}
-                      data-state={row.getIsSelected() && "selected"}
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={table.getAllColumns().length}
-                      className="h-24 text-center"
-                    >
-                      No results.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
+            <CustomTable columns={columns} data={filteredData} />
           )}
-        </div>
-        <div className="flex items-center justify-end space-x-2 py-4">
-          <div className="flex-1 text-sm text-muted-foreground">
-            {table.getFilteredSelectedRowModel().rows.length} of{" "}
-            {table.getFilteredRowModel().rows.length} row(s) selected.
-          </div>
-          <div className="space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handlePreviousPage}
-              disabled={currentPage === 0}
-            >
-              Previous
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleNextPage}
-              disabled={currentPage >= table.getPageCount() - 1}
-            >
-              Next
-            </Button>
-          </div>
         </div>
       </div>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
