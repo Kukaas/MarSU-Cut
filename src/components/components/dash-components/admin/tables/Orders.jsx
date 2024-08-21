@@ -417,9 +417,13 @@ function Orders() {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(order._id)}
+                onClick={() => {
+                  navigate(`/dashboard?tab=order-details`, {
+                    state: { selectedOrder: order },
+                  });
+                }}
               >
-                Copy Order ID
+                View Order Details
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>

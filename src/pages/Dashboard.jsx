@@ -22,9 +22,12 @@ import Sidebar from "@/components/components/Sidebar";
 
 // Other Imports
 import { useEffect, useState } from "react";
+import OrderDetails from "@/components/components/dash-components/admin/OrderDetails";
+import { useParams } from "react-router-dom";
 
 const Dashboard = ({ tab }) => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const { id } = useParams();
 
   const renderContent = () => {
     switch (tab) {
@@ -64,6 +67,8 @@ const Dashboard = ({ tab }) => {
         return <DashCommercial />;
       case "productions":
         return <DashProductions />;
+      case "order-details":
+        return <OrderDetails orderId={id} />;
       default:
         return null;
     }

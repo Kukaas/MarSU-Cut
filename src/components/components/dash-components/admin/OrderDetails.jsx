@@ -1,0 +1,265 @@
+import { Typography } from "antd";
+import { Helmet } from "react-helmet";
+import { toast, Toaster } from "sonner";
+import { useLocation, useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { BASE_URL } from "@/lib/api";
+import { token } from "@/lib/token";
+
+const StatusBadge = ({ status }) => {
+  const statusStyles = {
+    APPROVED: {
+      color: "#2b4cbe",
+      badgeText: "Approved",
+    },
+    MEASURED: {
+      color: "#c09000",
+      badgeText: "Measured",
+    },
+    DONE: {
+      color: "#1d4ed8",
+      badgeText: "Done",
+    },
+    CLAIMED: {
+      color: "#16a34a",
+      badgeText: "Claimed",
+    },
+    PENDING: {
+      color: "#dc2626",
+      badgeText: "Pending",
+    },
+    default: {
+      color: "#6b7280",
+      badgeText: "Unknown",
+    },
+  };
+
+  const { color, badgeText } = statusStyles[status] || statusStyles.default;
+
+  return (
+    <div className="status-badge flex items-center gap-2">
+      <div
+        className="w-3 h-3 rounded-full"
+        style={{ backgroundColor: color }}
+      />
+      <p className="text-xs font-semibold" style={{ color }}>
+        {badgeText}
+      </p>
+    </div>
+  );
+};
+
+StatusBadge.propTypes = {
+  status: PropTypes.string.isRequired,
+};
+
+const OrderItems = ({ orderItems, finishedProducts }) => {
+  if (!Array.isArray(orderItems) || orderItems.length === 0) {
+    return <div className="text-gray-600">Not yet Measured</div>;
+  }
+
+  const productAvailability = finishedProducts.reduce((acc, product) => {
+    const key = `${product.productType}-${product.size}-${product.level}`;
+    if (!acc[key]) {
+      acc[key] = product.quantity;
+    }
+    return acc;
+  }, {});
+
+  const groupedItems = orderItems.reduce((acc, item) => {
+    const key = `${item.productType}-${item.size}-${item.level}`;
+    if (!acc[key]) {
+      acc[key] = { ...item, quantity: 0 };
+    }
+    acc[key].quantity += item.quantity;
+    return acc;
+  }, {});
+
+  const itemsToRender = Object.values(groupedItems);
+
+  return (
+    <div>
+      {itemsToRender.map((item, index) => {
+        // Check availability only if productType is not LOGO or NECKTIE
+        const availableQuantity =
+          item.productType === "LOGO" || item.productType === "NECKTIE"
+            ? null
+            : productAvailability[
+                `${item.productType}-${item.size}-${item.level}`
+              ] || 0;
+
+        const isAvailable =
+          item.productType === "LOGO" || item.productType === "NECKTIE"
+            ? true
+            : item.quantity <= availableQuantity;
+
+        return (
+          <div
+            key={index}
+            className={`flex flex-row items-center gap-2 ${
+              isAvailable === null
+                ? ""
+                : isAvailable
+                ? "text-green-600 text-xs"
+                : "text-red-600 text-xs"
+            }`}
+          >
+            {item.productType === "LOGO" || item.productType === "NECKTIE" ? (
+              <>
+                <span className="text-xs">{item.productType}</span> -{" "}
+                <span className="text-xs font-medium">{item.quantity}</span>
+              </>
+            ) : (
+              <>
+                <span className="text-xs font-medium">{item.level}:</span>{" "}
+                <span className="text-xs">{item.productType}</span> -{" "}
+                <span className="text-xs">{item.size}</span> -{" "}
+                <span className="text-xs font-medium">{item.quantity}</span> (
+                {isAvailable ? "Available" : "Not Available"})
+              </>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+OrderItems.propTypes = {
+  orderItems: PropTypes.array.isRequired,
+  finishedProducts: PropTypes.array.isRequired,
+};
+
+const OrderDetails = () => {
+  const [data, setData] = useState([]);
+  const location = useLocation();
+  const selectedOrder = location.state?.selectedOrder;
+  const navigate = useNavigate();
+
+  const totalPrice = selectedOrder.orderItems.reduce(
+    (acc, item) => acc + parseFloat(item.totalPrice || 0),
+    0
+  );
+
+  useEffect(() => {
+    const fetchFinishedProduct = async () => {
+      try {
+        const res = await axios.get(`${BASE_URL}/api/v1/finished-product/all`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        });
+
+        const data = res.data;
+        setData(data.finishedProducts);
+      } catch (error) {
+        toast.error("Failed to fetch finished products.");
+      }
+    };
+
+    fetchFinishedProduct();
+  }, []);
+
+  return (
+    <div className="w-full h-screen p-6">
+      <Helmet>
+        <title>MarSU Cut | Order Details</title>
+        <meta
+          name="description"
+          content="View details of the selected order."
+        />
+      </Helmet>
+
+      <Typography.Title level={2} className="text-black dark:text-white mb-6">
+        Order Details
+      </Typography.Title>
+
+      <Card className="shadow-lg rounded-lg bg-white p-5 mt-10">
+        {selectedOrder ? (
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-12">
+            <div className="flex flex-col lg:w-1/2">
+              <img
+                src={selectedOrder.receipt}
+                alt="Order Receipt"
+                className="w-full h-full rounded-lg shadow-md"
+              />
+            </div>
+
+            <div className="flex flex-col lg:w-1/2">
+              <CardHeader className="mb-4">
+                <CardTitle className="text-xl font-bold flex flex-row gap-2">
+                  {selectedOrder.studentName}
+                  <span className="text-gray-500 text-xs font-normal mt-2">
+                    ({selectedOrder.studentNumber})
+                  </span>
+                </CardTitle>
+                <CardDescription className="text-sm text-gray-600">
+                  {selectedOrder.studentEmail}
+                </CardDescription>
+              </CardHeader>
+
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <h6 className="text-sm font-semibold">Orders:</h6>
+                  <OrderItems
+                    orderItems={selectedOrder.orderItems}
+                    finishedProducts={data}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <h6 className="text-sm font-semibold">
+                    Total Price:{" "}
+                    <span className="font-normal text-xs text-gray-700">
+                      ₱{totalPrice.toFixed(2)}
+                    </span>
+                  </h6>
+                  <h6 className="text-sm font-semibold">
+                    Schedule:{" "}
+                    <span className="font-normal text-xs text-gray-700">
+                      {new Date(selectedOrder.schedule).toDateString()}
+                    </span>
+                  </h6>
+                  <h6 className="text-sm font-semibold flex items-center gap-2">
+                    <span>Status:</span>
+                    <StatusBadge status={selectedOrder.status} />
+                  </h6>
+                </div>
+              </CardContent>
+
+              <div className="flex justify-end mt-4">
+                <Button
+                  variant="outline"
+                  onClick={() => navigate("/dashboard?tab=orders-admin")}
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Back
+                </Button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <Typography.Text className="text-gray-600">
+            No order details available.
+          </Typography.Text>
+        )}
+      </Card>
+
+      <Toaster position="top-center" richColors closeButton />
+    </div>
+  );
+};
+
+export default OrderDetails;
