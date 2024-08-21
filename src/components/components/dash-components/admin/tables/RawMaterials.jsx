@@ -33,7 +33,6 @@ const RawMaterials = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [table, setTable] = useState(null);
   const [selectedRawMaterial, setSelectedRawMaterial] = useState(null);
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   useEffect(() => {
     const fetchRawMaterial = async () => {
@@ -75,7 +74,6 @@ const RawMaterials = () => {
 
       if (res.status === 200) {
         setDeleteLoading(false);
-        setOpenDeleteDialog(false);
         setData((prevData) =>
           prevData.filter((product) => product._id !== selectedRawMaterial._id)
         );
@@ -87,7 +85,6 @@ const RawMaterials = () => {
       ToasterError({
         description: "Please check you internet connection and try again.",
       });
-      setOpenDeleteDialog(false);
       setDeleteLoading(false);
     }
   };
@@ -107,7 +104,7 @@ const RawMaterials = () => {
     },
     {
       accessorKey: "status",
-      header: () => <span className="font-bold">Status</span>,
+      header: "Status",
       cell: ({ row }) => {
         const statusStyles = {
           "Out of Stock": {
@@ -171,17 +168,13 @@ const RawMaterials = () => {
               </Dialog>
             </Tooltip>
             <Tooltip title="Delete product">
-              <Dialog
-                open={openDeleteDialog}
-                onOpenChange={setOpenDeleteDialog}
-              >
+              <Dialog>
                 <DialogTrigger asChild>
                   <Button
                     variant="destructive"
                     size="sm"
                     onClick={() => {
                       setSelectedRawMaterial(rawMaterial);
-                      setOpenDeleteDialog(true);
                     }}
                   >
                     Delete

@@ -117,33 +117,29 @@ export const AddOrderItemsSchema = z.object({
 });
 
 export const AddNewProductSchema = z.object({
-  level: z.string().min(3, { message: "Level must be at least 3 characters" }),
-  productType: z
-    .string()
-    .min(3, { message: "Product Type must be at least 3 characters" }),
-  size: z.string().min(1, { message: "Size must be at least 1 characters" }),
+  level: z.string(),
+  productType: z.string(),
+  size: z.string(),
   quantity: z.number().int().nonnegative(),
 });
 
 export const EditProductSchema = z.object({
-  level: z.string().min(3, { message: "Level must be at least 3 characters" }),
-  productType: z
-    .string()
-    .min(3, { message: "Product Type must be at least 3 characters" }),
-  size: z.string().min(1, { message: "Size must be at least 1 characters" }),
+  level: z.string(),
+  productType: z.string(),
+  size: z.string(),
   quantity: z.number().int().nonnegative(),
 });
 
 export const EditRawMAterialsSchema = z.object({
-  type: z.string().min(3, { message: "Type must be at least 3 characters" }),
+  type: z.string(),
   quantity: z.number().int().nonnegative(),
-  unit: z.string().min(1, { message: "Unit must be at least 1 characters" }),
+  unit: z.string(),
 });
 
 export const AddRawMaterialsSchema = z.object({
-  type: z.string().min(3, { message: "Type must be at least 3 characters" }),
+  type: z.string(),
   quantity: z.number().int().nonnegative(),
-  unit: z.string().min(1, { message: "Unit must be at least 1 characters" }),
+  unit: z.string(),
 });
 
 export const AddProductionSchema = z.object({
@@ -171,9 +167,5 @@ export const AddCommercialJobSchema = z.object({
   idNumber: z
     .string()
     .min(3, { message: "ID Number must be at least 3 characters" }),
-  cbName: z
-    .string()
-    .min(3, { message: "Name must be at least 3 characters" }),
-  
+  cbName: z.string().min(3, { message: "Name must be at least 3 characters" }),
 });
-

@@ -190,7 +190,7 @@ function ArchiveRentals() {
     },
     {
       accessorKey: "status",
-      header: () => <span className="font-bold">Status</span>,
+      header: "Status",
       cell: ({ row }) => {
         const statusStyles = {
           APPROVED: {

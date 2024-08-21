@@ -45,6 +45,14 @@ const AddNewProduct = () => {
   });
 
   const handleAddNewProduct = async (values) => {
+    if (
+      !values.level ||
+      !values.productType ||
+      !values.size ||
+      !values.quantity
+    ) {
+      return toast.error("Please fill all fields");
+    }
     try {
       setAddNewProductLoading(true);
       const res = await axios.post(

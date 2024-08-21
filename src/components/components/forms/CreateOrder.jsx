@@ -43,7 +43,7 @@ import PropTypes from "prop-types";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
-import { Loader2, UploadIcon } from "lucide-react";
+import { ChevronDown, Loader2, UploadIcon } from "lucide-react";
 import ToasterError from "@/lib/Toaster";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
@@ -53,7 +53,6 @@ const CreateOrder = ({ addNewOrder }) => {
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [dialogOpen, setDialogOpen] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const fileInputRef = useRef(null);
 
@@ -156,7 +155,6 @@ const CreateOrder = ({ addNewOrder }) => {
       );
 
       if (res.status === 201) {
-        setDialogOpen(false);
         setProgress(0);
         setLoading(false);
         addNewOrder(res.data.order);
@@ -229,10 +227,11 @@ const CreateOrder = ({ addNewOrder }) => {
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button
-                        className="block w-full text-start"
+                        className="flex justify-between items-center w-full text-start"
                         variant="outline"
                       >
                         {field.value || "Select Gender"}
+                        <ChevronDown className="ml-2 h-4 w-4" />{" "}
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
@@ -300,8 +299,8 @@ const CreateOrder = ({ addNewOrder }) => {
             )}
           />
           <div className="flex flex-col">
-            <p className="text-sm text-gray-500">
-              Wait for the upload reach 100%
+            <p className="text-sm text-red-500 mt-2">
+              <i>Note: Wait for the upload to reach 100%</i>
             </p>
             <Progress
               percent={progress}
@@ -315,14 +314,10 @@ const CreateOrder = ({ addNewOrder }) => {
               )}
             />
           </div>
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <Dialog>
             <div className="flex items-center justify-end gap-2">
               <DialogTrigger asChild>
-                <Button
-                  onClick={() => setDialogOpen(true)}
-                  variant="default"
-                  className="mt-2"
-                >
+                <Button variant="default" className="mt-2">
                   Submit Order
                 </Button>
               </DialogTrigger>

@@ -45,6 +45,15 @@ const EditProduct = ({ selectedProduct }) => {
   });
 
   const handleEditProduct = async (values) => {
+    if (
+      !values.quantity ||
+      !values.level ||
+      !values.productType ||
+      !values.size
+    ) {
+      return toast.error("Please fill all fields");
+    }
+
     try {
       setEditProductLoading(true);
       const res = await axios.put(

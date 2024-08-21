@@ -26,7 +26,13 @@ import { toast } from "sonner";
 import { Tooltip } from "antd";
 
 // icons
-import { CalendarIcon, Loader2, MinusCircle, PlusCircle } from "lucide-react";
+import {
+  CalendarIcon,
+  ChevronDown,
+  Loader2,
+  MinusCircle,
+  PlusCircle,
+} from "lucide-react";
 
 // others
 import ToasterError from "@/lib/Toaster";
@@ -61,6 +67,20 @@ const AddProduction = () => {
   });
 
   const handleAddProduction = async (values) => {
+    if (values.productionDateFrom > values.productionDateTo) {
+      return toast.error(
+        "Production date from cannot be greater than production date to"
+      );
+    }
+
+    if (!values.rawMaterialsUsed.length) {
+      return toast.error("Please add raw materials used");
+    }
+
+    if (!values.level || !values.productType || !values.size) {
+      return toast.error("Please fill all fields");
+    }
+
     try {
       setAddProductionLoading(true);
       const res = await axios.post(
@@ -109,10 +129,11 @@ const AddProduction = () => {
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button
-                            className="w-full overflow-y-auto"
+                            className="w-full flex justify-between items-center overflow-y-auto"
                             variant="outline"
                           >
                             {field.value || "Level"}
+                            <ChevronDown className="ml-2 h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
@@ -133,6 +154,7 @@ const AddProduction = () => {
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={productionForm.control}
                 name="productType"
@@ -143,10 +165,11 @@ const AddProduction = () => {
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button
-                            className="w-full overflow-y-auto"
+                            className="w-full flex justify-between items-center overflow-y-auto"
                             variant="outline"
                           >
                             {field.value || "Type"}
+                            <ChevronDown className="ml-2 h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
@@ -174,6 +197,7 @@ const AddProduction = () => {
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={productionForm.control}
                 name="size"
@@ -184,10 +208,11 @@ const AddProduction = () => {
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button
-                            className="w-full overflow-y-auto"
+                            className="w-full flex justify-between items-center overflow-y-auto"
                             variant="outline"
                           >
                             {field.value || "Size"}
+                            <ChevronDown className="ml-2 h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="max-h-48 overflow-y-auto">

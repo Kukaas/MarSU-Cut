@@ -33,7 +33,6 @@ const FinishedProduct = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [table, setTable] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   useEffect(() => {
     const fetchFinishedProduct = async () => {
@@ -74,7 +73,6 @@ const FinishedProduct = () => {
 
       if (res.status === 200) {
         setDeleteLoading(false);
-        setOpenDeleteDialog(false);
         setData((prevData) =>
           prevData.filter((product) => product._id !== selectedProduct._id)
         );
@@ -86,7 +84,7 @@ const FinishedProduct = () => {
       ToasterError({
         description: "Please check you internet connection and try again.",
       });
-      setOpenDeleteDialog(false);
+
       setDeleteLoading(false);
     }
   };
@@ -110,7 +108,7 @@ const FinishedProduct = () => {
     },
     {
       accessorKey: "status",
-      header: () => <span className="font-bold">Status</span>,
+      header: "Status",
       cell: ({ row }) => {
         const statusStyles = {
           "Out of Stock": {
@@ -174,17 +172,13 @@ const FinishedProduct = () => {
               </Dialog>
             </Tooltip>
             <Tooltip title="Delete product">
-              <Dialog
-                open={openDeleteDialog}
-                onOpenChange={setOpenDeleteDialog}
-              >
+              <Dialog>
                 <DialogTrigger asChild>
                   <Button
                     variant="destructive"
                     size="sm"
                     onClick={() => {
                       setSelectedProduct(product);
-                      setOpenDeleteDialog(true);
                     }}
                   >
                     Delete

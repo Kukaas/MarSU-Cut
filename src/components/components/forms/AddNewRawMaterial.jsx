@@ -36,6 +36,9 @@ const AddNewRawMaterial = () => {
   });
 
   const handleAddRawMaterial = async (values) => {
+    if (!values.quantity || !values.type || !values.unit) {
+      return toast.error("Please fill all fields");
+    }
     try {
       setAddRawMaterialLoading(true);
       const res = await axios.post(
