@@ -154,32 +154,51 @@ function Orders() {
       accessorKey: "orderItems",
       header: "Order Items",
       cell: ({ row }) => {
-        // Check if orderItems is not present or is an empty array
-        if (!row.original.orderItems || row.original.orderItems.length === 0) {
+        const orderItems = row.original.orderItems || [];
+
+        if (!Array.isArray(orderItems) || orderItems.length === 0) {
           return <div>Not yet Measured</div>;
         }
 
-        // Group items by productType, size, and level, and sum their quantities
-        const groupedItems = row.original.orderItems.reduce((acc, item) => {
+        const groupedItems = orderItems.reduce((acc, item) => {
           const key = `${item.productType}-${item.size}-${item.level}`;
           if (!acc[key]) {
-            acc[key] = { ...item, quantity: 0 }; // Initialize if not exist
+            acc[key] = { ...item, quantity: 0 };
           }
-          acc[key].quantity += item.quantity; // Sum the quantity
+          acc[key].quantity += item.quantity;
           return acc;
         }, {});
 
-        // Convert the grouped items object back to an array for rendering
         const itemsToRender = Object.values(groupedItems);
 
         return (
           <div>
             {itemsToRender.map((item, index) => (
               <div key={index}>
-                <span className="font-bold">{item.level}</span>:{" "}
-                <span className="font-semibold">{item.productType}</span> -{" "}
-                <span className="font-semibold">{item.size}</span> -{" "}
-                <span className="font-semibold">{item.quantity}</span>
+                {item.productType === "LOGO" ||
+                item.productType === "NECKTIE" ? (
+                  <div className="flex flex-row gap-2">
+                    <span className="font-semibold text-xs">
+                      {item.productType}
+                    </span>{" "}
+                    -{" "}
+                    <span className="font-semibold text-xs">
+                      {item.quantity}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex flex-row ">
+                    <span className="font-bold text-xs">{item.level}:</span>{" "}
+                    <span className="font-semibold text-xs">
+                      {item.productType}
+                    </span>{" "}
+                    - <span className="font-semibold text-xs">{item.size}</span>{" "}
+                    -{" "}
+                    <span className="font-semibold text-xs">
+                      {item.quantity}
+                    </span>
+                  </div>
+                )}
               </div>
             ))}
           </div>

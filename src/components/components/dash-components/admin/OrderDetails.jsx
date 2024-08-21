@@ -187,15 +187,22 @@ const OrderDetails = () => {
         Order Details
       </Typography.Title>
 
-      <Card className="shadow-lg rounded-lg bg-white p-5 mt-10">
+      <Card className="shadow-lg rounded-lg p-5 mt-10">
         {selectedOrder ? (
           <div className="flex flex-col lg:flex-row gap-6 lg:gap-12">
             <div className="flex flex-col lg:w-1/2">
-              <img
-                src={selectedOrder.receipt}
-                alt="Order Receipt"
-                className="w-full h-full rounded-lg shadow-md"
-              />
+              <a
+                href={selectedOrder.receipt}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full h-[400px] rounded-lg shadow-md"
+              >
+                <img
+                  src={selectedOrder.receipt}
+                  alt="Order Receipt"
+                  className="w-full h-full rounded-lg shadow-md"
+                />
+              </a>
             </div>
 
             <div className="flex flex-col lg:w-1/2">
@@ -223,13 +230,13 @@ const OrderDetails = () => {
                 <div className="space-y-2">
                   <h6 className="text-sm font-semibold">
                     Total Price:{" "}
-                    <span className="font-normal text-xs text-gray-700">
+                    <span className="font-normal text-xs">
                       ₱{totalPrice.toFixed(2)}
                     </span>
                   </h6>
                   <h6 className="text-sm font-semibold">
                     Schedule:{" "}
-                    <span className="font-normal text-xs text-gray-700">
+                    <span className="font-normal text-xs">
                       {new Date(selectedOrder.schedule).toDateString()}
                     </span>
                   </h6>
@@ -240,7 +247,7 @@ const OrderDetails = () => {
                 </div>
               </CardContent>
 
-              <div className="flex justify-end mt-4">
+              <div className="flex justify-end mt-10">
                 <Button
                   variant="outline"
                   onClick={() => navigate("/dashboard?tab=orders-admin")}

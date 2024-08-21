@@ -261,7 +261,11 @@ function Orders() {
       accessorKey: "receipt",
       header: "Receipt",
       cell: ({ row }) => (
-        <a target="_blank" rel="noopener noreferrer">
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href={row.getValue("receipt")}
+        >
           <img
             src={row.getValue("receipt")}
             alt="Receipt"
