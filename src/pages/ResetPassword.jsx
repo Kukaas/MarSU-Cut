@@ -1,19 +1,11 @@
 // UI
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { toast, Toaster } from "sonner";
 import { notification } from "antd";
 
 // icons
-import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 // redux
 import { useSelector } from "react-redux";
@@ -30,22 +22,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ResetPasswordSchema } from "@/schema/shema";
 import { BASE_URL } from "@/lib/api";
+import CustomInput from "@/components/components/CustomInput";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { currentEmail } = useSelector((state) => state.forgotPasword);
-
-  const toggleShowPassword = () => {
-    setShowPassword((prev) => !prev);
-  };
-
-  const toggleShowConfirmPassword = () => {
-    setShowConfirmPassword((prev) => !prev);
-  };
 
   const form = useForm({
     resolver: zodResolver(ResetPasswordSchema),
@@ -134,57 +117,19 @@ const ResetPassword = () => {
               onSubmit={form.handleSubmit(handleResetPassword)}
               className="space-y-4"
             >
-              <FormField
-                control={form.control}
+              <CustomInput
+                form={form}
                 name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>New Password</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <Input
-                          type={showPassword ? "text" : "password"}
-                          placeholder="Enter your password..."
-                          {...field}
-                        />
-                        <button
-                          onClick={toggleShowPassword}
-                          type="button"
-                          className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
-                        >
-                          {showPassword ? <EyeOffIcon /> : <EyeIcon />}
-                        </button>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Password"
+                placeholder="Enter your new password..."
+                type="password"
               />
-              <FormField
-                control={form.control}
+              <CustomInput
+                form={form}
                 name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Confirm Password</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <Input
-                          type={showConfirmPassword ? "text" : "password"}
-                          placeholder="Confirm your password..."
-                          {...field}
-                        />
-                        <button
-                          onClick={toggleShowConfirmPassword}
-                          type="button"
-                          className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
-                        >
-                          {showConfirmPassword ? <EyeOffIcon /> : <EyeIcon />}
-                        </button>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Confirm Password"
+                placeholder="Confirm your new password..."
+                type="password"
               />
               <Button
                 type="submit"

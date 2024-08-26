@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 
 import Users from "./tables/Users";
+import { Toaster } from "sonner";
 
 const DashUsers = () => {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ const DashUsers = () => {
         <meta name="description" content="" />
       </Helmet>
       <Users />
+      <Toaster position="top-center" richColors closeButton />
     </div>
   );
 };

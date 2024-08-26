@@ -40,6 +40,7 @@ import { useSelector } from "react-redux";
 import ToasterError from "@/lib/Toaster";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
+import CustomInput from "../CustomInput";
 
 const CreateRental = () => {
   const [loading, setLoading] = useState(false);
@@ -101,47 +102,23 @@ const CreateRental = () => {
           onSubmit={form.handleSubmit(handleCreateRental)}
           className="space-y-1 w-full"
         >
-          <FormField
-            control={form.control}
+          <CustomInput
+            form={form}
             name="idNumber"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>ID Number</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="eg.21B994" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            label="ID Number"
+            placeholder="eg. 123456"
           />
-          <FormField
-            control={form.control}
+          <CustomInput
+            form={form}
             name="coordinatorName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Coordinator Name</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="eg.Jhon Doe" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            label="Coordinator Name"
+            placeholder="eg. John Doe"
           />
-          <FormField
-            control={form.control}
+          <CustomInput
+            form={form}
             name="department"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Department</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="eg.College of Information Technology"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            label="Department"
+            placeholder="eg. College of Engineering"
           />
           <FormField
             control={form.control}

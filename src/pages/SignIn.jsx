@@ -1,18 +1,9 @@
 // UI
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { toast, Toaster } from "sonner";
 import { Button } from "@/components/ui/button";
 
 // icons
-import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 // redux
 import { useDispatch, useSelector } from "react-redux";
@@ -28,12 +19,13 @@ import { LoginSchema } from "@/schema/shema";
 import { useForm } from "react-hook-form";
 import { BASE_URL } from "@/lib/api";
 import ToasterError from "@/lib/Toaster";
+import CustomInput from "@/components/components/CustomInput";
+import { Form } from "@/components/ui/form";
 
 const SignIn = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
@@ -45,10 +37,6 @@ const SignIn = () => {
       navigate("/sign-in");
     }
   }, [currentUser, navigate]);
-
-  const toggleShowPassword = () => {
-    setShowPassword((prev) => !prev);
-  };
 
   const form = useForm({
     resolver: zodResolver(LoginSchema),
@@ -131,12 +119,12 @@ const SignIn = () => {
       <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center">
         {/* left */}
         <div className="flex-1 mb-4">
-          <Link to="/" className="font-bold hover:text-current text-4xl ">
+          <h2 className="font-bold hover:text-current text-4xl ">
             Welcome{" "}
             <span className="px-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white">
               Back!
             </span>
-          </Link>
+          </h2>
           <p className="text-l mt-4 ">Sign in with your email and password.</p>
         </div>
         {/* right */}
@@ -146,45 +134,19 @@ const SignIn = () => {
               onSubmit={form.handleSubmit(handleLogin)}
               className="space-y-4"
             >
-              <FormField
-                control={form.control}
+              <CustomInput
+                form={form}
                 name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter your email..." {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Email"
+                placeholder="Enter your email..."
               />
               <div className="relative flex flex-col">
-                <FormField
-                  control={form.control}
+                <CustomInput
+                  form={form}
                   name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Input
-                            type={showPassword ? "text" : "password"}
-                            placeholder="Enter your password..."
-                            {...field}
-                          />
-                          <button
-                            onClick={toggleShowPassword}
-                            type="button"
-                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
-                          >
-                            {showPassword ? <EyeOffIcon /> : <EyeIcon />}
-                          </button>
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  label="Password"
+                  placeholder="Enter your password..."
+                  type="password"
                 />
                 <Link
                   to="/forgot-password"

@@ -1,20 +1,12 @@
 // UI
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { DialogClose } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { message } from "antd";
 
 // icons
-import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 // others
 import { ResetPasswordSchemaProfile } from "@/schema/shema";
@@ -25,11 +17,9 @@ import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
+import CustomInput from "../CustomInput";
 
 const ChangePassword = () => {
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showOldPassword, setShowOldPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
 
@@ -41,18 +31,6 @@ const ChangePassword = () => {
       confirmPassword: "",
     },
   });
-
-  const toggleShowPassword = () => {
-    setShowNewPassword((prev) => !prev);
-  };
-
-  const toggleShowConfirmPassword = () => {
-    setShowConfirmPassword((prev) => !prev);
-  };
-
-  const toggleShowOldPassword = () => {
-    setShowOldPassword((prev) => !prev);
-  };
 
   const handleChangePassword = async (values) => {
     if (values.newPassword !== values.confirmPassword) {
@@ -102,83 +80,27 @@ const ChangePassword = () => {
         onSubmit={formChangePassword.handleSubmit(handleChangePassword)}
         className="space-y-4 w-full p-3"
       >
-        <FormField
-          control={formChangePassword.control}
+        <CustomInput
+          form={formChangePassword}
           name="oldPassword"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Old Password</FormLabel>
-              <FormControl>
-                <div className="relative">
-                  <Input
-                    type={showOldPassword ? "text" : "password"}
-                    placeholder="Enter your old password..."
-                    {...field}
-                  />
-                  <button
-                    onClick={toggleShowOldPassword}
-                    type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
-                  >
-                    {showOldPassword ? <EyeOffIcon /> : <EyeIcon />}
-                  </button>
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          type="password"
+          placeholder="Enter your old password..."
+          label="Old Password"
         />
-        <FormField
-          control={formChangePassword.control}
+
+        <CustomInput
+          form={formChangePassword}
           name="newPassword"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>New Password</FormLabel>
-              <FormControl>
-                <div className="relative">
-                  <Input
-                    type={showNewPassword ? "text" : "password"}
-                    placeholder="Enter your new password..."
-                    {...field}
-                  />
-                  <button
-                    onClick={toggleShowPassword}
-                    type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
-                  >
-                    {showNewPassword ? <EyeOffIcon /> : <EyeIcon />}
-                  </button>
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          type="password"
+          placeholder="Enter your new password..."
+          label="New Password"
         />
-        <FormField
-          control={formChangePassword.control}
+        <CustomInput
+          form={formChangePassword}
           name="confirmPassword"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Confirm Password</FormLabel>
-              <FormControl>
-                <div className="relative">
-                  <Input
-                    type={showConfirmPassword ? "text" : "password"}
-                    placeholder="Confirm your password..."
-                    {...field}
-                  />
-                  <button
-                    onClick={toggleShowConfirmPassword}
-                    type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
-                  >
-                    {showConfirmPassword ? <EyeOffIcon /> : <EyeIcon />}
-                  </button>
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          type="password"
+          placeholder="Confirm your new password..."
+          label="Confirm Password"
         />
         <div className="flex items-center justify-end">
           <DialogClose asChild>

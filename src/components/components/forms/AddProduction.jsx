@@ -45,6 +45,7 @@ import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
+import CustomInput from "../CustomInput";
 
 const AddProduction = () => {
   const [addProductionLoading, setAddProductionLoading] = useState(false);
@@ -364,47 +365,16 @@ const AddProduction = () => {
             <div className="space-y-4 mt-2">
               {fields.map((field, index) => (
                 <div key={field.id} className="flex items-center space-x-4">
-                  <FormField
-                    control={productionForm.control}
+                  <CustomInput
+                    form={productionForm}
                     name={`rawMaterialsUsed.${index}.type`}
-                    render={({ field }) => (
-                      <FormItem className="flex-1">
-                        <FormLabel>Type</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            placeholder="e.g Needle"
-                            className="w-full"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+                    label="Type"
+                    placeholder="eg. Cotton"
                   />
-                  <FormField
-                    control={productionForm.control}
+                  <CustomInput
+                    form={productionForm}
                     name={`rawMaterialsUsed.${index}.quantity`}
-                    render={({ field }) => (
-                      <FormItem className="flex-1">
-                        <FormLabel>Quantity</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            {...field}
-                            value={field.value !== undefined ? field.value : ""}
-                            onChange={(e) => {
-                              const value = e.target.value;
-                              field.onChange(
-                                value !== "" ? parseFloat(value) : ""
-                              );
-                            }}
-                            placeholder="Quantity"
-                            className="w-full"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+                    label="Quantity"
                   />
                   <Tooltip title="Remove input">
                     <MinusCircle
@@ -429,7 +399,11 @@ const AddProduction = () => {
               <SheetClose>
                 <Button variant="outline">Cancel</Button>
               </SheetClose>
-              <Button onClick={handleButtonClick} type="button">
+              <Button
+                onClick={handleButtonClick}
+                type="button"
+                disabled={addProductionLoading}
+              >
                 {addProductionLoading ? (
                   <div className="flex items-center">
                     <Loader2 className="mr-2 animate-spin" />

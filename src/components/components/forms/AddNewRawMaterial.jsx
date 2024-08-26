@@ -22,6 +22,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
+import CustomInput from "../CustomInput";
 
 const AddNewRawMaterial = () => {
   const [addRawMaterialLoading, setAddRawMaterialLoading] = useState(false);
@@ -57,6 +58,9 @@ const AddNewRawMaterial = () => {
         setAddRawMaterialLoading(false);
         toast.success("Raw material added successfully");
         addRawMaterialForm.reset();
+      } else if (res.status === 200) {
+        setAddRawMaterialLoading(false);
+        toast.success("Raw material updated successfully");
       }
     } catch (error) {
       setAddRawMaterialLoading(false);
@@ -72,29 +76,17 @@ const AddNewRawMaterial = () => {
         onSubmit={addRawMaterialForm.handleSubmit(handleAddRawMaterial)}
         className="space-y-4 w-full p-3"
       >
-        <FormField
-          control={addRawMaterialForm.control}
+        <CustomInput
+          form={addRawMaterialForm}
           name="type"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Type</FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="e.g Needle" />
-              </FormControl>
-            </FormItem>
-          )}
+          label="Type"
+          placeholder="e.g Fabric, Thread, etc."
         />
-        <FormField
-          control={addRawMaterialForm.control}
+        <CustomInput
+          form={addRawMaterialForm}
           name="unit"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Unit</FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="e.g Yard" />
-              </FormControl>
-            </FormItem>
-          )}
+          label="Unit"
+          placeholder="e.g Yard, Kilo, etc."
         />
         <FormField
           control={addRawMaterialForm.control}

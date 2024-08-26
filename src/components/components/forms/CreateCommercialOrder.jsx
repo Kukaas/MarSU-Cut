@@ -1,13 +1,5 @@
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
 import { Loader2 } from "lucide-react";
@@ -23,6 +15,7 @@ import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
+import CustomInput from "../CustomInput";
 
 const CreateCommercialOrder = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -80,31 +73,17 @@ const CreateCommercialOrder = () => {
               handleCreateCommercialOrder
             )}
           >
-            <FormField
-              control={commercialJobForm.control}
+            <CustomInput
+              form={commercialJobForm}
               name="idNumber"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>ID Number</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="eg.21B994" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              label="ID Number"
+              placeholder="eg. 123456"
             />
-            <FormField
-              control={commercialJobForm.control}
+            <CustomInput
+              form={commercialJobForm}
               name="cbName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="eg. John Doe" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              label="Commercial Job Name"
+              placeholder="eg. Jhon Doe"
             />
             <div className="flex items-center justify-end gap-2">
               <DialogClose>

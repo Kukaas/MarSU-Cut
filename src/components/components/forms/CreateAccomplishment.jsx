@@ -1,13 +1,5 @@
 // UI
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -22,6 +14,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
+import CustomInput from "../CustomInput";
+import { DialogClose } from "@/components/ui/dialog";
 
 const CreateAccomplishment = () => {
   const [loading, setLoading] = useState();
@@ -69,53 +63,35 @@ const CreateAccomplishment = () => {
             onSubmit={form.handleSubmit(handleCreateAccomplishment)}
             className="space-y-4"
           >
-            <FormField
-              control={form.control}
+            <CustomInput
+              form={form}
               name="type"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Type of Accomplishment</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="eg. Pattern Making, Cutting, Sewing, etc."
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              label="Type"
+              placeholder="eg. Pattern Making, Cutting, Sewing, etc."
             />
-            <FormField
-              control={form.control}
+            <CustomInput
+              form={form}
               name="accomplishment"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Accomplishment</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="eg. 10 pcs of T-shirts, 5 pcs of Pants, etc."
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              label="Accomplishment"
+              placeholder="eg. 100 pcs of shirt, 50 pcs of pants, etc."
             />
-            <Button
-              type="submit"
-              variant="default"
-              className="w-full"
-              disabled={loading}
-            >
-              {loading ? (
-                <div className="flex items-center">
-                  <Loader2 className="mr-2 animate-spin" />
-                  <span>Creating</span>
-                </div>
-              ) : (
-                "Create"
-              )}
-            </Button>
+            <div className="flex items-center justify-end">
+              <DialogClose asChild>
+                <Button variant="outline" className="mr-2">
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button type="submit" variant="default" disabled={loading}>
+                {loading ? (
+                  <div className="flex items-center">
+                    <Loader2 className="mr-2 animate-spin" />
+                    <span>Creating</span>
+                  </div>
+                ) : (
+                  "Create"
+                )}
+              </Button>
+            </div>
           </form>
         </Form>
       </div>

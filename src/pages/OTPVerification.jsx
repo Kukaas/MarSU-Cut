@@ -1,14 +1,6 @@
 // Ui import
 import { toast, Toaster } from "sonner";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 
 // icon
@@ -31,6 +23,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useEffect, useState } from "react";
 import { BASE_URL } from "@/lib/api";
+import CustomInput from "@/components/components/CustomInput";
 
 const OTPVerification = () => {
   const navigate = useNavigate();
@@ -202,18 +195,11 @@ const OTPVerification = () => {
               onSubmit={form.handleSubmit(handleSubmitOTP)}
               className="space-y-4"
             >
-              <FormField
-                control={form.control}
+              <CustomInput
+                form={form}
                 name="otp"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>One Time Password</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter OTP..." {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="OTP"
+                placeholder="Enter OTP..."
               />
               <Button
                 type="submit"

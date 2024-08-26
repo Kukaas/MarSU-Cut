@@ -1,13 +1,5 @@
 // Ui import
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { toast, Toaster } from "sonner";
 
@@ -34,6 +26,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "@/lib/api";
 import ToasterError from "@/lib/Toaster";
+import CustomInput from "@/components/components/CustomInput";
 
 const RequestResetPassword = () => {
   const dispatch = useDispatch();
@@ -124,18 +117,11 @@ const RequestResetPassword = () => {
                 onSubmit={form.handleSubmit(handleSendOTP)}
                 className="flex flex-col gap-4"
               >
-                <FormField
-                  control={form.control}
+                <CustomInput
+                  form={form}
                   name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter your email..." {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  label="Email"
+                  placeholder="Enter your email..."
                 />
                 <Button
                   type="submit"

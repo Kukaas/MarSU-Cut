@@ -47,6 +47,7 @@ import { ChevronDown, Loader2, UploadIcon } from "lucide-react";
 import ToasterError from "@/lib/Toaster";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
+import CustomInput from "../CustomInput";
 
 const CreateOrder = ({ addNewOrder }) => {
   const [imageFile, setImageFile] = useState(null);
@@ -191,31 +192,17 @@ const CreateOrder = ({ addNewOrder }) => {
           onSubmit={form.handleSubmit(handleCreateOrder)}
           className="space-y-1 w-full"
         >
-          <FormField
-            control={form.control}
+          <CustomInput
+            form={form}
             name="studentNumber"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Student Number</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="eg.21B994" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            label="Student Number"
+            placeholder="eg. 21B12345"
           />
-          <FormField
-            control={form.control}
+          <CustomInput
+            form={form}
             name="studentName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="eg.Jhon Doe" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            label="Student Name"
+            placeholder="eg. John Doe"
           />
           <FormField
             control={form.control}
