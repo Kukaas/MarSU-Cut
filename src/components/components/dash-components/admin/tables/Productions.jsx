@@ -34,12 +34,13 @@ import { BASE_URL } from "@/lib/api";
 import CustomTable from "@/components/components/CustomTable";
 
 const Productions = () => {
-  const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+  const [originalData, setOriginalData] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
+  const [loading, setLoading] = useState(true);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [selectedProduction, setSelectedProduction] = useState(null);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
-  const [table, setTable] = useState(null);
 
   // Check screen size
   useEffect(() => {
@@ -68,6 +69,7 @@ const Productions = () => {
         const data = res.data.productions;
         if (res.status === 200) {
           setData(data);
+          setOriginalData(data);
           setLoading(false);
         }
       } catch (error) {
@@ -77,6 +79,25 @@ const Productions = () => {
 
     fetchProductions();
   }, []);
+
+  useEffect(() => {
+    if (searchValue) {
+      const lowercasedSearchValue = searchValue.toLowerCase();
+
+      const filteredData = originalData.filter((production) => {
+        return (
+          production.productType
+            .toLowerCase()
+            .includes(lowercasedSearchValue) ||
+          production.level.toLowerCase().includes(lowercasedSearchValue)
+        );
+      });
+
+      setData(filteredData);
+    } else {
+      setData(originalData);
+    }
+  }, [searchValue, originalData]);
 
   const handleDelete = async (event) => {
     event.preventDefault();
@@ -234,18 +255,13 @@ const Productions = () => {
           Productions
         </Typography.Title>
         <div className="flex items-center py-4 justify-between gap-2">
-          <Input
-            placeholder="Filter by product type..."
-            value={table?.getColumn("productType")?.getFilterValue() || ""}
-            onChange={(event) => {
-              if (table) {
-                table
-                  .getColumn("studentNumber")
-                  ?.setFilterValue(event.target.value);
-              }
-            }}
-            className="max-w-sm"
-          />
+          <div className="flex items-center w-[300px]">
+            <Input
+              placeholder="Search by product type or level..."
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+            />
+          </div>
           <Tooltip title="Add new production">
             {!isSmallScreen ? (
               <Sheet>
@@ -322,11 +338,7 @@ const Productions = () => {
           {loading ? (
             <div className="p-4">Loading...</div>
           ) : (
-            <CustomTable
-              columns={columns}
-              data={data}
-              onTableInstance={setTable}
-            />
+            <CustomTable columns={columns} data={data} />
           )}
         </div>
       </div>

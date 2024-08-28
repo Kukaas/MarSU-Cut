@@ -28,9 +28,10 @@ import CustomTable from "@/components/components/CustomTable";
 
 function ArchiveRentals() {
   const [data, setData] = useState([]);
+  const [originalData, setOriginalData] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
   const [loading, setLoading] = useState(false);
   const [loadingUpdate, setLoadingUpdate] = useState(false);
-  const [table, setTable] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -62,6 +63,7 @@ function ArchiveRentals() {
           })
         );
         setData(rentalsWithPenalties);
+        setOriginalData(rentalsWithPenalties);
         setLoading(false);
       } catch (error) {
         setLoading(false);
@@ -70,6 +72,17 @@ function ArchiveRentals() {
 
     fetchRentals();
   }, []);
+
+  useEffect(() => {
+    if (searchValue) {
+      const filteredData = originalData.filter((rental) =>
+        rental.coordinatorName.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      setData(filteredData);
+    } else {
+      setData(originalData);
+    }
+  }, [searchValue, originalData]);
 
   // Archive the rental
   const handleUnarchive = async (rental) => {
@@ -293,18 +306,14 @@ function ArchiveRentals() {
           Archive Rentals
         </Typography.Title>
         <div className="flex items-center py-4 justify-between">
-          <Input
-            placeholder="Search by coordinator name..."
-            value={table?.getColumn("coordinatorName")?.getFilterValue() || ""}
-            onChange={(event) => {
-              if (table) {
-                table
-                  .getColumn("coordinatorName")
-                  ?.setFilterValue(event.target.value);
-              }
-            }}
-            className="max-w-sm"
-          />
+          <div className="flex items-center w-[300px]">
+            <Input
+              placeholder="Search by coordinator name..."
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              className="w-full"
+            />
+          </div>
           <Tooltip title="Archive Rentals">
             <Button
               variant="default"
@@ -320,11 +329,7 @@ function ArchiveRentals() {
           {loading ? (
             <div className="p-4">Loading...</div>
           ) : (
-            <CustomTable
-              data={data}
-              columns={columns}
-              onTableInstance={setTable}
-            />
+            <CustomTable data={data} columns={columns} />
           )}
         </div>
       </div>

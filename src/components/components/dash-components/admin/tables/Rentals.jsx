@@ -26,12 +26,15 @@ import axios from "axios";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomTable from "@/components/components/CustomTable";
+import StatusFilter from "@/components/components/StatusFilter";
 
 function Rentals() {
   const [data, setData] = useState([]);
+  const [originalData, setOriginalData] = useState([]);
+  const [statusFilter, setStatusFilter] = useState("All");
   const [loading, setLoading] = useState(false);
   const [loadingUpdate, setLoadingUpdate] = useState(false);
-  const [table, setTable] = useState(null);
+  const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -66,6 +69,7 @@ function Rentals() {
           })
         );
         setData(rentalsWithPenalties);
+        setOriginalData(rentalsWithPenalties);
       } catch (error) {
         console.error("Failed to fetch data:", error);
       } finally {
@@ -75,6 +79,17 @@ function Rentals() {
 
     fetchRentals();
   }, []);
+
+  useEffect(() => {
+    if (searchValue) {
+      const filteredData = originalData.filter((order) =>
+        order.coordinatorName.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      setData(filteredData);
+    } else {
+      setData(originalData);
+    }
+  }, [searchValue, originalData]);
 
   const handleReject = async (rental) => {
     try {
@@ -470,6 +485,23 @@ function Rentals() {
     },
   ];
 
+  const handleStatusChange = (status) => {
+    setStatusFilter(status);
+    if (status === "All") {
+      setData(originalData); // Assuming originalData is the unfiltered data
+    } else {
+      setData(originalData.filter((order) => order.status === status));
+    }
+  };
+
+  const status = {
+    PENDING: "PENDING",
+    APPROVED: "APPROVED",
+    REJECTED: "REJECTED",
+    GIVEN: "GIVEN",
+    RETURNED: "RETURNED",
+  };
+
   return (
     <Spin
       spinning={loadingUpdate}
@@ -487,18 +519,19 @@ function Rentals() {
           Rentals
         </Typography.Title>
         <div className="flex items-center py-4 justify-between">
-          <Input
-            placeholder="Search by coordinator name..."
-            value={table?.getColumn("coordinatorName")?.getFilterValue() || ""}
-            onChange={(event) => {
-              if (table) {
-                table
-                  .getColumn("coordinatorName")
-                  ?.setFilterValue(event.target.value);
-              }
-            }}
-            className="max-w-sm"
-          />
+          <div className="flex items-center">
+            <Input
+              placeholder="Search by coordinator name..."
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              className="w-full"
+            />
+            <StatusFilter
+              statusFilter={statusFilter}
+              status={status}
+              handleStatusChange={handleStatusChange}
+            />
+          </div>
           <Tooltip title="Archive Rentals">
             <Button
               variant="default"
@@ -514,11 +547,7 @@ function Rentals() {
           {loading ? (
             <div className="p-4">Loading...</div>
           ) : (
-            <CustomTable
-              columns={columns}
-              data={data}
-              onTableInstance={setTable}
-            />
+            <CustomTable columns={columns} data={data} />
           )}
         </div>
       </div>

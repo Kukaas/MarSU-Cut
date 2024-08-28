@@ -34,14 +34,18 @@ import AddOrderItems from "../../../forms/AddOrderItems";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomTable from "../../../CustomTable";
+import StatusFilter from "@/components/components/StatusFilter";
 
 function Orders() {
   const [data, setData] = useState([]);
+  const [originalData, setOriginalData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingUpdate, setLoadingUpdate] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
-  const [table, setTable] = useState(null);
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [searchValue, setSearchValue] = useState("");
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -56,7 +60,11 @@ function Orders() {
           withCredentials: true,
         });
         setLoading(false);
-        setData(response.data.orders.filter((order) => !order.isArchived));
+        const orders = response.data.orders.filter(
+          (order) => !order.isArchived
+        );
+        setOriginalData(orders);
+        setData(orders);
       } catch (error) {
         setLoading(false);
         setData([]);
@@ -66,12 +74,29 @@ function Orders() {
     fetchOrders();
   }, []);
 
-  const handleApprove = async (order) => {
+  useEffect(() => {
+    if (searchValue) {
+      const lowercasedSearchValue = searchValue.toLowerCase();
+
+      const filteredData = originalData.filter((orders) => {
+        return (
+          orders.studentName.toLowerCase().includes(lowercasedSearchValue) ||
+          orders.studentNumber.toLowerCase().includes(lowercasedSearchValue)
+        );
+      });
+
+      setData(filteredData);
+    } else {
+      setData(originalData);
+    }
+  }, [searchValue, originalData]);
+
+  const updateOrderStatus = async (order, status) => {
     try {
       setLoadingUpdate(true);
       const res = await axios.put(
         `${BASE_URL}/api/v1/order/update/student/${order._id}`,
-        { status: "APPROVED" },
+        { status },
         {
           headers: {
             "Content-Type": "application/json",
@@ -83,12 +108,14 @@ function Orders() {
 
       if (res.status === 200) {
         toast.success(
-          `Order of ${order.studentName} is approved successfully!`
+          `Order of ${
+            order.studentName
+          } is ${status.toLowerCase()} successfully!`
         );
         setData((prevData) =>
           prevData.map((item) =>
             item._id === order._id
-              ? { ...item, status: "APPROVED", schedule: res.data.schedule }
+              ? { ...item, status, schedule: res.data.schedule }
               : item
           )
         );
@@ -97,84 +124,16 @@ function Orders() {
       }
     } catch (error) {
       ToasterError({
-        description: "Please check you internet connection and try again.",
+        description: "Please check your internet connection and try again.",
       });
     } finally {
       setLoadingUpdate(false);
     }
   };
 
-  const handleDone = async (order) => {
-    try {
-      setLoadingUpdate(true);
-      const res = await axios.put(
-        `${BASE_URL}/api/v1/order/update/student/${order._id}`,
-        { status: "DONE" },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        }
-      );
-
-      if (res.status === 200) {
-        setLoadingUpdate(false);
-        toast.success(`Order of ${order.studentName} is ready to be claimed!`);
-        setData((prevData) =>
-          prevData.map((item) =>
-            item._id === order._id ? { ...item, status: "DONE" } : item
-          )
-        );
-      } else {
-        setLoadingUpdate(false);
-        ToasterError();
-      }
-    } catch (error) {
-      ToasterError({
-        description: "Please check you internet connection and try again.",
-      });
-    } finally {
-      setLoadingUpdate(false);
-    }
-  };
-
-  const handleClaimed = async (order) => {
-    try {
-      setLoadingUpdate(true);
-      const res = await axios.put(
-        `${BASE_URL}/api/v1/order/update/student/${order._id}`,
-        { status: "CLAIMED" },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        }
-      );
-
-      if (res.status === 200) {
-        setLoadingUpdate(false);
-        toast.success(`Order of ${order.studentName} is claimed!`);
-        setData((prevData) =>
-          prevData.map((item) =>
-            item._id === order._id ? { ...item, status: "CLAIMED" } : item
-          )
-        );
-      } else {
-        setLoadingUpdate(false);
-        ToasterError();
-      }
-    } catch (error) {
-      ToasterError({
-        description: "Please check you internet connection and try again.",
-      });
-    } finally {
-      setLoadingUpdate(false);
-    }
-  };
+  const handleApprove = (order) => updateOrderStatus(order, "APPROVED");
+  const handleDone = (order) => updateOrderStatus(order, "DONE");
+  const handleClaimed = (order) => updateOrderStatus(order, "CLAIMED");
 
   const handleArchive = async (order) => {
     try {
@@ -463,6 +422,23 @@ function Orders() {
     },
   ];
 
+  const handleStatusChange = (status) => {
+    setStatusFilter(status);
+    setData(
+      status === "All"
+        ? originalData
+        : originalData.filter((order) => order.status === status)
+    );
+  };
+
+  const status = {
+    PENDING: "PENDING",
+    APPROVED: "APPROVED",
+    MEASURED: "MEASURED",
+    DONE: "DONE",
+    CLAIMED: "CLAIMED",
+  };
+
   return (
     <Spin
       spinning={loadingUpdate}
@@ -480,18 +456,19 @@ function Orders() {
           Orders
         </Typography.Title>
         <div className="flex items-center py-4 justify-between">
-          <Input
-            placeholder="Search Student Number..."
-            value={table?.getColumn("studentNumber")?.getFilterValue() || ""}
-            onChange={(event) => {
-              if (table) {
-                table
-                  .getColumn("studentNumber")
-                  ?.setFilterValue(event.target.value);
-              }
-            }}
-            className="max-w-sm"
-          />
+          <div className="flex items-center w-[400px]">
+            <Input
+              placeholder="Search student number or name..."
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              className="w-full"
+            />
+            <StatusFilter
+              status={status}
+              handleStatusChange={handleStatusChange}
+              statusFilter={statusFilter}
+            />
+          </div>
           <Tooltip title="Archive Orders">
             <Button
               variant="default"
@@ -507,11 +484,7 @@ function Orders() {
           {loading ? (
             <div className="p-4">Loading...</div>
           ) : (
-            <CustomTable
-              columns={columns}
-              data={data}
-              onTableInstance={setTable}
-            />
+            <CustomTable columns={columns} data={data} />
           )}
         </div>
       </div>

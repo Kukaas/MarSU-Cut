@@ -28,10 +28,11 @@ import CustomTable from "@/components/components/CustomTable";
 
 const RawMaterials = () => {
   const [data, setData] = useState([]);
+  const [originalData, setOriginalData] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
   const [loading, setLoading] = useState(true);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [table, setTable] = useState(null);
   const [selectedRawMaterial, setSelectedRawMaterial] = useState(null);
 
   useEffect(() => {
@@ -48,6 +49,7 @@ const RawMaterials = () => {
 
         const data = res.data;
         setData(data.rawMaterials);
+        setOriginalData(data.rawMaterials);
         setLoading(false);
       } catch (error) {
         console.error(error);
@@ -57,6 +59,20 @@ const RawMaterials = () => {
 
     fetchRawMaterial();
   }, []);
+
+  useEffect(() => {
+    if (searchValue.trim() === "") {
+      setData(originalData);
+    } else {
+      const lowercasedSearchValue = searchValue.toLowerCase();
+
+      const filteredData = originalData.filter((rawMaterial) =>
+        rawMaterial.type.toLowerCase().includes(lowercasedSearchValue)
+      );
+
+      setData(filteredData);
+    }
+  }, [searchValue, originalData]);
 
   const handleDelete = async () => {
     try {
@@ -222,18 +238,13 @@ const RawMaterials = () => {
           Raw Materials
         </Typography.Title>
         <div className="flex items-center py-4 justify-between">
-          <Input
-            placeholder="Filter by product type..."
-            value={table?.getColumn("type")?.getFilterValue() || ""}
-            onChange={(event) => {
-              if (table) {
-                table
-                  .getColumn("studentNumber")
-                  ?.setFilterValue(event.target.value);
-              }
-            }}
-            className="max-w-sm"
-          />
+          <div className="flex items-center w-[300px]">
+            <Input
+              placeholder="Search by type..."
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+            />
+          </div>
           <Tooltip title="Add new raw material">
             <Dialog>
               <DialogTrigger asChild>
@@ -258,11 +269,7 @@ const RawMaterials = () => {
           {loading ? (
             <div className="p-4">Loading...</div>
           ) : (
-            <CustomTable
-              columns={columns}
-              data={data}
-              onTableInstance={setTable}
-            />
+            <CustomTable columns={columns} data={data} />
           )}
         </div>
       </div>

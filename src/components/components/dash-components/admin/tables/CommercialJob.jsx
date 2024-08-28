@@ -27,13 +27,16 @@ import ToasterError from "@/lib/Toaster";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomTable from "@/components/components/CustomTable";
+import StatusFilter from "@/components/components/StatusFilter";
 
 const CommercialJob = () => {
   const [data, setData] = useState([]);
+  const [originalData, setOriginalData] = useState([]);
+  const [statusFilter, setStatusFilter] = useState("All");
   const { currentUser } = useSelector((state) => state.user);
   const [loading, setLoading] = useState(true);
   const [loadingUpdate, setLoadingUpdate] = useState(false);
-  const [table, setTable] = useState(null);
+  const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -49,6 +52,7 @@ const CommercialJob = () => {
         const data = res.data;
         if (res.status === 200) {
           setData(data.commercialOrders);
+          setOriginalData(data.commercialOrders);
         }
         setLoading(false);
       } catch (error) {
@@ -58,6 +62,17 @@ const CommercialJob = () => {
 
     fetchCommercialJob();
   }, [currentUser]);
+
+  useEffect(() => {
+    if (searchValue) {
+      const filteredData = originalData.filter((order) =>
+        order.cbName.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      setData(filteredData);
+    } else {
+      setData(originalData);
+    }
+  }, [searchValue, originalData]);
 
   const handleApprove = async (commercial) => {
     try {
@@ -215,6 +230,20 @@ const CommercialJob = () => {
     },
   ];
 
+  const handleStatusChange = (status) => {
+    setStatusFilter(status);
+    if (status === "All") {
+      setData(originalData); // Assuming originalData is the unfiltered data
+    } else {
+      setData(originalData.filter((order) => order.status === status));
+    }
+  };
+
+  const status = {
+    PENDING: "PENDING",
+    APPROVED: "APPROVED",
+  };
+
   return (
     <Spin
       spinning={loadingUpdate}
@@ -232,16 +261,19 @@ const CommercialJob = () => {
           Commercial Job Orders
         </Typography.Title>
         <div className="flex items-center py-4 justify-between">
-          <Input
-            placeholder="Search by name..."
-            value={table?.getColumn("cbName")?.getFilterValue() || ""}
-            onChange={(event) => {
-              if (table) {
-                table.getColumn("cbName")?.setFilterValue(event.target.value);
-              }
-            }}
-            className="max-w-sm"
-          />
+          <div className="flex items-center w-[400px]">
+            <Input
+              placeholder="Search by name..."
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              className="w-full"
+            />
+            <StatusFilter
+              statusFilter={statusFilter}
+              handleStatusChange={handleStatusChange}
+              status={status}
+            />
+          </div>
           <Tooltip title="Archive Commercial Job Orders">
             <Button
               variant="default"
@@ -257,11 +289,7 @@ const CommercialJob = () => {
           {loading ? (
             <div className="p-4">Loading...</div>
           ) : (
-            <CustomTable
-              columns={columns}
-              data={data}
-              onTableInstance={setTable}
-            />
+            <CustomTable columns={columns} data={data} />
           )}
         </div>
       </div>

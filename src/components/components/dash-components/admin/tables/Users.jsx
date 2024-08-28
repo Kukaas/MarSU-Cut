@@ -23,24 +23,42 @@ import { toast } from "sonner";
 
 const Users = () => {
   const [data, setData] = useState([]);
+  const [originalData, setOriginalData] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [table, setTable] = useState(null);
 
-  const fetchData = async () => {
-    setLoading(true);
-    const result = await axios.get(`${BASE_URL}/api/v1/user/all`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      withCredentials: true,
-    });
-    const sortedData = result.data.sort((a, b) => a.name.localeCompare(b.name));
-    setData(sortedData);
-    setLoading(false);
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const result = await axios.get(`${BASE_URL}/api/v1/user/all`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      });
+      const sortedData = result.data.sort((a, b) =>
+        a.name.localeCompare(b.name)
+      );
+      setData(sortedData);
+      setOriginalData(sortedData);
+      setLoading(false);
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (searchValue === "") {
+      setData(originalData);
+    } else {
+      const filteredData = originalData.filter((user) =>
+        user.name.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      setData(filteredData);
+    }
+  }, [searchValue, originalData]);
 
   const handleDelete = async () => {
     try {
@@ -67,10 +85,6 @@ const Users = () => {
       setDeleteLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   const columns = [
     {
@@ -186,28 +200,19 @@ const Users = () => {
         Users
       </Typography.Title>
       <div className="flex items-center py-4 justify-between">
-        <Input
-          placeholder="Filter Name..."
-          value={table?.getColumn("name")?.getFilterValue() || ""}
-          onChange={(event) => {
-            if (table) {
-              table
-                .getColumn("studentNumber")
-                ?.setFilterValue(event.target.value);
-            }
-          }}
-          className="max-w-sm"
-        />
+        <div className="flex items-center w-[300px]">
+          <Input
+            placeholder="Search by name..."
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+          />
+        </div>
       </div>
       <div className="rounded-md border">
         {loading ? (
           <div className="p-4">Loading...</div>
         ) : (
-          <CustomTable
-            columns={columns}
-            data={data}
-            onTableInstance={setTable}
-          />
+          <CustomTable columns={columns} data={data} />
         )}
       </div>
     </div>

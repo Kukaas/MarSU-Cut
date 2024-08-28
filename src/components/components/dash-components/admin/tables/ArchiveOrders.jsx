@@ -29,8 +29,9 @@ import CustomTable from "@/components/components/CustomTable";
 function ArchiveOrders() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [originalData, setOriginalData] = useState([]);
   const [loadingUpdate, setLoadingUpdate] = useState(false);
-  const [table, setTable] = useState(null);
+  const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -48,6 +49,7 @@ function ArchiveOrders() {
           }
         );
         setData(response.data.orders);
+        setOriginalData(response.data.orders);
       } catch (error) {
         console.error("Error fetching orders:", error);
       } finally {
@@ -57,6 +59,14 @@ function ArchiveOrders() {
 
     fetchArchivedOrders();
   }, []);
+
+  useEffect(() => {
+    // Apply search filter
+    const filteredData = originalData.filter((order) =>
+      order.studentNumber.toLowerCase().includes(searchValue.toLowerCase())
+    );
+    setData(filteredData);
+  }, [searchValue, originalData]);
 
   // Unarchive orders
   const handleUnarchive = async (order) => {
@@ -346,18 +356,13 @@ function ArchiveOrders() {
           Archive Orders
         </Typography.Title>
         <div className="flex items-center py-4 justify-between">
-          <Input
-            placeholder="Search Student Number..."
-            value={table?.getColumn("studentNumber")?.getFilterValue() || ""}
-            onChange={(event) => {
-              if (table) {
-                table
-                  .getColumn("studentNumber")
-                  ?.setFilterValue(event.target.value);
-              }
-            }}
-            className="max-w-sm"
-          />
+          <div className="flex items-center w-[300px]">
+            <Input
+              placeholder="Search by student number"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+            />
+          </div>
           <Tooltip title="Back to Orders">
             <Button
               variant="default"
@@ -373,11 +378,7 @@ function ArchiveOrders() {
           {loading ? (
             <div className="p-4">Loading...</div>
           ) : (
-            <CustomTable
-              columns={columns}
-              data={data}
-              onTableInstance={setTable}
-            />
+            <CustomTable columns={columns} data={data} />
           )}
         </div>
       </div>
