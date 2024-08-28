@@ -12,14 +12,17 @@ import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { BASE_URL } from "@/lib/api";
 import { token } from "@/lib/token";
 import PropTypes from "prop-types";
+import { Loader2 } from "lucide-react";
 
 const ProductionPerformance = () => {
   const [data, setData] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         const headers = { Authorization: `Bearer ${token}` };
 
         const [thisMonthRes, lastMonthRes] = await Promise.all([
@@ -37,11 +40,14 @@ const ProductionPerformance = () => {
           ];
 
           setData(combinedData);
+          setLoading(false);
         } else {
           console.error("Error: API response does not indicate success");
+          setLoading(false);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
+        setLoading(false);
       }
     };
 
@@ -130,36 +136,46 @@ const ProductionPerformance = () => {
   };
 
   return (
-    <ChartContainer config={chartConfig}>
-      <ResponsiveContainer width="100%" height="100%">
-        <PieChart>
-          <Pie
-            activeIndex={activeIndex}
-            activeShape={renderActiveShape}
-            data={data}
-            cx="50%"
-            cy="50%"
-            innerRadius={70}
-            outerRadius={80}
-            fill="#8884d8"
-            dataKey="value"
-            onMouseEnter={(_, index) => setActiveIndex(index)}
-          >
-            {data.map((entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={
-                  entry.name === "This Month"
-                    ? currentMonthColor
-                    : lastMonthColor
-                }
-              />
-            ))}
-          </Pie>
-          <Tooltip content={<ChartTooltipContent />} />
-        </PieChart>
-      </ResponsiveContainer>
-    </ChartContainer>
+    <div>
+      {loading ? (
+        <div className="w-full h-full">
+          <div className="flex justify-center items-center w-full h-full">
+            <Loader2 size="100" className="animate-spin" />
+          </div>
+        </div>
+      ) : (
+        <ChartContainer config={chartConfig}>
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                activeIndex={activeIndex}
+                activeShape={renderActiveShape}
+                data={data}
+                cx="50%"
+                cy="50%"
+                innerRadius={70}
+                outerRadius={80}
+                fill="#8884d8"
+                dataKey="value"
+                onMouseEnter={(_, index) => setActiveIndex(index)}
+              >
+                {data.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={
+                      entry.name === "This Month"
+                        ? currentMonthColor
+                        : lastMonthColor
+                    }
+                  />
+                ))}
+              </Pie>
+              <Tooltip content={<ChartTooltipContent />} />
+            </PieChart>
+          </ResponsiveContainer>
+        </ChartContainer>
+      )}
+    </div>
   );
 };
 

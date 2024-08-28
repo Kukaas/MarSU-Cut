@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Tooltip, Typography } from "antd";
 import { toast } from "sonner";
 
-import { Loader2, PlusCircle } from "lucide-react";
+import { Loader2, Maximize2Icon, PlusCircle } from "lucide-react";
 
 // others
 import ToasterError from "@/lib/Toaster";
@@ -378,10 +378,7 @@ const Productions = () => {
                 {/* Additional Card 1 */}
                 <Card className="flex-1">
                   <CardHeader>
-                    <CardTitle>Card Title 1</CardTitle>
-                    <CardDescription>
-                      Description for the first additional card.
-                    </CardDescription>
+                    <CardTitle className="text-md">Quantity Produced</CardTitle>
                   </CardHeader>
                   <CardContent className="pl-2">
                     {/* Content for the first additional card */}
@@ -391,7 +388,24 @@ const Productions = () => {
                 {/* Additional Card 2 */}
                 <Card className="flex-1">
                   <CardHeader>
-                    <CardTitle>Performance</CardTitle>
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-md">Performance</CardTitle>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button variant="ghost">
+                            <Maximize2Icon className="h-4 w-4" />
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-h-[550px] overflow-auto">
+                          <DialogTitle>Performance</DialogTitle>
+                          <DialogDescription>
+                            A graph showing the performance of the production
+                            department.
+                          </DialogDescription>
+                          <ProductionPerformance />
+                        </DialogContent>
+                      </Dialog>
+                    </div>
                   </CardHeader>
                   <CardContent>
                     <ProductionPerformance />
