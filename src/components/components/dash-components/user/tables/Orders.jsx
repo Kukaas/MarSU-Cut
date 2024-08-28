@@ -11,7 +11,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import { Spin, Tooltip, Typography } from "antd";
 import { PlusCircle } from "lucide-react";
 import { useSelector } from "react-redux";
@@ -35,7 +34,6 @@ function Orders() {
   const [loading, setLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
-  const [table, setTable] = useState(null);
   const { currentUser } = useSelector((state) => state.user);
 
   // Fetch the data
@@ -318,19 +316,7 @@ function Orders() {
         <Typography.Title level={2} className="text-black dark:text-white">
           Orders
         </Typography.Title>
-        <div className="flex items-center py-4 justify-between">
-          <Input
-            placeholder="Filter Student Numbers..."
-            value={table?.getColumn("studentNumber")?.getFilterValue() || ""}
-            onChange={(event) => {
-              if (table) {
-                table
-                  .getColumn("studentNumber")
-                  ?.setFilterValue(event.target.value);
-              }
-            }}
-            className="max-w-sm"
-          />
+        <div className="flex items-center py-4 justify-end">
           <Tooltip title="Create an Order">
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
@@ -355,11 +341,7 @@ function Orders() {
           {loading ? (
             <div className="p-4">Loading...</div>
           ) : (
-            <CustomTable
-              columns={columns}
-              data={data}
-              onTableInstance={setTable}
-            />
+            <CustomTable columns={columns} data={data} />
           )}
         </div>
       </div>

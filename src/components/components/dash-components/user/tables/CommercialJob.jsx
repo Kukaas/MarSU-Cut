@@ -1,6 +1,5 @@
 import { Spin, Tooltip, Typography } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
-import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
@@ -35,7 +34,6 @@ const CommercialJob = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [loading, setLoading] = useState(true);
   const [loadingDelete, setLoadingDelete] = useState(false);
-  const [table, setTable] = useState(null);
 
   useEffect(() => {
     const fetchCommercialJob = async () => {
@@ -189,19 +187,7 @@ const CommercialJob = () => {
         <Typography.Title level={2} className="text-black dark:text-white">
           Commercial Job Orders
         </Typography.Title>
-        <div className="flex items-center py-4 justify-between">
-          <Input
-            placeholder="Filter Student Numbers..."
-            value={table?.getColumn("idNumber")?.getFilterValue() || ""}
-            onChange={(event) => {
-              if (table) {
-                table
-                  .getColumn("studentNumber")
-                  ?.setFilterValue(event.target.value);
-              }
-            }}
-            className="max-w-sm"
-          />
+        <div className="flex items-center py-4 justify-end">
           <Tooltip title="Create an Order">
             <Dialog>
               <DialogTrigger asChild>
@@ -226,11 +212,7 @@ const CommercialJob = () => {
           {loading ? (
             <div className="p-4">Loading...</div>
           ) : (
-            <CustomTable
-              columns={columns}
-              data={data}
-              onTableInstance={setTable}
-            />
+            <CustomTable columns={columns} data={data} />
           )}
         </div>
       </div>
