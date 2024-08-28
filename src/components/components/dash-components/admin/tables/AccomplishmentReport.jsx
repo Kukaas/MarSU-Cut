@@ -9,14 +9,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -38,7 +30,6 @@ import { toast } from "sonner";
 // icons
 import { LoadingOutlined } from "@ant-design/icons";
 import { CalendarIcon, Loader2, PlusCircle } from "lucide-react";
-import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 
 // others
 import axios from "axios";
@@ -46,7 +37,7 @@ import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
 import { EditAccomplishmentSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addDays, format } from "date-fns";
+import { endOfMonth, format, startOfMonth } from "date-fns";
 import { useEffect, useState } from "react";
 
 import DownloadButton from "./DownloadButton";
@@ -67,9 +58,10 @@ const AccomplishmentReport = () => {
   const form = useForm();
 
   const [selectedDate, setSelectedDate] = useState({
-    from: new Date(),
-    to: addDays(new Date(), 30),
+    from: startOfMonth(new Date()),
+    to: endOfMonth(new Date()),
   });
+
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   const handleSelect = (selectedDateRange) => {
@@ -271,43 +263,60 @@ const AccomplishmentReport = () => {
         const accomplishment = row.original;
 
         return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <DotsHorizontalIcon className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() =>
-                  navigator.clipboard.writeText(accomplishment._id)
-                }
-              >
-                Copy Order ID
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => setSelectedAccomplishment(accomplishment)}
-              >
-                Edit Accomplishment
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => handleDeleteAccomplishment(accomplishment)}
-                disabled={loadingDelete}
-              >
-                <span className="text-red-500 hover:text-red-400">
-                  {loadingDelete ? (
-                    <span className="loading-dots text-red-400">Deleting</span>
-                  ) : (
-                    "Delete"
-                  )}
-                </span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="flex items-center justify-center space-x-2">
+            <Tooltip title="Edit Accomplishment">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="default"
+                    size="sm"
+                    onClick={() => setSelectedAccomplishment(accomplishment)}
+                  >
+                    Edit
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Edit Product</DialogTitle>
+                    <DialogDescription>
+                      Please fill out the form below to edit product.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <EditAccomplishmentSchema
+                    selectedAccomplishment={selectedAccomplishment}
+                  />
+                </DialogContent>
+              </Dialog>
+            </Tooltip>
+            <Tooltip title="Delete Accomplishment">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="destructive" size="sm">
+                    Delete
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Delete Accomplishment</DialogTitle>
+                    <DialogDescription>
+                      Are you sure you want to delete this accomplishment?
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="flex items-center justify-end gap-2">
+                    <DialogClose>
+                      <Button variant="outline">Cancel</Button>
+                    </DialogClose>
+                    <Button
+                      variant="destructive"
+                      onClick={() => handleDeleteAccomplishment(accomplishment)}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </Tooltip>
+          </div>
         );
       },
     },

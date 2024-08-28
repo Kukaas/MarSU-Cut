@@ -11,9 +11,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Tooltip, Typography } from "antd";
+import { Spin, Tooltip, Typography } from "antd";
 
 import { Loader2, PlusCircle } from "lucide-react";
+import { LoadingOutlined } from "@ant-design/icons";
 
 // others
 import { useEffect, useState } from "react";
@@ -232,58 +233,70 @@ const RawMaterials = () => {
   ];
 
   return (
-    <div className="overflow-x-auto">
-      <div className="w-full p-5 h-screen">
-        <Typography.Title level={2} className="text-black dark:text-white">
-          Raw Materials
-        </Typography.Title>
-        <div className="flex items-center py-4 justify-between">
-          <div className="flex items-center w-[300px]">
-            <Input
-              placeholder="Search by type..."
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-            />
+    <Spin
+      spinning={deleteLoading}
+      indicator={
+        <LoadingOutlined
+          className="dark:text-white"
+          style={{
+            fontSize: 48,
+          }}
+        />
+      }
+    >
+      <div className="overflow-x-auto">
+        <div className="w-full p-5 h-screen">
+          <Typography.Title level={2} className="text-black dark:text-white">
+            Raw Materials
+          </Typography.Title>
+          <div className="flex items-center py-4 justify-between">
+            <div className="flex items-center w-[300px]">
+              <Input
+                placeholder="Search by type..."
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+              />
+            </div>
+            <Tooltip title="Add new raw material">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="default" className="m-2">
+                    <PlusCircle size={20} className="mr-2" />
+                    New Material
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Add a new raw material</DialogTitle>
+                    <DialogDescription>
+                      Click submit when you&apos;re done.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <AddNewRawMaterial />
+                </DialogContent>
+              </Dialog>
+            </Tooltip>
           </div>
-          <Tooltip title="Add new raw material">
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="default" className="m-2">
-                  <PlusCircle size={20} className="mr-2" />
-                  New Material
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Add a new raw material</DialogTitle>
-                  <DialogDescription>
-                    Click submit when you&apos;re done.
-                  </DialogDescription>
-                </DialogHeader>
-                <AddNewRawMaterial />
-              </DialogContent>
-            </Dialog>
-          </Tooltip>
+          <div className="rounded-md border">
+            {loading ? (
+              <div className="p-4">Loading...</div>
+            ) : (
+              <CustomTable columns={columns} data={data} />
+            )}
+          </div>
         </div>
-        <div className="rounded-md border">
-          {loading ? (
-            <div className="p-4">Loading...</div>
-          ) : (
-            <CustomTable columns={columns} data={data} />
-          )}
-        </div>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add New Raw Material</DialogTitle>
+              <DialogDescription>
+                Please fill out the form below to add new raw material.
+              </DialogDescription>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
       </div>
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Add New Raw Material</DialogTitle>
-            <DialogDescription>
-              Please fill out the form below to add new raw material.
-            </DialogDescription>
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
-    </div>
+    </Spin>
   );
 };
 

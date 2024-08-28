@@ -393,7 +393,7 @@ const Productions = () => {
                   <CardHeader>
                     <CardTitle>Performance</CardTitle>
                   </CardHeader>
-                  <CardContent className="pl-2">
+                  <CardContent>
                     <ProductionPerformance />
                   </CardContent>
                 </Card>
