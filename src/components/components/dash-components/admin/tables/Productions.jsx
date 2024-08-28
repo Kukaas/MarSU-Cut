@@ -32,6 +32,15 @@ import AddProduction from "@/components/components/forms/AddProduction";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomTable from "@/components/components/CustomTable";
+import ProductionChart from "../production-components/ProductionChart";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import ProductionPerformance from "../production-components/ProductionPerformance";
 
 const Productions = () => {
   const [data, setData] = useState([]);
@@ -334,13 +343,64 @@ const Productions = () => {
             )}
           </Tooltip>
         </div>
-        <div className="rounded-md border">
-          {loading ? (
-            <div className="p-4">Loading...</div>
-          ) : (
-            <CustomTable columns={columns} data={data} />
-          )}
-        </div>
+        <Tabs defaultValue="table">
+          <TabsList className="grid w-[300px] grid-cols-2">
+            <TabsTrigger value="table">Table</TabsTrigger>
+            <TabsTrigger value="graph">Graph</TabsTrigger>
+          </TabsList>
+          <TabsContent value="table" className="mt-4">
+            <div className="rounded-md border">
+              {loading ? (
+                <div className="p-4">Loading...</div>
+              ) : (
+                <CustomTable columns={columns} data={data} />
+              )}
+            </div>
+          </TabsContent>
+          <TabsContent value="graph" className="mt-4">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+              {/* Left Card */}
+              <Card className="lg:col-span-3">
+                <CardHeader>
+                  <CardTitle>Productions</CardTitle>
+                  <CardDescription>
+                    A graph showing the production quantity of each product type
+                    for the current year and the previous year.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="pl-2">
+                  <ProductionChart />
+                </CardContent>
+              </Card>
+
+              {/* Right Cards Container */}
+              <div className="lg:col-span-1 flex flex-col gap-4">
+                {/* Additional Card 1 */}
+                <Card className="flex-1">
+                  <CardHeader>
+                    <CardTitle>Card Title 1</CardTitle>
+                    <CardDescription>
+                      Description for the first additional card.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="pl-2">
+                    {/* Content for the first additional card */}
+                  </CardContent>
+                </Card>
+
+                {/* Additional Card 2 */}
+                <Card className="flex-1">
+                  <CardHeader>
+                    <CardTitle>Performance</CardTitle>
+                  </CardHeader>
+                  <CardContent className="pl-2">
+                    <ProductionPerformance />
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

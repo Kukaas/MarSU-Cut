@@ -261,7 +261,7 @@ const CommercialJob = () => {
           Commercial Job Orders
         </Typography.Title>
         <div className="flex items-center py-4 justify-between">
-          <div className="flex items-center w-[400px]">
+          <div className="flex items-center w-[450px]">
             <Input
               placeholder="Search by name..."
               value={searchValue}
