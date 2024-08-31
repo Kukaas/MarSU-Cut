@@ -23,7 +23,7 @@ const DashProductions = () => {
   return (
     <div className="w-full h-screen overflow-x-auto">
       <Helmet>
-        <title>MarSU Cut | Orders</title>
+        <title>MarSU Cut | Productions</title>
         <meta name="description" content="" />
       </Helmet>
       <Productions />

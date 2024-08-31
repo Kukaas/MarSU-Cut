@@ -458,10 +458,20 @@ function Rentals() {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem onClick={() => handleReject(rental)}>
+                <DropdownMenuItem
+                  onClick={() => handleReject(rental)}
+                  disabled={["APPROVED", "GIVEN", "RETURNED"].includes(
+                    rental.status
+                  )}
+                >
                   Reject
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleApprove(rental)}>
+                <DropdownMenuItem
+                  onClick={() => handleApprove(rental)}
+                  disabled={["APPROVED", "GIVEN", "RETURNED"].includes(
+                    rental.status
+                  )}
+                >
                   Approve
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => handleGiven(rental)}>

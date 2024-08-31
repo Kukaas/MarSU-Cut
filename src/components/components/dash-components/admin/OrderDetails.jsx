@@ -237,7 +237,9 @@ const OrderDetails = () => {
                   <h6 className="text-sm font-semibold">
                     Schedule:{" "}
                     <span className="font-normal text-xs">
-                      {new Date(selectedOrder.schedule).toDateString()}
+                      {selectedOrder.schedule
+                        ? new Date(selectedOrder.schedule).toDateString()
+                        : "Not yet scheduled"}
                     </span>
                   </h6>
                   <h6 className="text-sm font-semibold flex items-center gap-2">

@@ -376,10 +376,10 @@ const AddOrderItems = ({ selectedOrder }) => {
         newItems.push({
           level: "",
           size: "",
-          quantity: 1,
+          quantity: item.quantity,
           productType: "LOGO",
           unitPrice: 100,
-          totalPrice: 100,
+          totalPrice: 100 * item.quantity,
         });
       } else if (item.productType === "BLOUSE") {
         newItems.push({

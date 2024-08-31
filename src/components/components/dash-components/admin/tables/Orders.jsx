@@ -390,7 +390,15 @@ function Orders() {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem onClick={() => handleApprove(order)}>
+                <DropdownMenuItem
+                  onClick={() => handleApprove(order)}
+                  disabled={[
+                    "APPROVED",
+                    "MEASURED",
+                    "DONE",
+                    "CLAIMED",
+                  ].includes(order.status)}
+                >
                   Approve
                 </DropdownMenuItem>
                 <DropdownMenuItem
