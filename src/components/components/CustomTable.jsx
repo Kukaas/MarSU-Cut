@@ -18,6 +18,7 @@ import {
 import { useState } from "react";
 
 import PropTypes from "prop-types";
+import DataTableViewOptions from "./DataTableViewOption";
 
 const CustomTable = ({ data, columns }) => {
   const [sorting, setSorting] = useState([]);
@@ -66,7 +67,7 @@ const CustomTable = ({ data, columns }) => {
       <Table className="border-b-2">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
+            <TableRow key={headerGroup.id} className="bg-accent">
               {headerGroup.headers.map((header) => (
                 <TableHead key={header.id}>
                   {header.isPlaceholder
@@ -80,7 +81,7 @@ const CustomTable = ({ data, columns }) => {
             </TableRow>
           ))}
         </TableHeader>
-        <TableBody>
+        <TableBody className="overflow-x-auto">
           {table.getRowModel().rows.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
@@ -106,10 +107,15 @@ const CustomTable = ({ data, columns }) => {
           )}
         </TableBody>
       </Table>
-      <div className="flex items-center justify-end space-x-2 py-4 p-2">
-        <div className="flex-1 ml-2 text-sm text-muted-foreground">
-          Page {table.getState().pagination.pageIndex + 1} of{" "}
-          {table.getPageCount()}
+      <div className="flex items-center justify-between py-4 p-2">
+        <div className="flex-1 text-sm text-muted-foreground">
+          <div className="flex flex-row items-center space-x-2">
+            <span>
+              Page {table.getState().pagination.pageIndex + 1} of{" "}
+              {table.getPageCount()}
+            </span>
+            <DataTableViewOptions table={table} />
+          </div>
         </div>
         <div className="space-x-2">
           <Button

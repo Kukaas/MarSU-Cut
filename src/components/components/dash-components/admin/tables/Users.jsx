@@ -20,6 +20,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import DataTableColumnHeader from "@/components/components/DataTableColumnHeader";
 
 const Users = () => {
   const [data, setData] = useState([]);
@@ -109,11 +110,15 @@ const Users = () => {
     },
     {
       accessorKey: "name",
-      header: "Name",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Name" />
+      ),
     },
     {
       accessorKey: "email",
-      header: "Email",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Email" />
+      ),
     },
     {
       accessorKey: "verified",
@@ -199,12 +204,13 @@ const Users = () => {
       <Typography.Title level={2} className="text-black dark:text-white">
         Users
       </Typography.Title>
-      <div className="flex items-center py-4 justify-between">
-        <div className="flex items-center w-[300px]">
+      <div className="flex flex-wrap items-center justify-between pb-2">
+        <div className="flex flex-1 flex-wrap items-center gap-2">
           <Input
             placeholder="Search by name..."
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
+            className="h-8 w-[150px] lg:w-[250px]"
           />
         </div>
       </div>

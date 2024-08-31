@@ -28,6 +28,7 @@ import { BASE_URL } from "@/lib/api";
 import CustomTable from "@/components/components/CustomTable";
 import { statusColors } from "@/lib/utils";
 import CustomBadge from "@/components/components/CustomBadge";
+import DataTableColumnHeader from "@/components/components/DataTableColumnHeader";
 
 const FinishedProduct = () => {
   const [data, setData] = useState([]);
@@ -124,15 +125,21 @@ const FinishedProduct = () => {
   const columns = [
     {
       accessorKey: "level",
-      header: "Level",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Level" />
+      ),
     },
     {
       accessorKey: "productType",
-      header: "Product Type",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Product Type" />
+      ),
     },
     {
       accessorKey: "size",
-      header: "Size",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Size" />
+      ),
     },
     {
       accessorKey: "quantity",
@@ -140,7 +147,9 @@ const FinishedProduct = () => {
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Status" />
+      ),
       cell: ({ row }) => {
         const status = row.getValue("status");
         const { color, badgeText } =
@@ -151,7 +160,6 @@ const FinishedProduct = () => {
     },
     {
       id: "actions",
-      header: "Actions",
       cell: ({ row }) => {
         const product = row.original;
         return (
@@ -253,19 +261,20 @@ const FinishedProduct = () => {
           <Typography.Title level={2} className="text-black dark:text-white">
             Finished Products Inventory
           </Typography.Title>
-          <div className="flex items-center py-4 justify-between">
-            <div className="flex items-center w-[300px]">
+          <div className="flex flex-wrap items-center justify-between pb-2">
+            <div className="flex flex-1 flex-wrap items-center gap-2">
               <Input
                 placeholder="Search by product type or level..."
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
+                className="h-8 w-[150px] lg:w-[250px]"
               />
             </div>
             <Tooltip title="Add new product">
               <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild>
-                  <Button variant="default" className="m-2">
-                    <PlusCircle size={20} className="mr-2" />
+                  <Button variant="default" className="m-2 h-8">
+                    <PlusCircle size={20} className="mr-2 h-4 w-4" />
                     New Product
                   </Button>
                 </DialogTrigger>

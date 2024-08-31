@@ -42,6 +42,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import ProductionPerformance from "../production-components/ProductionPerformance";
+import DataTableColumnHeader from "@/components/components/DataTableColumnHeader";
 
 const Productions = () => {
   const [data, setData] = useState([]);
@@ -149,19 +150,27 @@ const Productions = () => {
   const columns = [
     {
       accessorKey: "productType",
-      header: "Product Type",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Product Type" />
+      ),
     },
     {
       accessorKey: "size",
-      header: "Size",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Size" />
+      ),
     },
     {
       accessorKey: "level",
-      header: "Level",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Level" />
+      ),
     },
     {
       accessorKey: "productionDateFrom",
-      header: "Production Date From",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="From" />
+      ),
       cell: ({ row }) => {
         const date = new Date(row.getValue("productionDateFrom"));
         return date.toLocaleDateString("en-US", {
@@ -173,7 +182,9 @@ const Productions = () => {
     },
     {
       accessorKey: "productionDateTo",
-      header: "Production Date To",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="To" />
+      ),
       cell: ({ row }) => {
         const date = new Date(row.getValue("productionDateTo"));
         return date.toLocaleDateString("en-US", {
@@ -273,19 +284,20 @@ const Productions = () => {
           <Typography.Title level={2} className="text-black dark:text-white">
             Productions
           </Typography.Title>
-          <div className="flex items-center py-4 justify-between gap-2">
-            <div className="flex items-center w-[300px]">
+          <div className="flex flex-wrap items-center justify-between pb-2">
+            <div className="flex flex-1 flex-wrap items-center gap-2">
               <Input
                 placeholder="Search by product type or level..."
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
+                className="h-8 w-[150px] lg:w-[250px]"
               />
             </div>
             <Tooltip title="Add new production">
               {!isSmallScreen ? (
                 <Sheet open={isOpen} onOpenChange={setIsOpen}>
                   <SheetTrigger asChild>
-                    <Button>
+                    <Button className="m-2 h-8">
                       <PlusCircle className="mr-2 h-4 w-4" />
                       Add Production
                     </Button>
@@ -322,7 +334,7 @@ const Productions = () => {
               ) : (
                 <Dialog open={isOpen} onOpenChange={setIsOpen}>
                   <DialogTrigger asChild>
-                    <Button>
+                    <Button className="m-2 h-8">
                       <PlusCircle className="mr-2 h-4 w-4" />
                       Add Production
                     </Button>

@@ -29,6 +29,7 @@ import { token } from "@/lib/token";
 import ToasterError from "@/lib/Toaster";
 import { BASE_URL } from "@/lib/api";
 import CustomTable from "@/components/components/CustomTable";
+import DataTableColumnHeader from "@/components/components/DataTableColumnHeader";
 
 function Rentals() {
   const [data, setData] = useState([]);
@@ -118,7 +119,7 @@ function Rentals() {
     },
     {
       accessorKey: "coordinatorName",
-      header: "Coordinator Name",
+      header: "Name",
     },
     {
       accessorKey: "department",
@@ -143,7 +144,6 @@ function Rentals() {
     {
       accessorKey: "returnDate",
       header: "ReturnDate",
-      key: "returnDate",
       cell: ({ row }) => {
         const date = new Date(row.getValue("returnDate"));
         return date.toLocaleDateString("en-US", {
@@ -155,7 +155,9 @@ function Rentals() {
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Status" />
+      ),
       cell: ({ row }) => {
         const statusStyles = {
           APPROVED: {
@@ -208,7 +210,6 @@ function Rentals() {
     },
     {
       id: "actions",
-      header: "Actions",
       cell: ({ row }) => {
         const rental = row.original;
 
@@ -258,7 +259,7 @@ function Rentals() {
         <Typography.Title level={2} className="text-black dark:text-white">
           Rentals
         </Typography.Title>
-        <div className="flex items-center py-4 justify-end">
+        <div className="flex items-center py-4 justify-end overflow-auto">
           <Tooltip title="Create a rental">
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>

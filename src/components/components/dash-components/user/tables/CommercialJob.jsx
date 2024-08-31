@@ -28,6 +28,7 @@ import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import ToasterError from "@/lib/Toaster";
 import CustomTable from "@/components/components/CustomTable";
+import DataTableColumnHeader from "@/components/components/DataTableColumnHeader";
 
 const CommercialJob = () => {
   const [data, setData] = useState([]);
@@ -106,7 +107,9 @@ const CommercialJob = () => {
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Status" />
+      ),
       cell: ({ row }) => {
         const statusStyles = {
           APPROVED: {
@@ -142,7 +145,6 @@ const CommercialJob = () => {
     },
     {
       id: "actions",
-      header: "Actions",
       cell: ({ row }) => {
         const commercial = row.original;
 

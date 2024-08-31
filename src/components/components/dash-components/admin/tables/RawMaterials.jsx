@@ -28,6 +28,7 @@ import { BASE_URL } from "@/lib/api";
 import CustomTable from "@/components/components/CustomTable";
 import { statusColors } from "@/lib/utils";
 import CustomBadge from "@/components/components/CustomBadge";
+import DataTableColumnHeader from "@/components/components/DataTableColumnHeader";
 
 const RawMaterials = () => {
   const [data, setData] = useState([]);
@@ -111,11 +112,15 @@ const RawMaterials = () => {
   const columns = [
     {
       accessorKey: "type",
-      header: "Type",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Type" />
+      ),
     },
     {
       accessorKey: "unit",
-      header: "Unit",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Unit" />
+      ),
     },
     {
       accessorKey: "quantity",
@@ -123,7 +128,9 @@ const RawMaterials = () => {
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Status" />
+      ),
       cell: ({ row }) => {
         const status = row.getValue("status");
         const { color, badgeText } =
@@ -224,19 +231,20 @@ const RawMaterials = () => {
           <Typography.Title level={2} className="text-black dark:text-white">
             Raw Materials
           </Typography.Title>
-          <div className="flex items-center py-4 justify-between">
-            <div className="flex items-center w-[300px]">
+          <div className="flex flex-wrap items-center justify-between pb-2">
+            <div className="flex flex-1 flex-wrap items-center gap-2">
               <Input
                 placeholder="Search by type..."
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
+                className="h-8 w-[150px] lg:w-[250px]"
               />
             </div>
             <Tooltip title="Add new raw material">
               <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild>
-                  <Button variant="default" className="m-2">
-                    <PlusCircle size={20} className="mr-2" />
+                  <Button variant="default" className="m-2 h-8">
+                    <PlusCircle size={20} className="mr-2 h-4 w-4" />
                     New Material
                   </Button>
                 </DialogTrigger>

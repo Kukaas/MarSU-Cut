@@ -17,7 +17,7 @@ const StatusFilter = ({ statusFilter, handleStatusChange, status }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="ml-2">
+        <Button variant="outline" className="ml-2 h-8">
           <div className="flex justify-between items-center">
             {statusFilter
               ? statusFilter === "All"

@@ -28,6 +28,7 @@ import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import ToasterError from "@/lib/Toaster";
 import CustomTable from "@/components/components/CustomTable";
+import DataTableColumnHeader from "@/components/components/DataTableColumnHeader";
 
 function Orders() {
   const [data, setData] = useState([]);
@@ -134,7 +135,9 @@ function Orders() {
     },
     {
       accessorKey: "schedule",
-      header: "Schedule",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Schedules" />
+      ),
       cell: ({ row }) => {
         const scheduleValue = row.getValue("schedule");
         if (!scheduleValue) {
@@ -216,7 +219,9 @@ function Orders() {
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Status" />
+      ),
       cell: ({ row }) => {
         const statusStyles = {
           APPROVED: {
@@ -264,7 +269,6 @@ function Orders() {
     },
     {
       id: "actions",
-      header: "Actions",
       cell: ({ row }) => {
         const order = row.original;
 

@@ -8,14 +8,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Spin, Tooltip, Typography } from "antd";
+import { Spin, Typography } from "antd";
 
 // icons
 import { LoadingOutlined } from "@ant-design/icons";
-import { ArchiveIcon } from "lucide-react";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 
 // others
@@ -27,9 +25,10 @@ import ToasterError from "@/lib/Toaster";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomTable from "@/components/components/CustomTable";
-import StatusFilter from "@/components/components/StatusFilter";
 import { statusColors } from "@/lib/utils";
 import CustomBadge from "@/components/components/CustomBadge";
+import DataTableColumnHeader from "@/components/components/DataTableColumnHeader";
+import DataTableToolBar from "@/components/components/DataTableToolBar";
 
 const CommercialJob = () => {
   const [data, setData] = useState([]);
@@ -152,15 +151,21 @@ const CommercialJob = () => {
     },
     {
       accessorKey: "cbName",
-      header: "Name",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Name" />
+      ),
     },
     {
       accessorKey: "cbEmail",
-      header: "Email",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Email" />
+      ),
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Status" />
+      ),
       cell: ({ row }) => {
         const status = row.getValue("status");
         const { color, badgeText } =
@@ -171,7 +176,6 @@ const CommercialJob = () => {
     },
     {
       id: "actions",
-      header: "Actions",
       cell: ({ row }) => {
         const commercial = row.original;
 
@@ -237,31 +241,14 @@ const CommercialJob = () => {
         <Typography.Title level={2} className="text-black dark:text-white">
           Commercial Job Orders
         </Typography.Title>
-        <div className="flex items-center py-4 justify-between">
-          <div className="flex items-center w-[450px]">
-            <Input
-              placeholder="Search by name..."
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              className="w-full"
-            />
-            <StatusFilter
-              statusFilter={statusFilter}
-              handleStatusChange={handleStatusChange}
-              status={status}
-            />
-          </div>
-          <Tooltip title="Archive Commercial Job Orders">
-            <Button
-              variant="default"
-              className="m-2"
-              onClick={() => navigate("/dashboard?tab=archive-commercial-job")}
-            >
-              <ArchiveIcon size={20} className="mr-2" />
-              Archive
-            </Button>
-          </Tooltip>
-        </div>
+        <DataTableToolBar
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
+          handleStatusChange={handleStatusChange}
+          statusFilter={statusFilter}
+          navigate={() => navigate("/dashboard?tab=commercial-job-archive")}
+          status={status}
+        />
         <div className="rounded-md border">
           {loading ? (
             <div className="p-4">Loading...</div>

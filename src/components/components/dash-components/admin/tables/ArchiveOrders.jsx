@@ -27,6 +27,7 @@ import { BASE_URL } from "@/lib/api";
 import CustomTable from "@/components/components/CustomTable";
 import { statusColors } from "@/lib/utils";
 import CustomBadge from "@/components/components/CustomBadge";
+import DataTableColumnHeader from "@/components/components/DataTableColumnHeader";
 
 function ArchiveOrders() {
   const [data, setData] = useState([]);
@@ -147,11 +148,15 @@ function ArchiveOrders() {
   const columns = [
     {
       accessorKey: "studentNumber",
-      header: "Student Number",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Student Number" />
+      ),
     },
     {
       accessorKey: "studentName",
-      header: "Student Name",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Name" />
+      ),
     },
     {
       accessorKey: "studentGender",
@@ -176,7 +181,9 @@ function ArchiveOrders() {
     },
     {
       accessorKey: "schedule",
-      header: "Schedule",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Schedules " />
+      ),
       cell: ({ row }) => {
         const scheduleValue = row.getValue("schedule");
         if (!scheduleValue) {
@@ -258,7 +265,9 @@ function ArchiveOrders() {
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Status" />
+      ),
       cell: ({ row }) => {
         const status = row.getValue("status");
         const { color, badgeText } =
@@ -269,7 +278,6 @@ function ArchiveOrders() {
     },
     {
       id: "actions",
-      header: "Actions",
       cell: ({ row }) => {
         const order = row.original;
 
@@ -322,21 +330,22 @@ function ArchiveOrders() {
         <Typography.Title level={2} className="text-black dark:text-white">
           Archive Orders
         </Typography.Title>
-        <div className="flex items-center py-4 justify-between">
-          <div className="flex items-center w-[300px]">
+        <div className="flex flex-wrap items-center justify-between pb-2">
+          <div className="flex flex-1 flex-wrap items-center gap-2">
             <Input
-              placeholder="Search by student number"
+              placeholder="Search by student number or name"
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
+              className="h-8 w-[150px] lg:w-[250px]"
             />
           </div>
           <Tooltip title="Back to Orders">
             <Button
               variant="default"
-              className="m-2"
+              className="m-2 h-8"
               onClick={() => navigate("/dashboard?tab=orders-admin")}
             >
-              <ArrowDownLeft size={20} className="mr-2" />
+              <ArrowDownLeft size={20} className="mr-2 h-4 w-4" />
               Orders
             </Button>
           </Tooltip>

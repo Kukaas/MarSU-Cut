@@ -46,6 +46,7 @@ import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import ToasterError from "@/lib/Toaster";
 import CustomTable from "@/components/components/CustomTable";
+import DataTableColumnHeader from "@/components/components/DataTableColumnHeader";
 
 const AccomplishmentReport = () => {
   const [data, setData] = useState([]);
@@ -221,18 +222,24 @@ const AccomplishmentReport = () => {
   const columns = [
     {
       accessorKey: "type",
-      header: "Type of Accomplishment",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Type of Accomplishment" />
+      ),
     },
     {
       accessorKey: "accomplishment",
-      header: "Accomplishment",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Accomplishment" />
+      ),
       cell: ({ row }) => (
         <div className="break-words w-52">{row.original.accomplishment}</div>
       ),
     },
     {
       accessorKey: "date",
-      header: "Accomplishment Date",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Accomplishment Date" />
+      ),
       cell: ({ row }) => {
         const accomplishmentDate = new Date(row.original.date);
         return accomplishmentDate.toLocaleDateString("en-US", {
@@ -341,80 +348,82 @@ const AccomplishmentReport = () => {
         <Typography.Title level={2} className="text-black dark:text-white">
           Accomplishment Report
         </Typography.Title>
-        <div className="flex items-center justify-between overflow-y-auto">
-          <div className={cn("grid gap-2")}>
-            <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
-              <Tooltip
-                title={
-                  selectedDate?.from ? (
-                    <>
-                      <span>
-                        {selectedDate?.from &&
-                          format(selectedDate.from, "LLL dd, y")}{" "}
-                        -{" "}
-                      </span>
-                      <span>
-                        {selectedDate?.to &&
-                          format(selectedDate.to, "LLL dd, y")}
-                      </span>
-                    </>
-                  ) : (
-                    "Please select a date"
-                  )
-                }
-              >
-                <PopoverTrigger asChild>
-                  <Button
-                    id="date"
-                    variant={"outline"}
-                    className={cn(
-                      "w-[300px] justify-start text-left font-normal overflow-y-auto",
-                      !selectedDate && "text-muted-foreground"
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {selectedDate?.from ? (
-                      selectedDate.to ? (
-                        <>
-                          {format(selectedDate.from, "LLL dd, y")} -{" "}
-                          {format(selectedDate.to, "LLL dd, y")}
-                        </>
-                      ) : (
-                        format(selectedDate.from, "LLL dd, y")
-                      )
+        <div className="flex flex-wrap items-center justify-between pb-2">
+          <div className="flex flex-1 flex-wrap items-center gap-2">
+            <div className={cn("grid gap-2")}>
+              <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+                <Tooltip
+                  title={
+                    selectedDate?.from ? (
+                      <>
+                        <span>
+                          {selectedDate?.from &&
+                            format(selectedDate.from, "LLL dd, y")}{" "}
+                          -{" "}
+                        </span>
+                        <span>
+                          {selectedDate?.to &&
+                            format(selectedDate.to, "LLL dd, y")}
+                        </span>
+                      </>
                     ) : (
-                      <span>Pick a date</span>
-                    )}
-                  </Button>
-                </PopoverTrigger>
-              </Tooltip>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  initialFocus
-                  mode="range"
-                  defaultMonth={selectedDate?.from}
-                  selected={selectedDate}
-                  onSelect={handleSelect}
-                  numberOfMonths={2}
-                />
-                <div className="flex justify-end gap-2 p-2">
-                  <Button
-                    variant="outline"
-                    onClick={() => setIsPopoverOpen(false)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      setSelectedDate(null);
-                      setIsPopoverOpen(false);
-                    }}
-                  >
-                    Show All
-                  </Button>
-                </div>
-              </PopoverContent>
-            </Popover>
+                      "Please select a date"
+                    )
+                  }
+                >
+                  <PopoverTrigger asChild>
+                    <Button
+                      id="date"
+                      variant={"outline"}
+                      className={cn(
+                        "h-8 w-[250px] justify-start text-left font-normal",
+                        !selectedDate && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {selectedDate?.from ? (
+                        selectedDate.to ? (
+                          <>
+                            {format(selectedDate.from, "LLL dd, y")} -{" "}
+                            {format(selectedDate.to, "LLL dd, y")}
+                          </>
+                        ) : (
+                          format(selectedDate.from, "LLL dd, y")
+                        )
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                </Tooltip>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    initialFocus
+                    mode="range"
+                    defaultMonth={selectedDate?.from}
+                    selected={selectedDate}
+                    onSelect={handleSelect}
+                    numberOfMonths={2}
+                  />
+                  <div className="flex justify-end gap-2 p-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => setIsPopoverOpen(false)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        setSelectedDate(null);
+                        setIsPopoverOpen(false);
+                      }}
+                    >
+                      Show All
+                    </Button>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
           </div>
           <div className="flex items-center py-4 justify-between overflow-y-auto">
             <DownloadButton
@@ -424,8 +433,8 @@ const AccomplishmentReport = () => {
             <Tooltip title="Create Accomplishment Report">
               <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild>
-                  <Button variant="default" className="m-2">
-                    <PlusCircle size={20} className="mr-2" />
+                  <Button variant="default" className="m-2 h-8">
+                    <PlusCircle size={20} className="mr-2 h-4 w-4" />
                     Create
                   </Button>
                 </DialogTrigger>

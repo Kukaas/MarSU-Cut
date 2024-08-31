@@ -16,8 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Spin, Tooltip, Typography } from "antd";
+import { Spin, Typography } from "antd";
 import { toast } from "sonner";
 
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
@@ -25,7 +24,6 @@ import { LoadingOutlined } from "@ant-design/icons";
 
 // others
 import { useNavigate } from "react-router-dom";
-import { ArchiveIcon } from "lucide-react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import ToasterError from "@/lib/Toaster";
@@ -34,9 +32,10 @@ import AddOrderItems from "../../../forms/AddOrderItems";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomTable from "../../../CustomTable";
-import StatusFilter from "@/components/components/StatusFilter";
 import { statusColors } from "@/lib/utils";
 import CustomBadge from "@/components/components/CustomBadge";
+import DataTableColumnHeader from "@/components/components/DataTableColumnHeader";
+import DataTableToolBar from "@/components/components/DataTableToolBar";
 
 function Orders() {
   const [data, setData] = useState([]);
@@ -213,7 +212,9 @@ function Orders() {
     },
     {
       accessorKey: "studentName",
-      header: "Student Name",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Name" />
+      ),
     },
     {
       accessorKey: "studentGender",
@@ -238,7 +239,9 @@ function Orders() {
     },
     {
       accessorKey: "schedule",
-      header: "Schedule",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Schedules" />
+      ),
       cell: ({ row }) => {
         const scheduleValue = row.getValue("schedule");
         if (!scheduleValue) {
@@ -320,7 +323,9 @@ function Orders() {
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Status" />
+      ),
       cell: ({ row }) => {
         const status = row.getValue("status");
         const { color, badgeText } =
@@ -331,7 +336,6 @@ function Orders() {
     },
     {
       id: "actions",
-      header: "Actions",
       cell: ({ row }) => {
         const order = row.original;
 
@@ -460,31 +464,14 @@ function Orders() {
         <Typography.Title level={2} className="text-black dark:text-white">
           Orders
         </Typography.Title>
-        <div className="flex items-center py-4 justify-between">
-          <div className="flex items-center w-[450px]">
-            <Input
-              placeholder="Search student number or name..."
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              className="w-full"
-            />
-            <StatusFilter
-              status={status}
-              handleStatusChange={handleStatusChange}
-              statusFilter={statusFilter}
-            />
-          </div>
-          <Tooltip title="Archive Orders">
-            <Button
-              variant="default"
-              className="m-2"
-              onClick={() => navigate("/dashboard?tab=archive-orders")}
-            >
-              <ArchiveIcon size={20} className="mr-2" />
-              Archive
-            </Button>
-          </Tooltip>
-        </div>
+        <DataTableToolBar
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
+          handleStatusChange={handleStatusChange}
+          statusFilter={statusFilter}
+          navigate={() => navigate("/dashboard?tab=archive-orders")}
+          status={status}
+        />
         <div className="rounded-md border">
           {loading ? (
             <div className="p-4">Loading...</div>

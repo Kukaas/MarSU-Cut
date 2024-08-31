@@ -9,13 +9,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Spin, Tooltip, Typography } from "antd";
+import { Spin, Typography } from "antd";
 import { toast } from "sonner";
 
 // icons
 import { LoadingOutlined } from "@ant-design/icons";
-import { ArchiveIcon } from "lucide-react";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 
 // others
@@ -26,9 +24,10 @@ import axios from "axios";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomTable from "@/components/components/CustomTable";
-import StatusFilter from "@/components/components/StatusFilter";
 import { statusColors } from "@/lib/utils";
 import CustomBadge from "@/components/components/CustomBadge";
+import DataTableColumnHeader from "@/components/components/DataTableColumnHeader";
+import DataTableToolBar from "@/components/components/DataTableToolBar";
 
 function Rentals() {
   const [data, setData] = useState([]);
@@ -349,11 +348,15 @@ function Rentals() {
     },
     {
       accessorKey: "coordinatorName",
-      header: "Coordinator Name",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Name" />
+      ),
     },
     {
       accessorKey: "department",
-      header: "Department",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Department" />
+      ),
     },
     {
       accessorKey: "quantity",
@@ -361,7 +364,9 @@ function Rentals() {
     },
     {
       accessorKey: "rentalDate",
-      header: "Rental Date",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Rental Date" />
+      ),
       cell: ({ row }) => {
         const date = new Date(row.getValue("rentalDate"));
         return date.toLocaleDateString("en-US", {
@@ -386,7 +391,9 @@ function Rentals() {
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Status" />
+      ),
       cell: ({ row }) => {
         const status = row.getValue("status");
         const { color, badgeText } =
@@ -402,7 +409,6 @@ function Rentals() {
     },
     {
       id: "actions",
-      header: "Actions",
       cell: ({ row }) => {
         const rental = row.original;
 
@@ -493,31 +499,14 @@ function Rentals() {
         <Typography.Title level={2} className="text-black dark:text-white">
           Rentals
         </Typography.Title>
-        <div className="flex items-center py-4 justify-between">
-          <div className="flex items-center w-[450px]">
-            <Input
-              placeholder="Search by coordinator name..."
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              className="w-full"
-            />
-            <StatusFilter
-              statusFilter={statusFilter}
-              status={status}
-              handleStatusChange={handleStatusChange}
-            />
-          </div>
-          <Tooltip title="Archive Rentals">
-            <Button
-              variant="default"
-              className="m-2"
-              onClick={() => navigate("/dashboard?tab=archive-rentals")}
-            >
-              <ArchiveIcon size={20} className="mr-2" />
-              Archive
-            </Button>
-          </Tooltip>
-        </div>
+        <DataTableToolBar
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
+          handleStatusChange={handleStatusChange}
+          statusFilter={statusFilter}
+          navigate={() => navigate("/dashboard?tab=archive-rentals")}
+          status={status}
+        />
         <div className="rounded-md border">
           {loading ? (
             <div className="p-4">Loading...</div>

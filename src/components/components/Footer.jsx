@@ -118,7 +118,7 @@ const ResponsiveFooter = () => {
       <hr className="my-4 border-gray-400 " />
       <div className="text-center">
         <p className="text-gray-600 dark:text-white">
-          &copy; {new Date().getFullYear()} Stitch Perfect. All Rights Reserved.
+          &copy; {new Date().getFullYear()} MarSU Cut. All Rights Reserved.
         </p>
       </div>
     </Footer>

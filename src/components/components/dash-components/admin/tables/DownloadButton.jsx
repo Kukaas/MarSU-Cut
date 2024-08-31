@@ -134,7 +134,9 @@ function DownloadButton({ selectedDate, filteredData }) {
     <div>
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="outline">Download</Button>
+          <Button variant="outline" className="mr-2 h-8">
+            Download
+          </Button>
         </PopoverTrigger>
         <PopoverContent>
           <span className="text-sm text-gray-500">
