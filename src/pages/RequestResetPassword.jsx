@@ -93,7 +93,7 @@ const RequestResetPassword = () => {
   };
 
   return (
-    <div className="min-h-[400px] mt-[140px]">
+    <div className="min-h-[450px] mt-[120px]">
       {loading1 ? (
         <Spin spinning={loading1} />
       ) : (

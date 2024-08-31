@@ -27,6 +27,8 @@ import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomTable from "@/components/components/CustomTable";
 import StatusFilter from "@/components/components/StatusFilter";
+import { statusColors } from "@/lib/utils";
+import CustomBadge from "@/components/components/CustomBadge";
 
 function Rentals() {
   const [data, setData] = useState([]);
@@ -386,48 +388,11 @@ function Rentals() {
       accessorKey: "status",
       header: "Status",
       cell: ({ row }) => {
-        const statusStyles = {
-          APPROVED: {
-            color: "blue",
-            badgeText: "Approved",
-          },
-          REJECTED: {
-            color: "red",
-            badgeText: "Rejected",
-          },
-          GIVEN: {
-            color: "#c09000",
-            badgeText: "Given",
-          },
-          PENDING: {
-            color: "red",
-            badgeText: "Pending",
-          },
-          RETURNED: {
-            color: "#31a900",
-            badgeText: "Returned",
-          },
-          default: {
-            color: "gray",
-            badgeText: "Unknown",
-          },
-        };
-
         const status = row.getValue("status");
         const { color, badgeText } =
-          statusStyles[status] || statusStyles.default;
+          statusColors[status] || statusColors.default;
 
-        return (
-          <div className="status-badge">
-            <div
-              className="size-2 rounded-full"
-              style={{ backgroundColor: color }}
-            />
-            <p className="text-[12px] font-semibold" style={{ color }}>
-              {badgeText}
-            </p>
-          </div>
-        );
+        return <CustomBadge color={color} badgeText={badgeText} />;
       },
     },
     {

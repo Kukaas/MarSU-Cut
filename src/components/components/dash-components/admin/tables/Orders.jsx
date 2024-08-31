@@ -35,6 +35,8 @@ import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomTable from "../../../CustomTable";
 import StatusFilter from "@/components/components/StatusFilter";
+import { statusColors } from "@/lib/utils";
+import CustomBadge from "@/components/components/CustomBadge";
 
 function Orders() {
   const [data, setData] = useState([]);
@@ -131,6 +133,7 @@ function Orders() {
     }
   };
 
+  const handleReject = (order) => updateOrderStatus(order, "REJECTED");
   const handleApprove = (order) => updateOrderStatus(order, "APPROVED");
   const handleDone = (order) => updateOrderStatus(order, "DONE");
   const handleClaimed = (order) => updateOrderStatus(order, "CLAIMED");
@@ -319,48 +322,11 @@ function Orders() {
       accessorKey: "status",
       header: "Status",
       cell: ({ row }) => {
-        const statusStyles = {
-          APPROVED: {
-            color: "#2b4cbe",
-            badgeText: "Approved",
-          },
-          MEASURED: {
-            color: "#c09000",
-            badgeText: "Measured",
-          },
-          DONE: {
-            color: "blue",
-            badgeText: "Done",
-          },
-          CLAIMED: {
-            color: "#31a900",
-            badgeText: "Claimed",
-          },
-          PENDING: {
-            color: "red",
-            badgeText: "Pending",
-          },
-          default: {
-            color: "gray",
-            badgeText: "Unknown",
-          },
-        };
-
         const status = row.getValue("status");
         const { color, badgeText } =
-          statusStyles[status] || statusStyles.default;
+          statusColors[status] || statusColors.default;
 
-        return (
-          <div className="status-badge">
-            <div
-              className="size-2 rounded-full"
-              style={{ backgroundColor: color }}
-            />
-            <p className="text-[12px] font-semibold" style={{ color }}>
-              {badgeText}
-            </p>
-          </div>
-        );
+        return <CustomBadge color={color} badgeText={badgeText} />;
       },
     },
     {
@@ -391,8 +357,21 @@ function Orders() {
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <DropdownMenuItem
+                  onClick={() => handleReject(order)}
+                  disabled={[
+                    "REJECTED",
+                    "APPROVED",
+                    "MEASURED",
+                    "DONE",
+                    "CLAIMED",
+                  ].includes(order.status)}
+                >
+                  Reject
+                </DropdownMenuItem>
+                <DropdownMenuItem
                   onClick={() => handleApprove(order)}
                   disabled={[
+                    "REJECTED",
                     "APPROVED",
                     "MEASURED",
                     "DONE",
@@ -406,13 +385,20 @@ function Orders() {
                     setIsDialogOpen(true);
                     setSelectedOrder(order);
                   }}
+                  disabled={order.status === "REJECTED"}
                 >
                   Measure
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleDone(order)}>
+                <DropdownMenuItem
+                  onClick={() => handleDone(order)}
+                  disabled={order.status === "REJECTED"}
+                >
                   Done
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleClaimed(order)}>
+                <DropdownMenuItem
+                  onClick={() => handleClaimed(order)}
+                  disabled={order.status === "REJECTED"}
+                >
                   Claimed
                 </DropdownMenuItem>
               </DropdownMenuGroup>
@@ -440,6 +426,7 @@ function Orders() {
   };
 
   const status = {
+    REJECTED: "REJECTED",
     PENDING: "PENDING",
     APPROVED: "APPROVED",
     MEASURED: "MEASURED",

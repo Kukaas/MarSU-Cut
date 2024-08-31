@@ -176,7 +176,7 @@ const OTPVerification = () => {
   };
 
   return (
-    <div className="min-h-[400px] mt-[120px]">
+    <div className="min-h-[450px] mt-[140px]">
       <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center">
         {/* left */}
         <div className="flex-1 mb-4">
@@ -200,6 +200,7 @@ const OTPVerification = () => {
                 name="otp"
                 label="OTP"
                 placeholder="Enter OTP..."
+                maxLength={4}
               />
               <Button
                 type="submit"

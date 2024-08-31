@@ -28,7 +28,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 // Icons import
-import { Home, LogInIcon, Menu, Moon, Sun } from "lucide-react";
+import { Home, LogInIcon, Menu, MenuIcon, Moon, Sun } from "lucide-react";
 
 // Other imports
 import { useEffect, useState } from "react";
@@ -193,7 +193,9 @@ const Header = () => {
               {isSmallScreen && !currentUser ? (
                 <Sheet>
                   <SheetTrigger asChild>
-                    <Button variant="outline">Menu</Button>
+                    <Button variant="outline">
+                      <MenuIcon />
+                    </Button>
                   </SheetTrigger>
                   <SheetContent>
                     <SheetHeader className="mt-10">

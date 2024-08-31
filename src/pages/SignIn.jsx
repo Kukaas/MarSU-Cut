@@ -110,7 +110,7 @@ const SignIn = () => {
   };
 
   return (
-    <div className="min-h-[400px] mt-[100px] mb-8">
+    <div className="min-h-[450px] mt-[120px] mb-8">
       <Helmet>
         <title>MarSU Cut | Sign In</title>
         <meta name="description" content="" />

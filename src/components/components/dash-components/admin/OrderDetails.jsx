@@ -16,36 +16,10 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "@/lib/api";
 import { token } from "@/lib/token";
+import { statusColors } from "@/lib/utils";
 
 const StatusBadge = ({ status }) => {
-  const statusStyles = {
-    APPROVED: {
-      color: "#2b4cbe",
-      badgeText: "Approved",
-    },
-    MEASURED: {
-      color: "#c09000",
-      badgeText: "Measured",
-    },
-    DONE: {
-      color: "#1d4ed8",
-      badgeText: "Done",
-    },
-    CLAIMED: {
-      color: "#16a34a",
-      badgeText: "Claimed",
-    },
-    PENDING: {
-      color: "#dc2626",
-      badgeText: "Pending",
-    },
-    default: {
-      color: "#6b7280",
-      badgeText: "Unknown",
-    },
-  };
-
-  const { color, badgeText } = statusStyles[status] || statusStyles.default;
+  const { color, badgeText } = statusColors[status] || statusColors.default;
 
   return (
     <div className="status-badge flex items-center gap-2">

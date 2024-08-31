@@ -25,6 +25,8 @@ import axios from "axios";
 import TableLoading from "./loading-components/TableLoading";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
+import { statusColors } from "@/lib/utils";
+import CustomBadge from "@/components/components/CustomBadge";
 
 const RecentSales = () => {
   const [recentOrders, setRecentOrders] = useState([]);
@@ -82,48 +84,11 @@ const RecentSales = () => {
       accessorKey: "status",
       header: "Status",
       cell: ({ row }) => {
-        const statusStyles = {
-          APPROVED: {
-            color: "#2b4cbe",
-            badgeText: "Approved",
-          },
-          MEASURED: {
-            color: "#c09000",
-            badgeText: "Measured",
-          },
-          DONE: {
-            color: "blue",
-            badgeText: "Done",
-          },
-          CLAIMED: {
-            color: "#31a900",
-            badgeText: "Claimed",
-          },
-          PENDING: {
-            color: "red",
-            badgeText: "Pending",
-          },
-          default: {
-            color: "gray",
-            badgeText: "Unknown",
-          },
-        };
-
         const status = row.getValue("status");
         const { color, badgeText } =
-          statusStyles[status] || statusStyles.default;
+          statusColors[status] || statusColors.default;
 
-        return (
-          <div className="status-badge">
-            <div
-              className="size-2 rounded-full"
-              style={{ backgroundColor: color }}
-            />
-            <p className="text-[12px] font-semibold" style={{ color }}>
-              {badgeText}
-            </p>
-          </div>
-        );
+        return <CustomBadge color={color} badgeText={badgeText} />;
       },
     },
   ];

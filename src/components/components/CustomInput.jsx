@@ -10,7 +10,7 @@ import { Input } from "../ui/input";
 import { Eye, EyeOff } from "lucide-react"; // Assuming you use lucide-react for icons
 import PropTypes from "prop-types";
 
-const CustomInput = ({ form, name, label, placeholder, type }) => {
+const CustomInput = ({ form, name, label, placeholder, type, maxLength }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const toggleShowPassword = () => {
@@ -31,6 +31,7 @@ const CustomInput = ({ form, name, label, placeholder, type }) => {
                 {...field}
                 type={showPassword && type === "password" ? "text" : type}
                 className={type === "password" ? "pr-10" : ""}
+                maxLength={maxLength}
               />
               {type === "password" && (
                 <button
@@ -60,6 +61,7 @@ CustomInput.propTypes = {
   label: PropTypes.string,
   placeholder: PropTypes.string,
   type: PropTypes.string,
+  maxLength: PropTypes.number,
 };
 
 export default CustomInput;

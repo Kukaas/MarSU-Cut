@@ -26,6 +26,8 @@ import AddNewRawMaterial from "@/components/components/forms/AddNewRawMaterial";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomTable from "@/components/components/CustomTable";
+import { statusColors } from "@/lib/utils";
+import CustomBadge from "@/components/components/CustomBadge";
 
 const RawMaterials = () => {
   const [data, setData] = useState([]);
@@ -123,36 +125,11 @@ const RawMaterials = () => {
       accessorKey: "status",
       header: "Status",
       cell: ({ row }) => {
-        const statusStyles = {
-          "Out of Stock": {
-            color: "red",
-            badgeText: "Out of Stock",
-          },
-          "In Stock": {
-            color: "green",
-            badgeText: "In Stock",
-          },
-          default: {
-            color: "gray",
-            badgeText: "Unknown",
-          },
-        };
-
         const status = row.getValue("status");
         const { color, badgeText } =
-          statusStyles[status] || statusStyles.default;
+          statusColors[status] || statusColors.default;
 
-        return (
-          <div className="status-badge">
-            <div
-              className="size-2 rounded-full"
-              style={{ backgroundColor: color }}
-            />
-            <p className="text-[12px] font-semibold" style={{ color }}>
-              {badgeText}
-            </p>
-          </div>
-        );
+        return <CustomBadge color={color} badgeText={badgeText} />;
       },
     },
     {

@@ -238,7 +238,7 @@ const Notification = () => {
             )}
           </Button>
         </TabsContent>
-        <TabsContent value="read" className="h-screen overflow-x-auto">
+        <TabsContent value="read" className="h-screen overflow-auto">
           <SheetTitle className="mt-5">Read</SheetTitle>
           <SheetDescription className="mt-2">
             {readNotifications.length === 0
@@ -250,7 +250,7 @@ const Notification = () => {
           {readNotifications.map((readNotifications) => (
             <div
               key={readNotifications.id}
-              className="p-4 border rounded-md border-gray-400 mt-2 overflow-x-auto cursor-pointer"
+              className="p-4 border rounded-md border-gray-400 mt-2 overflow-auto cursor-pointer"
             >
               <div className="flex gap-2 flex-col">
                 <SheetTitle className="text-sm">
