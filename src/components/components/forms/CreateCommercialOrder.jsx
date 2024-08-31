@@ -10,6 +10,7 @@ import { AddCommercialJobSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogClose } from "@radix-ui/react-dialog";
 import axios from "axios";
+import PropTypes from "prop-types";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
@@ -17,7 +18,10 @@ import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomInput from "../CustomInput";
 
-const CreateCommercialOrder = () => {
+const CreateCommercialOrder = ({
+  onCommercialOrderCreated,
+  setIsDialogOpen,
+}) => {
   const { currentUser } = useSelector((state) => state.user);
   const [commercialOrderLoading, setCommercialOrderLoading] = useState(false);
 
@@ -46,8 +50,8 @@ const CreateCommercialOrder = () => {
         toast.success("Commercial order created successfully", {
           description: "Wait for the admin to approve your order.",
         });
-
-        commercialJobForm.reset();
+        onCommercialOrderCreated(res.data);
+        setIsDialogOpen(false);
       }
     } catch (error) {
       ToasterError({
@@ -111,6 +115,11 @@ const CreateCommercialOrder = () => {
       </div>
     </div>
   );
+};
+
+CreateCommercialOrder.propTypes = {
+  onCommercialOrderCreated: PropTypes.func,
+  setIsDialogOpen: PropTypes.func,
 };
 
 export default CreateCommercialOrder;

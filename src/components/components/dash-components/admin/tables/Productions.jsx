@@ -18,10 +18,11 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Tooltip, Typography } from "antd";
+import { Spin, Tooltip, Typography } from "antd";
 import { toast } from "sonner";
 
-import { Loader2, Maximize2Icon, PlusCircle } from "lucide-react";
+import { Maximize2Icon, PlusCircle } from "lucide-react";
+import { LoadingOutlined } from "@ant-design/icons";
 
 // others
 import ToasterError from "@/lib/Toaster";
@@ -50,6 +51,7 @@ const Productions = () => {
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [selectedProduction, setSelectedProduction] = useState(null);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   // Check screen size
   useEffect(() => {
@@ -238,14 +240,7 @@ const Productions = () => {
                       onClick={(event) => handleDelete(event)}
                       disabled={deleteLoading}
                     >
-                      {deleteLoading ? (
-                        <div className="flex items-center">
-                          <Loader2 className="mr-2 animate-spin" />
-                          <span>Deleting</span>
-                        </div>
-                      ) : (
-                        "Delete"
-                      )}
+                      Delete
                     </Button>
                   </div>
                 </DialogContent>
@@ -257,166 +252,190 @@ const Productions = () => {
     },
   ];
 
-  return (
-    <div className="overflow-x-auto">
-      <div className="w-full p-5 h-screen">
-        <Typography.Title level={2} className="text-black dark:text-white">
-          Productions
-        </Typography.Title>
-        <div className="flex items-center py-4 justify-between gap-2">
-          <div className="flex items-center w-[300px]">
-            <Input
-              placeholder="Search by product type or level..."
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-            />
-          </div>
-          <Tooltip title="Add new production">
-            {!isSmallScreen ? (
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button>
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Add Production
-                  </Button>
-                </SheetTrigger>
-                <SheetContent className="max-h-screen overflow-auto">
-                  <Tabs defaultValue="uniform" className="mt-4">
-                    <TabsList className="grid w-full grid-cols-2">
-                      <TabsTrigger value="uniform">Uniform</TabsTrigger>
-                      <TabsTrigger value="academicGown">
-                        Academic Gown
-                      </TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="uniform" className="mt-4">
-                      <SheetTitle>Add a new uniform production</SheetTitle>
-                      <SheetDescription>
-                        Click submit when you&apos;re done.
-                      </SheetDescription>
-                      <AddProduction />
-                    </TabsContent>
-                    <TabsContent value="academicGown" className="mt-4">
-                      <SheetTitle>
-                        Add a new academic gown production
-                      </SheetTitle>
-                      <SheetDescription>
-                        Click submit when you&apos;re done.
-                      </SheetDescription>
-                    </TabsContent>
-                  </Tabs>
-                </SheetContent>
-              </Sheet>
-            ) : (
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button>
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Add Production
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-h-[550px] overflow-auto">
-                  <Tabs defaultValue="uniform" className="mt-4">
-                    <TabsList className="grid w-full grid-cols-2">
-                      <TabsTrigger value="uniform">Uniform</TabsTrigger>
-                      <TabsTrigger value="academicGown">
-                        Academic Gown
-                      </TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="uniform" className="mt-4">
-                      <DialogTitle>Add a new uniform production</DialogTitle>
-                      <DialogDescription>
-                        Click submit when you&apos;re done.
-                      </DialogDescription>
-                      <AddProduction />
-                    </TabsContent>
-                    <TabsContent value="academicGown" className="mt-4">
-                      <DialogTitle>
-                        Add a new academic gown production
-                      </DialogTitle>
-                      <DialogDescription>
-                        Click submit when you&apos;re done.
-                      </DialogDescription>
-                    </TabsContent>
-                  </Tabs>
-                </DialogContent>
-              </Dialog>
-            )}
-          </Tooltip>
-        </div>
-        <Tabs defaultValue="table">
-          <TabsList className="grid w-[300px] grid-cols-2">
-            <TabsTrigger value="table">Table</TabsTrigger>
-            <TabsTrigger value="graph">Graph</TabsTrigger>
-          </TabsList>
-          <TabsContent value="table" className="mt-4">
-            <div className="rounded-md border">
-              {loading ? (
-                <div className="p-4">Loading...</div>
-              ) : (
-                <CustomTable columns={columns} data={data} />
-              )}
-            </div>
-          </TabsContent>
-          <TabsContent value="graph" className="mt-4">
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-              {/* Left Card */}
-              <Card className="lg:col-span-3">
-                <CardHeader>
-                  <CardTitle>Productions</CardTitle>
-                  <CardDescription>
-                    A graph showing the production quantity of each product type
-                    for the current year and the previous year.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="pl-2">
-                  <ProductionChart />
-                </CardContent>
-              </Card>
+  const handleProductionAdded = (newProduction) => {
+    setData((prevData) => [...prevData, newProduction]);
+  };
 
-              {/* Right Cards Container */}
-              <div className="lg:col-span-1 flex flex-col gap-4">
-                {/* Additional Card 1 */}
-                <Card className="flex-1">
+  return (
+    <Spin
+      spinning={deleteLoading}
+      indicator={
+        <LoadingOutlined
+          className="dark:text-white"
+          style={{
+            fontSize: 48,
+          }}
+        />
+      }
+    >
+      <div className="overflow-x-auto">
+        <div className="w-full p-5 h-screen">
+          <Typography.Title level={2} className="text-black dark:text-white">
+            Productions
+          </Typography.Title>
+          <div className="flex items-center py-4 justify-between gap-2">
+            <div className="flex items-center w-[300px]">
+              <Input
+                placeholder="Search by product type or level..."
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+              />
+            </div>
+            <Tooltip title="Add new production">
+              {!isSmallScreen ? (
+                <Sheet open={isOpen} onOpenChange={setIsOpen}>
+                  <SheetTrigger asChild>
+                    <Button>
+                      <PlusCircle className="mr-2 h-4 w-4" />
+                      Add Production
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent className="max-h-screen overflow-auto">
+                    <Tabs defaultValue="uniform" className="mt-4">
+                      <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="uniform">Uniform</TabsTrigger>
+                        <TabsTrigger value="academicGown">
+                          Academic Gown
+                        </TabsTrigger>
+                      </TabsList>
+                      <TabsContent value="uniform" className="mt-4">
+                        <SheetTitle>Add a new uniform production</SheetTitle>
+                        <SheetDescription>
+                          Click submit when you&apos;re done.
+                        </SheetDescription>
+                        <AddProduction
+                          onProductionAdded={handleProductionAdded}
+                          setIsOpen={setIsOpen}
+                        />
+                      </TabsContent>
+                      <TabsContent value="academicGown" className="mt-4">
+                        <SheetTitle>
+                          Add a new academic gown production
+                        </SheetTitle>
+                        <SheetDescription>
+                          Click submit when you&apos;re done.
+                        </SheetDescription>
+                      </TabsContent>
+                    </Tabs>
+                  </SheetContent>
+                </Sheet>
+              ) : (
+                <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                  <DialogTrigger asChild>
+                    <Button>
+                      <PlusCircle className="mr-2 h-4 w-4" />
+                      Add Production
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-h-[550px] overflow-auto">
+                    <Tabs defaultValue="uniform" className="mt-4">
+                      <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="uniform">Uniform</TabsTrigger>
+                        <TabsTrigger value="academicGown">
+                          Academic Gown
+                        </TabsTrigger>
+                      </TabsList>
+                      <TabsContent value="uniform" className="mt-4">
+                        <DialogTitle>Add a new uniform production</DialogTitle>
+                        <DialogDescription>
+                          Click submit when you&apos;re done.
+                        </DialogDescription>
+                        <AddProduction
+                          onProductionAdded={handleProductionAdded}
+                          setIsOpen={setIsOpen}
+                        />
+                      </TabsContent>
+                      <TabsContent value="academicGown" className="mt-4">
+                        <DialogTitle>
+                          Add a new academic gown production
+                        </DialogTitle>
+                        <DialogDescription>
+                          Click submit when you&apos;re done.
+                        </DialogDescription>
+                      </TabsContent>
+                    </Tabs>
+                  </DialogContent>
+                </Dialog>
+              )}
+            </Tooltip>
+          </div>
+          <Tabs defaultValue="table">
+            <TabsList className="grid w-[300px] grid-cols-2">
+              <TabsTrigger value="table">Table</TabsTrigger>
+              <TabsTrigger value="graph">Graph</TabsTrigger>
+            </TabsList>
+            <TabsContent value="table" className="mt-4">
+              <div className="rounded-md border">
+                {loading ? (
+                  <div className="p-4">Loading...</div>
+                ) : (
+                  <CustomTable columns={columns} data={data} />
+                )}
+              </div>
+            </TabsContent>
+            <TabsContent value="graph" className="mt-4">
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+                {/* Left Card */}
+                <Card className="lg:col-span-3">
                   <CardHeader>
-                    <CardTitle className="text-md">Quantity Produced</CardTitle>
+                    <CardTitle>Productions</CardTitle>
+                    <CardDescription>
+                      A graph showing the production quantity of each product
+                      type for the current year and the previous year.
+                    </CardDescription>
                   </CardHeader>
                   <CardContent className="pl-2">
-                    {/* Content for the first additional card */}
+                    <ProductionChart />
                   </CardContent>
                 </Card>
 
-                {/* Additional Card 2 */}
-                <Card className="flex-1">
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-md">Performance</CardTitle>
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button variant="ghost">
-                            <Maximize2Icon className="h-4 w-4" />
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="max-h-[550px] overflow-auto">
-                          <DialogTitle>Performance</DialogTitle>
-                          <DialogDescription>
-                            A graph showing the performance of the production
-                            department.
-                          </DialogDescription>
-                          <ProductionPerformance />
-                        </DialogContent>
-                      </Dialog>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <ProductionPerformance />
-                  </CardContent>
-                </Card>
+                {/* Right Cards Container */}
+                <div className="lg:col-span-1 flex flex-col gap-4">
+                  {/* Additional Card 1 */}
+                  <Card className="flex-1">
+                    <CardHeader>
+                      <CardTitle className="text-md">
+                        Quantity Produced
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="pl-2">
+                      {/* Content for the first additional card */}
+                    </CardContent>
+                  </Card>
+
+                  {/* Additional Card 2 */}
+                  <Card className="flex-1">
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="text-md">Performance</CardTitle>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button variant="ghost">
+                              <Maximize2Icon className="h-4 w-4" />
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="max-h-[550px] overflow-auto">
+                            <DialogTitle>Performance</DialogTitle>
+                            <DialogDescription>
+                              A graph showing the performance of the production
+                              department.
+                            </DialogDescription>
+                            <ProductionPerformance />
+                          </DialogContent>
+                        </Dialog>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <ProductionPerformance />
+                    </CardContent>
+                  </Card>
+                </div>
               </div>
-            </div>
-          </TabsContent>
-        </Tabs>
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
-    </div>
+    </Spin>
   );
 };
 

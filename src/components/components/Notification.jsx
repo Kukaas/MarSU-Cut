@@ -15,6 +15,7 @@ import { Tooltip } from "antd";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import ToasterError from "@/lib/Toaster";
+import { formatDistanceToNow } from "date-fns";
 
 const Notification = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -218,7 +219,9 @@ const Notification = () => {
                 {unreadNotifications?.message}
               </SheetDescription>
               <SheetDescription className="text-xs text-gray-400">
-                {unreadNotifications?.createdAt}
+                {unreadNotifications?.createdAt} -{" "}
+                {formatDistanceToNow(new Date(unreadNotifications.createdAt))}{" "}
+                ago
               </SheetDescription>
             </div>
           ))}
@@ -260,7 +263,9 @@ const Notification = () => {
                   {readNotifications?.message}
                 </SheetDescription>
                 <SheetDescription className="text-xs text-gray-400">
-                  {readNotifications?.createdAt}
+                  {readNotifications?.createdAt} -
+                  {formatDistanceToNow(new Date(readNotifications.createdAt))}{" "}
+                  ago
                 </SheetDescription>
               </div>
               <Tooltip title="Delete notification">
@@ -290,7 +295,7 @@ const Notification = () => {
             )}
           </Button>
         </TabsContent>
-        <Toaster position="top-center" richColors cloeButton />
+        <Toaster position="top-center" richColors closeButton />
       </Tabs>
     </>
   );

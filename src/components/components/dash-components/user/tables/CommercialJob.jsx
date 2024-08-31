@@ -34,6 +34,7 @@ const CommercialJob = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [loading, setLoading] = useState(true);
   const [loadingDelete, setLoadingDelete] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
     const fetchCommercialJob = async () => {
@@ -171,6 +172,10 @@ const CommercialJob = () => {
     },
   ];
 
+  const handleCreateCommercialOrder = (newCommercialOrder) => {
+    setData((prevData) => [...prevData, newCommercialOrder]);
+  };
+
   return (
     <Spin
       spinning={loadingDelete}
@@ -189,7 +194,7 @@ const CommercialJob = () => {
         </Typography.Title>
         <div className="flex items-center py-4 justify-end">
           <Tooltip title="Create an Order">
-            <Dialog>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
                 <Button variant="default" className="m-2">
                   <PlusCircle size={20} className="mr-2" />
@@ -203,7 +208,10 @@ const CommercialJob = () => {
                     Click submit when you&apos;re done.
                   </DialogDescription>
                 </DialogHeader>
-                <CreateCommercialOrder />
+                <CreateCommercialOrder
+                  onCommercialOrderCreated={handleCreateCommercialOrder}
+                  setIsDialogOpen={setIsDialogOpen}
+                />
               </DialogContent>
             </Dialog>
           </Tooltip>

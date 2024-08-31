@@ -31,7 +31,11 @@ import { useForm } from "react-hook-form";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 
-const EditProduct = ({ selectedProduct }) => {
+const EditProduct = ({
+  selectedProduct,
+  setIsDialogOpen,
+  onProductUpdated,
+}) => {
   const [editProductLoading, setEditProductLoading] = useState(false);
 
   const editProductForm = useForm({
@@ -71,12 +75,10 @@ const EditProduct = ({ selectedProduct }) => {
       if (res.status === 200) {
         setEditProductLoading(false);
         toast.success("Product updated successfully!");
-        editProductForm.reset({
-          level: "",
-          productType: "",
-          size: "",
-          price: 0,
-        });
+        setIsDialogOpen(false);
+        onProductUpdated(res.data.finishedProduct); // Pass the updated product
+        setIsDialogOpen(false);
+        console.log(res.data);
       }
     } catch (error) {
       ToasterError({
@@ -251,7 +253,9 @@ const EditProduct = ({ selectedProduct }) => {
 };
 
 EditProduct.propTypes = {
-  selectedProduct: PropTypes.object.isRequired,
+  selectedProduct: PropTypes.object,
+  setIsDialogOpen: PropTypes.func,
+  onProductUpdated: PropTypes.func,
 };
 
 export default EditProduct;

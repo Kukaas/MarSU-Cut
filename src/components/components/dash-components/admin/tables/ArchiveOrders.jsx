@@ -285,10 +285,12 @@ function ArchiveOrders() {
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem
                 onClick={() => {
-                  navigator.clipboard.writeText(order._id);
+                  navigate(`/dashboard?tab=order-details`, {
+                    state: { selectedOrder: order },
+                  });
                 }}
               >
-                Copy Order ID
+                View Order Details
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => handleUnarchive(order)}>

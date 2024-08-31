@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Spin, Tooltip, Typography } from "antd";
 
-import { Loader2, PlusCircle } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import { LoadingOutlined } from "@ant-design/icons";
 
 // others
@@ -190,14 +190,7 @@ const RawMaterials = () => {
                       onClick={(event) => handleDelete(event)}
                       disabled={deleteLoading}
                     >
-                      {deleteLoading ? (
-                        <div className="flex items-center">
-                          <Loader2 className="mr-2 animate-spin" />
-                          <span>Deleting</span>
-                        </div>
-                      ) : (
-                        "Delete"
-                      )}
+                      Delete
                     </Button>
                   </div>
                 </DialogContent>
@@ -208,6 +201,11 @@ const RawMaterials = () => {
       },
     },
   ];
+
+  const handleRawMaterialAdded = (rawMaterial) => {
+    console.log("Adding raw material:", rawMaterial);
+    setData((prevData) => [...prevData, rawMaterial]);
+  };
 
   return (
     <Spin
@@ -235,7 +233,7 @@ const RawMaterials = () => {
               />
             </div>
             <Tooltip title="Add new raw material">
-              <Dialog>
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild>
                   <Button variant="default" className="m-2">
                     <PlusCircle size={20} className="mr-2" />
@@ -249,7 +247,10 @@ const RawMaterials = () => {
                       Click submit when you&apos;re done.
                     </DialogDescription>
                   </DialogHeader>
-                  <AddNewRawMaterial />
+                  <AddNewRawMaterial
+                    onRawMaterialAdded={handleRawMaterialAdded}
+                    setIsDialogOpen={setIsDialogOpen}
+                  />
                 </DialogContent>
               </Dialog>
             </Tooltip>
@@ -262,16 +263,6 @@ const RawMaterials = () => {
             )}
           </div>
         </div>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Add New Raw Material</DialogTitle>
-              <DialogDescription>
-                Please fill out the form below to add new raw material.
-              </DialogDescription>
-            </DialogHeader>
-          </DialogContent>
-        </Dialog>
       </div>
     </Spin>
   );

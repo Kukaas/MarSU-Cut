@@ -10,6 +10,7 @@ import ToasterError from "@/lib/Toaster";
 import { CreateAccomplishmentSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import PropTypes from "prop-types";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { token } from "@/lib/token";
@@ -17,7 +18,7 @@ import { BASE_URL } from "@/lib/api";
 import CustomInput from "../CustomInput";
 import { DialogClose } from "@/components/ui/dialog";
 
-const CreateAccomplishment = () => {
+const CreateAccomplishment = ({ onAccomplishmentCreate, setIsDialogOpen }) => {
   const [loading, setLoading] = useState();
 
   const form = useForm({
@@ -46,6 +47,9 @@ const CreateAccomplishment = () => {
         setLoading(false);
         toast.success("Accomplishment report created successfully!");
         form.reset();
+        onAccomplishmentCreate(res.data.accomplishmentReport);
+        setIsDialogOpen(false);
+        console.log(res.data);
       }
     } catch (error) {
       ToasterError({
@@ -97,6 +101,11 @@ const CreateAccomplishment = () => {
       </div>
     </div>
   );
+};
+
+CreateAccomplishment.propTypes = {
+  onAccomplishmentCreate: PropTypes.func,
+  setIsDialogOpen: PropTypes.func,
 };
 
 export default CreateAccomplishment;

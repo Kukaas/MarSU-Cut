@@ -34,6 +34,7 @@ function Rentals() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
 
   // Fetch the data
@@ -242,6 +243,10 @@ function Rentals() {
     },
   ];
 
+  const handleRentalCreated = (newRental) => {
+    setData((prevData) => [...prevData, newRental]);
+  };
+
   return (
     <Spin
       spinning={loadingDelete}
@@ -255,7 +260,7 @@ function Rentals() {
         </Typography.Title>
         <div className="flex items-center py-4 justify-end">
           <Tooltip title="Create a rental">
-            <Dialog>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
                 <Button variant="default" className="m-2">
                   <PlusCircle size={20} className="mr-2" />
@@ -269,7 +274,10 @@ function Rentals() {
                     Click submit when you&apos;re done.
                   </DialogDescription>
                 </DialogHeader>
-                <CreateRental />
+                <CreateRental
+                  onRentalCreated={handleRentalCreated}
+                  setIsDialogOpen={setIsDialogOpen}
+                />
               </DialogContent>
             </Dialog>
           </Tooltip>

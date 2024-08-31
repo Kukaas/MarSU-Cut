@@ -22,7 +22,8 @@ const StatusFilter = ({ statusFilter, handleStatusChange, status }) => {
             {statusFilter
               ? statusFilter === "All"
                 ? "Status Filter"
-                : statusFilter
+                : statusFilter.toLowerCase().charAt(0).toUpperCase() +
+                  statusFilter.slice(1).toLowerCase()
               : "Status Filter"}
             <ChevronDown className="ml-2 h-4 w-4" />
           </div>
@@ -38,7 +39,8 @@ const StatusFilter = ({ statusFilter, handleStatusChange, status }) => {
             key={statusOption}
             onClick={() => handleStatusChange(statusOption)}
           >
-            {statusOption}
+            {statusOption.toLowerCase().charAt(0).toUpperCase() +
+              statusOption.slice(1).toLowerCase()}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

@@ -107,8 +107,9 @@ const CustomTable = ({ data, columns }) => {
         </TableBody>
       </Table>
       <div className="flex items-center justify-end space-x-2 py-4 p-2">
-        <div className="flex-1 text-sm text-muted-foreground">
-          Showing {table.getRowModel().rows.length} of {data.length} results
+        <div className="flex-1 ml-2 text-sm text-muted-foreground">
+          Page {table.getState().pagination.pageIndex + 1} of{" "}
+          {table.getPageCount()}
         </div>
         <div className="space-x-2">
           <Button

@@ -15,6 +15,7 @@ import { Loader2 } from "lucide-react";
 
 // others
 import ToasterError from "@/lib/Toaster";
+import PropTypes from "prop-types";
 import { AddRawMaterialsSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
@@ -24,7 +25,7 @@ import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomInput from "../CustomInput";
 
-const AddNewRawMaterial = () => {
+const AddNewRawMaterial = ({ onRawMaterialAdded, setIsDialogOpen }) => {
   const [addRawMaterialLoading, setAddRawMaterialLoading] = useState(false);
 
   const addRawMaterialForm = useForm({
@@ -58,9 +59,13 @@ const AddNewRawMaterial = () => {
         setAddRawMaterialLoading(false);
         toast.success("Raw material added successfully");
         addRawMaterialForm.reset();
+        onRawMaterialAdded(res.data.newRawMaterial);
+        setIsDialogOpen(false);
       } else if (res.status === 200) {
         setAddRawMaterialLoading(false);
         toast.success("Raw material updated successfully");
+        onRawMaterialAdded(res.data.rawMaterial);
+        setIsDialogOpen(false);
       }
     } catch (error) {
       setAddRawMaterialLoading(false);
@@ -129,6 +134,11 @@ const AddNewRawMaterial = () => {
       </form>
     </Form>
   );
+};
+
+AddNewRawMaterial.propTypes = {
+  onRawMaterialAdded: PropTypes.func,
+  setIsDialogOpen: PropTypes.func,
 };
 
 export default AddNewRawMaterial;

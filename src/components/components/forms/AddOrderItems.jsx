@@ -30,7 +30,11 @@ import ToasterError from "@/lib/Toaster";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 
-const AddOrderItems = ({ selectedOrder }) => {
+const AddOrderItems = ({
+  selectedOrder,
+  setIsDialogOpen,
+  onOrderItemsAdded,
+}) => {
   const [loadingAddItems, setLoadingAddItems] = useState(false);
 
   const form = useForm({
@@ -413,6 +417,8 @@ const AddOrderItems = ({ selectedOrder }) => {
       toast.success(`The student ${selectedOrder.studentName} is measured`, {
         description: "The items have been added to the order",
       });
+      onOrderItemsAdded(res.data.orderStudent);
+      setIsDialogOpen(false);
     } else {
       ToasterError({
         description: "Please check your internet connection and try again.",

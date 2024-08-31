@@ -224,10 +224,7 @@ const OrderDetails = () => {
               </CardContent>
 
               <div className="flex justify-end mt-10">
-                <Button
-                  variant="outline"
-                  onClick={() => navigate("/dashboard?tab=orders-admin")}
-                >
+                <Button variant="outline" onClick={() => navigate(-1)}>
                   <ArrowLeft className="mr-2 h-4 w-4" /> Back
                 </Button>
               </div>

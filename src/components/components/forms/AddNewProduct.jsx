@@ -26,12 +26,13 @@ import ToasterError from "@/lib/Toaster";
 import { AddNewProductSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import PropTypes from "prop-types";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 
-const AddNewProduct = () => {
+const AddNewProduct = ({ onProductAdded, setIsDialogOpen }) => {
   const [addNewProductLoading, setAddNewProductLoading] = useState(false);
 
   const addNewProductForm = useForm({
@@ -71,6 +72,8 @@ const AddNewProduct = () => {
         setAddNewProductLoading(false);
         toast.success("Product added successfully!");
         addNewProductForm.reset();
+        onProductAdded(res.data.finishedProduct);
+        setIsDialogOpen(false);
       }
     } catch (error) {
       console.log(error);
@@ -134,7 +137,7 @@ const AddNewProduct = () => {
                       {field.value || "Select product type"}
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent>
+                  <DropdownMenuContent className="max-h-48 overflow-y-auto">
                     {[
                       "SKIRT",
                       "POLO",
@@ -142,6 +145,8 @@ const AddNewProduct = () => {
                       "BLOUSE",
                       "PE TSHIRT",
                       "JPANTS",
+                      "ACADEMIC GOWN",
+                      "CAP",
                     ].map((type) => (
                       <DropdownMenuItem
                         key={type}
@@ -198,6 +203,7 @@ const AddNewProduct = () => {
                       "M/L",
                       "XL",
                       "XXL",
+                      "Custom",
                     ].map((size) => (
                       <DropdownMenuItem
                         key={size}
@@ -254,6 +260,11 @@ const AddNewProduct = () => {
       </form>
     </Form>
   );
+};
+
+AddNewProduct.propTypes = {
+  onProductAdded: PropTypes.func,
+  setIsDialogOpen: PropTypes.func,
 };
 
 export default AddNewProduct;

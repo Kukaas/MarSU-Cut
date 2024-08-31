@@ -22,7 +22,7 @@ function DownloadButton({ selectedDate, filteredData }) {
       },
     });
   };
-  
+
   const handleDownload = () => {
     const selectedMonth = selectedDate?.from
       ? selectedDate?.from.getMonth()
@@ -134,7 +134,7 @@ function DownloadButton({ selectedDate, filteredData }) {
     <div>
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="secondary">Download</Button>
+          <Button variant="outline">Download</Button>
         </PopoverTrigger>
         <PopoverContent>
           <span className="text-sm text-gray-500">

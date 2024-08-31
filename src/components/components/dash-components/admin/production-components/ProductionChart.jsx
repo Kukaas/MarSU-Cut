@@ -115,8 +115,8 @@ const ProductionChart = () => {
           />
         </BarChart>
       ) : (
-        <div className="min-h-[200px] w-full flex items-center justify-center">
-          <p className="text-gray-400 mt-20 text-lg">No data available</p>
+        <div className="h-full w-full flex items-center justify-center">
+          <p className="text-gray-500">No data available</p>
         </div>
       )}
     </ChartContainer>

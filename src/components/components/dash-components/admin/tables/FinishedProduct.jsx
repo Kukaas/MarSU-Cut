@@ -113,6 +113,14 @@ const FinishedProduct = () => {
     }
   };
 
+  const handleProductUpdated = (updatedProduct) => {
+    setData((prevData) =>
+      prevData.map((product) =>
+        product._id === updatedProduct._id ? updatedProduct : product
+      )
+    );
+  };
+
   const columns = [
     {
       accessorKey: "level",
@@ -154,7 +162,9 @@ const FinishedProduct = () => {
                   <Button
                     variant="default"
                     size="sm"
-                    onClick={() => setSelectedProduct(product)}
+                    onClick={() => {
+                      setSelectedProduct(product);
+                    }}
                   >
                     Edit
                   </Button>
@@ -166,7 +176,11 @@ const FinishedProduct = () => {
                       Please fill out the form below to edit product.
                     </DialogDescription>
                   </DialogHeader>
-                  <EditProduct selectedProduct={selectedProduct} />
+                  <EditProduct
+                    selectedProduct={selectedProduct}
+                    setIsDialogOpen={setIsDialogOpen}
+                    onProductUpdated={handleProductUpdated}
+                  />
                 </DialogContent>
               </Dialog>
             </Tooltip>
@@ -218,6 +232,10 @@ const FinishedProduct = () => {
     },
   ];
 
+  const handleProductAdded = (newProduct) => {
+    setData((prevData) => [...prevData, newProduct]);
+  };
+
   return (
     <Spin
       spinning={deleteLoading}
@@ -244,7 +262,7 @@ const FinishedProduct = () => {
               />
             </div>
             <Tooltip title="Add new product">
-              <Dialog>
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild>
                   <Button variant="default" className="m-2">
                     <PlusCircle size={20} className="mr-2" />
@@ -258,7 +276,10 @@ const FinishedProduct = () => {
                       Click submit when you&apos;re done.
                     </DialogDescription>
                   </DialogHeader>
-                  <AddNewProduct />
+                  <AddNewProduct
+                    onProductAdded={handleProductAdded}
+                    setIsDialogOpen={setIsDialogOpen}
+                  />
                 </DialogContent>
               </Dialog>
             </Tooltip>
@@ -271,16 +292,6 @@ const FinishedProduct = () => {
             )}
           </div>
         </div>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Add New Product</DialogTitle>
-              <DialogDescription>
-                Please fill out the form below to add new product.
-              </DialogDescription>
-            </DialogHeader>
-          </DialogContent>
-        </Dialog>
       </div>
     </Spin>
   );

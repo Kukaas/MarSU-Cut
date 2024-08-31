@@ -1,13 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  ResponsiveContainer,
-  Sector,
-} from "recharts";
+import { PieChart, Pie, Cell, Tooltip, Sector } from "recharts";
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { BASE_URL } from "@/lib/api";
 import { token } from "@/lib/token";
@@ -135,6 +128,9 @@ const ProductionPerformance = () => {
     );
   };
 
+  const noData = data.every((entry) => entry.value === 0);
+  console.log(noData);
+
   return (
     <div>
       {loading ? (
@@ -145,7 +141,7 @@ const ProductionPerformance = () => {
         </div>
       ) : (
         <ChartContainer config={chartConfig}>
-          <ResponsiveContainer width="100%" height="100%">
+          {!noData ? (
             <PieChart>
               <Pie
                 activeIndex={activeIndex}
@@ -172,7 +168,11 @@ const ProductionPerformance = () => {
               </Pie>
               <Tooltip content={<ChartTooltipContent />} />
             </PieChart>
-          </ResponsiveContainer>
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <p className="text-gray-500">No data available</p>
+            </div>
+          )}
         </ChartContainer>
       )}
     </div>

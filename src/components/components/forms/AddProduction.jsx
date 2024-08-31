@@ -40,6 +40,7 @@ import { cn } from "@/lib/utils";
 import { AddProductionSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import PropTypes from "prop-types";
 import { format } from "date-fns";
 import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -47,7 +48,7 @@ import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomInput from "../CustomInput";
 
-const AddProduction = () => {
+const AddProduction = ({ onProductionAdded, setIsOpen }) => {
   const [addProductionLoading, setAddProductionLoading] = useState(false);
   const productionForm = useForm({
     resolver: zodResolver(AddProductionSchema),
@@ -100,6 +101,8 @@ const AddProduction = () => {
         setAddProductionLoading(false);
         toast.success("Production added successfully");
         productionForm.reset();
+        onProductionAdded(res.data.production);
+        setIsOpen(false);
       }
     } catch (error) {
       setAddProductionLoading(false);
@@ -419,6 +422,11 @@ const AddProduction = () => {
       </div>
     </div>
   );
+};
+
+AddProduction.propTypes = {
+  onProductionAdded: PropTypes.func,
+  setIsOpen: PropTypes.func,
 };
 
 export default AddProduction;

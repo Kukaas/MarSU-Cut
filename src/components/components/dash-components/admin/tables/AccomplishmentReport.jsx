@@ -55,6 +55,7 @@ const AccomplishmentReport = () => {
   const [loadingDelete, setLoadingDelete] = useState(false);
   const [selectedAccomplishment, setSelectedAccomplishment] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDialogEditOpen, setIsDialogEditOpen] = useState(false);
   const form = useForm();
 
   const [selectedDate, setSelectedDate] = useState({
@@ -117,7 +118,7 @@ const AccomplishmentReport = () => {
         type: selectedAccomplishment.type,
         accomplishment: selectedAccomplishment.accomplishment,
       });
-      setIsDialogOpen(true);
+      setIsDialogEditOpen(true);
     } else {
       formAccomplishment.reset({
         type: "",
@@ -159,7 +160,7 @@ const AccomplishmentReport = () => {
         }
       );
       if (res.status === 200) {
-        setIsDialogOpen(false);
+        setIsDialogEditOpen(false);
         setUpdateLoading(false);
         toast.success("Accomplishment report updated successfully!");
         setData((prevData) => {
@@ -270,7 +271,10 @@ const AccomplishmentReport = () => {
                   <Button
                     variant="default"
                     size="sm"
-                    onClick={() => setSelectedAccomplishment(accomplishment)}
+                    onClick={() => {
+                      setSelectedAccomplishment(accomplishment);
+                      setIsDialogEditOpen(true);
+                    }}
                   >
                     Edit
                   </Button>
@@ -321,6 +325,10 @@ const AccomplishmentReport = () => {
       },
     },
   ];
+
+  const handleCreateAccomplishment = (newAccomplishment) => {
+    setData((prevData) => [newAccomplishment, ...prevData]);
+  };
 
   return (
     <Spin
@@ -414,7 +422,7 @@ const AccomplishmentReport = () => {
               filteredData={filteredData}
             />
             <Tooltip title="Create Accomplishment Report">
-              <Dialog>
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild>
                   <Button variant="default" className="m-2">
                     <PlusCircle size={20} className="mr-2" />
@@ -428,7 +436,10 @@ const AccomplishmentReport = () => {
                       Click create when you&apos;re done.
                     </DialogDescription>
                   </DialogHeader>
-                  <CreateAccomplishment />
+                  <CreateAccomplishment
+                    onAccomplishmentCreate={handleCreateAccomplishment}
+                    setIsDialogOpen={setIsDialogOpen}
+                  />
                 </DialogContent>
               </Dialog>
             </Tooltip>
@@ -442,7 +453,7 @@ const AccomplishmentReport = () => {
           )}
         </div>
       </div>
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+      <Dialog open={isDialogEditOpen} onOpenChange={setIsDialogEditOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Edit Accomplishment</DialogTitle>

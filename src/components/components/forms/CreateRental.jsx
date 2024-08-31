@@ -33,6 +33,7 @@ import { cn } from "@/lib/utils";
 import { CreateRentalSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import PropTypes from "prop-types";
 import { format } from "date-fns";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -42,7 +43,7 @@ import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomInput from "../CustomInput";
 
-const CreateRental = () => {
+const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
   const [loading, setLoading] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
@@ -86,6 +87,9 @@ const CreateRental = () => {
         toast.success("Rental submitted successfully!", {
           description: "Wait for the admin to approve you rental",
         });
+        onRentalCreated(res.data.savedRental);
+        setIsDialogOpen(false);
+        console.log(res.data);
       }
     } catch (error) {
       setLoading(false);
@@ -279,6 +283,11 @@ const CreateRental = () => {
       </Form>
     </div>
   );
+};
+
+CreateRental.propTypes = {
+  onRentalCreated: PropTypes.func,
+  setIsDialogOpen: PropTypes.func,
 };
 
 export default CreateRental;

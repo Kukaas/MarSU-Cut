@@ -434,6 +434,16 @@ function Orders() {
     CLAIMED: "CLAIMED",
   };
 
+  const handleAddOrderItems = (order) => {
+    setData((prevData) =>
+      prevData.map((item) =>
+        item._id === order._id
+          ? { ...item, status: "MEASURED", orderItems: order.orderItems }
+          : item
+      )
+    );
+  };
+
   return (
     <Spin
       spinning={loadingUpdate}
@@ -491,7 +501,11 @@ function Orders() {
               Please fill out the form below to add items to your order.
             </DialogDescription>
           </DialogHeader>
-          <AddOrderItems selectedOrder={selectedOrder} />
+          <AddOrderItems
+            selectedOrder={selectedOrder}
+            setIsDialogOpen={setIsDialogOpen}
+            onOrderItemsAdded={handleAddOrderItems}
+          />
         </DialogContent>
       </Dialog>
     </Spin>
