@@ -23,7 +23,15 @@ const ResponsiveFooter = () => {
           to="/"
           className="font-bold hover:text-current text-3xl text-center sm:text-left"
         >
-          <span className="px-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white">
+          <span
+            className="rounded-lg text-white"
+            style={{
+              background:
+                "linear-gradient(90deg, hsla(48, 80%, 66%, 1) 0%, hsla(0, 100%, 25%, 1) 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
             MarSU
           </span>{" "}
           Cut

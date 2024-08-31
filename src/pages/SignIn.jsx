@@ -121,10 +121,19 @@ const SignIn = () => {
         <div className="flex-1 mb-4">
           <h2 className="font-bold hover:text-current text-4xl ">
             Welcome{" "}
-            <span className="px-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white">
+            <span
+              className="rounded-lg text-white"
+              style={{
+                background:
+                  "linear-gradient(90deg, hsla(48, 80%, 66%, 1) 0%, hsla(0, 100%, 25%, 1) 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
               Back!
             </span>
           </h2>
+
           <p className="text-l mt-4 ">Sign in with your email and password.</p>
         </div>
         {/* right */}
@@ -150,7 +159,7 @@ const SignIn = () => {
                 />
                 <Link
                   to="/forgot-password"
-                  className=" right-0 bottom-0 text-blue-500 text-sm mt-3"
+                  className=" right-0 bottom-0 text-sm mt-3"
                   style={{ fontFamily: "'Poppins', sans-serif" }}
                 >
                   Forgot password?
@@ -159,7 +168,11 @@ const SignIn = () => {
 
               <Button
                 type="submit"
-                className="w-full mt-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white text-lg hover:bg-gradient-to-r hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600"
+                className="w-full mt-3 rounded-lg text-white text-lg"
+                style={{
+                  background:
+                    "linear-gradient(90deg, hsla(48, 80%, 66%, 1) 0%, hsla(0, 100%, 25%, 1) 100%)",
+                }}
                 disabled={loading}
               >
                 {loading ? (

@@ -104,7 +104,15 @@ const ResetPassword = () => {
         <div className="flex-1 mb-4">
           <h1 className="font-bold text-4xl">
             Reset{" "}
-            <span className="px-2 bg-gradient-to-r p-1 from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white">
+            <span
+              className="rounded-lg text-white"
+              style={{
+                background:
+                  "linear-gradient(90deg, hsla(48, 80%, 66%, 1) 0%, hsla(0, 100%, 25%, 1) 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
               Password
             </span>
           </h1>
@@ -133,7 +141,11 @@ const ResetPassword = () => {
               />
               <Button
                 type="submit"
-                className="w-full mt-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white text-lg hover:bg-gradient-to-r hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600"
+                className="w-full mt-3 rounded-lg text-white text-lg"
+                style={{
+                  background:
+                    "linear-gradient(90deg, hsla(48, 80%, 66%, 1) 0%, hsla(0, 100%, 25%, 1) 100%)",
+                }}
                 disabled={loading}
               >
                 {loading ? (

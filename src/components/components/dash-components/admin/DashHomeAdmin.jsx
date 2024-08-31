@@ -11,7 +11,7 @@ import Cards from "./dashboard-components/Cards";
 
 const DashHomeAdmin = () => {
   const navigate = useNavigate();
-   const {currentUser} = useSelector((state) => state.user);
+  const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (currentUser && currentUser.isAdmin) {

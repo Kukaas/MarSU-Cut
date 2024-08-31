@@ -42,7 +42,15 @@ const WelcomePage = () => {
       </Helmet>
       <div className="p-3 max-w-3xl mx-auto text-center">
         <Link to="/" className="font-bold hover:text-current text-6xl ">
-          <span className="px-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white">
+          <span
+            className="px-2 rounded-lg text-white"
+            style={{
+              background:
+                "linear-gradient(90deg, hsla(48, 80%, 66%, 1) 0%, hsla(0, 100%, 25%, 1) 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
             MarSU
           </span>{" "}
           Cut
@@ -53,7 +61,11 @@ const WelcomePage = () => {
         </p>
         <div className="flex flex-row gap-2 mt-4">
           <Button
-            className="w-full p-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white text-lg hover:bg-gradient-to-r hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600"
+            className="w-full mt-3 rounded-lg text-white text-lg"
+            style={{
+              background:
+                "linear-gradient(90deg, hsla(48, 80%, 66%, 1) 0%, hsla(0, 100%, 25%, 1) 100%)",
+            }}
             size="lg"
             onClick={handleClicked}
             disabled={loading}

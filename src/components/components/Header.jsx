@@ -92,14 +92,46 @@ const Header = () => {
   return (
     <div className="border-b border-solid z-30 border-gray-300 shadow-lg sticky top-0 bg-white dark:bg-slate-900">
       <div className="flex justify-between items-center max-w-6xl mx-auto p-3">
-        <Link to="/">
-          <h1 className="font-bold text-2xl">
-            <span className="px-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white">
+        {currentUser ? (
+          <div
+            className="font-bold hover:text-current text-2xl cursor-pointer"
+            onClick={() => {
+              if (currentUser.isAdmin) {
+                navigate("/dashboard?tab=home-admin");
+              } else {
+                navigate("/dashboard?tab=home");
+              }
+            }}
+          >
+            <span
+              className="rounded-lg text-white"
+              style={{
+                background:
+                  "linear-gradient(90deg, hsla(48, 80%, 66%, 1) 0%, hsla(0, 100%, 25%, 1) 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
               MarSU
             </span>{" "}
             Cut
-          </h1>
-        </Link>
+          </div>
+        ) : (
+          <Link to="/" className="font-bold hover:text-current text-2xl">
+            <span
+              className="rounded-lg text-white"
+              style={{
+                background:
+                  "linear-gradient(90deg, hsla(48, 80%, 66%, 1) 0%, hsla(0, 100%, 25%, 1) 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              MarSU
+            </span>{" "}
+            Cut
+          </Link>
+        )}
         <div className="flex flex-row gap-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -179,7 +211,15 @@ const Header = () => {
                 <SheetTitle>
                   {" "}
                   <div className="font-bold hover:text-current text-2xl text-center sm:text-left mt-8">
-                    <span className="px-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white">
+                    <span
+                      className="rounded-lg text-white"
+                      style={{
+                        background:
+                          "linear-gradient(90deg, hsla(48, 80%, 66%, 1) 0%, hsla(0, 100%, 25%, 1) 100%)",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                      }}
+                    >
                       MarSU
                     </span>{" "}
                     Cut
@@ -203,7 +243,15 @@ const Header = () => {
                         to="/"
                         className="font-bold hover:text-current text-2xl text-center sm:text-left"
                       >
-                        <span className="px-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white">
+                        <span
+                          className="rounded-lg text-white"
+                          style={{
+                            background:
+                              "linear-gradient(90deg, hsla(48, 80%, 66%, 1) 0%, hsla(0, 100%, 25%, 1) 100%)",
+                            WebkitBackgroundClip: "text",
+                            WebkitTextFillColor: "transparent",
+                          }}
+                        >
                           MarSU
                         </span>{" "}
                         Cut

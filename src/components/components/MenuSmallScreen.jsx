@@ -85,32 +85,32 @@ const MenuSmallScreen = () => {
     <div className="flex h-[800px] flex-col gap-2 w-full mt-2">
       <div className="flex h-full max-h-screen flex-col gap-5">
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6 gap-3">
-          <div className="flex items-center text-sm ">
+          <div className="flex items-center text-sm justify-between gap-16">
             <span className="font-semibold">
               {" "}
               {currentUser?.name?.split(" ")[0]}
             </span>
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="ml-10 h-8 w-8 relative"
+                >
+                  <Bell className="h-4 w-4" />
+                  <span className="sr-only">Toggle notifications</span>
+                  {unreadNotifications && unreadNotifications.length > 0 && (
+                    <span className="absolute top-0 right-0 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                      {unreadNotifications.length}
+                    </span>
+                  )}
+                </Button>
+              </SheetTrigger>
+              <SheetContent className="overflow-auto">
+                <Notification />
+              </SheetContent>
+            </Sheet>
           </div>
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                className="ml-10 h-8 w-8 relative"
-              >
-                <Bell className="h-4 w-4" />
-                <span className="sr-only">Toggle notifications</span>
-                {unreadNotifications && unreadNotifications.length > 0 && (
-                  <span className="absolute top-0 right-0 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                    {unreadNotifications.length}
-                  </span>
-                )}
-              </Button>
-            </SheetTrigger>
-            <SheetContent>
-              <Notification />
-            </SheetContent>
-          </Sheet>
         </div>
         <div className="flex-1">
           <nav className="grid items-start px-3 text-sm font-medium lg:px-4 gap-2">

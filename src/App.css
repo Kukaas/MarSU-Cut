@@ -18,40 +18,6 @@ body {
   font-family: 'Poppins', sans-serif !important;
 }
 
-@keyframes dots {
-  0%, 100% {
-    content: ".";
-    opacity: 0;
-  }
-  25% {
-    content: ".";
-    opacity: 1;
-  }
-  33% {
-    content: "..";
-    opacity: 0.5;
-  }
-  50% {
-    content: "...";
-    opacity: 1;
-  }
-  66% {
-    content: "..";
-    opacity: 0.5;
-  }
-  75% {
-    content: ".";
-    opacity: 1;
-  }
-}
-
-.loading-dots::after {
-  display: inline-block;
-  content: "";
-  animation: dots 2s infinite;
-  padding-left: 5px;
-}
-
 
 .styled-checkbox-group .ant-checkbox-inner {
   border-color: #4d90fe; /* Change border color */

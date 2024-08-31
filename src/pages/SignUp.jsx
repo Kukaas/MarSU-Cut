@@ -114,7 +114,15 @@ const SignUp = () => {
           <Link to="/" className="font-bold hover:text-current text-4xl ">
             <div className="flex flex-col items-start">
               Welcome to
-              <span className="px-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white p-1 mt-1">
+              <span
+                className="rounded-lg text-white"
+                style={{
+                  background:
+                    "linear-gradient(90deg, hsla(48, 80%, 66%, 1) 0%, hsla(0, 100%, 25%, 1) 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
                 MSC Garments
               </span>
             </div>
@@ -156,7 +164,11 @@ const SignUp = () => {
               />
               <Button
                 type="submit"
-                className="w-full mt-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white text-lg hover:bg-gradient-to-r hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600"
+                className="w-full mt-3 rounded-lg text-white text-lg"
+                style={{
+                  background:
+                    "linear-gradient(90deg, hsla(48, 80%, 66%, 1) 0%, hsla(0, 100%, 25%, 1) 100%)",
+                }}
                 disabled={loading}
               >
                 {loading ? (
