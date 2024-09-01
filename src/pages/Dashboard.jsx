@@ -87,7 +87,7 @@ const Dashboard = ({ tab }) => {
   }, []);
 
   return (
-    <div className="flex flex-col md:flex-row w-full">
+    <div className="flex flex-col md:flex-row w-full h-screen">
       {!isSmallScreen && <Sidebar />}
       <div className="flex-1">{renderContent()}</div>
     </div>
