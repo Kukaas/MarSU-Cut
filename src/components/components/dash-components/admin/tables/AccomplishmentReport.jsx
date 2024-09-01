@@ -434,11 +434,11 @@ const AccomplishmentReport = () => {
           </div>
         </div>
         <div className="rounded-md border">
-          {loading ? (
-            <div className="p-4">Loading...</div>
-          ) : (
-            <CustomTable columns={columns} data={filteredData} />
-          )}
+          <CustomTable
+            columns={columns}
+            data={filteredData}
+            loading={loading}
+          />
         </div>
       </div>
       <Dialog open={isDialogEditOpen} onOpenChange={setIsDialogEditOpen}>

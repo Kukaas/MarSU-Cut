@@ -17,6 +17,7 @@ import axios from "axios";
 import { BASE_URL } from "@/lib/api";
 import { token } from "@/lib/token";
 import { statusColors } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const StatusBadge = ({ status }) => {
   const { color, badgeText } = statusColors[status] || statusColors.default;
@@ -117,6 +118,7 @@ OrderItems.propTypes = {
 
 const OrderDetails = () => {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
   const location = useLocation();
   const selectedOrder = location.state?.selectedOrder;
   const navigate = useNavigate();
@@ -129,6 +131,7 @@ const OrderDetails = () => {
   useEffect(() => {
     const fetchFinishedProduct = async () => {
       try {
+        setLoading(true);
         const res = await axios.get(`${BASE_URL}/api/v1/finished-product/all`, {
           headers: {
             "Content-Type": "application/json",
@@ -139,8 +142,10 @@ const OrderDetails = () => {
 
         const data = res.data;
         setData(data.finishedProducts);
+        setLoading(false);
       } catch (error) {
         toast.error("Failed to fetch finished products.");
+        setLoading(false);
       }
     };
 
@@ -161,81 +166,127 @@ const OrderDetails = () => {
         Order Details
       </Typography.Title>
 
-      <Card className="shadow-lg rounded-lg p-5 mt-10">
-        {selectedOrder ? (
+      {loading ? (
+        <div className="shadow-lg rounded-lg p-5 mt-10 border-2 border-gray-6s00">
           <div className="flex flex-col lg:flex-row gap-6 lg:gap-12">
+            {/* Left side - Image placeholder */}
             <div className="flex flex-col lg:w-1/2">
-              <a
-                href={selectedOrder.receipt}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full h-[400px] rounded-lg shadow-md"
-              >
-                <img
-                  src={selectedOrder.receipt}
-                  alt="Order Receipt"
-                  className="w-full h-full rounded-lg shadow-md"
-                />
-              </a>
+              <Skeleton className="w-full h-[400px] rounded-lg shadow-md" />
             </div>
 
+            {/* Right side - Content placeholders */}
             <div className="flex flex-col lg:w-1/2">
-              <CardHeader className="mb-4">
-                <CardTitle className="text-xl font-bold flex flex-row gap-2">
-                  {selectedOrder.studentName}
-                  <span className="text-gray-500 text-xs font-normal mt-2">
-                    ({selectedOrder.studentNumber})
-                  </span>
-                </CardTitle>
-                <CardDescription className="text-sm text-gray-600">
-                  {selectedOrder.studentEmail}
-                </CardDescription>
-              </CardHeader>
+              <div className="mb-4">
+                <div className="text-xl font-bold flex flex-row gap-2">
+                  <Skeleton className="h-6 w-[150px]" />
+                  <Skeleton className="h-4 w-[80px]" />
+                </div>
+                <Skeleton className="h-4 w-[200px] mt-2" />
+              </div>
 
-              <CardContent className="space-y-4">
+              <div className="space-y-4">
+                {/* Orders section */}
                 <div className="space-y-2">
-                  <h6 className="text-sm font-semibold">Orders:</h6>
-                  <OrderItems
-                    orderItems={selectedOrder.orderItems}
-                    finishedProducts={data}
-                  />
+                  <Skeleton className="h-4 w-[100px]" />
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-full" />
+                  </div>
                 </div>
 
+                {/* Other details section */}
                 <div className="space-y-2">
-                  <h6 className="text-sm font-semibold">
-                    Total Price:{" "}
-                    <span className="font-normal text-xs">
-                      ₱{totalPrice.toFixed(2)}
-                    </span>
-                  </h6>
-                  <h6 className="text-sm font-semibold">
-                    Schedule:{" "}
-                    <span className="font-normal text-xs">
-                      {selectedOrder.schedule
-                        ? new Date(selectedOrder.schedule).toDateString()
-                        : "Not yet scheduled"}
-                    </span>
-                  </h6>
-                  <h6 className="text-sm font-semibold flex items-center gap-2">
-                    <span>Status:</span>
-                    <StatusBadge status={selectedOrder.status} />
-                  </h6>
+                  <Skeleton className="h-4 w-[120px]" />
+                  <Skeleton className="h-4 w-[160px]" />
+                  <Skeleton className="h-4 w-[80px]" />
                 </div>
-              </CardContent>
+              </div>
 
+              {/* Button placeholder */}
               <div className="flex justify-end mt-10">
-                <Button variant="outline" onClick={() => navigate(-1)}>
-                  <ArrowLeft className="mr-2 h-4 w-4" /> Back
-                </Button>
+                <Skeleton className="h-10 w-[100px] rounded-md" />
               </div>
             </div>
           </div>
-        ) : (
-          <Typography.Text className="text-gray-600">
-            No order details available.
-          </Typography.Text>
-        )}
-      </Card>
+        </div>
+      ) : (
+        <Card className="shadow-lg rounded-lg p-5 mt-10">
+          {selectedOrder ? (
+            <div className="flex flex-col lg:flex-row gap-6 lg:gap-12">
+              <div className="flex flex-col lg:w-1/2">
+                <a
+                  href={selectedOrder.receipt}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block w-full h-[400px] rounded-lg shadow-md"
+                >
+                  <img
+                    src={selectedOrder.receipt}
+                    alt="Order Receipt"
+                    className="w-full h-full rounded-lg shadow-md"
+                  />
+                </a>
+              </div>
+
+              <div className="flex flex-col lg:w-1/2">
+                <CardHeader className="mb-4">
+                  <CardTitle className="text-xl font-bold flex flex-row gap-2">
+                    {selectedOrder.studentName}
+                    <span className="text-gray-500 text-xs font-normal mt-2">
+                      ({selectedOrder.studentNumber})
+                    </span>
+                  </CardTitle>
+                  <CardDescription className="text-sm text-gray-600">
+                    {selectedOrder.studentEmail}
+                  </CardDescription>
+                </CardHeader>
+
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <h6 className="text-sm font-semibold">Orders:</h6>
+                    <OrderItems
+                      orderItems={selectedOrder.orderItems}
+                      finishedProducts={data}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <h6 className="text-sm font-semibold">
+                      Total Price:{" "}
+                      <span className="font-normal text-xs">
+                        ₱{totalPrice.toFixed(2)}
+                      </span>
+                    </h6>
+                    <h6 className="text-sm font-semibold">
+                      Schedule:{" "}
+                      <span className="font-normal text-xs">
+                        {selectedOrder.schedule
+                          ? new Date(selectedOrder.schedule).toDateString()
+                          : "Not yet scheduled"}
+                      </span>
+                    </h6>
+                    <h6 className="text-sm font-semibold flex items-center gap-2">
+                      <span>Status:</span>
+                      <StatusBadge status={selectedOrder.status} />
+                    </h6>
+                  </div>
+                </CardContent>
+
+                <div className="flex justify-end mt-10">
+                  <Button variant="outline" onClick={() => navigate(-1)}>
+                    <ArrowLeft className="mr-2 h-4 w-4" /> Back
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <Typography.Text className="text-gray-600">
+              No order details available.
+            </Typography.Text>
+          )}
+        </Card>
+      )}
 
       <Toaster position="top-center" richColors closeButton />
     </div>

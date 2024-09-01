@@ -344,11 +344,7 @@ const Productions = () => {
             </TabsList>
             <TabsContent value="table" className="mt-4">
               <div className="rounded-md border">
-                {loading ? (
-                  <div className="p-4">Loading...</div>
-                ) : (
-                  <CustomTable columns={columns} data={data} />
-                )}
+                <CustomTable columns={columns} data={data} loading={loading} />
               </div>
             </TabsContent>
             <TabsContent value="graph" className="mt-4">

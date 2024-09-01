@@ -183,11 +183,7 @@ const Users = () => {
           </div>
         </div>
         <div className="rounded-md border">
-          {loading ? (
-            <div className="p-4">Loading...</div>
-          ) : (
-            <CustomTable columns={columns} data={data} />
-          )}
+          <CustomTable columns={columns} data={data} loading={loading} />
         </div>
       </div>
     </Spin>

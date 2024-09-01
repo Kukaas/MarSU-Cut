@@ -20,7 +20,7 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import DataTableViewOptions from "./DataTableViewOption";
 
-const CustomTable = ({ data, columns }) => {
+const CustomTable = ({ data, columns, loading }) => {
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState({});
   const [columnVisibility, setColumnVisibility] = useState({});
@@ -81,31 +81,38 @@ const CustomTable = ({ data, columns }) => {
             </TableRow>
           ))}
         </TableHeader>
-        <TableBody className="overflow-x-auto">
-          {table.getRowModel().rows.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
+        {loading ? (
+          <div className="p-6">Loading...</div>
+        ) : (
+          <TableBody className="overflow-x-auto">
+            {table.getRowModel().rows.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={table.getAllColumns().length}
+                  className="h-24 text-center"
+                >
+                  No results.
+                </TableCell>
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell
-                colSpan={table.getAllColumns().length}
-                className="h-24 text-center"
-              >
-                No results.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
+            )}
+          </TableBody>
+        )}
       </Table>
       <div className="flex items-center justify-between py-4 p-2">
         <div className="flex-1 text-sm text-muted-foreground">
@@ -143,6 +150,7 @@ const CustomTable = ({ data, columns }) => {
 CustomTable.propTypes = {
   data: PropTypes.array,
   columns: PropTypes.array,
+  loading: PropTypes.bool,
 };
 
 export default CustomTable;

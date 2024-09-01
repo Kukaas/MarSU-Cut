@@ -300,11 +300,7 @@ function ArchiveRentals() {
           </Tooltip>
         </div>
         <div className="rounded-md border">
-          {loading ? (
-            <div className="p-4">Loading...</div>
-          ) : (
-            <CustomTable data={data} columns={columns} />
-          )}
+          <CustomTable data={data} columns={columns} loading={loading} />
         </div>
       </div>
     </Spin>
