@@ -28,6 +28,17 @@
   border-radius: 6px; /* Optional: for rounded corners */
 }
 
+/* Hide scrollbar for WebKit browsers (Chrome, Safari) */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Hide the scrollbar */
+}
+
+/* Hide scrollbar for other browsers */
+.hide-scrollbar {
+  overflow: -moz-scrollbars-none; /* For Firefox */
+  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+}
+
 
 
 
