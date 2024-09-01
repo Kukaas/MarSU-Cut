@@ -1,12 +1,6 @@
 /* eslint-disable react/prop-types */
 // UI
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
   Form,
   FormControl,
   FormField,
@@ -29,6 +23,7 @@ import PropTypes from "prop-types";
 import ToasterError from "@/lib/Toaster";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
+import SelectField from "../SelectField";
 
 const AddOrderItems = ({
   selectedOrder,
@@ -446,200 +441,139 @@ const AddOrderItems = ({
     return (
       <div
         key={index}
-        className="flex gap-4 w-full justify-between items-center overflow-auto"
+        className="flex gap-4 w-full justify-between items-center"
       >
-        <Controller
-          control={form.control}
-          name={`orderItems[${index}].level`}
-          rules={{ required: "Missing level" }}
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button className="w-15 overflow-y-auto" variant="outline">
-                      {field.value || "Level"}
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem
-                      onClick={() => {
-                        const { productType, size } = getValues([
-                          `orderItems[${index}].productType`,
-                          `orderItems[${index}].size`,
-                        ]);
-                        updateUnitPrice(index, productType, size, "SHS");
-                        field.onChange("SHS");
-                      }}
-                    >
-                      SHS
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => {
-                        const { productType, size } = getValues([
-                          `orderItems[${index}].productType`,
-                          `orderItems[${index}].size`,
-                        ]);
-                        updateUnitPrice(index, productType, size, "COLLEGE");
-                        field.onChange("COLLEGE");
-                      }}
-                    >
-                      COLLEGE
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Controller
-          control={form.control}
-          name={`orderItems[${index}].productType`}
-          rules={{ required: "Missing product type" }}
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button className="w-15 overflow-y-auto" variant="outline">
-                      {field.value || "Type"}
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    {[
-                      "SKIRT",
-                      "POLO",
-                      "PANTS",
-                      "BLOUSE",
-                      "PE TSHIRT",
-                      "JPANTS",
-                    ].map((type) => (
-                      <DropdownMenuItem
-                        key={type}
-                        onClick={() => {
-                          const { level, size } = getValues([
-                            `orderItems[${index}].level`,
-                            `orderItems[${index}].size`,
-                          ]);
-                          updateUnitPrice(index, type, size, level);
-                          field.onChange(type);
-                        }}
-                      >
-                        {type}
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Controller
-          control={form.control}
-          name={`orderItems[${index}].size`}
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button className="w-15 overflow-y-auto" variant="outline">
-                      {field.value || "Size"}
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="max-h-48 overflow-y-auto">
-                    {[
-                      "S14",
-                      "S15",
-                      "S16",
-                      "S17",
-                      "S18",
-                      "S18+",
-                      "S19+",
-                      "S24",
-                      "S25",
-                      "S26",
-                      "S27",
-                      "S28+",
-                      "S33+34",
-                      "S35",
-                      "S36",
-                      "S37",
-                      "S38+40",
-                      "S42+45",
-                      "2XL",
-                      "XS/S",
-                      "M/L",
-                      "XL",
-                      "XXL",
-                    ].map((size) => (
-                      <DropdownMenuItem
-                        key={size}
-                        onClick={() => {
-                          const { productType, level } = getValues([
-                            `orderItems[${index}].productType`,
-                            `orderItems[${index}].level`,
-                          ]);
-                          updateUnitPrice(index, productType, size, level);
-                          field.onChange(size);
-                        }}
-                      >
-                        {size}
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name={`orderItems[${index}].unitPrice`}
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Tooltip
-                  title="Unit Price"
-                  className="cursor-pointer w-12 overflow-y-auto"
-                >
-                  <Input
-                    {...field}
-                    placeholder="Unit Price"
-                    type="number"
-                    readOnly
-                    className="w-full"
-                  />
-                </Tooltip>
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name={`orderItems[${index}].quantity`}
-          rules={{ required: "Missing quantity" }}
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Tooltip
-                  title="Quantity"
-                  className="cursor-pointer w-12 overflow-y-auto"
-                >
-                  <Input {...field} placeholder="Quantity" type="number" />
-                </Tooltip>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <MinusCircle
-          onClick={() => remove(index)}
-          style={{ width: "25px", height: "25px" }} // Adjust the size as needed
-          className="cursor-pointer"
-        />
+        <div className="flex gap-4 w-full items-center">
+          <Controller
+            control={form.control}
+            name={`orderItems[${index}].level`}
+            rules={{ required: "Missing level" }}
+            render={({ field }) => (
+              <SelectField
+                field={field}
+                options={["SHS", "COLLEGE"]}
+                placeholder="Level"
+                onValueChange={(value) => {
+                  const { productType, size } = getValues([
+                    `orderItems[${index}].productType`,
+                    `orderItems[${index}].size`,
+                  ]);
+                  updateUnitPrice(index, productType, size, value);
+                }}
+                className="w-32"
+              />
+            )}
+          />
+          <Controller
+            control={form.control}
+            name={`orderItems[${index}].productType`}
+            rules={{ required: "Missing product type" }}
+            render={({ field }) => (
+              <SelectField
+                field={field}
+                options={[
+                  "SKIRT",
+                  "POLO",
+                  "PANTS",
+                  "BLOUSE",
+                  "PE TSHIRT",
+                  "JPANTS",
+                ]}
+                placeholder="Type"
+                onValueChange={(value) => {
+                  const { level, size } = getValues([
+                    `orderItems[${index}].level`,
+                    `orderItems[${index}].size`,
+                  ]);
+                  updateUnitPrice(index, value, size, level);
+                }}
+                className="w-32"
+              />
+            )}
+          />
+          <Controller
+            control={form.control}
+            name={`orderItems[${index}].size`}
+            render={({ field }) => (
+              <SelectField
+                field={field}
+                options={[
+                  "S14",
+                  "S15",
+                  "S16",
+                  "S17",
+                  "S18",
+                  "S18+",
+                  "S19+",
+                  "S24",
+                  "S25",
+                  "S26",
+                  "S27",
+                  "S28+",
+                  "S33+34",
+                  "S35",
+                  "S36",
+                  "S37",
+                  "S38+40",
+                  "S42+45",
+                  "2XL",
+                  "XS/S",
+                  "M/L",
+                  "XL",
+                  "XXL",
+                ]}
+                placeholder="Size"
+                onValueChange={(value) => {
+                  const { productType, level } = getValues([
+                    `orderItems[${index}].productType`,
+                    `orderItems[${index}].level`,
+                  ]);
+                  updateUnitPrice(index, productType, value, level);
+                }}
+                className="w-32"
+              />
+            )}
+          />
+          <FormField
+            control={form.control}
+            name={`orderItems[${index}].unitPrice`}
+            render={({ field }) => (
+              <FormItem className="w-32 mt-2">
+                <FormControl>
+                  <Tooltip title="Unit Price" className="cursor-pointer w-full">
+                    <Input
+                      {...field}
+                      placeholder="Unit Price"
+                      type="number"
+                      readOnly
+                      className="w-full"
+                    />
+                  </Tooltip>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name={`orderItems[${index}].quantity`}
+            rules={{ required: "Missing quantity" }}
+            render={({ field }) => (
+              <FormItem className="w-32 mt-2">
+                <FormControl>
+                  <Tooltip title="Quantity" className="cursor-pointer w-full">
+                    <Input {...field} placeholder="Quantity" type="number" />
+                  </Tooltip>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <MinusCircle
+            onClick={() => remove(index)}
+            style={{ width: "25px", height: "25px" }}
+            className="cursor-pointer"
+          />
+        </div>
       </div>
     );
   };

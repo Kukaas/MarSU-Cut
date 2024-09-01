@@ -248,6 +248,7 @@ const CommercialJob = () => {
           statusFilter={statusFilter}
           navigate={() => navigate("/dashboard?tab=commercial-job-archive")}
           status={status}
+          placeholder="Filter by name..."
         />
         <div className="rounded-md border">
           {loading ? (

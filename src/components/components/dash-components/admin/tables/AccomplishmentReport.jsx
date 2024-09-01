@@ -47,6 +47,7 @@ import { BASE_URL } from "@/lib/api";
 import ToasterError from "@/lib/Toaster";
 import CustomTable from "@/components/components/CustomTable";
 import DataTableColumnHeader from "@/components/components/DataTableColumnHeader";
+import DeleteDialog from "@/components/components/DeleteDialog";
 
 const AccomplishmentReport = () => {
   const [data, setData] = useState([]);
@@ -300,32 +301,10 @@ const AccomplishmentReport = () => {
               </Dialog>
             </Tooltip>
             <Tooltip title="Delete Accomplishment">
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="destructive" size="sm">
-                    Delete
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Delete Accomplishment</DialogTitle>
-                    <DialogDescription>
-                      Are you sure you want to delete this accomplishment?
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="flex items-center justify-end gap-2">
-                    <DialogClose>
-                      <Button variant="outline">Cancel</Button>
-                    </DialogClose>
-                    <Button
-                      variant="destructive"
-                      onClick={() => handleDeleteAccomplishment(accomplishment)}
-                    >
-                      Delete
-                    </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
+              <DeleteDialog
+                item={`accompishment with ID ${accomplishment?._id}`}
+                handleDelete={() => handleDeleteAccomplishment(accomplishment)}
+              />
             </Tooltip>
           </div>
         );

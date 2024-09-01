@@ -12,15 +12,16 @@ const DataTableToolBar = ({
   statusFilter,
   navigate,
   status,
+  placeholder,
 }) => {
   return (
     <div className="flex flex-wrap items-center justify-between pb-2">
       <div className="flex flex-1 flex-wrap items-center gap-2">
         <Input
-          placeholder="Search student number or name..."
+          placeholder={placeholder}
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
-          className="h-8 w-[150px] lg:w-[250px]"
+          className="h-8 w-[270px]"
         />
         <StatusFilter
           status={status}
@@ -45,6 +46,7 @@ DataTableToolBar.propTypes = {
   statusFilter: PropTypes.string.isRequired,
   navigate: PropTypes.func.isRequired,
   status: PropTypes.string.isRequired,
+  placeholder: PropTypes.string.isRequired,
 };
 
 export default DataTableToolBar;

@@ -506,6 +506,7 @@ function Rentals() {
           statusFilter={statusFilter}
           navigate={() => navigate("/dashboard?tab=archive-rentals")}
           status={status}
+          placeholder="Filter by coordinator name..."
         />
         <div className="rounded-md border">
           {loading ? (

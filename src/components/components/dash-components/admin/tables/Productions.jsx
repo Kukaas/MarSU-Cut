@@ -1,10 +1,8 @@
 // UI
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -43,6 +41,7 @@ import {
 } from "@/components/ui/card";
 import ProductionPerformance from "../production-components/ProductionPerformance";
 import DataTableColumnHeader from "@/components/components/DataTableColumnHeader";
+import DeleteDialog from "@/components/components/DeleteDialog";
 
 const Productions = () => {
   const [data, setData] = useState([]);
@@ -50,7 +49,6 @@ const Productions = () => {
   const [searchValue, setSearchValue] = useState("");
   const [loading, setLoading] = useState(true);
   const [deleteLoading, setDeleteLoading] = useState(false);
-  const [selectedProduction, setSelectedProduction] = useState(null);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -111,13 +109,11 @@ const Productions = () => {
     }
   }, [searchValue, originalData]);
 
-  const handleDelete = async (event) => {
-    event.preventDefault();
-    setDeleteLoading(true);
-
+  const handleDelete = async (production) => {
     try {
+      setDeleteLoading(true);
       const res = await axios.delete(
-        `${BASE_URL}/api/v1/production/delete/${selectedProduction._id}`,
+        `${BASE_URL}/api/v1/production/delete/${production._id}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -128,11 +124,11 @@ const Productions = () => {
       );
 
       if (res.status === 200) {
-        toast.success(`Production with ID ${selectedProduction._id} deleted.`);
+        toast.success(`Production with ID ${production._id} deleted.`);
 
         setData((prevData) => {
           return prevData.filter(
-            (production) => production._id !== selectedProduction._id
+            (deletedProduction) => deletedProduction._id !== production._id
           );
         });
       } else {
@@ -217,45 +213,15 @@ const Productions = () => {
     },
     {
       id: "actions",
-      header: "Actions",
       cell: ({ row }) => {
         const production = row.original;
         return (
           <div className="flex space-x-2">
-            <Tooltip title="Delete product">
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => {
-                      setSelectedProduction(production);
-                    }}
-                  >
-                    Delete
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Delete Raw Material</DialogTitle>
-                    <DialogDescription>
-                      Are you sure you want to delete this raw material?
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="flex items-center justify-end gap-2">
-                    <DialogClose>
-                      <Button variant="outline">Cancel</Button>
-                    </DialogClose>
-                    <Button
-                      variant="destructive"
-                      onClick={(event) => handleDelete(event)}
-                      disabled={deleteLoading}
-                    >
-                      Delete
-                    </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
+            <Tooltip title="Delete production">
+              <DeleteDialog
+                item={`raw material with ID ${production?._id}`}
+                handleDelete={() => handleDelete(production)}
+              />
             </Tooltip>
           </div>
         );
@@ -287,10 +253,10 @@ const Productions = () => {
           <div className="flex flex-wrap items-center justify-between pb-2">
             <div className="flex flex-1 flex-wrap items-center gap-2">
               <Input
-                placeholder="Search by product type or level..."
+                placeholder="Filter by product type or level..."
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
-                className="h-8 w-[150px] lg:w-[250px]"
+                className="h-8 w-[270px]"
               />
             </div>
             <Tooltip title="Add new production">

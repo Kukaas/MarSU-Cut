@@ -8,12 +8,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
   Form,
   FormControl,
   FormField,
@@ -43,11 +37,12 @@ import PropTypes from "prop-types";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
-import { ChevronDown, Loader2, UploadIcon } from "lucide-react";
+import { Loader2, UploadIcon } from "lucide-react";
 import ToasterError from "@/lib/Toaster";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomInput from "../CustomInput";
+import SelectField from "../SelectField";
 
 const CreateOrder = ({ addNewOrder }) => {
   const [imageFile, setImageFile] = useState(null);
@@ -208,33 +203,12 @@ const CreateOrder = ({ addNewOrder }) => {
             control={form.control}
             name="studentGender"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Gender</FormLabel>
-                <FormControl>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        className="flex justify-between items-center w-full text-start"
-                        variant="outline"
-                      >
-                        {field.value || "Select Gender"}
-                        <ChevronDown className="ml-2 h-4 w-4" />{" "}
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuItem onSelect={() => field.onChange("Male")}>
-                        Male
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onSelect={() => field.onChange("Female")}
-                      >
-                        Female
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+              <SelectField
+                field={field}
+                label="Gender"
+                options={["Male", "Female"]}
+                placeholder="Select gender"
+              />
             )}
           />
           <FormField

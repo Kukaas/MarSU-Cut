@@ -1,11 +1,5 @@
 // UI
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
   Form,
   FormControl,
   FormField,
@@ -21,18 +15,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
-import { SheetClose, SheetTitle } from "@/components/ui/sheet";
+import { SheetClose } from "@/components/ui/sheet";
 import { toast } from "sonner";
 import { Tooltip } from "antd";
 
 // icons
-import {
-  CalendarIcon,
-  ChevronDown,
-  Loader2,
-  MinusCircle,
-  PlusCircle,
-} from "lucide-react";
+import { CalendarIcon, Loader2, MinusCircle, PlusCircle } from "lucide-react";
 
 // others
 import ToasterError from "@/lib/Toaster";
@@ -47,6 +35,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomInput from "../CustomInput";
+import SelectField from "../SelectField";
 
 const AddProduction = ({ onProductionAdded, setIsOpen }) => {
   const [addProductionLoading, setAddProductionLoading] = useState(false);
@@ -81,6 +70,19 @@ const AddProduction = ({ onProductionAdded, setIsOpen }) => {
 
     if (!values.level || !values.productType || !values.size) {
       return toast.error("Please fill all fields");
+    }
+
+    if (values.quantity === 0) {
+      return toast.error("Quantity must not be 0");
+    }
+
+    // Check if any raw material's quantity is 0
+    const hasZeroQuantity = values.rawMaterialsUsed.some(
+      (rawMaterial) => rawMaterial.quantity === 0
+    );
+
+    if (hasZeroQuantity) {
+      return toast.error("Raw material quantity must not be 0");
     }
 
     try {
@@ -122,282 +124,255 @@ const AddProduction = ({ onProductionAdded, setIsOpen }) => {
       <div className="w-full">
         <Form {...productionForm}>
           <form onSubmit={productionForm.handleSubmit(handleAddProduction)}>
-            <div className="flex w-full justify-between gap-2">
-              <FormField
-                control={productionForm.control}
-                name="level"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Level</FormLabel>
-                    <FormControl>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            className="w-full flex justify-between items-center overflow-y-auto"
-                            variant="outline"
-                          >
-                            {field.value || "Level"}
-                            <ChevronDown className="ml-2 h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                          {["SHS", "COLLEGE"].map((level) => (
-                            <DropdownMenuItem
-                              key={level}
-                              onClick={() => {
-                                field.onChange(level);
-                              }}
-                            >
-                              {level}
-                            </DropdownMenuItem>
-                          ))}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={productionForm.control}
-                name="productType"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Product Type</FormLabel>
-                    <FormControl>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            className="w-full flex justify-between items-center overflow-y-auto"
-                            variant="outline"
-                          >
-                            {field.value || "Type"}
-                            <ChevronDown className="ml-2 h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                          {[
-                            "SKIRT",
-                            "POLO",
-                            "PANTS",
-                            "BLOUSE",
-                            "PE TSHIRT",
-                            "JPANTS",
-                          ].map((type) => (
-                            <DropdownMenuItem
-                              key={type}
-                              onClick={() => {
-                                field.onChange(type);
-                              }}
-                            >
-                              {type}
-                            </DropdownMenuItem>
-                          ))}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={productionForm.control}
-                name="size"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Size</FormLabel>
-                    <FormControl>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            className="w-full flex justify-between items-center overflow-y-auto"
-                            variant="outline"
-                          >
-                            {field.value || "Size"}
-                            <ChevronDown className="ml-2 h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="max-h-48 overflow-y-auto">
-                          {[
-                            "S14",
-                            "S15",
-                            "S16",
-                            "S17",
-                            "S18",
-                            "S18+",
-                            "S19+",
-                            "S24",
-                            "S25",
-                            "S26",
-                            "S27",
-                            "S28+",
-                            "S33+34",
-                            "S35",
-                            "S36",
-                            "S37",
-                            "S38+40",
-                            "S42+45",
-                            "2XL",
-                            "XS/S",
-                            "M/L",
-                            "XL",
-                            "XXL",
-                          ].map((size) => (
-                            <DropdownMenuItem
-                              key={size}
-                              onClick={() => {
-                                field.onChange(size);
-                              }}
-                            >
-                              {size}
-                            </DropdownMenuItem>
-                          ))}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="flex space-x-4 mt-4">
-              <FormField
-                control={productionForm.control}
-                name="productionDateFrom" // Ensure this matches the name in your schema
-                render={({ field }) => (
-                  <FormItem className="flex flex-col w-full">
-                    <FormLabel>Production Date From</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "pl-3 text-left font-normal w-full",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            {field.value ? (
-                              format(new Date(field.value), "MMMM dd")
-                            ) : (
-                              <span>From</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value ? new Date(field.value) : null}
-                          onSelect={field.onChange}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={productionForm.control}
-                name="productionDateTo" // Ensure this matches the name in your schema
-                render={({ field }) => (
-                  <FormItem className="flex flex-col w-full">
-                    <FormLabel>Production Date To</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "pl-3 text-left font-normal w-full",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            {field.value ? (
-                              format(new Date(field.value), "MMMM dd")
-                            ) : (
-                              <span>To</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value ? new Date(field.value) : null}
-                          onSelect={field.onChange}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <FormField
-              control={productionForm.control}
-              name="quantity"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Quantity</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      {...field}
-                      value={field.value !== undefined ? field.value : ""}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        field.onChange(value !== "" ? parseFloat(value) : "");
-                      }}
-                      placeholder="Quantity"
-                      className="w-full"
+            {/* Production Details */}
+            <fieldset className="border border-gray-300 rounded-md p-4 mt-2">
+              <legend className="text-lg font-semibold">
+                Production Details
+              </legend>
+              <div className="flex w-full justify-between gap-2">
+                <FormField
+                  control={productionForm.control}
+                  name="level"
+                  render={({ field }) => (
+                    <SelectField
+                      field={field}
+                      label="Level"
+                      options={["SHS", "COLLEGE"]}
+                      placeholder="Level"
                     />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <SheetTitle className="mt-4">Raw Materials Used</SheetTitle>
-            <div className="space-y-4 mt-2">
-              {fields.map((field, index) => (
-                <div key={field.id} className="flex items-center space-x-4">
-                  <CustomInput
-                    form={productionForm}
-                    name={`rawMaterialsUsed.${index}.type`}
-                    label="Type"
-                    placeholder="eg. Cotton"
-                  />
-                  <CustomInput
-                    form={productionForm}
-                    name={`rawMaterialsUsed.${index}.quantity`}
-                    label="Quantity"
-                  />
-                  <Tooltip title="Remove input">
-                    <MinusCircle
+                  )}
+                />
+
+                <FormField
+                  control={productionForm.control}
+                  name="productType"
+                  render={({ field }) => (
+                    <SelectField
+                      field={field}
+                      label="Product Type"
+                      options={[
+                        "SKIRT",
+                        "POLO",
+                        "PANTS",
+                        "BLOUSE",
+                        "PE TSHIRT",
+                        "JPANTS",
+                      ]}
+                      placeholder="Type"
+                    />
+                  )}
+                />
+
+                <FormField
+                  control={productionForm.control}
+                  name="size"
+                  render={({ field }) => (
+                    <SelectField
+                      field={field}
+                      label="Size"
+                      options={[
+                        "S14",
+                        "S15",
+                        "S16",
+                        "S17",
+                        "S18",
+                        "S18+",
+                        "S19+",
+                        "S24",
+                        "S25",
+                        "S26",
+                        "S27",
+                        "S28+",
+                        "S33+34",
+                        "S35",
+                        "S36",
+                        "S37",
+                        "S38+40",
+                        "S42+45",
+                        "2XL",
+                        "XS/S",
+                        "M/L",
+                        "XL",
+                        "XXL",
+                      ]}
+                      placeholder="Size"
+                    />
+                  )}
+                />
+              </div>
+              <div className="flex space-x-4 mt-4">
+                <FormField
+                  control={productionForm.control}
+                  name="productionDateFrom"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col w-full">
+                      <FormLabel>Production From</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "pl-3 text-left font-normal w-full",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value ? (
+                                format(new Date(field.value), "MMMM dd")
+                              ) : (
+                                <span>From</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={
+                              field.value ? new Date(field.value) : null
+                            }
+                            onSelect={field.onChange}
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={productionForm.control}
+                  name="productionDateTo"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col w-full">
+                      <FormLabel>Production To</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "pl-3 text-left font-normal w-full",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value ? (
+                                format(new Date(field.value), "MMMM dd")
+                              ) : (
+                                <span>To</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={
+                              field.value ? new Date(field.value) : null
+                            }
+                            onSelect={field.onChange}
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <FormField
+                control={productionForm.control}
+                name="quantity"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Quantity</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        {...field}
+                        value={field.value !== undefined ? field.value : ""}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          const parsedValue =
+                            value !== "" ? parseFloat(value) : "";
+                          field.onChange(parsedValue >= 0 ? parsedValue : 0);
+                        }}
+                        placeholder="Quantity"
+                        className="w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </fieldset>
+
+            {/* Raw Materials Used */}
+            <fieldset className="border border-gray-300 rounded-md p-4 mt-2">
+              <legend className="text-lg font-semibold">
+                Raw Materials Used
+              </legend>
+              <div className="space-y-4 mt-2">
+                {fields.map((field, index) => (
+                  <div key={field.id} className="flex items-center space-x-4">
+                    <CustomInput
+                      form={productionForm}
+                      name={`rawMaterialsUsed.${index}.type`}
+                      label="Type"
+                      placeholder="eg. Cotton"
+                    />
+                    <FormField
+                      control={productionForm.control}
+                      name={`rawMaterialsUsed.${index}.quantity`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Quantity</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              {...field}
+                              value={
+                                field.value !== undefined ? field.value : ""
+                              }
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                const parsedValue =
+                                  value !== "" ? parseFloat(value) : "";
+                                field.onChange(
+                                  parsedValue >= 0 ? parsedValue : 0
+                                );
+                              }}
+                              placeholder="Quantity"
+                              className="w-full"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Tooltip title="Remove input">
+                      <MinusCircle
+                        size={24}
+                        onClick={() => remove(index)}
+                        className="mt-8"
+                      />
+                    </Tooltip>
+                  </div>
+                ))}
+                <div className="flex justify-center mt-3">
+                  <Tooltip title="Add new input">
+                    <PlusCircle
                       size={24}
-                      onClick={() => remove(index)}
-                      className="mt-8"
+                      onClick={() => append({ type: "", quantity: 0 })}
+                      className="flex items-center justify-center"
                     />
                   </Tooltip>
                 </div>
-              ))}
-              <div className="flex justify-center mt-3">
-                <Tooltip title="Add new input">
-                  <PlusCircle
-                    size={24}
-                    onClick={() => append({ type: "", quantity: 0 })}
-                    className="flex items-center justify-center"
-                  />
-                </Tooltip>
               </div>
-            </div>
+            </fieldset>
             <div className="flex items-center justify-end gap-2 mt-4">
               <SheetClose>
                 <Button variant="outline">Cancel</Button>

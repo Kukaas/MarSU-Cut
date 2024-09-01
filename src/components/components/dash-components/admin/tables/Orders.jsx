@@ -471,6 +471,7 @@ function Orders() {
           statusFilter={statusFilter}
           navigate={() => navigate("/dashboard?tab=archive-orders")}
           status={status}
+          placeholder="Filter by student number or name"
         />
         <div className="rounded-md border">
           {loading ? (

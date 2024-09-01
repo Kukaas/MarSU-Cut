@@ -333,10 +333,10 @@ function ArchiveOrders() {
         <div className="flex flex-wrap items-center justify-between pb-2">
           <div className="flex flex-1 flex-wrap items-center gap-2">
             <Input
-              placeholder="Search by student number or name"
+              placeholder="Filter by student number or name..."
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
-              className="h-8 w-[150px] lg:w-[250px]"
+              className="h-8 w-[270px]"
             />
           </div>
           <Tooltip title="Back to Orders">

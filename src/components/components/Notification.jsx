@@ -206,25 +206,25 @@ const Notification = () => {
               ? "You have 1 unread notification."
               : `You have ${unreadNotifications.length} unread notifications.`}
           </SheetDescription>
-          {unreadNotifications.map((unreadNotifications) => (
-            <div
-              key={unreadNotifications.id}
-              className="p-4 border rounded-md border-gray-400 mt-2 cursor-pointer"
-              onClick={() => {
-                handleReadNotification(unreadNotifications);
-              }}
-            >
-              <SheetTitle>{unreadNotifications?.title}</SheetTitle>
-              <SheetDescription>
-                {unreadNotifications?.message}
-              </SheetDescription>
-              <SheetDescription className="text-xs text-gray-400">
-                {unreadNotifications?.createdAt} -{" "}
-                {formatDistanceToNow(new Date(unreadNotifications.createdAt))}{" "}
-                ago
-              </SheetDescription>
-            </div>
-          ))}
+          {unreadNotifications
+            .slice() // Create a copy of the array to avoid mutating the original
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort in descending order
+            .map((notification) => (
+              <div
+                key={notification.id}
+                className="p-4 border rounded-md border-gray-400 mt-2 cursor-pointer"
+                onClick={() => {
+                  handleReadNotification(notification);
+                }}
+              >
+                <SheetTitle>{notification?.title}</SheetTitle>
+                <SheetDescription>{notification?.message}</SheetDescription>
+                <SheetDescription className="text-xs text-gray-400">
+                  {notification?.createdAt} -{" "}
+                  {formatDistanceToNow(new Date(notification.createdAt))} ago
+                </SheetDescription>
+              </div>
+            ))}
           <Button
             className="mt-5"
             onClick={handleMarkAllNotificationsAsRead}
@@ -250,35 +250,37 @@ const Notification = () => {
               ? "You have 1 read notification."
               : `You have ${readNotifications.length} read notifications.`}
           </SheetDescription>
-          {readNotifications.map((readNotifications) => (
-            <div
-              key={readNotifications.id}
-              className="p-4 border rounded-md border-gray-400 mt-2 overflow-auto cursor-pointer"
-            >
-              <div className="flex gap-2 flex-col">
-                <SheetTitle className="text-sm">
-                  {readNotifications?.title}
-                </SheetTitle>
-                <SheetDescription className="text-sm">
-                  {readNotifications?.message}
-                </SheetDescription>
-                <SheetDescription className="text-xs text-gray-400">
-                  {readNotifications?.createdAt} -
-                  {formatDistanceToNow(new Date(readNotifications.createdAt))}{" "}
-                  ago
-                </SheetDescription>
+          {readNotifications
+            .slice()
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort in descending order
+            .map((notification) => (
+              <div
+                key={notification.id}
+                className="p-4 border rounded-md border-gray-400 mt-2 overflow-auto cursor-pointer"
+              >
+                <div className="flex gap-2 flex-col">
+                  <SheetTitle className="text-sm">
+                    {notification?.title}
+                  </SheetTitle>
+                  <SheetDescription className="text-sm">
+                    {notification?.message}
+                  </SheetDescription>
+                  <SheetDescription className="text-xs text-gray-400">
+                    {notification?.createdAt} -{" "}
+                    {formatDistanceToNow(new Date(notification.createdAt))} ago
+                  </SheetDescription>
+                </div>
+                <Tooltip title="Delete notification">
+                  <Button
+                    variant="destructive"
+                    className="mt-2 h-6 w-6 relative"
+                    onClick={() => handleDeleteNotification(notification)}
+                  >
+                    <Trash className="h-4 w-4 absolute" />
+                  </Button>
+                </Tooltip>
               </div>
-              <Tooltip title="Delete notification">
-                <Button
-                  variant="destructive"
-                  className="mt-2 h-6 w-6 relative"
-                  onClick={() => handleDeleteNotification(readNotifications)}
-                >
-                  <Trash className="h-4 w-4 absolute" />
-                </Button>
-              </Tooltip>
-            </div>
-          ))}
+            ))}
           <Button
             className="mt-5"
             variant="destructive"

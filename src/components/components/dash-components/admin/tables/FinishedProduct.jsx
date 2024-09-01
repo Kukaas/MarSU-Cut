@@ -2,7 +2,6 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -13,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Spin, Tooltip, Typography } from "antd";
 
-import { Loader2, PlusCircle } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import { LoadingOutlined } from "@ant-design/icons";
 
 // others
@@ -29,6 +28,7 @@ import CustomTable from "@/components/components/CustomTable";
 import { statusColors } from "@/lib/utils";
 import CustomBadge from "@/components/components/CustomBadge";
 import DataTableColumnHeader from "@/components/components/DataTableColumnHeader";
+import DeleteDialog from "@/components/components/DeleteDialog";
 
 const FinishedProduct = () => {
   const [data, setData] = useState([]);
@@ -82,11 +82,11 @@ const FinishedProduct = () => {
     }
   }, [searchValue, originalData]);
 
-  const handleDelete = async () => {
+  const handleDelete = async (product) => {
     try {
       setDeleteLoading(true);
       const res = await axios.delete(
-        `${BASE_URL}/api/v1/finished-product/delete/${selectedProduct._id}`,
+        `${BASE_URL}/api/v1/finished-product/delete/${product._id}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -99,7 +99,9 @@ const FinishedProduct = () => {
       if (res.status === 200) {
         setDeleteLoading(false);
         setData((prevData) =>
-          prevData.filter((product) => product._id !== selectedProduct._id)
+          prevData.filter(
+            (finishedProduct) => finishedProduct._id !== product._id
+          )
         );
         toast.success("Product deleted successfully!");
       } else {
@@ -193,46 +195,10 @@ const FinishedProduct = () => {
               </Dialog>
             </Tooltip>
             <Tooltip title="Delete product">
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => {
-                      setSelectedProduct(product);
-                    }}
-                  >
-                    Delete
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Delete Product</DialogTitle>
-                    <DialogDescription>
-                      Are you sure you want to delete this product?
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="flex items-center justify-end gap-2">
-                    <DialogClose>
-                      <Button variant="outline">Cancel</Button>
-                    </DialogClose>
-                    <Button
-                      variant="destructive"
-                      onClick={(event) => handleDelete(event)}
-                      disabled={deleteLoading}
-                    >
-                      {deleteLoading ? (
-                        <div className="flex items-center">
-                          <Loader2 className="mr-2 animate-spin" />
-                          <span>Deleting</span>
-                        </div>
-                      ) : (
-                        "Delete"
-                      )}
-                    </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
+              <DeleteDialog
+                item={`raw material with ID ${product?._id}`}
+                handleDelete={() => handleDelete(product)}
+              />
             </Tooltip>
           </div>
         );
@@ -264,10 +230,10 @@ const FinishedProduct = () => {
           <div className="flex flex-wrap items-center justify-between pb-2">
             <div className="flex flex-1 flex-wrap items-center gap-2">
               <Input
-                placeholder="Search by product type or level..."
+                placeholder="Filter by product type or level..."
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
-                className="h-8 w-[150px] lg:w-[250px]"
+                className="h-8 w-[270px]"
               />
             </div>
             <Tooltip title="Add new product">

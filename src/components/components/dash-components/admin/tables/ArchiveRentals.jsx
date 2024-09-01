@@ -282,7 +282,7 @@ function ArchiveRentals() {
         <div className="flex flex-wrap items-center justify-between pb-2">
           <div className="flex flex-1 flex-wrap items-center gap-2">
             <Input
-              placeholder="Search by coordinator name..."
+              placeholder="Filter by coordinator name..."
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
               className="h-8 w-[150px] lg:w-[250px]"

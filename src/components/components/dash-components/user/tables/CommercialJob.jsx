@@ -29,6 +29,7 @@ import { BASE_URL } from "@/lib/api";
 import ToasterError from "@/lib/Toaster";
 import CustomTable from "@/components/components/CustomTable";
 import DataTableColumnHeader from "@/components/components/DataTableColumnHeader";
+import { statusColors } from "@/lib/utils";
 
 const CommercialJob = () => {
   const [data, setData] = useState([]);
@@ -111,24 +112,9 @@ const CommercialJob = () => {
         <DataTableColumnHeader column={column} title="Status" />
       ),
       cell: ({ row }) => {
-        const statusStyles = {
-          APPROVED: {
-            color: "blue",
-            badgeText: "Approved",
-          },
-          PENDING: {
-            color: "red",
-            badgeText: "Pending",
-          },
-          default: {
-            color: "gray",
-            badgeText: "Unknown",
-          },
-        };
-
         const status = row.getValue("status");
         const { color, badgeText } =
-          statusStyles[status] || statusStyles.default;
+          statusColors[status] || statusColors.default;
 
         return (
           <div className="status-badge">
@@ -198,8 +184,8 @@ const CommercialJob = () => {
           <Tooltip title="Create an Order">
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
-                <Button variant="default" className="m-2">
-                  <PlusCircle size={20} className="mr-2" />
+                <Button variant="default" className="m-2 h-8">
+                  <PlusCircle size={20} className="mr-2 h-4 w-4" />
                   Create
                 </Button>
               </DialogTrigger>

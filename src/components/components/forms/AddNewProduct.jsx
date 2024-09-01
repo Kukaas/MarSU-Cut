@@ -1,11 +1,5 @@
 // UI
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
   Form,
   FormControl,
   FormField,
@@ -31,6 +25,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
+import SelectField from "../SelectField";
 
 const AddNewProduct = ({ onProductAdded, setIsDialogOpen }) => {
   const [addNewProductLoading, setAddNewProductLoading] = useState(false);
@@ -93,130 +88,67 @@ const AddNewProduct = ({ onProductAdded, setIsDialogOpen }) => {
           control={addNewProductForm.control}
           name="level"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Level</FormLabel>
-              <FormControl>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      className="block w-full text-start"
-                      variant="outline"
-                    >
-                      {field.value || "Select level"}
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem onSelect={() => field.onChange("SHS")}>
-                      SHS
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onSelect={() => field.onChange("COLLEGE")}
-                    >
-                      COLLEGE
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+            <SelectField
+              field={field}
+              label="Level"
+              options={["SHS", "COLLEGE"]}
+              placeholder="Level"
+            />
           )}
         />
         <FormField
           control={addNewProductForm.control}
           name="productType"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Poduct Type</FormLabel>
-              <FormControl>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      className="block w-full text-start"
-                      variant="outline"
-                    >
-                      {field.value || "Select product type"}
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="max-h-48 overflow-y-auto">
-                    {[
-                      "SKIRT",
-                      "POLO",
-                      "PANTS",
-                      "BLOUSE",
-                      "PE TSHIRT",
-                      "JPANTS",
-                      "ACADEMIC GOWN",
-                      "CAP",
-                    ].map((type) => (
-                      <DropdownMenuItem
-                        key={type}
-                        onSelect={() => field.onChange(type)}
-                      >
-                        {type}
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+            <SelectField
+              field={field}
+              label="Product Type"
+              options={[
+                "SKIRT",
+                "POLO",
+                "PANTS",
+                "BLOUSE",
+                "PE TSHIRT",
+                "JPANTS",
+              ]}
+              placeholder="Type"
+            />
           )}
         />
         <FormField
           control={addNewProductForm.control}
           name="size"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Size</FormLabel>
-              <FormControl>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      className="block w-full text-start"
-                      variant="outline"
-                    >
-                      {field.value || "Select a size"}
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="max-h-48 overflow-y-auto">
-                    {[
-                      "S14",
-                      "S15",
-                      "S16",
-                      "S17",
-                      "S18",
-                      "S18+",
-                      "S19+",
-                      "S24",
-                      "S25",
-                      "S26",
-                      "S27",
-                      "S28+",
-                      "S33+34",
-                      "S35",
-                      "S36",
-                      "S37",
-                      "S38+40",
-                      "S42+45",
-                      "2XL",
-                      "XS/S",
-                      "M/L",
-                      "XL",
-                      "XXL",
-                      "Custom",
-                    ].map((size) => (
-                      <DropdownMenuItem
-                        key={size}
-                        onSelect={() => field.onChange(size)}
-                      >
-                        {size}
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+            <SelectField
+              field={field}
+              label="Size"
+              options={[
+                "S14",
+                "S15",
+                "S16",
+                "S17",
+                "S18",
+                "S18+",
+                "S19+",
+                "S24",
+                "S25",
+                "S26",
+                "S27",
+                "S28+",
+                "S33+34",
+                "S35",
+                "S36",
+                "S37",
+                "S38+40",
+                "S42+45",
+                "2XL",
+                "XS/S",
+                "M/L",
+                "XL",
+                "XXL",
+              ]}
+              placeholder="Size"
+            />
           )}
         />
         <FormField
@@ -232,7 +164,8 @@ const AddNewProduct = ({ onProductAdded, setIsDialogOpen }) => {
                   value={field.value !== undefined ? field.value : ""}
                   onChange={(e) => {
                     const value = e.target.value;
-                    field.onChange(value !== "" ? parseFloat(value) : "");
+                    const parsedValue = value !== "" ? parseFloat(value) : "";
+                    field.onChange(parsedValue >= 0 ? parsedValue : 0);
                   }}
                   placeholder="Quantity"
                   className="w-full"

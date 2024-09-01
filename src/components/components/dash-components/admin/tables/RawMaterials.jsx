@@ -1,7 +1,6 @@
 // UI
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -29,6 +28,7 @@ import CustomTable from "@/components/components/CustomTable";
 import { statusColors } from "@/lib/utils";
 import CustomBadge from "@/components/components/CustomBadge";
 import DataTableColumnHeader from "@/components/components/DataTableColumnHeader";
+import DeleteDialog from "@/components/components/DeleteDialog";
 
 const RawMaterials = () => {
   const [data, setData] = useState([]);
@@ -78,11 +78,11 @@ const RawMaterials = () => {
     }
   }, [searchValue, originalData]);
 
-  const handleDelete = async () => {
+  const handleDelete = async (rawMaterial) => {
     try {
       setDeleteLoading(true);
       const res = await axios.delete(
-        `${BASE_URL}/api/v1/raw-materials/delete/${selectedRawMaterial._id}`,
+        `${BASE_URL}/api/v1/raw-materials/delete/${rawMaterial._id}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -95,9 +95,9 @@ const RawMaterials = () => {
       if (res.status === 200) {
         setDeleteLoading(false);
         setData((prevData) =>
-          prevData.filter((product) => product._id !== selectedRawMaterial._id)
+          prevData.filter((rawMaterial) => rawMaterial._id !== rawMaterial._id)
         );
-        toast.success("Product deleted successfully!");
+        toast.success("Raw material deleted successfully!");
       } else {
         ToasterError();
       }
@@ -151,7 +151,6 @@ const RawMaterials = () => {
                 <DialogTrigger asChild>
                   <Button
                     variant="default"
-                    size="sm"
                     onClick={() => setSelectedRawMaterial(rawMaterial)}
                   >
                     Edit
@@ -168,40 +167,11 @@ const RawMaterials = () => {
                 </DialogContent>
               </Dialog>
             </Tooltip>
-            <Tooltip title="Delete product">
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => {
-                      setSelectedRawMaterial(rawMaterial);
-                    }}
-                  >
-                    Delete
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Delete Raw Material</DialogTitle>
-                    <DialogDescription>
-                      Are you sure you want to delete this raw material?
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="flex items-center justify-end gap-2">
-                    <DialogClose>
-                      <Button variant="outline">Cancel</Button>
-                    </DialogClose>
-                    <Button
-                      variant="destructive"
-                      onClick={(event) => handleDelete(event)}
-                      disabled={deleteLoading}
-                    >
-                      Delete
-                    </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
+            <Tooltip title="Delete raw material">
+              <DeleteDialog
+                item={`raw material with ID ${rawMaterial?._id}`}
+                handleDelete={() => handleDelete(rawMaterial)}
+              />
             </Tooltip>
           </div>
         );
@@ -234,10 +204,10 @@ const RawMaterials = () => {
           <div className="flex flex-wrap items-center justify-between pb-2">
             <div className="flex flex-1 flex-wrap items-center gap-2">
               <Input
-                placeholder="Search by type..."
+                placeholder="Filter by type..."
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
-                className="h-8 w-[150px] lg:w-[250px]"
+                className="h-8 w-[270px]"
               />
             </div>
             <Tooltip title="Add new raw material">
