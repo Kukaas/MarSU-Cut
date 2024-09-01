@@ -23,7 +23,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
-import CustomInput from "../CustomInput";
+import CustomInput from "../custom-components/CustomInput";
 
 const AddNewRawMaterial = ({ onRawMaterialAdded, setIsDialogOpen }) => {
   const [addRawMaterialLoading, setAddRawMaterialLoading] = useState(false);

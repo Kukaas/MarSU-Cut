@@ -1,9 +1,9 @@
-import { Input } from "../ui/input";
-import StatusFilter from "./StatusFilter";
+import { Input } from "../../ui/input";
 import { Tooltip } from "antd";
 import { ArchiveIcon } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import PropTypes from "prop-types";
+import StatusFilter from "./StatusFilter";
 
 const DataTableToolBar = ({
   searchValue,

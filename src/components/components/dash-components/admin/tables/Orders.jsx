@@ -31,11 +31,11 @@ import ToasterError from "@/lib/Toaster";
 import AddOrderItems from "../../../forms/AddOrderItems";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
-import CustomTable from "../../../CustomTable";
+import CustomTable from "../../../custom-components/CustomTable";
 import { statusColors } from "@/lib/utils";
-import CustomBadge from "@/components/components/CustomBadge";
-import DataTableColumnHeader from "@/components/components/DataTableColumnHeader";
-import DataTableToolBar from "@/components/components/DataTableToolBar";
+import CustomBadge from "@/components/components/custom-components/CustomBadge";
+import DataTableColumnHeader from "@/components/components/custom-components/DataTableColumnHeader";
+import DataTableToolBar from "@/components/components/custom-components/DataTableToolBar";
 
 function Orders() {
   const [data, setData] = useState([]);

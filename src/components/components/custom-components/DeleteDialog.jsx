@@ -10,8 +10,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "../ui/alert-dialog";
-import { Button } from "../ui/button";
+} from "../../ui/alert-dialog";
+import { Button } from "../../ui/button";
 import PropTypes from "prop-types";
 
 const DeleteDialog = ({

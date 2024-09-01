@@ -24,11 +24,11 @@ import { useNavigate } from "react-router-dom";
 import ToasterError from "@/lib/Toaster";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
-import CustomTable from "@/components/components/CustomTable";
+import CustomTable from "@/components/components/custom-components/CustomTable";
 import { statusColors } from "@/lib/utils";
-import CustomBadge from "@/components/components/CustomBadge";
-import DataTableColumnHeader from "@/components/components/DataTableColumnHeader";
-import DataTableToolBar from "@/components/components/DataTableToolBar";
+import CustomBadge from "@/components/components/custom-components/CustomBadge";
+import DataTableColumnHeader from "@/components/components/custom-components/DataTableColumnHeader";
+import DataTableToolBar from "@/components/components/custom-components/DataTableToolBar";
 
 const CommercialJob = () => {
   const [data, setData] = useState([]);

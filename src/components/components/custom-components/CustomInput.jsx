@@ -5,8 +5,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
+} from "../../ui/form";
+import { Input } from "../../ui/input";
 import { Eye, EyeOff } from "lucide-react"; // Assuming you use lucide-react for icons
 import PropTypes from "prop-types";
 

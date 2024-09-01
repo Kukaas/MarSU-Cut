@@ -1,4 +1,4 @@
-import { FormControl, FormItem, FormLabel, FormMessage } from "../ui/form";
+import { FormControl, FormItem, FormLabel, FormMessage } from "../../ui/form";
 import {
   Select,
   SelectContent,
@@ -7,7 +7,7 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
+} from "../../ui/select";
 import PropTypes from "prop-types";
 
 const SelectField = ({ field, label, options, placeholder, onValueChange }) => {

@@ -17,7 +17,7 @@ import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
-import CustomInput from "../CustomInput";
+import CustomInput from "../custom-components/CustomInput";
 
 const ChangePassword = () => {
   const [loading, setLoading] = useState(false);

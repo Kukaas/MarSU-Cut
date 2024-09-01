@@ -28,8 +28,8 @@ import { toast } from "sonner";
 import { token } from "@/lib/token";
 import ToasterError from "@/lib/Toaster";
 import { BASE_URL } from "@/lib/api";
-import CustomTable from "@/components/components/CustomTable";
-import DataTableColumnHeader from "@/components/components/DataTableColumnHeader";
+import CustomTable from "@/components/components/custom-components/CustomTable";
+import DataTableColumnHeader from "@/components/components/custom-components/DataTableColumnHeader";
 import { statusColors } from "@/lib/utils";
 
 function Rentals() {

@@ -23,7 +23,7 @@ import PropTypes from "prop-types";
 import ToasterError from "@/lib/Toaster";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
-import SelectField from "../SelectField";
+import SelectField from "../custom-components/SelectField";
 
 const AddOrderItems = ({
   selectedOrder,

@@ -9,10 +9,10 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
-import CustomTable from "@/components/components/CustomTable";
+import CustomTable from "@/components/components/custom-components/CustomTable";
 import { toast } from "sonner";
-import DataTableColumnHeader from "@/components/components/DataTableColumnHeader";
-import DeleteDialog from "@/components/components/DeleteDialog";
+import DataTableColumnHeader from "@/components/components/custom-components/DataTableColumnHeader";
+import DeleteDialog from "@/components/components/custom-components/DeleteDialog";
 
 const Users = () => {
   const [data, setData] = useState([]);

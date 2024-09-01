@@ -15,7 +15,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
-import CustomInput from "../CustomInput";
+import CustomInput from "../custom-components/CustomInput";
 import { DialogClose } from "@/components/ui/dialog";
 
 const CreateAccomplishment = ({ onAccomplishmentCreate, setIsDialogOpen }) => {

@@ -22,7 +22,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ResetPasswordSchema } from "@/schema/shema";
 import { BASE_URL } from "@/lib/api";
-import CustomInput from "@/components/components/CustomInput";
+import CustomInput from "@/components/components/custom-components/CustomInput";
 
 const ResetPassword = () => {
   const navigate = useNavigate();

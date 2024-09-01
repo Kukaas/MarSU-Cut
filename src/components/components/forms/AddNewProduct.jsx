@@ -25,7 +25,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
-import SelectField from "../SelectField";
+import SelectField from "../custom-components/SelectField";
 
 const AddNewProduct = ({ onProductAdded, setIsDialogOpen }) => {
   const [addNewProductLoading, setAddNewProductLoading] = useState(false);

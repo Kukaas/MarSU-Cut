@@ -18,7 +18,7 @@ import { Helmet } from "react-helmet";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-import { CustomCalendar } from "../../CustomCalendar";
+import { CustomCalendar } from "../../custom-components/CustomCalendar";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 

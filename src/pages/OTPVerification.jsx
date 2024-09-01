@@ -23,7 +23,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useEffect, useState } from "react";
 import { BASE_URL } from "@/lib/api";
-import CustomInput from "@/components/components/CustomInput";
+import CustomInput from "@/components/components/custom-components/CustomInput";
 
 const OTPVerification = () => {
   const navigate = useNavigate();

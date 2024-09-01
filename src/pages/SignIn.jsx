@@ -19,7 +19,7 @@ import { LoginSchema } from "@/schema/shema";
 import { useForm } from "react-hook-form";
 import { BASE_URL } from "@/lib/api";
 import ToasterError from "@/lib/Toaster";
-import CustomInput from "@/components/components/CustomInput";
+import CustomInput from "@/components/components/custom-components/CustomInput";
 import { Form } from "@/components/ui/form";
 
 const SignIn = () => {

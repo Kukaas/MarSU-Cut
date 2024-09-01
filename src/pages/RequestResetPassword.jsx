@@ -26,7 +26,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "@/lib/api";
 import ToasterError from "@/lib/Toaster";
-import CustomInput from "@/components/components/CustomInput";
+import CustomInput from "@/components/components/custom-components/CustomInput";
 
 const RequestResetPassword = () => {
   const dispatch = useDispatch();

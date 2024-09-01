@@ -34,8 +34,8 @@ import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
-import CustomInput from "../CustomInput";
-import SelectField from "../SelectField";
+import CustomInput from "../custom-components/CustomInput";
+import SelectField from "../custom-components/SelectField";
 
 const AddProduction = ({ onProductionAdded, setIsOpen }) => {
   const [addProductionLoading, setAddProductionLoading] = useState(false);

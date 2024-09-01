@@ -41,7 +41,7 @@ import { useSelector } from "react-redux";
 import ToasterError from "@/lib/Toaster";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
-import CustomInput from "../CustomInput";
+import CustomInput from "../custom-components/CustomInput";
 
 const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
   const [loading, setLoading] = useState(false);

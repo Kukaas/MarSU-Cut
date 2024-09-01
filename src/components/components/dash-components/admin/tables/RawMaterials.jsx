@@ -24,11 +24,11 @@ import EditRawMaterial from "@/components/components/forms/EditRawMaterial";
 import AddNewRawMaterial from "@/components/components/forms/AddNewRawMaterial";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
-import CustomTable from "@/components/components/CustomTable";
+import CustomTable from "@/components/components/custom-components/CustomTable";
 import { statusColors } from "@/lib/utils";
-import CustomBadge from "@/components/components/CustomBadge";
-import DataTableColumnHeader from "@/components/components/DataTableColumnHeader";
-import DeleteDialog from "@/components/components/DeleteDialog";
+import CustomBadge from "@/components/components/custom-components/CustomBadge";
+import DataTableColumnHeader from "@/components/components/custom-components/DataTableColumnHeader";
+import DeleteDialog from "@/components/components/custom-components/DeleteDialog";
 
 const RawMaterials = () => {
   const [data, setData] = useState([]);

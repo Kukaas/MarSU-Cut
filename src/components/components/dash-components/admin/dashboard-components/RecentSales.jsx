@@ -5,8 +5,8 @@ import TableLoading from "./loading-components/TableLoading";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import { statusColors } from "@/lib/utils";
-import CustomBadge from "@/components/components/CustomBadge";
-import CustomTable from "@/components/components/CustomTable";
+import CustomBadge from "@/components/components/custom-components/CustomBadge";
+import CustomTable from "@/components/components/custom-components/CustomTable";
 
 const RecentSales = () => {
   const [recentOrders, setRecentOrders] = useState([]);

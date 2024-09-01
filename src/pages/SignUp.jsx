@@ -18,7 +18,7 @@ import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet";
 import { BASE_URL } from "@/lib/api";
 import ToasterError from "@/lib/Toaster";
-import CustomInput from "@/components/components/CustomInput";
+import CustomInput from "@/components/components/custom-components/CustomInput";
 
 const SignUp = () => {
   const [loading, setLoading] = useState(false);

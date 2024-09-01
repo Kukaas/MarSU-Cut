@@ -30,7 +30,7 @@ import { useEffect, useState } from "react";
 import AddProduction from "@/components/components/forms/AddProduction";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
-import CustomTable from "@/components/components/CustomTable";
+import CustomTable from "@/components/components/custom-components/CustomTable";
 import ProductionChart from "../production-components/ProductionChart";
 import {
   Card,
@@ -40,8 +40,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import ProductionPerformance from "../production-components/ProductionPerformance";
-import DataTableColumnHeader from "@/components/components/DataTableColumnHeader";
-import DeleteDialog from "@/components/components/DeleteDialog";
+import DataTableColumnHeader from "@/components/components/custom-components/DataTableColumnHeader";
+import DeleteDialog from "@/components/components/custom-components/DeleteDialog";
 
 const Productions = () => {
   const [data, setData] = useState([]);

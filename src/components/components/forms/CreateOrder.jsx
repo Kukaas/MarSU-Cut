@@ -41,8 +41,8 @@ import { Loader2, UploadIcon } from "lucide-react";
 import ToasterError from "@/lib/Toaster";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
-import CustomInput from "../CustomInput";
-import SelectField from "../SelectField";
+import CustomInput from "../custom-components/CustomInput";
+import SelectField from "../custom-components/SelectField";
 
 const CreateOrder = ({ addNewOrder }) => {
   const [imageFile, setImageFile] = useState(null);

@@ -45,9 +45,9 @@ import CreateAccomplishment from "../../../forms/CreateAccomplishment";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import ToasterError from "@/lib/Toaster";
-import CustomTable from "@/components/components/CustomTable";
-import DataTableColumnHeader from "@/components/components/DataTableColumnHeader";
-import DeleteDialog from "@/components/components/DeleteDialog";
+import CustomTable from "@/components/components/custom-components/CustomTable";
+import DataTableColumnHeader from "@/components/components/custom-components/DataTableColumnHeader";
+import DeleteDialog from "@/components/components/custom-components/DeleteDialog";
 
 const AccomplishmentReport = () => {
   const [data, setData] = useState([]);

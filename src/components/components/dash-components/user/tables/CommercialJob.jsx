@@ -27,9 +27,9 @@ import { toast } from "sonner";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import ToasterError from "@/lib/Toaster";
-import CustomTable from "@/components/components/CustomTable";
-import DataTableColumnHeader from "@/components/components/DataTableColumnHeader";
+import CustomTable from "@/components/components/custom-components/CustomTable";
 import { statusColors } from "@/lib/utils";
+import DataTableColumnHeader from "@/components/components/custom-components/DataTableColumnHeader";
 
 const CommercialJob = () => {
   const [data, setData] = useState([]);
