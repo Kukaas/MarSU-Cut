@@ -113,7 +113,7 @@ const Weekly = () => {
         </ChartContainer>
       ) : (
         <div className="min-h-[400px] w-full flex items-center justify-center">
-          <p className="text-gray-400 mt-20 text-lg">No data available</p>
+          <p className="text-gray-400 mt-20 text-sm">No data available</p>
         </div>
       )}
     </>

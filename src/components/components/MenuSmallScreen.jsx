@@ -82,7 +82,7 @@ const MenuSmallScreen = () => {
   }, [currentUser._id]);
 
   return (
-    <div className="flex h-[800px] flex-col gap-2 w-full mt-2">
+    <div className="flex h-[400px] flex-col gap-2 w-full mt-2">
       <div className="flex h-full max-h-screen flex-col gap-5">
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6 gap-3">
           <div className="flex items-center text-sm justify-between gap-16">
