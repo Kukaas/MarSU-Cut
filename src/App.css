@@ -9,7 +9,6 @@
 /* Track */
 ::-webkit-scrollbar-track {
   border-radius: 100vh;
-
 }
 
 /* Handle for vertical scrollbars */
@@ -38,9 +37,6 @@
   overflow: -moz-scrollbars-none; /* For Firefox */
   -ms-overflow-style: none; /* For Internet Explorer and Edge */
 }
-
-
-
 
 /* Hide scrollbar for IE, Edge and Firefox */
 html,
