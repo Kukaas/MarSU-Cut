@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Alert, Avatar, message, notification } from "antd";
+import { Alert, Avatar, message, notification, Typography } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast, Toaster } from "sonner";
@@ -51,13 +51,15 @@ import { UpdateProfileSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Helmet } from "react-helmet";
-import { Loader2 } from "lucide-react";
+import { Camera, Loader2 } from "lucide-react";
 
 import SkeletonProfile from "../SkeletonProfile";
 import ChangePassword from "../forms/ChangePassword";
 import ToasterError from "@/lib/Toaster";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 const DashProfile = () => {
   const navigate = useNavigate();
@@ -100,7 +102,7 @@ const DashProfile = () => {
 
   // Handle image upload
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files ? e.target.files[0] : e.dataTransfer.files[0];
     if (file) {
       // Check if file size exceeds 2MB
       if (file.size > 2 * 1024 * 1024) {
@@ -114,6 +116,9 @@ const DashProfile = () => {
       const imageUrl = URL.createObjectURL(file);
       setImageFile(file);
       setImageFileUrl(imageUrl);
+    } else {
+      setImageFile(null);
+      setImageFileUrl(null);
     }
   };
 
@@ -184,8 +189,6 @@ const DashProfile = () => {
         setUpdateProfileLoading(false);
         dispatch(updateSuccess(data));
         toast.success("Profile updated successfully");
-        // Reset the form with updated values
-        formUpdateProfile.reset();
         setImageUploadProgress(false);
       }
     } catch (error) {
@@ -237,171 +240,198 @@ const DashProfile = () => {
   };
 
   return (
-    <div className="max-w-lg mx-auto w-full max-h-screen">
-      <Helmet>
-        <title>MarSU Cut | Profile</title>
-        <meta name="description" content="" />
-      </Helmet>
-      {skeletonLoading ? (
-        <div className="flex justify-center items-start pt-20 h-screen">
-          <SkeletonProfile />
-        </div>
-      ) : (
-        <div className="flex flex-col justify-center items-center h-screen mt-3">
-          <Form {...formUpdateProfile}>
-            <form
-              onSubmit={formUpdateProfile.handleSubmit(handleUpdate)}
-              className="space-y-4 w-full p-3"
-            >
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                ref={filePickerRef}
-                style={{ display: "none" }}
-              />
-              <div
-                className="relative w-32 h-32 m-auto self-center cursor-pointer shadow-md overflow-hidden rounded-full"
-                onClick={() =>
-                  filePickerRef.current && filePickerRef.current.click()
-                }
-              >
-                <Avatar
-                  src={imageFileUrl || currentUser.photo}
-                  alt={currentUser ? currentUser.name : "User"}
-                  className={`w-full rounded-full h-full border-8 border-[lightgray] object-cover ${
-                    imageUploadProgress &&
-                    imageUploadError < 100 &&
-                    "opacity-50"
-                  }`}
-                />
-                {imageUploadProgress && (
-                  <CircularProgressbar
-                    value={imageUploadProgress || 0}
-                    text={`${imageUploadProgress}%`}
-                    strokeWidth={5}
-                    styles={{
-                      root: {
-                        width: "100%",
-                        height: "100%",
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                      },
-                      path: {
-                        stroke: `rgba(62, 152, 199, ${
-                          imageUploadProgress / 100
-                        })`,
-                      },
-                    }}
-                  />
-                )}
-              </div>
-              {imageUploadError && (
-                <Alert message={imageUploadError} type="error" />
-              )}
-              <FormField
-                control={formUpdateProfile.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={formUpdateProfile.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input disabled {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={updateProfileLoading}
-              >
-                {updateProfileLoading ? (
-                  <div className="flex items-center">
-                    <Loader2 className="mr-2 animate-spin" />
-                    <span>Updating Profile</span>
-                  </div>
-                ) : (
-                  "Update Profile"
-                )}
-              </Button>
-            </form>
-            <div className="w-full p-3">
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="secondary" className="w-full">
-                    Change Password
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px]">
-                  <DialogHeader>
-                    <DialogTitle>Change Password</DialogTitle>
-                    <DialogDescription>
-                      Enter your new password
-                    </DialogDescription>
-                    <ChangePassword />
-                  </DialogHeader>
-                </DialogContent>
-              </Dialog>
-            </div>
-            <div className="w-full p-3 mb-[80px]">
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="destructive" className="w-full">
-                    Delete Account
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px]">
-                  <DialogHeader>
-                    <DialogTitle>Delete Account?</DialogTitle>
-                    <DialogDescription>
-                      All of your data will be deleted. Click Ok to proceed
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="flex justify-end">
-                    <DialogClose>
-                      <Button variant="secondary" className="m-2">
-                        Cancel
-                      </Button>
-                    </DialogClose>
+    <div className="p-5 h-screen w-full">
+      <Typography.Title level={2} className="text-black dark:text-white">
+        Profile
+      </Typography.Title>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <Helmet>
+          <title>MarSU Cut | Profile</title>
+          <meta name="description" content="" />
+        </Helmet>
+        <div className="p-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>Personal Information</CardTitle>
+            </CardHeader>
+            <Separator />
+            {skeletonLoading ? (
+              <SkeletonProfile />
+            ) : (
+              <CardContent>
+                <Form {...formUpdateProfile}>
+                  <form
+                    onSubmit={formUpdateProfile.handleSubmit(handleUpdate)}
+                    className="space-y-4 w-full p-3"
+                  >
+                    <div className="flex items-center justify-center gap-5 mt-4">
+                      <div className="flex flex-col items-center">
+                        <div className="relative w-20 h-20 mt-3 cursor-default shadow-md overflow-hidden rounded-full">
+                          <Avatar
+                            src={imageFileUrl || currentUser.photo}
+                            alt={currentUser ? currentUser.name : "User"}
+                            className={`w-full rounded-full h-full border-7 border-[lightgray] object-cover ${
+                              imageUploadProgress &&
+                              imageUploadError < 100 &&
+                              "opacity-50"
+                            }`}
+                          />
+                          {imageUploadProgress && (
+                            <CircularProgressbar
+                              value={imageUploadProgress || 0}
+                              text={`${imageUploadProgress}%`}
+                              strokeWidth={5}
+                              styles={{
+                                root: {
+                                  width: "100%",
+                                  height: "100%",
+                                  position: "absolute",
+                                  top: 0,
+                                  left: 0,
+                                },
+                                path: {
+                                  stroke: `rgba(62, 152, 199, ${
+                                    imageUploadProgress / 100
+                                  })`,
+                                },
+                              }}
+                            />
+                          )}
+                        </div>
+                        {imageUploadError && (
+                          <Alert message={imageUploadError} type="error" />
+                        )}
+                      </div>
+                      <div
+                        className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4 text-center cursor-pointer h-[200px] sm:h-[150px] md:h-[100px] flex flex-col justify-center items-center space-y-1 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-300"
+                        onClick={() =>
+                          filePickerRef.current && filePickerRef.current.click()
+                        }
+                        onDragOver={(e) => e.preventDefault()} // Allow the element to accept the drop
+                        onDrop={(e) => {
+                          e.preventDefault(); // Prevent default behavior (open as link for some elements)
+                          handleImageChange(e); // Handle file drop
+                        }}
+                      >
+                        <Camera className="w-8 h-8 mx-auto text-gray-400 sm:w-6 sm:h-6 md:w-4 md:h-4" />
+                        <p className="text-blue-600 underline text-sm sm:text-xs md:text-[10px]">
+                          Click to upload
+                        </p>
+                        <p className="text-sm text-gray-500 sm:text-xs md:text-[10px]">
+                          or drag and drop
+                        </p>
+                        <p className="text-xs text-gray-400 sm:text-[10px] md:text-[9px]">
+                          PNG, JPG
+                        </p>
+                        <p className="text-xs text-gray-400 sm:text-[10px] md:text-[9px]">
+                          Max size: 2MB
+                        </p>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          ref={filePickerRef}
+                          className="hidden"
+                          onChange={handleImageChange}
+                        />
+                      </div>
+                    </div>
+                    <FormField
+                      control={formUpdateProfile.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Name</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={formUpdateProfile.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input disabled {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                     <Button
-                      onClick={() => handleDeleteUser()}
-                      className="m-2"
-                      variant="destructive"
-                      disabled={loading}
+                      type="submit"
+                      className="w-full"
+                      disabled={updateProfileLoading}
                     >
-                      {loading ? (
+                      {updateProfileLoading ? (
                         <div className="flex items-center">
                           <Loader2 className="mr-2 animate-spin" />
-                          <span>Deleting Account</span>
+                          <span>Updating Profile</span>
                         </div>
                       ) : (
-                        "Delete Account"
+                        "Update Profile"
                       )}
                     </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
-            </div>
-          </Form>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant="destructive" className="w-full">
+                          Delete Account
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                          <DialogTitle>Delete Account?</DialogTitle>
+                          <DialogDescription>
+                            All of your data will be deleted. Click Ok to
+                            proceed.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="flex justify-end">
+                          <DialogClose>
+                            <Button variant="secondary" className="m-2">
+                              Cancel
+                            </Button>
+                          </DialogClose>
+                          <Button
+                            onClick={() => handleDeleteUser()}
+                            className="m-2"
+                            variant="destructive"
+                            disabled={loading}
+                          >
+                            {loading ? (
+                              <div className="flex items-center">
+                                <Loader2 className="mr-2 animate-spin" />
+                                <span>Deleting Account</span>
+                              </div>
+                            ) : (
+                              "Delete Account"
+                            )}
+                          </Button>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  </form>
+                </Form>
+              </CardContent>
+            )}
+          </Card>
         </div>
-      )}
-      <Toaster richColors position="top-center" closeButton />
+        <div className="p-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>Change Password</CardTitle>
+            </CardHeader>
+            <Separator />
+            <CardContent>
+              <ChangePassword />
+            </CardContent>
+          </Card>
+        </div>
+        <Toaster position="top-center" richColors closeButton />
+      </div>
     </div>
   );
 };

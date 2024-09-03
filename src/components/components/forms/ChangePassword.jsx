@@ -1,7 +1,6 @@
 // UI
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { DialogClose } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { message } from "antd";
 
@@ -103,15 +102,6 @@ const ChangePassword = () => {
           label="Confirm Password"
         />
         <div className="flex items-center justify-end">
-          <DialogClose asChild>
-            <Button
-              variant="outline"
-              className="mr-2"
-              onClick={() => formChangePassword.reset()}
-            >
-              Cancel
-            </Button>
-          </DialogClose>
           <Button type="submit" disabled={loading}>
             {loading ? (
               <div className="flex items-center">
