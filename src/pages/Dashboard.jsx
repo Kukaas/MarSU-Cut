@@ -2,7 +2,6 @@
 import DashProfile from "@/components/components/dash-components/DashProfile";
 import DashHomeAdmin from "../components/components/dash-components/admin/DashHomeAdmin";
 import DashHome from "../components/components/dash-components/user/DashHome";
-import DashOrder from "@/components/components/dash-components/user/DashOrder";
 import DashRental from "@/components/components/dash-components/user/DashRental";
 import DashCommercial from "@/components/components/dash-components/user/DashCommercial";
 import DashOrderAdmin from "@/components/components/dash-components/admin/DashOrderAdmin";
@@ -24,6 +23,7 @@ import Sidebar from "@/components/components/Sidebar";
 import { useEffect, useState } from "react";
 import OrderDetails from "@/components/components/dash-components/admin/OrderDetails";
 import { useParams } from "react-router-dom";
+import DashOrder from "@/components/components/dash-components/user/student/DashOrder";
 
 const Dashboard = ({ tab }) => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);

@@ -32,6 +32,7 @@ const CustomInput = ({ form, name, label, placeholder, type, maxLength }) => {
                 type={showPassword && type === "password" ? "text" : type}
                 className={type === "password" ? "pr-10" : ""}
                 maxLength={maxLength}
+                disabled={type === "disabled"}
               />
               {type === "password" && (
                 <button

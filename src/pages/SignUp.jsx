@@ -64,10 +64,10 @@ const SignUp = () => {
         {/* right */}
         <div className="flex-1">
           <Tabs defaultValue="student" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-3 gap-2">
               <TabsTrigger value="student">Student</TabsTrigger>
               <TabsTrigger value="coordinator">Coordinator</TabsTrigger>
-              <TabsTrigger value="commercial">Commercial Job</TabsTrigger>
+              <TabsTrigger value="commercial">Commercial</TabsTrigger>
             </TabsList>
             <TabsContent value="student">
               <Card>

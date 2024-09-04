@@ -6,7 +6,7 @@ const SkeletonProfile = () => {
       {/* Avatar and Drag-and-Drop Area */}
       <div className="flex flex-row items-center justify-center gap-2">
         <Skeleton className="relative w-20 h-20 rounded-full shadow-md" />
-        <Skeleton className="w-[150px] h-[100px] rounded-lg" />
+        <Skeleton className="w-[100px] h-[50px] rounded-lg" />
       </div>
 
       {/* Form Fields and Buttons */}
@@ -16,8 +16,8 @@ const SkeletonProfile = () => {
         <Skeleton className="h-8 w-2/3" />
         <Skeleton className="h-8 w-full" />
         <div className="flex flex-col gap-2 justify-center">
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-8 w-full" />
+          <Skeleton className="h-8 w-full" />
         </div>
       </div>
     </div>

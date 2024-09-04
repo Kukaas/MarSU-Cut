@@ -56,12 +56,55 @@ export const LoginSchema = z.object({
   password: z.string(),
 });
 
-export const UpdateProfileSchema = z.object({
+export const StudentUpdateProfileSchema = z.object({
   photo: z.string(),
   name: z
     .string()
     .min(3, { message: "Name must be at least 3 characters" })
     .max(255, { message: "Name must be less than 256 characters" }),
+  email: z.string().email({ message: "Invalid email address" }),
+  studentNumber: z
+    .string()
+    .min(3, { message: "Student Number must be at least 3 characters" }),
+  studentGender: z.string(),
+  department: z
+    .string()
+    .min(3, { message: "Department must be at least 3 characters" }),
+});
+
+export const CoordinatorUpdateProfileSchema = z.object({
+  photo: z.string(),
+  name: z
+    .string()
+    .min(3, { message: "Name must be at least 3 characters" })
+    .max(255, { message: "Name must be less than 256 characters" }),
+  email: z.string().email({ message: "Invalid email address" }),
+  gender: z.string(),
+  department: z
+    .string()
+    .min(3, { message: "Department must be at least 3 characters" }),
+});
+
+export const CommercialJobUpdateProfileSchema = z.object({
+  photo: z.string(),
+  name: z
+    .string()
+    .min(3, { message: "Name must be at least 3 characters" })
+    .max(255, { message: "Name must be less than 256 characters" }),
+  email: z.string().email({ message: "Invalid email address " }),
+  address: z
+    .string()
+    .min(3, { message: "Address must be at least 3 characters" }),
+  gender: z.string(),
+});
+
+export const AdminUpdateProfileSchema = z.object({
+  photo: z.string(),
+  name: z
+    .string()
+    .min(3, { message: "Name must be at least 3 characters" })
+    .max(255, { message: "Name must be less than 256 characters" }),
+  email: z.string().email({ message: "Invalid email address" }),
 });
 
 export const RequestResetPasswordSchema = z.object({

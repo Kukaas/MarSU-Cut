@@ -1,9 +1,9 @@
-import Orders from "./tables/Orders";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { Toaster } from "sonner";
+import Orders from "./Orders";
 
 const DashOrder = () => {
   const navigate = useNavigate();

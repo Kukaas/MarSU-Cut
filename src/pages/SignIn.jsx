@@ -21,6 +21,13 @@ import { BASE_URL } from "@/lib/api";
 import ToasterError from "@/lib/Toaster";
 import CustomInput from "@/components/components/custom-components/CustomInput";
 import { Form } from "@/components/ui/form";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -138,54 +145,60 @@ const SignIn = () => {
         </div>
         {/* right */}
         <div className="flex-1">
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(handleLogin)}
-              className="space-y-4"
-            >
-              <CustomInput
-                form={form}
-                name="email"
-                label="Email"
-                placeholder="Enter your email..."
-              />
-              <div className="relative flex flex-col">
-                <CustomInput
-                  form={form}
-                  name="password"
-                  label="Password"
-                  placeholder="Enter your password..."
-                  type="password"
-                />
-                <Link
-                  to="/forgot-password"
-                  className=" right-0 bottom-0 text-sm mt-3"
-                  style={{ fontFamily: "'Poppins', sans-serif" }}
+          <Card>
+            <CardHeader>
+              <CardTitle>Sign In</CardTitle>
+              <CardDescription>
+                Sign in with your email and password.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(handleLogin)}
+                  className="space-y-4"
                 >
-                  Forgot password?
-                </Link>
-              </div>
-
-              <Button
-                type="submit"
-                className="w-full mt-3 rounded-lg text-white text-lg"
-                style={{
-                  background:
-                    "linear-gradient(90deg, hsla(48, 80%, 66%, 1) 0%, hsla(0, 100%, 25%, 1) 100%)",
-                }}
-                disabled={loading}
-              >
-                {loading ? (
-                  <div className="flex items-center">
-                    <Loader2 className="mr-2 animate-spin" />
-                    <span>Signing in</span>
+                  <CustomInput
+                    form={form}
+                    name="email"
+                    label="Email"
+                    placeholder="Enter your email..."
+                  />
+                  <div className="relative flex flex-col">
+                    <CustomInput
+                      form={form}
+                      name="password"
+                      label="Password"
+                      placeholder="Enter your password..."
+                      type="password"
+                    />
+                    <Link
+                      to="/forgot-password"
+                      className=" right-0 bottom-0 text-sm mt-3"
+                      style={{ fontFamily: "'Poppins', sans-serif" }}
+                    >
+                      Forgot password?
+                    </Link>
                   </div>
-                ) : (
-                  "Sign in"
-                )}
-              </Button>
-            </form>
-          </Form>
+
+                  <Button
+                    type="submit"
+                    className="w-full mt-3 rounded-lg"
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <div className="flex items-center">
+                        <Loader2 className="mr-2 animate-spin" />
+                        <span>Signing in</span>
+                      </div>
+                    ) : (
+                      "Sign in"
+                    )}
+                  </Button>
+                </form>
+              </Form>
+            </CardContent>
+          </Card>
           <div>
             <p className="text-center text-sm mt-4">
               Don&apos;t have an account?{" "}

@@ -111,8 +111,8 @@ const Student = () => {
                 <CustomInput
                   form={form}
                   name="studentNumber"
-                  label="studentNumber"
-                  placeholder="eg. Jhon Doe"
+                  label="Student Number"
+                  placeholder="eg. 21B1234"
                 />
               </div>
               <FormField
@@ -127,11 +127,26 @@ const Student = () => {
                   />
                 )}
               />
-              <CustomInput
-                form={form}
+              <FormField
+                control={form.control}
                 name="department"
-                label="Department"
-                placeholder="eg. College of Engineering"
+                render={({ field }) => (
+                  <SelectField
+                    field={field}
+                    label="Department"
+                    options={[
+                      "College of Engineering",
+                      "College of Industrial Technology",
+                      "College of Education",
+                      "College of Business Administration",
+                      "College of Arts and Sciences",
+                      "College of Information and Computing Sciences",
+                      "College of Allied Health and Medicine",
+                      "College of Governance",
+                    ]}
+                    placeholder="Department"
+                  />
+                )}
               />
               <Button
                 type="button"
