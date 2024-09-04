@@ -1,11 +1,48 @@
 import * as z from "zod";
 
-export const RegisterSchema = z.object({
+export const StudentRegisterSchema = z.object({
   name: z
     .string()
     .min(3, { message: "Name must be at least 3 characters" })
     .max(255, { message: "Name must be less than 256 characters" }),
   email: z.string().email({ message: "Invalid email address" }),
+  studentNumber: z
+    .string()
+    .min(3, { message: "Student Number must be at least 3 characters" }),
+  studentGender: z.string(),
+  department: z
+    .string()
+    .min(3, { message: "Department must be at least 3 characters" }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters" }),
+  confirmPassword: z
+    .string()
+    .min(6, { message: "Confirm Password must be at least 6 characters" }),
+});
+
+export const CoordinatorRegisterSchema = z.object({
+  department: z
+    .string()
+    .min(3, { message: "Department must be at least 3 characters" }),
+  name: z.string().min(3, { message: "Name must be at least 3 characters" }),
+  email: z.string().email({ message: "Invalid email address" }),
+  gender: z.string(),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters" }),
+  confirmPassword: z
+    .string()
+    .min(6, { message: "Confirm Password must be at least 6 characters" }),
+});
+
+export const CommercialJobRegisterSchema = z.object({
+  address: z
+    .string()
+    .min(3, { message: "Address must be at least 3 characters" }),
+  name: z.string().min(3, { message: "Name must be at least 3 characters" }),
+  email: z.string().email({ message: "Invalid email address" }),
+  gender: z.string(),
   password: z
     .string()
     .min(6, { message: "Password must be at least 6 characters" }),
