@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Bell,
   Home,
@@ -17,6 +17,8 @@ import {
   BarChart,
   Building2Icon,
   Shirt,
+  LogOutIcon,
+  Loader2,
 } from "lucide-react";
 import { Button } from "../ui/button";
 import {
@@ -25,16 +27,23 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../ui/accordion";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import Notification from "./Notification";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { logout } from "@/redux/user/userSlice";
+import { toast } from "sonner";
+import ToasterError from "@/lib/Toaster";
 
 const MenuSmallScreen = () => {
   const location = useLocation();
+  const [loadingLogout, setLoadingLogout] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const currentPath = location.pathname + location.search;
   const { currentUser } = useSelector((state) => state.user);
 
@@ -81,39 +90,65 @@ const MenuSmallScreen = () => {
     fetchNotifications();
   }, [currentUser._id]);
 
+  // Logout
+  const handleLogout = async (event) => {
+    try {
+      event.preventDefault(); // Prevent default button action
+      event.stopPropagation(); // Stop event from propagating and closing the dropdown
+      setLoadingLogout(true);
+      const res = await axios.post(`${BASE_URL}/api/v1/auth/logout`, {
+        withCredentials: true,
+      });
+      if (res.status === 200) {
+        setLoadingLogout(false);
+        dispatch(logout());
+        localStorage.removeItem("token");
+        toast.success("Thank you for using our service. Come back soon!");
+        navigate("/sign-in");
+      }
+    } catch (error) {
+      ToasterError({
+        description: "Please check your internet connection and try again.",
+      });
+      setLoadingLogout(false);
+    }
+  };
+
   return (
     <div className="flex h-[400px] flex-col gap-2 w-full mt-2">
       <div className="flex h-full max-h-screen flex-col gap-5">
-        <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6 gap-3">
-          <div className="flex items-center text-sm justify-between gap-16">
+        <div className="flex justify-between h-14 items-center border-b px-4 lg:h-[60px] lg:px-6 gap-3">
+          <div className="flex items-center gap-2 text-sm">
             <span className="font-semibold">
-              {" "}
-              {currentUser?.name?.split(" ")[0]}
+              {currentUser?.name?.split(" ")[0]} |
             </span>
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="ml-10 h-8 w-8 relative"
-                >
-                  <Bell className="h-4 w-4" />
-                  <span className="sr-only">Toggle notifications</span>
-                  {unreadNotifications && unreadNotifications.length > 0 && (
-                    <span className="absolute top-0 right-0 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                      {unreadNotifications.length}
-                    </span>
-                  )}
-                </Button>
-              </SheetTrigger>
-              <SheetContent className="overflow-auto">
-                <Notification />
-              </SheetContent>
-            </Sheet>
+            <span className="text-muted-foreground">
+              {currentUser.isAdmin ? "Admin" : "User"}
+            </span>
           </div>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-8 w-8 relative"
+              >
+                <Bell className="h-4 w-4" />
+                <span className="sr-only">Toggle notifications</span>
+                {unreadNotifications && unreadNotifications.length > 0 && (
+                  <span className="absolute top-0 right-0 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                    {unreadNotifications.length}
+                  </span>
+                )}
+              </Button>
+            </SheetTrigger>
+            <SheetContent className="overflow-auto">
+              <Notification />
+            </SheetContent>
+          </Sheet>
         </div>
-        <div className="flex-1">
-          <nav className="grid items-start px-3 text-sm font-medium lg:px-4 gap-2">
+        <div className="flex-1 overflow-auto">
+          <nav className="grid items-start px-3 text-sm font-medium lg:px-4 gap-2 ov">
             {currentUser.isAdmin ? (
               <div>
                 <SheetTrigger asChild>
@@ -340,62 +375,140 @@ const MenuSmallScreen = () => {
               </div>
             ) : (
               <div>
-                <SheetTrigger asChild>
-                  <Link
-                    to="/dashboard?tab=home"
-                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                      isActive("/dashboard?tab=home")
-                        ? "bg-muted text-primary"
-                        : "text-muted-foreground hover:text-primary"
-                    }`}
-                  >
-                    <Home className="h-4 w-4" />
-                    Dashboard
-                  </Link>
-                </SheetTrigger>
-                <SheetTrigger asChild>
-                  <Link
-                    to="/dashboard?tab=orders"
-                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                      isActive("/dashboard?tab=orders")
-                        ? "bg-muted text-primary"
-                        : "text-muted-foreground hover:text-primary"
-                    }`}
-                  >
-                    <ShoppingCart className="h-4 w-4" />
-                    Orders
-                  </Link>
-                </SheetTrigger>
-                <SheetTrigger asChild>
-                  <Link
-                    to="/dashboard?tab=rentals"
-                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                      isActive("/dashboard?tab=rentals")
-                        ? "bg-muted text-primary"
-                        : "text-muted-foreground hover:text-primary"
-                    }`}
-                  >
-                    <Shirt className="h-4 w-4" />
-                    Rentals
-                  </Link>
-                </SheetTrigger>
-                <SheetTrigger asChild>
-                  <Link
-                    to="/dashboard?tab=commercial-job"
-                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                      isActive("/dashboard?tab=commercial-job")
-                        ? "bg-muted text-primary"
-                        : "text-muted-foreground hover:text-primary"
-                    }`}
-                  >
-                    <Building2Icon className="h-4 w-4" />
-                    Commercial Job
-                  </Link>
-                </SheetTrigger>
+                {currentUser.role === "Student" && (
+                  <>
+                    <SheetTrigger asChild>
+                      <Link
+                        to="/dashboard?tab=home"
+                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                          isActive("/dashboard?tab=home")
+                            ? "bg-muted text-primary"
+                            : "text-muted-foreground hover:text-primary"
+                        }`}
+                      >
+                        <Home className="h-4 w-4" />
+                        Dashboard
+                      </Link>
+                    </SheetTrigger>
+                    <SheetTrigger asChild>
+                      <Link
+                        to="/dashboard?tab=orders"
+                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                          isActive("/dashboard?tab=orders")
+                            ? "bg-muted text-primary"
+                            : "text-muted-foreground hover:text-primary"
+                        }`}
+                      >
+                        <ShoppingCart className="h-4 w-4" />
+                        Orders
+                      </Link>
+                    </SheetTrigger>
+                  </>
+                )}
+
+                {currentUser.role === "Coordinator" && (
+                  <>
+                    <SheetTrigger asChild>
+                      <Link
+                        to="/dashboard?tab=home"
+                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                          isActive("/dashboard?tab=home")
+                            ? "bg-muted text-primary"
+                            : "text-muted-foreground hover:text-primary"
+                        }`}
+                      >
+                        <Home className="h-4 w-4" />
+                        Dashboard
+                      </Link>
+                    </SheetTrigger>
+                    <SheetTrigger asChild>
+                      <Link
+                        to="/dashboard?tab=rentals"
+                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                          isActive("/dashboard?tab=rentals")
+                            ? "bg-muted text-primary"
+                            : "text-muted-foreground hover:text-primary"
+                        }`}
+                      >
+                        <Shirt className="h-4 w-4" />
+                        Rentals
+                      </Link>
+                    </SheetTrigger>
+                  </>
+                )}
+
+                {currentUser.role === "CommercialJob" && (
+                  <>
+                    <SheetTrigger asChild>
+                      <Link
+                        to="/dashboard?tab=home"
+                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                          isActive("/dashboard?tab=home")
+                            ? "bg-muted text-primary"
+                            : "text-muted-foreground hover:text-primary"
+                        }`}
+                      >
+                        <Home className="h-4 w-4" />
+                        Dashboard
+                      </Link>
+                    </SheetTrigger>
+                    <SheetTrigger asChild>
+                      <Link
+                        to="/dashboard?tab=commercial-job"
+                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                          isActive("/dashboard?tab=commercial-job")
+                            ? "bg-muted text-primary"
+                            : "text-muted-foreground hover:text-primary"
+                        }`}
+                      >
+                        <Building2Icon className="h-4 w-4" />
+                        Commercial Job
+                      </Link>
+                    </SheetTrigger>
+                  </>
+                )}
               </div>
             )}
+
+            <div className="">
+              <SheetTrigger asChild>
+                <Link
+                  to="/dashboard?tab=profile"
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                    isActive("/dashboard?tab=profile")
+                      ? "bg-muted text-primary"
+                      : "text-muted-foreground hover:text-primary"
+                  }`}
+                >
+                  <Avatar className="h-6 w-6">
+                    <AvatarImage src={currentUser.photo} />
+                    <AvatarFallback>
+                      {`${currentUser.name.split(" ")[0][0]}${
+                        currentUser.name.split(" ").slice(-1)[0][0]
+                      }`.toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  Settings
+                </Link>
+              </SheetTrigger>
+            </div>
           </nav>
         </div>
+      </div>
+      <div className="mt-auto px-3 w-full text-red-600">
+        <Button onClick={handleLogout} variant="outline" className="w-full">
+          {loadingLogout ? (
+            <span className="flex items-center justify-center gap-2 text-red-500">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Logging out...
+            </span>
+          ) : (
+            <span className="flex items-center justify-center gap-2">
+              <LogOutIcon className="h-4 w-4" />
+              Logout
+            </span>
+          )}
+        </Button>
       </div>
     </div>
   );
