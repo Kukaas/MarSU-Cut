@@ -1,13 +1,4 @@
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
   Form,
   FormControl,
   FormField,
@@ -50,8 +41,17 @@ import {
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { AlertDialogTrigger } from "@radix-ui/react-alert-dialog";
 
-const CreateOrder = ({ addNewOrder }) => {
+const CreateOrder = ({ addNewOrder, setIsDialogOpen }) => {
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -331,37 +331,35 @@ const CreateOrder = ({ addNewOrder }) => {
               )}
             />
           </div>
-          <Dialog>
+          <AlertDialog>
             <div className="flex items-center justify-end gap-2">
-              <DialogTrigger asChild>
-                <Button variant="default" className="mt-2">
+              <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogTrigger asChild>
+                <Button variant="default" className="mt-2 sm:mt-0">
                   Submit Order
                 </Button>
-              </DialogTrigger>
+              </AlertDialogTrigger>
             </div>
-            <DialogContent className="sm:max-w-[425px] mx-auto">
-              <DialogHeader>
-                <DialogTitle>Confirm Submission</DialogTitle>
-                <DialogDescription>
+            <AlertDialogContent className="sm:max-w-[425px] mx-auto">
+              <AlertDialogHeader>
+                <AlertDialogTitle>Confirm Submission</AlertDialogTitle>
+                <AlertDialogDescription>
                   <div>
                     <p>Are you sure you want to submit these details?</p>
-                    <p className="mb-5 text-red-500">
-                      Once you submit you can&apos;t change the details.
-                    </p>
                   </div>
-                </DialogDescription>
-              </DialogHeader>
-              <div className="flex justify-end">
-                <DialogClose asChild>
-                  <Button variant="outline" className="m-2">
-                    Cancel
-                  </Button>
-                </DialogClose>
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <div className="flex justify-end gap-2 items-center">
+                <AlertDialogCancel asChild>
+                  <Button variant="outline">Cancel</Button>
+                </AlertDialogCancel>
                 <Button
                   onClick={(event) => {
                     handleCreateOrder(form.getValues(), event);
                   }}
-                  className="m-2"
+                  className="mt-2 sm:mt-0"
                   variant="default"
                   disabled={loading}
                 >
@@ -375,8 +373,8 @@ const CreateOrder = ({ addNewOrder }) => {
                   )}
                 </Button>
               </div>
-            </DialogContent>
-          </Dialog>
+            </AlertDialogContent>
+          </AlertDialog>
         </form>
       </Form>
     </div>
@@ -385,6 +383,7 @@ const CreateOrder = ({ addNewOrder }) => {
 
 CreateOrder.propTypes = {
   addNewOrder: PropTypes.func,
+  setIsDialogOpen: PropTypes.bool,
 };
 
 export default CreateOrder;

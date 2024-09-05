@@ -3,14 +3,6 @@ import DataTableColumnHeader from "@/components/components/custom-components/Dat
 import CreateOrder from "@/components/components/forms/CreateOrder";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -31,6 +23,14 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 function Orders() {
   const [data, setData] = useState([]);
@@ -283,23 +283,26 @@ function Orders() {
         </Typography.Title>
         <div className="flex items-center py-4 justify-end">
           <Tooltip title="Create an Order">
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
+            <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <AlertDialogTrigger asChild>
                 <Button variant="default" className="m-2 h-8">
                   <PlusCircle size={20} className="mr-2 h-4 w-4" />
                   Create
                 </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Create an order</DialogTitle>
-                  <DialogDescription>
+              </AlertDialogTrigger>
+              <AlertDialogContent className="sm:max-w-[425px]">
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Create an order</AlertDialogTitle>
+                  <AlertDialogDescription>
                     Click submit when you&apos;re done.
-                  </DialogDescription>
-                </DialogHeader>
-                <CreateOrder addNewOrder={addNewOrder} />
-              </DialogContent>
-            </Dialog>
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <CreateOrder
+                  addNewOrder={addNewOrder}
+                  setIsDialogOpen={setIsDialogOpen}
+                />
+              </AlertDialogContent>
+            </AlertDialog>
           </Tooltip>
         </div>
         <div className="rounded-md border">
