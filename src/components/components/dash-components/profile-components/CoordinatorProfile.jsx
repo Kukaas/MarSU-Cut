@@ -154,9 +154,13 @@ const CoordinatorProfile = () => {
       }
     } catch (error) {
       dispatch(updateFail());
-      ToasterError({
-        description: "Failed to update profile. Please try again.",
-      });
+      if (error.response) {
+        ToasterError({ description: error.response.data.message });
+      } else {
+        ToasterError({
+          description: "Failed to update profile. Please try again.",
+        });
+      }
     } finally {
       setUpdateProfileLoading(false);
     }

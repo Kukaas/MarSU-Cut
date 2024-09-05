@@ -12,7 +12,14 @@ import PropTypes from "prop-types";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 
-const SelectField = ({ field, label, options, placeholder, onValueChange }) => {
+const SelectField = ({
+  field,
+  label,
+  options,
+  placeholder,
+  onValueChange,
+  type,
+}) => {
   const hasManyOptions = options.length > 2; // Adjust the threshold as needed
 
   return (
@@ -28,7 +35,7 @@ const SelectField = ({ field, label, options, placeholder, onValueChange }) => {
             }
           }}
         >
-          <SelectTrigger className="w-full">
+          <SelectTrigger className="w-full" disabled={type === "disabled"}>
             <SelectValue placeholder={placeholder} />
           </SelectTrigger>
           <SelectContent>
@@ -67,6 +74,7 @@ SelectField.propTypes = {
   options: PropTypes.array.isRequired,
   placeholder: PropTypes.string,
   onValueChange: PropTypes.func,
+  type: PropTypes.string,
 };
 
 export default SelectField;

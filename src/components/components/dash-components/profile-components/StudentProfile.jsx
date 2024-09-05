@@ -153,12 +153,15 @@ const StudentProfile = () => {
         setImageUploadProgress(false);
       }
     } catch (error) {
-      console.error("Update Error:", error);
       dispatch(updateFail());
       setUpdateProfileLoading(false);
-      ToasterError({
-        description: "Could not update profile. Please try again",
-      });
+      if (error.response) {
+        ToasterError({ description: error.response.data.message });
+      } else {
+        ToasterError({
+          description: "Failed to update profile. Please try again.",
+        });
+      }
     }
   };
 

@@ -13,6 +13,7 @@ import OTPVerification from "./pages/OTPVerification";
 import ResetPassword from "./pages/ResetPassword";
 import PageNotFound from "./components/components/PageNotFound";
 import "./App.css";
+import ReceiptsPage from "./components/components/dash-components/user/student/ReceiptPage";
 
 // Wrapper component to extract tab from URL and pass it as a prop
 const DashboardWrapper = () => {
@@ -67,6 +68,7 @@ const App = () => {
         {/* Private Routes */}
         <Route element={<PrivateRoute />}>
           <Route path="/dashboard" element={<DashboardWrapper />} />
+          <Route path="/orders/receipts/:orderId" element={<ReceiptsPage />} />
         </Route>
 
         {/* Catch-all route */}

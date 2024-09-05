@@ -36,7 +36,6 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
 import { CalendarIcon, Loader2, UploadIcon } from "lucide-react";
 import ToasterError from "@/lib/Toaster";
 import { token } from "@/lib/token";
@@ -50,25 +49,22 @@ import {
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
+import { AlertDialogCancel } from "@/components/ui/alert-dialog";
+import SelectField from "../custom-components/SelectField";
 
-const CreateOrder = ({ addNewOrder }) => {
+const AddNewReceipt = ({ orderId }) => {
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
-  const { currentUser } = useSelector((state) => state.user);
   const fileInputRef = useRef(null);
 
   const form = useForm({
     resolver: zodResolver(CreateOrderSchema),
     defaultValues: {
-      studentNumber: currentUser.studentNumber,
-      studentName: currentUser.name,
-      studentGender: currentUser.studentGender,
       receipt: "",
-      receiptUrl: "",
+      url: "",
       receiptType: "",
-      receiptDescription: "",
       ORNumber: "",
       amount: 0,
       datePaid: "",
@@ -146,19 +142,13 @@ const CreateOrder = ({ addNewOrder }) => {
     try {
       setLoading(true);
       const res = await axios.post(
-        `${BASE_URL}/api/v1/order/student/create`,
+        `${BASE_URL}/api/v1/order//student/receipt/${orderId}`,
         {
-          userId: currentUser._id,
-          studentNumber: values.studentNumber,
-          studentName: values.studentName,
-          studentEmail: values.studentEmail,
-          studentGender: values.studentGender,
-          initialReceipt: {
-            url: imageFileUrl,
-            ORNumber: values.ORNumber,
-            amount: values.amount,
-            datePaid: values.datePaid,
-          },
+          url: imageFileUrl,
+          type: values.type,
+          ORNumber: values.ORNumber,
+          amount: values.amount,
+          datePaid: values.datePaid,
         },
         {
           headers: {
@@ -169,10 +159,10 @@ const CreateOrder = ({ addNewOrder }) => {
         }
       );
 
-      if (res.status === 201) {
+      if (res.status === 200) {
         setProgress(0);
         setLoading(false);
-        addNewOrder(res.data.order);
+
         form.reset();
         toast.success("Order submitted successfully!");
         if (fileInputRef.current) {
@@ -208,6 +198,18 @@ const CreateOrder = ({ addNewOrder }) => {
           />
           <FormField
             control={form.control}
+            name="type"
+            render={({ field }) => (
+              <SelectField
+                field={field}
+                label="Receipt Type"
+                options={["Full Payment", "Partial Payment"]}
+                placeholder="Select Receipt Type"
+              />
+            )}
+          />
+          <FormField
+            control={form.control}
             name="amount"
             render={({ field }) => (
               <FormItem>
@@ -219,7 +221,9 @@ const CreateOrder = ({ addNewOrder }) => {
                     value={field.value !== undefined ? field.value : ""}
                     onChange={(e) => {
                       const value = e.target.value;
-                      field.onChange(value !== "" ? parseFloat(value) : "");
+                      field.onChange(
+                        value !== "" ? parseFloat(value) : undefined
+                      );
                     }}
                     placeholder="Amount"
                     className="w-full"
@@ -229,6 +233,7 @@ const CreateOrder = ({ addNewOrder }) => {
               </FormItem>
             )}
           />
+
           <div className="flex space-x-4 mt-4">
             <FormField
               control={form.control}
@@ -269,7 +274,7 @@ const CreateOrder = ({ addNewOrder }) => {
           </div>
           <FormField
             control={form.control}
-            name="receipt"
+            name="url"
             render={() => (
               <FormItem>
                 <FormLabel>Upload Receipt</FormLabel>
@@ -333,10 +338,9 @@ const CreateOrder = ({ addNewOrder }) => {
           </div>
           <Dialog>
             <div className="flex items-center justify-end gap-2">
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
               <DialogTrigger asChild>
-                <Button variant="default" className="mt-2">
-                  Submit Order
-                </Button>
+                <Button variant="default">Submit Order</Button>
               </DialogTrigger>
             </div>
             <DialogContent className="sm:max-w-[425px] mx-auto">
@@ -383,8 +387,8 @@ const CreateOrder = ({ addNewOrder }) => {
   );
 };
 
-CreateOrder.propTypes = {
-  addNewOrder: PropTypes.func,
+AddNewReceipt.propTypes = {
+  orderId: PropTypes.string,
 };
 
-export default CreateOrder;
+export default AddNewReceipt;

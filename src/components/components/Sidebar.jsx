@@ -6,6 +6,7 @@ import {
   Building2Icon,
   Calendar,
   Clipboard,
+  CoinsIcon,
   Home,
   LineChart,
   Package,
@@ -344,6 +345,17 @@ const Sidebar = () => {
                     >
                       <ShoppingCart className="h-4 w-4" />
                       Orders
+                    </Link>
+                    <Link
+                      to="/dashboard?tab=payments"
+                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                        isActive("/dashboard?tab=payments")
+                          ? "bg-muted text-primary"
+                          : "text-muted-foreground hover:text-primary"
+                      }`}
+                    >
+                      <CoinsIcon className="h-4 w-4" />
+                      Payments
                     </Link>
                   </>
                 )}

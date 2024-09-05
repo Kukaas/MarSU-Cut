@@ -147,6 +147,22 @@ export const CreateOrderSchema = z.object({
     .string()
     .min(3, { message: "Gender must be at least 3 characters" }),
   receipt: z.string(),
+  receiptUrl: z.string().optional(),
+  receiptType: z.string().optional(),
+  receiptDescription: z.string().optional(),
+  ORNumber: z.string().optional(),
+  amount: z.number().optional(),
+  datePaid: z.string().optional(),
+});
+
+export const NewReceiptSchema = z.object({
+  type: z.string().min(3, { message: "Type must be at least 3 characters" }),
+  ORNumber: z
+    .string()
+    .min(3, { message: "OR Number must be at least 3 characters" }),
+  amount: z.number().int().nonnegative(),
+  datePaid: z.string(),
+  description: z.string().optional(),
 });
 
 export const CreateRentalSchema = z.object({

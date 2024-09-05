@@ -30,6 +30,7 @@ import { PlusCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 function Orders() {
   const [data, setData] = useState([]);
@@ -37,6 +38,11 @@ function Orders() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+
+  const handleViewReceipts = (order) => {
+    navigate(`/orders/receipts/${order}`);
+  };
 
   // Fetch the data
   useEffect(() => {
@@ -116,23 +122,6 @@ function Orders() {
     {
       accessorKey: "studentGender",
       header: "Gender",
-    },
-    {
-      accessorKey: "receipt",
-      header: "Receipt",
-      cell: ({ row }) => (
-        <a
-          href={row.getValue("receipt")}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img
-            src={row.getValue("receipt")}
-            alt="Receipt"
-            style={{ width: "50px", height: "50px" }}
-          />
-        </a>
-      ),
     },
     {
       accessorKey: "schedule",
@@ -256,10 +245,8 @@ function Orders() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(order._id)}
-              >
-                Copy Order ID
+              <DropdownMenuItem onClick={() => handleViewReceipts(order._id)}>
+                View Receipts
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
