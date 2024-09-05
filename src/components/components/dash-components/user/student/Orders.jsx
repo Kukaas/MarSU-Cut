@@ -37,6 +37,7 @@ function Orders() {
   const [loading, setLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
+  const [loadingUpdate, setLoadingUpdate] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
@@ -108,6 +109,48 @@ function Orders() {
   const addNewOrder = (newOrder) => {
     setData((prevData) => [newOrder, ...prevData]);
     setIsDialogOpen(false);
+  };
+
+  const handleClaimed = (order) => updateOrderStatus(order, "CLAIMED");
+
+  const updateOrderStatus = async (order, status) => {
+    try {
+      setLoadingUpdate(true);
+      const res = await axios.put(
+        `${BASE_URL}/api/v1/order/update/student/${order._id}`,
+        { status },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+
+      if (res.status === 200) {
+        toast.success(
+          `Order of ${
+            order.studentName
+          } is ${status.toLowerCase()} successfully!`
+        );
+        setData((prevData) =>
+          prevData.map((item) =>
+            item._id === order._id
+              ? { ...item, status, schedule: res.data.schedule }
+              : item
+          )
+        );
+      } else {
+        ToasterError();
+      }
+    } catch (error) {
+      ToasterError({
+        description: "Please check your internet connection and try again.",
+      });
+    } finally {
+      setLoadingUpdate(false);
+    }
   };
 
   const columns = [
@@ -208,6 +251,61 @@ function Orders() {
       },
     },
     {
+      accessorKey: "currentBalance",
+      header: "Current Balance",
+      cell: ({ row }) => {
+        const orderItems = row.original.orderItems || [];
+
+        const totalPrice = orderItems.reduce(
+          (acc, item) => acc + parseFloat(item.totalPrice || 0),
+          0
+        );
+
+        if (!totalPrice) {
+          return (
+            <div className="status-badge">
+              <div
+                className="size-2 rounded-full"
+                style={{ backgroundColor: "gray" }}
+              />
+              <p
+                className="text-[12px] font-semibold"
+                style={{ color: "gray" }}
+              >
+                Down Payment
+              </p>
+            </div>
+          );
+        }
+
+        const receipts = row.original.receipts || [];
+        const totalAmountPaid = receipts.reduce(
+          (acc, receipt) => acc + parseFloat(receipt.amount || 0),
+          0
+        );
+
+        const currentBalance = totalPrice - totalAmountPaid;
+
+        if (currentBalance === 0) {
+          return (
+            <div className="status-badge">
+              <div
+                className="size-2 rounded-full"
+                style={{ backgroundColor: "#32C75F" }}
+              />
+              <p
+                className="text-[12px] font-semibold"
+                style={{ color: "#32C75F" }}
+              >
+                Paid
+              </p>
+            </div>
+          );
+        }
+        return `₱${currentBalance.toFixed(2)}`;
+      },
+    },
+    {
       accessorKey: "status",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Status" />
@@ -250,6 +348,12 @@ function Orders() {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
+                onClick={() => handleClaimed(order)}
+                disabled={order.status === "CLAIMED" || order.status !== "DONE"}
+              >
+                Claimed
+              </DropdownMenuItem>
+              <DropdownMenuItem
                 onClick={() => handleDelete(order)}
                 disabled={["APPROVED", "MEASURED", "DONE", "CLAIMED"].includes(
                   order.status
@@ -266,7 +370,7 @@ function Orders() {
 
   return (
     <Spin
-      spinning={loadingDelete}
+      spinning={loadingDelete || loadingUpdate}
       indicator={
         <LoadingOutlined
           className="dark:text-white"

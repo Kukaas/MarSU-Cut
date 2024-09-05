@@ -23,12 +23,15 @@ import {
 } from "@/components/ui/alert-dialog";
 import AddNewReceipt from "@/components/components/forms/AddNewReceipt";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useSelector } from "react-redux";
 
 function ReceiptsPage() {
   const { orderId } = useParams();
   const [receipts, setReceipts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isFullPayment, setIsFullPayment] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
     const fetchReceipts = async () => {
@@ -61,6 +64,10 @@ function ReceiptsPage() {
 
     fetchReceipts();
   }, [orderId]);
+
+  const addNewReceipt = () => {
+    setIsDialogOpen(false);
+  };
 
   return (
     <div className="p-5">
@@ -149,20 +156,25 @@ function ReceiptsPage() {
         >
           Cancel
         </Button>
-        <AlertDialog>
-          <AlertDialogTrigger disabled={isFullPayment}>
-            <Button disabled={isFullPayment}>Add New Receipt</Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Upload a new receipt</AlertDialogTitle>
-              <AlertDialogDescription>
-                Upload a new receipt for order {orderId}
-              </AlertDialogDescription>
-              <AddNewReceipt orderId={orderId} />
-            </AlertDialogHeader>
-          </AlertDialogContent>
-        </AlertDialog>
+        {currentUser.isAdmin === false && (
+          <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <AlertDialogTrigger disabled={isFullPayment}>
+              <Button disabled={isFullPayment}>Add New Receipt</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Upload a new receipt</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Upload a new receipt for order {orderId}
+                </AlertDialogDescription>
+                <AddNewReceipt
+                  addNewReceipt={addNewReceipt}
+                  orderId={orderId}
+                />
+              </AlertDialogHeader>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
       </div>
     </div>
   );

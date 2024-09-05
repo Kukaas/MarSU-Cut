@@ -46,8 +46,11 @@ function Orders() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [statusFilter, setStatusFilter] = useState("All");
   const [searchValue, setSearchValue] = useState("");
-
   const navigate = useNavigate();
+
+  const handleViewReceipts = (order) => {
+    navigate(`/orders/receipts/${order}`);
+  };
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -135,7 +138,6 @@ function Orders() {
   const handleReject = (order) => updateOrderStatus(order, "REJECTED");
   const handleApprove = (order) => updateOrderStatus(order, "APPROVED");
   const handleDone = (order) => updateOrderStatus(order, "DONE");
-  const handleClaimed = (order) => updateOrderStatus(order, "CLAIMED");
 
   const handleArchive = async (order) => {
     try {
@@ -219,23 +221,6 @@ function Orders() {
     {
       accessorKey: "studentGender",
       header: "Gender",
-    },
-    {
-      accessorKey: "receipt",
-      header: "Receipt",
-      cell: ({ row }) => (
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href={row.getValue("receipt")}
-        >
-          <img
-            src={row.getValue("receipt")}
-            alt="Receipt"
-            style={{ width: "50px", height: "50px" }}
-          />
-        </a>
-      ),
     },
     {
       accessorKey: "schedule",
@@ -322,6 +307,60 @@ function Orders() {
       },
     },
     {
+      accessorKey: "currentBalance",
+      header: "Current Balance",
+      cell: ({ row }) => {
+        const orderItems = row.original.orderItems || [];
+        const totalPrice = orderItems.reduce(
+          (acc, item) => acc + parseFloat(item.totalPrice || 0),
+          0
+        );
+
+        if (!totalPrice) {
+          return (
+            <div className="status-badge">
+              <div
+                className="size-2 rounded-full"
+                style={{ backgroundColor: "gray" }}
+              />
+              <p
+                className="text-[12px] font-semibold"
+                style={{ color: "gray" }}
+              >
+                Down
+              </p>
+            </div>
+          );
+        }
+
+        const receipts = row.original.receipts || [];
+        const totalAmountPaid = receipts.reduce(
+          (acc, receipt) => acc + parseFloat(receipt.amount || 0),
+          0
+        );
+
+        const currentBalance = totalPrice - totalAmountPaid;
+
+        if (currentBalance === 0) {
+          return (
+            <div className="status-badge">
+              <div
+                className="size-2 rounded-full"
+                style={{ backgroundColor: "#32C75F" }}
+              />
+              <p
+                className="text-[12px] font-semibold"
+                style={{ color: "#32C75F" }}
+              >
+                Paid
+              </p>
+            </div>
+          );
+        }
+        return `₱${currentBalance.toFixed(2)}`;
+      },
+    },
+    {
       accessorKey: "status",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Status" />
@@ -358,6 +397,9 @@ function Orders() {
               >
                 View Order Details
               </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleViewReceipts(order._id)}>
+                View Receipts
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <DropdownMenuItem
@@ -389,21 +431,25 @@ function Orders() {
                     setIsDialogOpen(true);
                     setSelectedOrder(order);
                   }}
-                  disabled={order.status === "REJECTED"}
+                  disabled={[
+                    "REJECTED",
+                    "MEASURED",
+                    "DONE",
+                    "CLAIMED",
+                  ].includes(order.status)}
                 >
                   Measure
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => handleDone(order)}
-                  disabled={order.status === "REJECTED"}
+                  disabled={[
+                    "REJECTED",
+                    "MEASURED",
+                    "DONE",
+                    "CLAIMED",
+                  ].includes(order.status)}
                 >
                   Done
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => handleClaimed(order)}
-                  disabled={order.status === "REJECTED"}
-                >
-                  Claimed
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
@@ -435,7 +481,6 @@ function Orders() {
     APPROVED: "APPROVED",
     MEASURED: "MEASURED",
     DONE: "DONE",
-    CLAIMED: "CLAIMED",
   };
 
   const handleAddOrderItems = (order) => {

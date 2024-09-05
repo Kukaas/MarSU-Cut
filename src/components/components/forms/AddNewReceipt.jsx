@@ -52,7 +52,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { AlertDialogCancel } from "@/components/ui/alert-dialog";
 import SelectField from "../custom-components/SelectField";
 
-const AddNewReceipt = ({ orderId }) => {
+const AddNewReceipt = ({ addNewReceipt, orderId }) => {
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -142,7 +142,7 @@ const AddNewReceipt = ({ orderId }) => {
     try {
       setLoading(true);
       const res = await axios.post(
-        `${BASE_URL}/api/v1/order//student/receipt/${orderId}`,
+        `${BASE_URL}/api/v1/order/student/receipt/${orderId}`,
         {
           url: imageFileUrl,
           type: values.type,
@@ -162,7 +162,7 @@ const AddNewReceipt = ({ orderId }) => {
       if (res.status === 200) {
         setProgress(0);
         setLoading(false);
-
+        addNewReceipt(res.data.receipts);
         form.reset();
         toast.success("Order submitted successfully!");
         if (fileInputRef.current) {
@@ -221,9 +221,7 @@ const AddNewReceipt = ({ orderId }) => {
                     value={field.value !== undefined ? field.value : ""}
                     onChange={(e) => {
                       const value = e.target.value;
-                      field.onChange(
-                        value !== "" ? parseFloat(value) : undefined
-                      );
+                      field.onChange(value !== "" ? parseFloat(value) : "");
                     }}
                     placeholder="Amount"
                     className="w-full"
@@ -340,7 +338,7 @@ const AddNewReceipt = ({ orderId }) => {
             <div className="flex items-center justify-end gap-2">
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <DialogTrigger asChild>
-                <Button variant="default">Submit Order</Button>
+                <Button variant="default">Submit Receipt</Button>
               </DialogTrigger>
             </div>
             <DialogContent className="sm:max-w-[425px] mx-auto">
@@ -349,9 +347,6 @@ const AddNewReceipt = ({ orderId }) => {
                 <DialogDescription>
                   <div>
                     <p>Are you sure you want to submit these details?</p>
-                    <p className="mb-5 text-red-500">
-                      Once you submit you can&apos;t change the details.
-                    </p>
                   </div>
                 </DialogDescription>
               </DialogHeader>
@@ -388,6 +383,7 @@ const AddNewReceipt = ({ orderId }) => {
 };
 
 AddNewReceipt.propTypes = {
+  addNewReceipt: PropTypes.func,
   orderId: PropTypes.string,
 };
 
