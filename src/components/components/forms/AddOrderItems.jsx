@@ -8,7 +8,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Tooltip } from "antd";
 import { toast } from "sonner";
@@ -24,6 +23,7 @@ import ToasterError from "@/lib/Toaster";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import SelectField from "../custom-components/SelectField";
+import { AlertDialogCancel } from "@/components/ui/alert-dialog";
 
 const AddOrderItems = ({
   selectedOrder,
@@ -34,297 +34,65 @@ const AddOrderItems = ({
 
   const form = useForm({
     defaultValues: {
-      orderItems: [],
+      orderItems: [
+        {
+          level: selectedOrder.level,
+          productType: "",
+          size: "",
+          unitPrice: 0,
+          quantity: 1,
+        },
+      ],
     },
   });
 
-  // Function to automatically update the unit price based on productType, size, and level
+  const priceMap = {
+    SHS: {
+      BLOUSE: { S14: 460, S15: 510, S16: 560, S17: 610, "S18+": 660 },
+      SKIRT: { S24: 427, S25: 477, S26: 527, S27: 577, "S28+": 627 },
+      POLO: { S15: 390, S16: 440, S17: 490, S18: 540, "S19+": 590 },
+      PANTS: { S24: 450, S25: 500, S26: 550, S27: 600, "S28+": 650 },
+      JPANTS: {
+        "S33+34": 328.5,
+        S35: 351,
+        S36: 396,
+        S37: 441,
+        "S38+40": 531,
+        "S42+45": 581,
+      },
+      "PE TSHIRT": {
+        "2XL": 315,
+        "XS/S": 337.5,
+        "M/L": 382.5,
+        XL: 427.5,
+        XXL: 472.5,
+      },
+    },
+    COLLEGE: {
+      BLOUSE: { S14: 400, S15: 450, S16: 500, S17: 550, "S18+": 600 },
+      SKIRT: { S24: 350, S25: 400, S26: 450, S27: 500, "S28+": 550 },
+      POLO: { S15: 390, S16: 440, S17: 490, S18: 540, "S19+": 590 },
+      PANTS: { S24: 450, S25: 500, S26: 550, S27: 600, "S28+": 650 },
+      JPANTS: {
+        "S33+34": 328.5,
+        S35: 351,
+        S36: 396,
+        S37: 441,
+        "S38+40": 531,
+        "S42+45": 581,
+      },
+      "PE TSHIRT": {
+        "2XL": 315,
+        "XS/S": 337.5,
+        "M/L": 382.5,
+        XL: 427.5,
+        XXL: 472.5,
+      },
+    },
+  };
+
   const updateUnitPrice = (fieldName, productType, size, level) => {
-    // Example logic to determine unit price based on productType, size, and level
-    let unitPrice = 0;
-    if (productType === "BLOUSE" && size === "S14" && level === "SHS") {
-      unitPrice = 460;
-    } else if (productType === "BLOUSE" && size === "S15" && level === "SHS") {
-      unitPrice = 510;
-    } else if (productType === "BLOUSE" && size === "S16" && level === "SHS") {
-      unitPrice = 560;
-    } else if (productType === "BLOUSE" && size === "S17" && level === "SHS") {
-      unitPrice = 610;
-    } else if (productType === "BLOUSE" && size === "S18+" && level === "SHS") {
-      unitPrice = 660;
-    } else if (
-      productType === "BLOUSE" &&
-      size === "S14" &&
-      level === "COLLEGE"
-    ) {
-      unitPrice = 400;
-    } else if (
-      productType === "BLOUSE" &&
-      size === "S15" &&
-      level === "COLLEGE"
-    ) {
-      unitPrice = 450;
-    } else if (
-      productType === "BLOUSE" &&
-      size === "S16" &&
-      level === "COLLEGE"
-    ) {
-      unitPrice = 500;
-    } else if (
-      productType === "BLOUSE" &&
-      size === "S17" &&
-      level === "COLLEGE"
-    ) {
-      unitPrice = 550;
-    } else if (
-      productType === "BLOUSE" &&
-      size === "S18+" &&
-      level === "COLLEGE"
-    ) {
-      unitPrice = 600;
-    } else if (productType === "SKIRT" && size === "S24" && level === "SHS") {
-      unitPrice = 427;
-    } else if (productType === "SKIRT" && size === "S25" && level === "SHS") {
-      unitPrice = 477;
-    } else if (productType === "SKIRT" && size === "S26" && level === "SHS") {
-      unitPrice = 527;
-    } else if (productType === "SKIRT" && size === "S27" && level === "SHS") {
-      unitPrice = 577;
-    } else if (productType === "SKIRT" && size === "S28+" && level === "SHS") {
-      unitPrice = 627;
-    } else if (
-      productType === "SKIRT" &&
-      size === "S24" &&
-      level === "COLLEGE"
-    ) {
-      unitPrice = 350;
-    } else if (
-      productType === "SKIRT" &&
-      size === "S25" &&
-      level === "COLLEGE"
-    ) {
-      unitPrice = 400;
-    } else if (
-      productType === "SKIRT" &&
-      size === "S26" &&
-      level === "COLLEGE"
-    ) {
-      unitPrice = 450;
-    } else if (
-      productType === "SKIRT" &&
-      size === "S27" &&
-      level === "COLLEGE"
-    ) {
-      unitPrice = 500;
-    } else if (
-      productType === "SKIRT" &&
-      size === "S28+" &&
-      level === "COLLEGE"
-    ) {
-      unitPrice = 550;
-    } else if (productType === "POLO" && size === "S15" && level === "SHS") {
-      unitPrice = 390;
-    } else if (productType === "POLO" && size === "S16" && level === "SHS") {
-      unitPrice = 440;
-    } else if (productType === "POLO" && size === "S17" && level === "SHS") {
-      unitPrice = 490;
-    } else if (productType === "POLO" && size === "S18" && level === "SHS") {
-      unitPrice = 540;
-    } else if (productType === "POLO" && size === "S19+" && level === "SHS") {
-      unitPrice = 590;
-    } else if (
-      productType === "POLO" &&
-      size === "S15" &&
-      level === "COLLEGE"
-    ) {
-      unitPrice = 390;
-    } else if (
-      productType === "POLO" &&
-      size === "S16" &&
-      level === "COLLEGE"
-    ) {
-      unitPrice = 440;
-    } else if (
-      productType === "POLO" &&
-      size === "S17" &&
-      level === "COLLEGE"
-    ) {
-      unitPrice = 490;
-    } else if (
-      productType === "POLO" &&
-      size === "S18" &&
-      level === "COLLEGE"
-    ) {
-      unitPrice = 540;
-    } else if (
-      productType === "POLO" &&
-      size === "S19+" &&
-      level === "COLLEGE"
-    ) {
-      unitPrice = 590;
-    } else if (productType === "PANTS" && size === "S24" && level === "SHS") {
-      unitPrice = 450;
-    } else if (productType === "PANTS" && size === "S25" && level === "SHS") {
-      unitPrice = 500;
-    } else if (productType === "PANTS" && size === "S26" && level === "SHS") {
-      unitPrice = 550;
-    } else if (productType === "PANTS" && size === "S27" && level === "SHS") {
-      unitPrice = 600;
-    } else if (productType === "PANTS" && size === "S28+" && level === "SHS") {
-      unitPrice = 650;
-    } else if (
-      productType === "PANTS" &&
-      size === "S24" &&
-      level === "COLLEGE"
-    ) {
-      unitPrice = 450;
-    } else if (
-      productType === "PANTS" &&
-      size === "S25" &&
-      level === "COLLEGE"
-    ) {
-      unitPrice = 500;
-    } else if (
-      productType === "PANTS" &&
-      size === "S26" &&
-      level === "COLLEGE"
-    ) {
-      unitPrice = 550;
-    } else if (
-      productType === "PANTS" &&
-      size === "S27" &&
-      level === "COLLEGE"
-    ) {
-      unitPrice = 600;
-    } else if (
-      productType === "PANTS" &&
-      size === "S28+" &&
-      level === "COLLEGE"
-    ) {
-      unitPrice = 650;
-    } else if (
-      productType === "JPANTS" &&
-      size === "S33+34" &&
-      level === "SHS"
-    ) {
-      unitPrice = 328.5;
-    } else if (productType === "JPANTS" && size === "S35" && level === "SHS") {
-      unitPrice = 351;
-    } else if (productType === "JPANTS" && size === "S36" && level === "SHS") {
-      unitPrice = 396;
-    } else if (productType === "JPANTS" && size === "S37" && level === "SHS") {
-      unitPrice = 441;
-    } else if (
-      productType === "JPANTS" &&
-      size === "S38+40" &&
-      level === "SHS"
-    ) {
-      unitPrice = 531;
-    } else if (
-      productType === "JPANTS" &&
-      size === "S42+45" &&
-      level === "SHS"
-    ) {
-      unitPrice = 581;
-    } else if (
-      productType === "JPANTS" &&
-      size === "S33+34" &&
-      level === "COLLEGE"
-    ) {
-      unitPrice = 328.5;
-    } else if (
-      productType === "JPANTS" &&
-      size === "S35" &&
-      level === "COLLEGE"
-    ) {
-      unitPrice = 351;
-    } else if (
-      productType === "JPANTS" &&
-      size === "S36" &&
-      level === "COLLEGE"
-    ) {
-      unitPrice = 396;
-    } else if (
-      productType === "JPANTS" &&
-      size === "S37" &&
-      level === "COLLEGE"
-    ) {
-      unitPrice = 441;
-    } else if (
-      productType === "JPANTS" &&
-      size === "S38+40" &&
-      level === "COLLEGE"
-    ) {
-      unitPrice = 531;
-    } else if (
-      productType === "JPANTS" &&
-      size === "S42+45" &&
-      level === "COLLEGE"
-    ) {
-      unitPrice = 581;
-    } else if (
-      productType === "PE TSHIRT" &&
-      size === "2XL" &&
-      level === "SHS"
-    ) {
-      unitPrice = 315;
-    } else if (
-      productType === "PE TSHIRT" &&
-      size === "XS/S" &&
-      level === "SHS"
-    ) {
-      unitPrice = 337.5;
-    } else if (
-      productType === "PE TSHIRT" &&
-      size === "M/L" &&
-      level === "SHS"
-    ) {
-      unitPrice = 382.5;
-    } else if (
-      productType === "PE TSHIRT" &&
-      size === "XL" &&
-      level === "SHS"
-    ) {
-      unitPrice = 427.5;
-    } else if (
-      productType === "PE TSHIRT" &&
-      size === "XXL" &&
-      level === "SHS"
-    ) {
-      unitPrice = 472.5;
-    } else if (
-      productType === "PE TSHIRT" &&
-      size === "2XL" &&
-      level === "COLLEGE"
-    ) {
-      unitPrice = 315;
-    } else if (
-      productType === "PE TSHIRT" &&
-      size === "XS/S" &&
-      level === "COLLEGE"
-    ) {
-      unitPrice = 337.5;
-    } else if (
-      productType === "PE TSHIRT" &&
-      size === "M/L" &&
-      level === "COLLEGE"
-    ) {
-      unitPrice = 382.5;
-    } else if (
-      productType === "PE TSHIRT" &&
-      size === "XL" &&
-      level === "COLLEGE"
-    ) {
-      unitPrice = 427.5;
-    } else if (
-      productType === "PE TSHIRT" &&
-      size === "XXL" &&
-      level === "COLLEGE"
-    ) {
-      unitPrice = 472.5;
-    }
-    // Add more conditions as needed...
-    // Update the form field for unitPrice
+    const unitPrice = priceMap[level]?.[productType]?.[size];
     form.setValue(`orderItems[${fieldName}].unitPrice`, unitPrice);
   };
 
@@ -336,7 +104,6 @@ const AddOrderItems = ({
   const handleAddItems = async (values) => {
     setLoadingAddItems(true);
 
-    // Ensure orderItems is an array
     const orderItems = Array.isArray(values.orderItems)
       ? values.orderItems
       : [];
@@ -394,33 +161,39 @@ const AddOrderItems = ({
       return newItems;
     });
 
-    const res = await axios.put(
-      `${BASE_URL}/api/v1/order/add-item/${selectedOrder._id}`,
-      {
-        orderItems: updatedOrderItems,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+    try {
+      const res = await axios.put(
+        `${BASE_URL}/api/v1/order/add-item/${selectedOrder._id}`,
+        {
+          orderItems: updatedOrderItems,
         },
-        withCredentials: true,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+
+      if (res.status === 200) {
+        toast.success(`The student ${selectedOrder.studentName} is measured`, {
+          description: "The items have been added to the order",
+        });
+        onOrderItemsAdded(res.data.orderStudent);
+        setIsDialogOpen(false);
+      } else {
+        ToasterError({
+          description: "Please check your internet connection and try again.",
+        });
       }
-    );
-
-    if (res.status === 200) {
-      toast.success(`The student ${selectedOrder.studentName} is measured`, {
-        description: "The items have been added to the order",
-      });
-      onOrderItemsAdded(res.data.orderStudent);
-      setIsDialogOpen(false);
-    } else {
+    } catch (error) {
       ToasterError({
-        description: "Please check your internet connection and try again.",
+        description: "Failed to add items to the order. Please try again.",
       });
+    } finally {
+      setLoadingAddItems(false);
     }
-
-    setLoadingAddItems(false);
   };
 
   const onSubmit = async (values) => {
@@ -437,6 +210,17 @@ const AddOrderItems = ({
     useEffect(() => {
       updateUnitPrice(index, productType, size, level);
     }, [level, productType, size, index, updateUnitPrice]);
+
+    const sizes =
+      productType === "POLO" || productType === "BLOUSE"
+        ? ["S14", "S15", "S16", "S17", "S18", "S18+", "S19+"]
+        : productType === "SKIRT" || productType === "PANTS"
+        ? ["S24", "S25", "S26", "S27", "S28+"]
+        : productType === "JPANTS"
+        ? ["S33+34", "S35", "S36", "S37", "S38+40", "S42+45"]
+        : productType === "PE TSHIRT"
+        ? ["2XL", "XS/S", "M/L", "XL", "XXL"]
+        : [];
 
     return (
       <div
@@ -461,6 +245,7 @@ const AddOrderItems = ({
                   updateUnitPrice(index, productType, size, value);
                 }}
                 className="w-32"
+                type="disabled"
               />
             )}
           />
@@ -497,31 +282,7 @@ const AddOrderItems = ({
             render={({ field }) => (
               <SelectField
                 field={field}
-                options={[
-                  "S14",
-                  "S15",
-                  "S16",
-                  "S17",
-                  "S18",
-                  "S18+",
-                  "S19+",
-                  "S24",
-                  "S25",
-                  "S26",
-                  "S27",
-                  "S28+",
-                  "S33+34",
-                  "S35",
-                  "S36",
-                  "S37",
-                  "S38+40",
-                  "S42+45",
-                  "2XL",
-                  "XS/S",
-                  "M/L",
-                  "XL",
-                  "XXL",
-                ]}
+                options={sizes}
                 placeholder="Size"
                 onValueChange={(value) => {
                   const { productType, level } = getValues([
@@ -604,31 +365,31 @@ const AddOrderItems = ({
           <PlusCircle
             onClick={() =>
               append({
-                level: "",
+                level: selectedOrder.level,
                 productType: "",
                 size: "",
                 unitPrice: 0,
-                quantity: 0,
+                quantity: 1,
               })
             }
             className="mt-5 w-full cursor-pointer"
           />
         </Tooltip>
         <div className="flex justify-end items-center">
-          <DialogClose asChild>
+          <AlertDialogCancel asChild>
             <Button
               variant="outline"
-              className="mr-2 mt-4"
+              className="mr-2"
               onClick={() => form.reset()}
             >
               Cancel
             </Button>
-          </DialogClose>
-          <Button type="submit" className="mt-4" disabled={loadingAddItems}>
+          </AlertDialogCancel>
+          <Button type="submit" className="" disabled={loadingAddItems}>
             {loadingAddItems ? (
               <div className="flex items-center">
-                <Loader2 className="mr-2 animate-spin" />
-                <span>Adding</span>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Adding Items...
               </div>
             ) : (
               "Add Items"

@@ -272,7 +272,7 @@ function Orders() {
                 className="text-[12px] font-semibold"
                 style={{ color: "gray" }}
               >
-                Down Payment
+                Down
               </p>
             </div>
           );

@@ -19,6 +19,7 @@ export const StudentRegisterSchema = z.object({
   confirmPassword: z
     .string()
     .min(6, { message: "Confirm Password must be at least 6 characters" }),
+  level: z.string(),
 });
 
 export const CoordinatorRegisterSchema = z.object({
@@ -34,6 +35,7 @@ export const CoordinatorRegisterSchema = z.object({
   confirmPassword: z
     .string()
     .min(6, { message: "Confirm Password must be at least 6 characters" }),
+  level: z.string(),
 });
 
 export const CommercialJobRegisterSchema = z.object({
@@ -70,6 +72,7 @@ export const StudentUpdateProfileSchema = z.object({
   department: z
     .string()
     .min(3, { message: "Department must be at least 3 characters" }),
+  level: z.string(),
 });
 
 export const CoordinatorUpdateProfileSchema = z.object({

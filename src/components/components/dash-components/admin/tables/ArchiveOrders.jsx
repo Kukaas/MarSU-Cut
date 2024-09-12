@@ -163,23 +163,6 @@ function ArchiveOrders() {
       header: "Gender",
     },
     {
-      accessorKey: "receipt",
-      header: "Receipt",
-      cell: ({ row }) => (
-        <a
-          href={row.getValue("receipt")}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img
-            src={row.getValue("receipt")}
-            alt="Receipt"
-            style={{ width: "50px", height: "50px" }}
-          />
-        </a>
-      ),
-    },
-    {
       accessorKey: "schedule",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Schedules " />
@@ -263,6 +246,61 @@ function ArchiveOrders() {
         return `₱${totalPrice.toFixed(2)}`; // Format as currency
       },
     },
+    {
+      accessorKey: "currentBalance",
+      header: "Current Balance",
+      cell: ({ row }) => {
+        const orderItems = row.original.orderItems || [];
+        const totalPrice = orderItems.reduce(
+          (acc, item) => acc + parseFloat(item.totalPrice || 0),
+          0
+        );
+
+        if (!totalPrice) {
+          return (
+            <div className="status-badge">
+              <div
+                className="size-2 rounded-full"
+                style={{ backgroundColor: "gray" }}
+              />
+              <p
+                className="text-[12px] font-semibold"
+                style={{ color: "gray" }}
+              >
+                Down
+              </p>
+            </div>
+          );
+        }
+
+        const receipts = row.original.receipts || [];
+        const totalAmountPaid = receipts.reduce(
+          (acc, receipt) => acc + parseFloat(receipt.amount || 0),
+          0
+        );
+
+        const currentBalance = totalPrice - totalAmountPaid;
+
+        if (currentBalance === 0) {
+          return (
+            <div className="status-badge">
+              <div
+                className="size-2 rounded-full"
+                style={{ backgroundColor: "#32C75F" }}
+              />
+              <p
+                className="text-[12px] font-semibold"
+                style={{ color: "#32C75F" }}
+              >
+                Paid
+              </p>
+            </div>
+          );
+        }
+        return `₱${currentBalance.toFixed(2)}`;
+      },
+    },
+
     {
       accessorKey: "status",
       header: ({ column }) => (

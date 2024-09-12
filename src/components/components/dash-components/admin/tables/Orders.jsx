@@ -1,12 +1,5 @@
 // UI
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -36,6 +29,13 @@ import { statusColors } from "@/lib/utils";
 import CustomBadge from "@/components/components/custom-components/CustomBadge";
 import DataTableColumnHeader from "@/components/components/custom-components/DataTableColumnHeader";
 import DataTableToolBar from "@/components/components/custom-components/DataTableToolBar";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 function Orders() {
   const [data, setData] = useState([]);
@@ -388,15 +388,6 @@ function Orders() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => {
-                  navigate(`/dashboard?tab=order-details`, {
-                    state: { selectedOrder: order },
-                  });
-                }}
-              >
-                View Order Details
-              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleViewReceipts(order._id)}>
                 View Receipts
               </DropdownMenuItem>
@@ -442,12 +433,9 @@ function Orders() {
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => handleDone(order)}
-                  disabled={[
-                    "REJECTED",
-                    "MEASURED",
-                    "DONE",
-                    "CLAIMED",
-                  ].includes(order.status)}
+                  disabled={["REJECTED", "DONE", "CLAIMED"].includes(
+                    order.status
+                  )}
                 >
                   Done
                 </DropdownMenuItem>
@@ -522,21 +510,21 @@ function Orders() {
           <CustomTable columns={columns} data={data} loading={loading} />
         </div>
       </div>
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="overflow-auto">
-          <DialogHeader>
-            <DialogTitle>Add Order Items</DialogTitle>
-            <DialogDescription>
+      <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <AlertDialogContent className="overflow-auto">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Add Order Items</AlertDialogTitle>
+            <AlertDialogDescription>
               Please fill out the form below to add items to your order.
-            </DialogDescription>
-          </DialogHeader>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
           <AddOrderItems
             selectedOrder={selectedOrder}
             setIsDialogOpen={setIsDialogOpen}
             onOrderItemsAdded={handleAddOrderItems}
           />
-        </DialogContent>
-      </Dialog>
+        </AlertDialogContent>
+      </AlertDialog>
     </Spin>
   );
 }

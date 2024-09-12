@@ -61,6 +61,7 @@ const StudentProfile = () => {
       studentNumber: currentUser.studentNumber,
       studentGender: currentUser.studentGender,
       department: currentUser.department,
+      level: currentUser.level,
     },
   });
 
@@ -123,6 +124,22 @@ const StudentProfile = () => {
       }
     );
   };
+
+  const selectedLevel = formUpdateProfile.watch("level");
+
+  const departmentOptions =
+    selectedLevel === "COLLEGE"
+      ? [
+          "College of Engineering",
+          "College of Industrial Technology",
+          "College of Education",
+          "College of Business Administration",
+          "College of Arts and Sciences",
+          "College of Information and Computing Sciences",
+          "College of Allied Health and Medicine",
+          "College of Governance",
+        ]
+      : ["Grade 7", "Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"];
 
   // Update user profile
   const handleUpdate = async (values) => {
@@ -297,18 +314,36 @@ const StudentProfile = () => {
               type="text"
             />
           </div>
-          <FormField
-            control={formUpdateProfile.control}
-            name="studentGender"
-            render={({ field }) => (
-              <SelectField
-                field={field}
-                label="Gender"
-                options={["Male", "Female"]}
-                placeholder="Gender"
+          <div className="flex w-full justify-between gap-2">
+            <div className="w-full">
+              <FormField
+                control={formUpdateProfile.control}
+                name="studentGender"
+                render={({ field }) => (
+                  <SelectField
+                    field={field}
+                    label="Gender"
+                    options={["Male", "Female"]}
+                    placeholder="Gender"
+                  />
+                )}
               />
-            )}
-          />
+            </div>
+            <div className="w-full">
+              <FormField
+                control={formUpdateProfile.control}
+                name="level"
+                render={({ field }) => (
+                  <SelectField
+                    field={field}
+                    label="Level"
+                    options={["COLLEGE", "HS"]}
+                    placeholder="Level"
+                  />
+                )}
+              />
+            </div>
+          </div>
           <FormField
             control={formUpdateProfile.control}
             name="department"
@@ -316,16 +351,7 @@ const StudentProfile = () => {
               <SelectField
                 field={field}
                 label="Department"
-                options={[
-                  "College of Engineering",
-                  "College of Industrial Technology",
-                  "College of Education",
-                  "College of Business Administration",
-                  "College of Arts and Sciences",
-                  "College of Information and Computing Sciences",
-                  "College of Allied Health and Medicine",
-                  "College of Governance",
-                ]}
+                options={departmentOptions}
                 placeholder="Department"
               />
             )}

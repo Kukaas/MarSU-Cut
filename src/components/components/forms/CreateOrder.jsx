@@ -153,6 +153,7 @@ const CreateOrder = ({ addNewOrder, setIsDialogOpen }) => {
           studentName: values.studentName,
           studentEmail: values.studentEmail,
           studentGender: values.studentGender,
+          level: currentUser.level,
           initialReceipt: {
             url: imageFileUrl,
             ORNumber: values.ORNumber,

@@ -64,9 +64,8 @@ const OrderItems = ({ orderItems, finishedProducts }) => {
   const itemsToRender = Object.values(groupedItems);
 
   return (
-    <div>
+    <div className="space-y-2">
       {itemsToRender.map((item, index) => {
-        // Check availability only if productType is not LOGO or NECKTIE
         const availableQuantity =
           item.productType === "LOGO" || item.productType === "NECKTIE"
             ? null
@@ -82,7 +81,7 @@ const OrderItems = ({ orderItems, finishedProducts }) => {
         return (
           <div
             key={index}
-            className={`flex flex-row items-center gap-2 ${
+            className={`flex items-center gap-2 ${
               isAvailable === null
                 ? ""
                 : isAvailable
@@ -123,10 +122,17 @@ const OrderDetails = () => {
   const selectedOrder = location.state?.selectedOrder;
   const navigate = useNavigate();
 
-  const totalPrice = selectedOrder.orderItems.reduce(
+  const totalPrice = selectedOrder?.orderItems.reduce(
     (acc, item) => acc + parseFloat(item.totalPrice || 0),
     0
   );
+
+  const totalAmountPaid = selectedOrder?.receipts.reduce(
+    (acc, receipt) => acc + parseFloat(receipt.amount || 0),
+    0
+  );
+
+  const currentBalance = totalPrice - totalAmountPaid;
 
   useEffect(() => {
     const fetchFinishedProduct = async () => {
@@ -167,14 +173,12 @@ const OrderDetails = () => {
       </Typography.Title>
 
       {loading ? (
-        <div className="shadow-lg rounded-lg p-5 mt-10 border-2 border-gray-6s00">
+        <div className="shadow-lg rounded-lg p-5 mt-10 border-2 border-gray-600">
           <div className="flex flex-col lg:flex-row gap-6 lg:gap-12">
-            {/* Left side - Image placeholder */}
             <div className="flex flex-col lg:w-1/2">
               <Skeleton className="w-full h-[400px] rounded-lg shadow-md" />
             </div>
 
-            {/* Right side - Content placeholders */}
             <div className="flex flex-col lg:w-1/2">
               <div className="mb-4">
                 <div className="text-xl font-bold flex flex-row gap-2">
@@ -185,7 +189,6 @@ const OrderDetails = () => {
               </div>
 
               <div className="space-y-4">
-                {/* Orders section */}
                 <div className="space-y-2">
                   <Skeleton className="h-4 w-[100px]" />
                   <div className="space-y-2">
@@ -195,7 +198,6 @@ const OrderDetails = () => {
                   </div>
                 </div>
 
-                {/* Other details section */}
                 <div className="space-y-2">
                   <Skeleton className="h-4 w-[120px]" />
                   <Skeleton className="h-4 w-[160px]" />
@@ -203,7 +205,6 @@ const OrderDetails = () => {
                 </div>
               </div>
 
-              {/* Button placeholder */}
               <div className="flex justify-end mt-10">
                 <Skeleton className="h-10 w-[100px] rounded-md" />
               </div>
@@ -215,30 +216,36 @@ const OrderDetails = () => {
           {selectedOrder ? (
             <div className="flex flex-col lg:flex-row gap-6 lg:gap-12">
               <div className="flex flex-col lg:w-1/2">
-                <a
-                  href={selectedOrder.receipt}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block w-full h-[400px] rounded-lg shadow-md"
-                >
-                  <img
-                    src={selectedOrder.receipt}
-                    alt="Order Receipt"
-                    className="w-full h-full rounded-lg shadow-md"
-                  />
-                </a>
-              </div>
-
-              <div className="flex flex-col lg:w-1/2">
                 <CardHeader className="mb-4">
-                  <CardTitle className="text-xl font-bold flex flex-row gap-2">
+                  <CardTitle className="text-xl font-bold">
+                    Personal Details
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="font-bold flex flex-row gap-2">
                     {selectedOrder.studentName}
                     <span className="text-gray-500 text-xs font-normal mt-2">
                       ({selectedOrder.studentNumber})
                     </span>
+                  </div>
+                  <div className="mt-2">
+                    <h6 className="text-sm font-semibold">
+                      Year Level:{" "}
+                      <span className="font-normal text-xs">
+                        {selectedOrder.level}
+                      </span>
+                    </h6>
+                  </div>
+                </CardContent>
+              </div>
+
+              <div className="flex flex-col lg:w-1/2">
+                <CardHeader className="mb-4">
+                  <CardTitle className="text-xl font-bold">
+                    Order Details
                   </CardTitle>
                   <CardDescription className="text-sm text-gray-600">
-                    {selectedOrder.studentEmail}
+                    This is the order details of the student
                   </CardDescription>
                 </CardHeader>
 
@@ -251,11 +258,23 @@ const OrderDetails = () => {
                     />
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-4">
                     <h6 className="text-sm font-semibold">
                       Total Price:{" "}
                       <span className="font-normal text-xs">
-                        ₱{totalPrice.toFixed(2)}
+                        ₱{totalPrice?.toFixed(2)}
+                      </span>
+                    </h6>
+                    <h6 className="text-sm font-semibold flex gap-3">
+                      Current Balance:{" "}
+                      <span className="font-normal text-xs">
+                        {currentBalance === 0 ? (
+                          <StatusBadge status="Paid" />
+                        ) : currentBalance > 0 ? (
+                          `₱${currentBalance.toFixed(2)}`
+                        ) : (
+                          <StatusBadge status="Down" />
+                        )}
                       </span>
                     </h6>
                     <h6 className="text-sm font-semibold">

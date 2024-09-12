@@ -25,8 +25,28 @@ const Student = () => {
       email: "",
       department: "",
       password: "",
+      confirmPassword: "",
+      studentNumber: "",
+      studentGender: "",
+      level: "",
     },
   });
+
+  const selectedLevel = form.watch("level");
+
+  const departmentOptions =
+    selectedLevel === "COLLEGE"
+      ? [
+          "College of Engineering",
+          "College of Industrial Technology",
+          "College of Education",
+          "College of Business Administration",
+          "College of Arts and Sciences",
+          "College of Information and Computing Sciences",
+          "College of Allied Health and Medicine",
+          "College of Governance",
+        ]
+      : ["Grade 7", "Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"];
 
   // Handle register
   const handleRegister = async (values) => {
@@ -101,32 +121,56 @@ const Student = () => {
         >
           {currentStep === 1 && (
             <div>
-              <div className="flex gap-3">
-                <CustomInput
-                  form={form}
-                  name="name"
-                  label="Name"
-                  placeholder="eg. Jhon Doe"
-                />
-                <CustomInput
-                  form={form}
-                  name="studentNumber"
-                  label="Student Number"
-                  placeholder="eg. 21B1234"
-                />
-              </div>
-              <FormField
-                control={form.control}
-                name="studentGender"
-                render={({ field }) => (
-                  <SelectField
-                    field={field}
-                    label="Gender"
-                    options={["Male", "Female"]}
-                    placeholder="Gender"
+              <div className="flex justify-between gap-3">
+                <div className="w-full">
+                  <CustomInput
+                    form={form}
+                    name="name"
+                    label="Name"
+                    placeholder="eg. John Doe"
+                    type="text"
                   />
-                )}
-              />
+                </div>
+                <div className="w-full">
+                  <CustomInput
+                    form={form}
+                    name="studentNumber"
+                    label="Student Number"
+                    placeholder="eg. 21B10322"
+                    type="text"
+                  />
+                </div>
+              </div>
+              <div className="flex w-full justify-between gap-2">
+                <div className="w-full">
+                  <FormField
+                    control={form.control}
+                    name="studentGender"
+                    render={({ field }) => (
+                      <SelectField
+                        field={field}
+                        label="Gender"
+                        options={["Male", "Female"]}
+                        placeholder="Gender"
+                      />
+                    )}
+                  />
+                </div>
+                <div className="w-full">
+                  <FormField
+                    control={form.control}
+                    name="level"
+                    render={({ field }) => (
+                      <SelectField
+                        field={field}
+                        label="Level"
+                        options={["COLLEGE", "HS"]}
+                        placeholder="Level"
+                      />
+                    )}
+                  />
+                </div>
+              </div>
               <FormField
                 control={form.control}
                 name="department"
@@ -134,16 +178,7 @@ const Student = () => {
                   <SelectField
                     field={field}
                     label="Department"
-                    options={[
-                      "College of Engineering",
-                      "College of Industrial Technology",
-                      "College of Education",
-                      "College of Business Administration",
-                      "College of Arts and Sciences",
-                      "College of Information and Computing Sciences",
-                      "College of Allied Health and Medicine",
-                      "College of Governance",
-                    ]}
+                    options={departmentOptions}
                     placeholder="Department"
                   />
                 )}

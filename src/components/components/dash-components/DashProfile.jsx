@@ -65,9 +65,12 @@ const DashProfile = () => {
                 {currentUser.role === "Coordinator" && <CoordinatorProfile />}
                 {currentUser.role === "CommercialJob" && <CommercialProfile />}
                 {currentUser.isAdmin && (
-                  <Typography.Text>
+                  <Typography.Title
+                    level={5}
+                    className="text-black dark:text-white mt-5"
+                  >
                     You are an admin, you can&apos;t edit your profile
-                  </Typography.Text>
+                  </Typography.Title>
                 )}
               </CardContent>
             )}
