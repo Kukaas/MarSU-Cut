@@ -1,6 +1,5 @@
 // UI
 import { Button } from "@/components/ui/button";
-import { DialogClose } from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -24,6 +23,7 @@ import { useForm } from "react-hook-form";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomInput from "../custom-components/CustomInput";
+import { AlertDialogCancel } from "@/components/ui/alert-dialog";
 
 const AddNewRawMaterial = ({ onRawMaterialAdded, setIsDialogOpen }) => {
   const [addRawMaterialLoading, setAddRawMaterialLoading] = useState(false);
@@ -117,9 +117,9 @@ const AddNewRawMaterial = ({ onRawMaterialAdded, setIsDialogOpen }) => {
           )}
         />
         <div className="flex items-center justify-end gap-2">
-          <DialogClose>
+          <AlertDialogCancel asChild>
             <Button variant="outline">Cancel</Button>
-          </DialogClose>
+          </AlertDialogCancel>
           <Button type="submit" disabled={addRawMaterialLoading}>
             {addRawMaterialLoading ? (
               <div className="flex items-center">

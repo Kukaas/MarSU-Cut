@@ -1,13 +1,5 @@
 // UI
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Spin, Tooltip, Typography } from "antd";
@@ -29,6 +21,14 @@ import { statusColors } from "@/lib/utils";
 import CustomBadge from "@/components/components/custom-components/CustomBadge";
 import DataTableColumnHeader from "@/components/components/custom-components/DataTableColumnHeader";
 import DeleteDialog from "@/components/components/custom-components/DeleteDialog";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const FinishedProduct = () => {
   const [data, setData] = useState([]);
@@ -167,8 +167,8 @@ const FinishedProduct = () => {
         return (
           <div className="flex items-center justify-center space-x-2">
             <Tooltip title="Edit product">
-              <Dialog>
-                <DialogTrigger asChild>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
                   <Button
                     variant="default"
                     size="sm"
@@ -178,21 +178,21 @@ const FinishedProduct = () => {
                   >
                     Edit
                   </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Edit Product</DialogTitle>
-                    <DialogDescription>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Edit Product</AlertDialogTitle>
+                    <AlertDialogDescription>
                       Please fill out the form below to edit product.
-                    </DialogDescription>
-                  </DialogHeader>
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
                   <EditProduct
                     selectedProduct={selectedProduct}
                     setIsDialogOpen={setIsDialogOpen}
                     onProductUpdated={handleProductUpdated}
                   />
-                </DialogContent>
-              </Dialog>
+                </AlertDialogContent>
+              </AlertDialog>
             </Tooltip>
             <Tooltip title="Delete product">
               <DeleteDialog
@@ -237,26 +237,26 @@ const FinishedProduct = () => {
               />
             </div>
             <Tooltip title="Add new product">
-              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogTrigger asChild>
+              <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <AlertDialogTrigger asChild>
                   <Button variant="default" className="m-2 h-8">
                     <PlusCircle size={20} className="mr-2 h-4 w-4" />
                     New Product
                   </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px]">
-                  <DialogHeader>
-                    <DialogTitle>Add a new product</DialogTitle>
-                    <DialogDescription>
+                </AlertDialogTrigger>
+                <AlertDialogContent className="sm:max-w-[425px]">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Add a new product</AlertDialogTitle>
+                    <AlertDialogDescription>
                       Click submit when you&apos;re done.
-                    </DialogDescription>
-                  </DialogHeader>
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
                   <AddNewProduct
                     onProductAdded={handleProductAdded}
                     setIsDialogOpen={setIsDialogOpen}
                   />
-                </DialogContent>
-              </Dialog>
+                </AlertDialogContent>
+              </AlertDialog>
             </Tooltip>
           </div>
           <div className="rounded-md border">

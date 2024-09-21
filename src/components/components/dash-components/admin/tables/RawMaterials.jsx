@@ -1,12 +1,4 @@
 // UI
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -29,6 +21,14 @@ import { statusColors } from "@/lib/utils";
 import CustomBadge from "@/components/components/custom-components/CustomBadge";
 import DataTableColumnHeader from "@/components/components/custom-components/DataTableColumnHeader";
 import DeleteDialog from "@/components/components/custom-components/DeleteDialog";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const RawMaterials = () => {
   const [data, setData] = useState([]);
@@ -147,25 +147,25 @@ const RawMaterials = () => {
         return (
           <div className="flex space-x-2">
             <Tooltip title="Edit product">
-              <Dialog>
-                <DialogTrigger asChild>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
                   <Button
                     variant="default"
                     onClick={() => setSelectedRawMaterial(rawMaterial)}
                   >
                     Edit
                   </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Edit Raw Material</DialogTitle>
-                    <DialogDescription>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Edit Raw Material</AlertDialogTitle>
+                    <AlertDialogDescription>
                       Please fill out the form below to edit raw material.
-                    </DialogDescription>
-                  </DialogHeader>
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
                   <EditRawMaterial selectedRawMaterial={selectedRawMaterial} />
-                </DialogContent>
-              </Dialog>
+                </AlertDialogContent>
+              </AlertDialog>
             </Tooltip>
             <Tooltip title="Delete raw material">
               <DeleteDialog
@@ -211,26 +211,26 @@ const RawMaterials = () => {
               />
             </div>
             <Tooltip title="Add new raw material">
-              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogTrigger asChild>
+              <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <AlertDialogTrigger asChild>
                   <Button variant="default" className="m-2 h-8">
                     <PlusCircle size={20} className="mr-2 h-4 w-4" />
                     New Material
                   </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px]">
-                  <DialogHeader>
-                    <DialogTitle>Add a new raw material</DialogTitle>
-                    <DialogDescription>
+                </AlertDialogTrigger>
+                <AlertDialogContent className="sm:max-w-[425px]">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Add a new raw material</AlertDialogTitle>
+                    <AlertDialogDescription>
                       Click submit when you&apos;re done.
-                    </DialogDescription>
-                  </DialogHeader>
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
                   <AddNewRawMaterial
                     onRawMaterialAdded={handleRawMaterialAdded}
                     setIsDialogOpen={setIsDialogOpen}
                   />
-                </DialogContent>
-              </Dialog>
+                </AlertDialogContent>
+              </AlertDialog>
             </Tooltip>
           </div>
           <div className="rounded-md border">

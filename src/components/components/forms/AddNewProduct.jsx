@@ -8,7 +8,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
@@ -26,6 +25,7 @@ import { useForm } from "react-hook-form";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import SelectField from "../custom-components/SelectField";
+import { AlertDialogCancel } from "@/components/ui/alert-dialog";
 
 const AddNewProduct = ({ onProductAdded, setIsDialogOpen }) => {
   const [addNewProductLoading, setAddNewProductLoading] = useState(false);
@@ -39,6 +39,18 @@ const AddNewProduct = ({ onProductAdded, setIsDialogOpen }) => {
       quantity: 0,
     },
   });
+
+  const productType = addNewProductForm.watch("productType");
+  const sizes =
+    productType === "POLO" || productType === "BLOUSE"
+      ? ["S14", "S15", "S16", "S17", "S18", "S18+", "S19+"]
+      : productType === "SKIRT" || productType === "PANTS"
+      ? ["S24", "S25", "S26", "S27", "S28+"]
+      : productType === "JPANTS"
+      ? ["S33+34", "S35", "S36", "S37", "S38+40", "S42+45"]
+      : productType === "PE TSHIRT"
+      ? ["2XL", "XS/S", "M/L", "XL", "XXL"]
+      : [];
 
   const handleAddNewProduct = async (values) => {
     if (
@@ -122,31 +134,7 @@ const AddNewProduct = ({ onProductAdded, setIsDialogOpen }) => {
             <SelectField
               field={field}
               label="Size"
-              options={[
-                "S14",
-                "S15",
-                "S16",
-                "S17",
-                "S18",
-                "S18+",
-                "S19+",
-                "S24",
-                "S25",
-                "S26",
-                "S27",
-                "S28+",
-                "S33+34",
-                "S35",
-                "S36",
-                "S37",
-                "S38+40",
-                "S42+45",
-                "2XL",
-                "XS/S",
-                "M/L",
-                "XL",
-                "XXL",
-              ]}
+              options={sizes}
               placeholder="Size"
             />
           )}
@@ -176,9 +164,9 @@ const AddNewProduct = ({ onProductAdded, setIsDialogOpen }) => {
           )}
         />
         <div className="flex items-center justify-end gap-2">
-          <DialogClose>
+          <AlertDialogCancel asChild>
             <Button variant="outline">Cancel</Button>
-          </DialogClose>
+          </AlertDialogCancel>
           <Button type="submit" disabled={addNewProductLoading}>
             {addNewProductLoading ? (
               <div className="flex items-center">

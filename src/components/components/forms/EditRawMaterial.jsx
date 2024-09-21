@@ -8,7 +8,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -24,6 +23,7 @@ import axios from "axios";
 import ToasterError from "@/lib/Toaster";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
+import { AlertDialogCancel } from "@/components/ui/alert-dialog";
 
 const EditRawMaterial = ({ selectedRawMaterial }) => {
   const [editRawMaterialLoading, setEditRawMaterialLoading] = useState(false);
@@ -121,9 +121,9 @@ const EditRawMaterial = ({ selectedRawMaterial }) => {
           )}
         />
         <div className="flex items-center justify-end gap-2">
-          <DialogClose>
+          <AlertDialogCancel asChild>
             <Button variant="outline">Cancel</Button>
-          </DialogClose>
+          </AlertDialogCancel>
           <Button type="submit" disabled={editRawMaterialLoading}>
             {editRawMaterialLoading ? (
               <div className="flex items-center">

@@ -14,7 +14,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
@@ -30,6 +29,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
+import { AlertDialogCancel } from "@/components/ui/alert-dialog";
 
 const EditProduct = ({
   selectedProduct,
@@ -233,9 +233,9 @@ const EditProduct = ({
           )}
         />
         <div className="flex items-center justify-end gap-2">
-          <DialogClose>
+          <AlertDialogCancel asChild>
             <Button variant="outline">Cancel</Button>
-          </DialogClose>
+          </AlertDialogCancel>
           <Button type="submit" disabled={editProductLoading}>
             {editProductLoading ? (
               <div className="flex items-center">
