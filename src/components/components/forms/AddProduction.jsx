@@ -15,7 +15,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
-import { SheetClose } from "@/components/ui/sheet";
 import { toast } from "sonner";
 import { Tooltip } from "antd";
 
@@ -35,22 +34,51 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import SelectField from "../custom-components/SelectField";
+import { AlertDialogCancel } from "@/components/ui/alert-dialog";
 
 const AddProduction = ({ onProductionAdded, setIsOpen }) => {
   const [addProductionLoading, setAddProductionLoading] = useState(false);
   const [rawMaterials, setRawMaterials] = useState([]);
+  // Initialize formState from localStorage or with default values
+  const initialFormState = JSON.parse(localStorage.getItem("formState")) || {
+    productType: "",
+    size: "",
+    level: "",
+    productionDateFrom: "",
+    productionDateTo: "",
+    quantity: 0,
+    rawMaterialsUsed: [{ type: "", quantity: 0 }],
+  };
+
+  const [formState, setFormState] = useState(initialFormState);
+
+  // Initialize the form with default values from formState or localStorage
   const productionForm = useForm({
     resolver: zodResolver(AddProductionSchema),
-    defaultValues: {
-      productType: "",
-      size: "",
-      level: "",
-      productionDateFrom: "",
-      productionDateTo: "",
-      quantity: 0,
-      rawMaterialsUsed: [{ type: "", quantity: 0 }],
-    },
+    defaultValues: formState, // Set default values from formState
   });
+
+  // Sync formState with form values and save to localStorage
+  useEffect(() => {
+    const subscription = productionForm.watch((values) => {
+      setFormState(values); // Update formState
+      localStorage.setItem("formState", JSON.stringify(values)); // Persist formState in localStorage
+    });
+
+    return () => subscription.unsubscribe();
+  }, [productionForm]);
+
+  const productType = productionForm.watch("productType");
+  const sizes =
+    productType === "POLO" || productType === "BLOUSE"
+      ? ["S14", "S15", "S16", "S17", "S18", "S18+", "S19+"]
+      : productType === "SKIRT" || productType === "PANTS"
+      ? ["S24", "S25", "S26", "S27", "S28+"]
+      : productType === "JPANTS"
+      ? ["S33+34", "S35", "S36", "S37", "S38+40", "S42+45"]
+      : productType === "PE TSHIRT"
+      ? ["2XL", "XS/S", "M/L", "XL", "XXL"]
+      : [];
 
   const { fields, append, remove } = useFieldArray({
     control: productionForm.control,
@@ -104,6 +132,7 @@ const AddProduction = ({ onProductionAdded, setIsOpen }) => {
         toast.success("Production added successfully");
         productionForm.reset();
         onProductionAdded(res.data.production);
+        localStorage.removeItem("formState");
         setIsOpen(false);
       }
     } catch (error) {
@@ -149,15 +178,13 @@ const AddProduction = ({ onProductionAdded, setIsOpen }) => {
       value: rawMaterial.type,
     }));
 
-  console.log(rawMaterials);
-
   return (
     <div className="grid gap-6 py-2">
       <div className="w-full">
         <Form {...productionForm}>
           <form onSubmit={productionForm.handleSubmit(handleAddProduction)}>
             {/* Production Details */}
-            <fieldset className="border border-gray-300 rounded-md p-4 mt-2">
+            <fieldset className="border border-gray-300 rounded-md p-4 space-y-3">
               <legend className="text-lg font-semibold">
                 Production Details
               </legend>
@@ -202,31 +229,7 @@ const AddProduction = ({ onProductionAdded, setIsOpen }) => {
                     <SelectField
                       field={field}
                       label="Size"
-                      options={[
-                        "S14",
-                        "S15",
-                        "S16",
-                        "S17",
-                        "S18",
-                        "S18+",
-                        "S19+",
-                        "S24",
-                        "S25",
-                        "S26",
-                        "S27",
-                        "S28+",
-                        "S33+34",
-                        "S35",
-                        "S36",
-                        "S37",
-                        "S38+40",
-                        "S42+45",
-                        "2XL",
-                        "XS/S",
-                        "M/L",
-                        "XL",
-                        "XXL",
-                      ]}
+                      options={sizes}
                       placeholder="Size"
                     />
                   )}
@@ -343,13 +346,16 @@ const AddProduction = ({ onProductionAdded, setIsOpen }) => {
             </fieldset>
 
             {/* Raw Materials Used */}
-            <fieldset className="border border-gray-300 rounded-md p-4 mt-2">
+            <fieldset className="border border-gray-300 rounded-md p-4 mt-2 w-full">
               <legend className="text-lg font-semibold">
                 Raw Materials Used
               </legend>
-              <div className="space-y-4 mt-2">
+              <div className="space-y-4 mt-2 w-full">
                 {fields.map((field, index) => (
-                  <div key={field.id} className="flex items-center space-x-4">
+                  <div
+                    key={field.id}
+                    className="flex items-center space-x-4 justify-between w-full"
+                  >
                     <SelectField
                       field={{
                         value: productionForm.watch(
@@ -420,7 +426,7 @@ const AddProduction = ({ onProductionAdded, setIsOpen }) => {
                                   );
                                 }}
                                 placeholder="Quantity"
-                                className="w-full"
+                                className="w-[100px]"
                                 min={0}
                                 max={availableQuantity}
                               />
@@ -432,7 +438,7 @@ const AddProduction = ({ onProductionAdded, setIsOpen }) => {
                     />
                     <Tooltip title="Remove input">
                       <MinusCircle
-                        size={24}
+                        size={20}
                         onClick={() => remove(index)}
                         className="mt-8"
                       />
@@ -442,18 +448,18 @@ const AddProduction = ({ onProductionAdded, setIsOpen }) => {
                 <div className="flex justify-center mt-3">
                   <Tooltip title="Add new input">
                     <PlusCircle
-                      size={24}
+                      size={20}
                       onClick={() => append({ type: "", quantity: 0 })}
-                      className="flex items-center justify-center"
+                      className="flex items-center justify-center mt-2"
                     />
                   </Tooltip>
                 </div>
               </div>
             </fieldset>
             <div className="flex items-center justify-end gap-2 mt-4">
-              <SheetClose>
+              <AlertDialogCancel asChild>
                 <Button variant="outline">Cancel</Button>
-              </SheetClose>
+              </AlertDialogCancel>
               <Button
                 onClick={handleButtonClick}
                 type="button"

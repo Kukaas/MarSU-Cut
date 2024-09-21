@@ -6,13 +6,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -42,6 +35,13 @@ import {
 import ProductionPerformance from "../production-components/ProductionPerformance";
 import DataTableColumnHeader from "@/components/components/custom-components/DataTableColumnHeader";
 import DeleteDialog from "@/components/components/custom-components/DeleteDialog";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const Productions = () => {
   const [data, setData] = useState([]);
@@ -49,20 +49,7 @@ const Productions = () => {
   const [searchValue, setSearchValue] = useState("");
   const [loading, setLoading] = useState(true);
   const [deleteLoading, setDeleteLoading] = useState(false);
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-
-  // Check screen size
-  useEffect(() => {
-    const checkScreenSize = () => {
-      setIsSmallScreen(window.innerWidth < 771);
-    };
-
-    checkScreenSize();
-    window.addEventListener("resize", checkScreenSize);
-
-    return () => window.removeEventListener("resize", checkScreenSize);
-  }, []);
 
   useEffect(() => {
     const fetchProductions = async () => {
@@ -260,81 +247,44 @@ const Productions = () => {
               />
             </div>
             <Tooltip title="Add new production">
-              {!isSmallScreen ? (
-                <Sheet open={isOpen} onOpenChange={setIsOpen}>
-                  <SheetTrigger asChild>
-                    <Button className="m-2 h-8">
-                      <PlusCircle className="mr-2 h-4 w-4" />
-                      Add Production
-                    </Button>
-                  </SheetTrigger>
-                  <SheetContent className="max-h-screen overflow-auto">
-                    <Tabs defaultValue="uniform" className="mt-4">
-                      <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="uniform">Uniform</TabsTrigger>
-                        <TabsTrigger value="academicGown">
-                          Academic Gown
-                        </TabsTrigger>
-                      </TabsList>
-                      <TabsContent value="uniform" className="mt-4">
-                        <SheetTitle>Add a new uniform production</SheetTitle>
-                        <SheetDescription>
-                          Click submit when you&apos;re done.
-                        </SheetDescription>
-                        <AddProduction
-                          onProductionAdded={handleProductionAdded}
-                          setIsOpen={setIsOpen}
-                        />
-                      </TabsContent>
-                      <TabsContent value="academicGown" className="mt-4">
-                        <SheetTitle>
-                          Add a new academic gown production
-                        </SheetTitle>
-                        <SheetDescription>
-                          Click submit when you&apos;re done.
-                        </SheetDescription>
-                      </TabsContent>
-                    </Tabs>
-                  </SheetContent>
-                </Sheet>
-              ) : (
-                <Dialog open={isOpen} onOpenChange={setIsOpen}>
-                  <DialogTrigger asChild>
-                    <Button className="m-2 h-8">
-                      <PlusCircle className="mr-2 h-4 w-4" />
-                      Add Production
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-h-[550px] overflow-auto">
-                    <Tabs defaultValue="uniform" className="mt-4">
-                      <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="uniform">Uniform</TabsTrigger>
-                        <TabsTrigger value="academicGown">
-                          Academic Gown
-                        </TabsTrigger>
-                      </TabsList>
-                      <TabsContent value="uniform" className="mt-4">
-                        <DialogTitle>Add a new uniform production</DialogTitle>
-                        <DialogDescription>
-                          Click submit when you&apos;re done.
-                        </DialogDescription>
-                        <AddProduction
-                          onProductionAdded={handleProductionAdded}
-                          setIsOpen={setIsOpen}
-                        />
-                      </TabsContent>
-                      <TabsContent value="academicGown" className="mt-4">
-                        <DialogTitle>
-                          Add a new academic gown production
-                        </DialogTitle>
-                        <DialogDescription>
-                          Click submit when you&apos;re done.
-                        </DialogDescription>
-                      </TabsContent>
-                    </Tabs>
-                  </DialogContent>
-                </Dialog>
-              )}
+              <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+                <AlertDialogTrigger asChild>
+                  <Button className="m-2 h-8">
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    Add Production
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent className="max-h-[550px] overflow-auto">
+                  <Tabs defaultValue="uniform" className="mt-4">
+                    <TabsList className="grid w-full grid-cols-2">
+                      <TabsTrigger value="uniform">Uniform</TabsTrigger>
+                      <TabsTrigger value="academicGown">
+                        Academic Gown
+                      </TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="uniform" className="mt-4">
+                      <AlertDialogTitle>
+                        Add a new uniform production
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Click submit when you&apos;re done.
+                      </AlertDialogDescription>
+                      <AddProduction
+                        onProductionAdded={handleProductionAdded}
+                        setIsOpen={setIsOpen}
+                      />
+                    </TabsContent>
+                    <TabsContent value="academicGown" className="mt-4">
+                      <AlertDialogTitle>
+                        Add a new academic gown production
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Click submit when you&apos;re done.
+                      </AlertDialogDescription>
+                    </TabsContent>
+                  </Tabs>
+                </AlertDialogContent>
+              </AlertDialog>
             </Tooltip>
           </div>
           <Tabs defaultValue="table">
