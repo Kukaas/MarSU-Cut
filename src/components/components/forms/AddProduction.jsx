@@ -30,15 +30,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { format } from "date-fns";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
-import CustomInput from "../custom-components/CustomInput";
 import SelectField from "../custom-components/SelectField";
 
 const AddProduction = ({ onProductionAdded, setIsOpen }) => {
   const [addProductionLoading, setAddProductionLoading] = useState(false);
+  const [rawMaterials, setRawMaterials] = useState([]);
   const productionForm = useForm({
     resolver: zodResolver(AddProductionSchema),
     defaultValues: {
@@ -118,6 +118,38 @@ const AddProduction = ({ onProductionAdded, setIsOpen }) => {
     const values = productionForm.getValues();
     handleAddProduction(values);
   };
+
+  useEffect(() => {
+    const fetchRawMaterials = async () => {
+      try {
+        const res = await axios.get(`${BASE_URL}/api/v1/raw-materials/all `, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        });
+
+        if (res.status === 200) {
+          setRawMaterials(res.data.rawMaterials);
+        }
+      } catch (error) {
+        ToasterError({
+          description: "Please check your internet connection and try again.",
+        });
+      }
+    };
+
+    fetchRawMaterials();
+  }, []);
+
+  const rawMaterialsSelectOptions = rawMaterials
+    .filter((rawMaterial) => rawMaterial.quantity > 0)
+    .map((rawMaterial) => ({
+      label: rawMaterial.type,
+      value: rawMaterial.type,
+    }));
+
+  console.log(rawMaterials);
 
   return (
     <div className="grid gap-6 py-2">
@@ -318,40 +350,85 @@ const AddProduction = ({ onProductionAdded, setIsOpen }) => {
               <div className="space-y-4 mt-2">
                 {fields.map((field, index) => (
                   <div key={field.id} className="flex items-center space-x-4">
-                    <CustomInput
-                      form={productionForm}
-                      name={`rawMaterialsUsed.${index}.type`}
-                      label="Type"
-                      placeholder="eg. Cotton"
+                    <SelectField
+                      field={{
+                        value: productionForm.watch(
+                          `rawMaterialsUsed.${index}.type`
+                        ),
+                        onChange: (value) => {
+                          productionForm.setValue(
+                            `rawMaterialsUsed.${index}.type`,
+                            value
+                          );
+                        },
+                      }}
+                      label="Raw Material"
+                      options={rawMaterialsSelectOptions.map(
+                        (option) => option.value
+                      )}
+                      placeholder="Select Material"
+                      onValueChange={(value) => {
+                        productionForm.setValue(
+                          `rawMaterialsUsed.${index}.type`,
+                          value
+                        );
+                      }}
+                      name={`rawMaterialsUsed.${index}.quantity`}
                     />
                     <FormField
                       control={productionForm.control}
                       name={`rawMaterialsUsed.${index}.quantity`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Quantity</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="number"
-                              {...field}
-                              value={
-                                field.value !== undefined ? field.value : ""
-                              }
-                              onChange={(e) => {
-                                const value = e.target.value;
-                                const parsedValue =
-                                  value !== "" ? parseFloat(value) : "";
-                                field.onChange(
-                                  parsedValue >= 0 ? parsedValue : 0
-                                );
-                              }}
-                              placeholder="Quantity"
-                              className="w-full"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
+                      render={({ field }) => {
+                        const selectedRawMaterialType = productionForm.watch(
+                          `rawMaterialsUsed.${index}.type`
+                        );
+
+                        // Find the selected raw material to get the available quantity
+                        const selectedRawMaterial = rawMaterials.find(
+                          (rawMaterial) =>
+                            rawMaterial.type === selectedRawMaterialType
+                        );
+
+                        const availableQuantity = selectedRawMaterial
+                          ? selectedRawMaterial.quantity
+                          : 0;
+
+                        return (
+                          <FormItem>
+                            <FormLabel>
+                              Available: {availableQuantity}
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                type="number"
+                                {...field}
+                                value={
+                                  field.value !== undefined ? field.value : ""
+                                }
+                                onChange={(e) => {
+                                  const value = e.target.value;
+                                  const parsedValue =
+                                    value !== "" ? parseFloat(value) : "";
+
+                                  // Ensure quantity doesn't exceed available stock
+                                  field.onChange(
+                                    parsedValue > availableQuantity
+                                      ? availableQuantity
+                                      : parsedValue >= 0
+                                      ? parsedValue
+                                      : 0
+                                  );
+                                }}
+                                placeholder="Quantity"
+                                className="w-full"
+                                min={0}
+                                max={availableQuantity}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        );
+                      }}
                     />
                     <Tooltip title="Remove input">
                       <MinusCircle
