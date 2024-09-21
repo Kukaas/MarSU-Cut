@@ -3,13 +3,7 @@ import { Helmet } from "react-helmet";
 import { toast, Toaster } from "sonner";
 import { useLocation, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -159,7 +153,7 @@ const OrderDetails = () => {
   }, []);
 
   return (
-    <div className="w-full h-screen p-6">
+    <div className="w-full h-screen p-6 overflow-auto">
       <Helmet>
         <title>MarSU Cut | Order Details</title>
         <meta
@@ -223,16 +217,25 @@ const OrderDetails = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="font-bold flex flex-row gap-2">
-                    {selectedOrder.studentName}
-                    <span className="text-gray-500 text-xs font-normal mt-2">
-                      ({selectedOrder.studentNumber})
-                    </span>
+                    <h3 className="text-xl">{selectedOrder.studentName}</h3>
                   </div>
-                  <div className="mt-2">
+                  <div className="mt-2 flex flex-col gap-3">
+                    <h6 className="text-sm font-semibold">
+                      Student Number:{" "}
+                      <span className="font-normal text-xs ml-4">
+                        {selectedOrder.studentNumber}
+                      </span>
+                    </h6>
                     <h6 className="text-sm font-semibold">
                       Year Level:{" "}
-                      <span className="font-normal text-xs">
+                      <span className="font-normal text-xs ml-4">
                         {selectedOrder.level}
+                      </span>
+                    </h6>
+                    <h6 className="text-sm font-semibold">
+                      Department:{" "}
+                      <span className="font-normal text-xs ml-4">
+                        {selectedOrder.department}
                       </span>
                     </h6>
                   </div>
@@ -244,9 +247,6 @@ const OrderDetails = () => {
                   <CardTitle className="text-xl font-bold">
                     Order Details
                   </CardTitle>
-                  <CardDescription className="text-sm text-gray-600">
-                    This is the order details of the student
-                  </CardDescription>
                 </CardHeader>
 
                 <CardContent className="space-y-4">
@@ -265,7 +265,7 @@ const OrderDetails = () => {
                         ₱{totalPrice?.toFixed(2)}
                       </span>
                     </h6>
-                    <h6 className="text-sm font-semibold flex gap-3">
+                    <h6 className="text-sm font-semibold flex gap-3 items-center">
                       Current Balance:{" "}
                       <span className="font-normal text-xs">
                         {currentBalance === 0 ? (

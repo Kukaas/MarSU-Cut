@@ -70,7 +70,7 @@ const CreateOrder = ({ addNewOrder, setIsDialogOpen }) => {
       receiptType: "",
       receiptDescription: "",
       ORNumber: "",
-      amount: 0,
+      amount: 500,
       datePaid: "",
     },
   });
@@ -154,6 +154,7 @@ const CreateOrder = ({ addNewOrder, setIsDialogOpen }) => {
           studentEmail: values.studentEmail,
           studentGender: values.studentGender,
           level: currentUser.level,
+          department: currentUser.department,
           initialReceipt: {
             url: imageFileUrl,
             ORNumber: values.ORNumber,
