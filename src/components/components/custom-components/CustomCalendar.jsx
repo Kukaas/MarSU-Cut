@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import PropTypes from "prop-types";
 
 const CustomHeader = ({ date, prev, next, setView }) => {
+  const formattedDate = new Date(date);
   return (
     <div className="flex flex-col md:flex-row justify-between items-center mb-4">
       <div className="flex items-center space-x-2">
@@ -25,7 +26,7 @@ const CustomHeader = ({ date, prev, next, setView }) => {
           &lt;
         </button>
         <h2 className="text-lg font-semibold">
-          {date.toLocaleDateString("default", {
+          {formattedDate.toLocaleDateString(undefined, {
             month: "long",
             year: "numeric",
           })}
@@ -184,10 +185,6 @@ export const CustomCalendar = () => {
             select={handleDateClick} // Maintain select for range selection
             dateClick={handleDateClick} // Add dateClick event
             headerToolbar={false} // Disable the default header
-            // Ensure to update currentDate when FullCalendar's date changes
-            datesSet={(dateInfo) => {
-              setCurrentDate(dateInfo.start); // Update currentDate when the view changes
-            }}
           />
         </>
       )}
