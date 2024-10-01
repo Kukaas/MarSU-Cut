@@ -458,7 +458,14 @@ const AddProduction = ({ onProductionAdded, setIsOpen }) => {
             </fieldset>
             <div className="flex items-center justify-end gap-2 mt-4">
               <AlertDialogCancel asChild>
-                <Button variant="outline">Cancel</Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    localStorage.removeItem("formState");
+                  }}
+                >
+                  Cancel
+                </Button>
               </AlertDialogCancel>
               <Button
                 onClick={handleButtonClick}

@@ -1,14 +1,5 @@
 // UI
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
   Form,
   FormControl,
   FormField,
@@ -35,31 +26,65 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { format } from "date-fns";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import ToasterError from "@/lib/Toaster";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomInput from "../custom-components/CustomInput";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { DialogClose } from "@/components/ui/dialog";
+import SelectField from "../custom-components/SelectField";
 
 const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
   const [loading, setLoading] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
+  const initialFormState = JSON.parse(
+    localStorage.getItem("createRentalForm")
+  ) || {
+    coordinatorName: "",
+    coordinatorGender: "",
+    department: "",
+    rentalDate: "",
+    returnDate: "",
+    quantity: 0,
+  };
+  const [formState, setFormState] = useState(initialFormState);
 
   const form = useForm({
     resolver: zodResolver(CreateRentalSchema),
-    defaultValues: {
-      idNumber: "",
-      coordinatorName: "",
-      coordinatorGender: "",
-      department: "",
-      rentalDate: "",
-      returnDate: "",
-      quantity: 0,
-    },
+    defaultValues: formState,
   });
+
+  useEffect(() => {
+    const formValues = form.watch((values) => {
+      setFormState(values);
+      localStorage.setItem("createRentalForm", JSON.stringify(values));
+    });
+
+    return () => formValues.unsubscribe();
+  }, [form]);
+
+  const departmentOptions = [
+    "College of Engineering",
+    "College of Industrial Technology",
+    "College of Education",
+    "College of Business Administration",
+    "College of Arts and Sciences",
+    "College of Information and Computing Sciences",
+    "College of Allied Health and Medicine",
+    "College of Governance",
+  ];
 
   const handleCreateRental = async (values) => {
     if (
@@ -67,7 +92,6 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
       !values.rentalDate ||
       !values ||
       !values.coordinatorName ||
-      !values.idNumber ||
       !values.department
     ) {
       return toast.error("Please fill all fields");
@@ -126,21 +150,21 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
             <div className="space-y-4">
               <CustomInput
                 form={form}
-                name="idNumber"
-                label="ID Number"
-                placeholder="eg. 123456"
-              />
-              <CustomInput
-                form={form}
                 name="coordinatorName"
                 label="Coordinator Name"
                 placeholder="eg. John Doe"
               />
-              <CustomInput
-                form={form}
+              <FormField
+                control={form.control}
                 name="department"
-                label="Department"
-                placeholder="eg. College of Engineering"
+                render={({ field }) => (
+                  <SelectField
+                    field={field}
+                    label="Department"
+                    options={departmentOptions}
+                    placeholder="Department"
+                  />
+                )}
               />
             </div>
           </fieldset>
@@ -260,37 +284,41 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
           </fieldset>
 
           {/* Submission Section */}
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <div className="flex items-center justify-end gap-2">
-              <DialogTrigger asChild>
+              <DialogClose asChild>
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    localStorage.removeItem("createRentalForm");
+                  }}
+                >
+                  Cancel
+                </Button>
+              </DialogClose>
+              <AlertDialogTrigger asChild>
                 <Button onClick={() => setDialogOpen(true)}>
                   Submit Rental
                 </Button>
-              </DialogTrigger>
+              </AlertDialogTrigger>
             </div>
-            <DialogContent className="sm:max-w-[425px] mx-auto overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>Confirm Submission</DialogTitle>
-                <DialogDescription>
+            <AlertDialogContent className="sm:max-w-[425px] mx-auto overflow-y-auto">
+              <AlertDialogHeader>
+                <AlertDialogTitle>Confirm Submission</AlertDialogTitle>
+                <AlertDialogDescription>
                   <div>
                     <p>Are you sure you want to submit these details?</p>
-                    <p className="mb-5 text-red-500">
-                      Once you submit you can&apos;t change the details.
-                    </p>
                   </div>
-                </DialogDescription>
-              </DialogHeader>
-              <div className="flex justify-end">
-                <DialogClose asChild>
-                  <Button variant="outline" className="m-2">
-                    Cancel
-                  </Button>
-                </DialogClose>
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <div className="flex justify-end gap-2">
+                <AlertDialogCancel asChild>
+                  <Button variant="secondary">Cancel</Button>
+                </AlertDialogCancel>
                 <Button
                   onClick={() => {
                     handleCreateRental(form.getValues());
                   }}
-                  className="m-2"
                   variant="default"
                   disabled={loading}
                 >
@@ -304,8 +332,8 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
                   )}
                 </Button>
               </div>
-            </DialogContent>
-          </Dialog>
+            </AlertDialogContent>
+          </AlertDialog>
         </form>
       </Form>
     </div>

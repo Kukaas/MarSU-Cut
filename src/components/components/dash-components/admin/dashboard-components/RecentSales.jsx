@@ -43,19 +43,6 @@ const RecentSales = () => {
       header: "Name",
     },
     {
-      accessorKey: "receipt",
-      header: "Receipt",
-      cell: ({ row }) => (
-        <a target="_blank" rel="noopener noreferrer">
-          <img
-            src={row.getValue("receipt")}
-            alt="Receipt"
-            style={{ width: "50px", height: "50px" }}
-          />
-        </a>
-      ),
-    },
-    {
       accessorKey: "status",
       header: "Status",
       cell: ({ row }) => {

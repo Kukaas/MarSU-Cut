@@ -115,10 +115,6 @@ function Rentals() {
 
   const columns = [
     {
-      accessorKey: "idNumber",
-      header: "ID Number",
-    },
-    {
       accessorKey: "coordinatorName",
       header: "Name",
     },
