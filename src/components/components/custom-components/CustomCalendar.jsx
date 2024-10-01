@@ -114,8 +114,8 @@ export const CustomCalendar = () => {
     fetchSchedules();
   }, []);
 
-  const handleDateClick = (selected) => {
-    const selectedDateString = selected.startStr;
+  const handleDateClick = (info) => {
+    const selectedDateString = info.dateStr; // Use dateStr from the dateClick event
 
     const schedulesForDate = schedules.filter(
       (schedule) => schedule.start === selectedDateString
@@ -181,7 +181,8 @@ export const CustomCalendar = () => {
             selectMirror={true}
             dayMaxEvents={true}
             events={schedules}
-            select={handleDateClick}
+            select={handleDateClick} // Maintain select for range selection
+            dateClick={handleDateClick} // Add dateClick event
             headerToolbar={false} // Disable the default header
             // Ensure to update currentDate when FullCalendar's date changes
             datesSet={(dateInfo) => {
@@ -220,5 +221,5 @@ export const CustomCalendar = () => {
   );
 };
 
-
 export default CustomCalendar;
+
