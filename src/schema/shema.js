@@ -263,8 +263,22 @@ export const AddProductionSchema = z.object({
 });
 
 export const AddCommercialJobSchema = z.object({
-  idNumber: z
+  contactNumber: z
     .string()
-    .min(3, { message: "ID Number must be at least 3 characters" }),
+    .min(3, { message: "Contact Number must be at least 3 characters" }),
   cbName: z.string().min(3, { message: "Name must be at least 3 characters" }),
+});
+
+export const measureCommercialJobSchema = z.object({
+  sh: z.string().min(1, { message: "Sh must be at least 1 characters" }),
+  b: z.string().min(1, { message: "B must be at least 1 characters" }),
+  fbl: z.string().min(1, { message: "Fbl must be at least 1 characters" }),
+  UAG: z.string().min(1, { message: "UAG must be at least 1 characters" }),
+  SL: z.string().min(1, { message: "SL must be at least 1 characters" }),
+  W: z.string().min(1, { message: "W must be at least 1 characters" }),
+  H: z.string().min(1, { message: "H must be at least 1 characters" }),
+  Cr: z.string().min(1, { message: "Cr must be at least 1 characters" }),
+  Th: z.string().min(1, { message: "Th must be at least 1 characters" }),
+  KL: z.string().min(1, { message: "KL must be at least 1 characters" }),
+  PLBW: z.string().min(1, { message: "PLBW must be at least 1 characters" }),
 });

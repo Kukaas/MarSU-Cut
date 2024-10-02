@@ -30,6 +30,7 @@ import ToasterError from "@/lib/Toaster";
 import CustomTable from "@/components/components/custom-components/CustomTable";
 import { statusColors } from "@/lib/utils";
 import DataTableColumnHeader from "@/components/components/custom-components/DataTableColumnHeader";
+import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 const CommercialJob = () => {
   const [data, setData] = useState([]);
@@ -95,16 +96,16 @@ const CommercialJob = () => {
 
   const columns = [
     {
-      accessorKey: "idNumber",
-      header: "ID Number",
-    },
-    {
       accessorKey: "cbName",
       header: "Name",
     },
     {
       accessorKey: "cbEmail",
       header: "Email",
+    },
+    {
+      accessorKey: "contactNumber",
+      header: "Contact",
     },
     {
       accessorKey: "status",
@@ -150,7 +151,12 @@ const CommercialJob = () => {
                 Copy Commercial Job ID
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => handleDelete(commercial)}>
+              <DropdownMenuItem
+                onClick={() => handleDelete(commercial)}
+                disabled={["APPROVED", "MEASURED", "DONE", "CLAIMED"].includes(
+                  commercial.status
+                )}
+              >
                 <span className="text-red-500 hover:text-red-400">Delete</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -182,26 +188,26 @@ const CommercialJob = () => {
         </Typography.Title>
         <div className="flex items-center py-4 justify-end">
           <Tooltip title="Create an Order">
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
+            <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <AlertDialogTrigger asChild>
                 <Button variant="default" className="m-2 h-8">
                   <PlusCircle size={20} className="mr-2 h-4 w-4" />
                   Create
                 </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Create an commercial job order</DialogTitle>
-                  <DialogDescription>
+              </AlertDialogTrigger>
+              <AlertDialogContent className="sm:max-w-[425px]">
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Create a commercial job order</AlertDialogTitle>
+                  <AlertDialogDescription>
                     Click submit when you&apos;re done.
-                  </DialogDescription>
-                </DialogHeader>
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
                 <CreateCommercialOrder
                   onCommercialOrderCreated={handleCreateCommercialOrder}
                   setIsDialogOpen={setIsDialogOpen}
                 />
-              </DialogContent>
-            </Dialog>
+              </AlertDialogContent>
+            </AlertDialog>
           </Tooltip>
         </div>
         <div className="rounded-md border">

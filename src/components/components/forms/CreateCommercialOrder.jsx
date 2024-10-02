@@ -17,6 +17,7 @@ import { useSelector } from "react-redux";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomInput from "../custom-components/CustomInput";
+import { AlertDialogCancel } from "@/components/ui/alert-dialog";
 
 const CreateCommercialOrder = ({
   onCommercialOrderCreated,
@@ -32,8 +33,8 @@ const CreateCommercialOrder = ({
         `${BASE_URL}/api/v1/commercial-job/create`,
         {
           userId: currentUser._id,
-          idNumber: values.idNumber,
           cbName: values.cbName,
+          contactNumber: values.contactNumber,
           cbEmail: currentUser.email,
         },
         {
@@ -63,8 +64,8 @@ const CreateCommercialOrder = ({
   const commercialJobForm = useForm({
     resolver: zodResolver(AddCommercialJobSchema),
     defaultValues: {
-      idNumber: "",
-      cbName: "",
+      contactNumber: "",
+      cbName: currentUser.name,
     },
   });
   return (
@@ -77,27 +78,29 @@ const CreateCommercialOrder = ({
               handleCreateCommercialOrder
             )}
           >
-            <CustomInput
-              form={commercialJobForm}
-              name="idNumber"
-              label="ID Number"
-              placeholder="eg. 123456"
-            />
+            <div className="grid gap-4 mb-6">
             <CustomInput
               form={commercialJobForm}
               name="cbName"
               label="Commercial Job Name"
               placeholder="eg. Jhon Doe"
             />
+            <CustomInput
+              form={commercialJobForm}
+              name="contactNumber"
+              label="Contact Number"
+              placeholder="eg. 0912345678"
+            />
+            </div>
+            
             <div className="flex items-center justify-end gap-2">
-              <DialogClose>
-                <Button variant="outline" className="mt-3">
+              <AlertDialogCancel asChild>
+                <Button variant="outline">
                   Cancel
                 </Button>
-              </DialogClose>
+              </AlertDialogCancel>
               <Button
                 type="submit"
-                className="mt-3"
                 disabled={commercialOrderLoading}
               >
                 {commercialOrderLoading ? (

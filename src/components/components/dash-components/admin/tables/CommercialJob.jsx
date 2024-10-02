@@ -29,9 +29,19 @@ import { statusColors } from "@/lib/utils";
 import CustomBadge from "@/components/components/custom-components/CustomBadge";
 import DataTableColumnHeader from "@/components/components/custom-components/DataTableColumnHeader";
 import DataTableToolBar from "@/components/components/custom-components/DataTableToolBar";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import MeasureMentForm from "@/components/components/forms/MeasureMentForm";
 
 const CommercialJob = () => {
   const [data, setData] = useState([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
   const [originalData, setOriginalData] = useState([]);
   const [statusFilter, setStatusFilter] = useState("All");
   const { currentUser } = useSelector((state) => state.user);
@@ -146,10 +156,6 @@ const CommercialJob = () => {
 
   const columns = [
     {
-      accessorKey: "idNumber",
-      header: "ID Number",
-    },
-    {
       accessorKey: "cbName",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Name" />
@@ -159,6 +165,12 @@ const CommercialJob = () => {
       accessorKey: "cbEmail",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Email" />
+      ),
+    },
+    {
+      accessorKey: "contactNumber",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Contact" />
       ),
     },
     {
@@ -196,8 +208,30 @@ const CommercialJob = () => {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem onClick={() => handleApprove(commercial)}>
+                <DropdownMenuItem
+                  onClick={() => handleApprove(commercial)}
+                  disabled={[
+                    "APPROVED",
+                    "MEASURED",
+                    "DONE",
+                    "CLAIMED",
+                  ].includes(commercial.status)}
+                >
                   Approve
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setIsDialogOpen(true);
+                    setSelectedOrder(commercial);
+                  }}
+                  disabled={[
+                    "REJECTED",
+                    "MEASURED",
+                    "DONE",
+                    "CLAIMED",
+                  ].includes(commercial.status)}
+                >
+                  Measure
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
@@ -254,6 +288,20 @@ const CommercialJob = () => {
           <CustomTable columns={columns} data={data} loading={loading} />
         </div>
       </div>
+      <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <AlertDialogContent className="h-[500px] overflow-auto">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Record Measurement</AlertDialogTitle>
+            <AlertDialogDescription>
+              Please fill out the form below to add measurements
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <MeasureMentForm
+            selectedOrder={selectedOrder}
+            setIsDialogOpen={setIsDialogOpen}
+          />
+        </AlertDialogContent>
+      </AlertDialog>
     </Spin>
   );
 };
