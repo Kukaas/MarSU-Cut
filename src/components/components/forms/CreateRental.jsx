@@ -52,18 +52,19 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
   const initialFormState = JSON.parse(
     localStorage.getItem("createRentalForm")
   ) || {
-    coordinatorName: "",
     coordinatorGender: "",
     department: "",
-    rentalDate: "",
-    returnDate: "",
-    quantity: 0,
+    possiblePickupDate: "",
+    small: 0,
+    medium: 0,
+    large: 0,
+    extraLarge: 0,
   };
   const [formState, setFormState] = useState(initialFormState);
 
   const form = useForm({
     resolver: zodResolver(CreateRentalSchema),
-    defaultValues: formState,
+    defaultValues: { ...formState, coordinatorName: currentUser.name },
   });
 
   useEffect(() => {
@@ -88,11 +89,9 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
 
   const handleCreateRental = async (values) => {
     if (
-      values.quantity <= 0 ||
-      !values.rentalDate ||
-      !values ||
       !values.coordinatorName ||
-      !values.department
+      !values.department ||
+      !values.possiblePickupDate
     ) {
       return toast.error("Please fill all fields");
     }
@@ -153,6 +152,7 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
                 name="coordinatorName"
                 label="Coordinator Name"
                 placeholder="eg. John Doe"
+                type="disabled"
               />
               <FormField
                 control={form.control}
@@ -175,35 +175,10 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
             <div className="space-y-4">
               <FormField
                 control={form.control}
-                name="quantity"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Quantity</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        {...field}
-                        value={field.value !== undefined ? field.value : ""}
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          const parsedValue =
-                            value !== "" ? parseFloat(value) : "";
-                          field.onChange(parsedValue >= 0 ? parsedValue : 0);
-                        }}
-                        placeholder="Quantity"
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="rentalDate"
+                name="possiblePickupDate"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel>Rental Date</FormLabel>
+                    <FormLabel>Pick up Date</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
@@ -217,7 +192,7 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
                             {field.value ? (
                               format(field.value, "PPP")
                             ) : (
-                              <span>Pick a rental date</span>
+                              <span>Pick your possible pickup date</span>
                             )}
                             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                           </Button>
@@ -239,47 +214,111 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="returnDate"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Return Date</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span>Pick a return date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) =>
-                            date < new Date().setHours(0, 0, 0, 0)
-                          }
-                          initialFocus
+              <div className="flex justify-between gap-4">
+                <FormField
+                  control={form.control}
+                  name="small"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Small</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          {...field}
+                          value={field.value !== undefined ? field.value : ""}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            const parsedValue =
+                              value !== "" ? parseFloat(value) : "";
+                            field.onChange(parsedValue >= 0 ? parsedValue : 0);
+                          }}
+                          placeholder="Quantity of small"
+                          className="w-full"
                         />
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="medium"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Medium</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          {...field}
+                          value={field.value !== undefined ? field.value : ""}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            const parsedValue =
+                              value !== "" ? parseFloat(value) : "";
+                            field.onChange(parsedValue >= 0 ? parsedValue : 0);
+                          }}
+                          placeholder="Quantity of medium"
+                          className="w-full"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="flex justify-between gap-4">
+                <FormField
+                  control={form.control}
+                  name="large"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Large</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          {...field}
+                          value={field.value !== undefined ? field.value : ""}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            const parsedValue =
+                              value !== "" ? parseFloat(value) : "";
+                            field.onChange(parsedValue >= 0 ? parsedValue : 0);
+                          }}
+                          placeholder="Quantity of large"
+                          className="w-full"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="extraLarge"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Extra Large</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          {...field}
+                          value={field.value !== undefined ? field.value : ""}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            const parsedValue =
+                              value !== "" ? parseFloat(value) : "";
+                            field.onChange(parsedValue >= 0 ? parsedValue : 0);
+                          }}
+                          placeholder="Quantity of extra large"
+                          className="w-full"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
           </fieldset>
 

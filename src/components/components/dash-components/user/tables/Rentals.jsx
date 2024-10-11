@@ -54,25 +54,8 @@ function Rentals() {
         }
       );
 
-      // Fetch the penalties for each rental
-      const rentalsWithPenalties = await Promise.all(
-        res.data.rental.map(async (rental) => {
-          const penaltyRes = await axios.get(
-            `${BASE_URL}/api/v1/rental/penalty/${rental._id}`,
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-              },
-              withCredentials: true,
-            }
-          );
-          return { ...rental, penalty: penaltyRes.data.penalty };
-        })
-      );
-
       setLoading(false);
-      setData(rentalsWithPenalties);
+      setData(res.data.rental);
     };
 
     fetchData();
@@ -123,14 +106,10 @@ function Rentals() {
       header: "Department",
     },
     {
-      accessorKey: "quantity",
-      header: "Quantity",
-    },
-    {
-      accessorKey: "rentalDate",
-      header: "Rental Date",
+      accessorKey: "possiblePickupDate",
+      header: "Possible Pickup Date",
       cell: ({ row }) => {
-        const date = new Date(row.getValue("rentalDate"));
+        const date = new Date(row.getValue("possiblePickupDate"));
         return date.toLocaleDateString("en-US", {
           year: "numeric",
           month: "long",
@@ -139,10 +118,46 @@ function Rentals() {
       },
     },
     {
-      accessorKey: "returnDate",
-      header: "ReturnDate",
+      accessorKey: "pickupDate",
+      header: "Pickup Date",
       cell: ({ row }) => {
-        const date = new Date(row.getValue("returnDate"));
+        const dateValue = row.getValue("pickupDate");
+        if (!dateValue) {
+          return "Not set"; // Render "Not set" if there's no date
+        }
+        const date = new Date(dateValue);
+        return date.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+      },
+    },
+    {
+      accessorKey: "small",
+      header: "Small",
+    },
+    {
+      accessorKey: "medium",
+      header: "Medium",
+    },
+    {
+      accessorKey: "large",
+      header: "Large",
+    },
+    {
+      accessorKey: "extraLarge",
+      header: "Extra Large"
+    },
+    {
+      accessorKey: "returnDate",
+      header: "Pickup Date",
+      cell: ({ row }) => {
+        const dateValue = row.getValue("returnDate");
+        if (!dateValue) {
+          return "Not set"; // Render "Not set" if there's no date
+        }
+        const date = new Date(dateValue);
         return date.toLocaleDateString("en-US", {
           year: "numeric",
           month: "long",
@@ -172,11 +187,6 @@ function Rentals() {
           </div>
         );
       },
-    },
-    {
-      accessorKey: "penalty",
-      header: "Penalty",
-      render: (penalty) => `₱${penalty}`,
     },
     {
       id: "actions",

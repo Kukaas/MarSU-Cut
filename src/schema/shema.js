@@ -169,18 +169,17 @@ export const NewReceiptSchema = z.object({
 });
 
 export const CreateRentalSchema = z.object({
-  idNumber: z
-    .string()
-    .min(3, { message: "ID Number must be at least 3 characters" }),
   coordinatorName: z
     .string()
     .min(3, { message: "Name must be at least 3 characters" }),
   department: z
     .string()
     .min(3, { message: "Department must be at least 3 characters" }),
-  rentalDate: z.string(),
-  returnDate: z.string(),
-  quantity: z.number().int().nonnegative(),
+  possiblePickupDate: z.string(),
+  small: z.number().int().nonnegative(),
+  medium: z.number().int().nonnegative(),
+  large: z.number().int().nonnegative(),
+  extraLarge: z.number().int().nonnegative(),
 });
 
 export const CreateAccomplishmentSchema = z.object({
