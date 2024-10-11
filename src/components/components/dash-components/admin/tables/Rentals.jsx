@@ -28,6 +28,8 @@ import { statusColors } from "@/lib/utils";
 import CustomBadge from "@/components/components/custom-components/CustomBadge";
 import DataTableColumnHeader from "@/components/components/custom-components/DataTableColumnHeader";
 import DataTableToolBar from "@/components/components/custom-components/DataTableToolBar";
+import { AlertDialog } from "@radix-ui/react-alert-dialog";
+import { AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 
 function Rentals() {
   const [data, setData] = useState([]);
@@ -36,6 +38,7 @@ function Rentals() {
   const [loading, setLoading] = useState(false);
   const [loadingUpdate, setLoadingUpdate] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const [dialogOpen, setDialogOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -54,23 +57,8 @@ function Rentals() {
           (rental) => !rental.isArchived
         );
 
-        const rentalsWithPenalties = await Promise.all(
-          activeRentals.map(async (rental) => {
-            const penaltyRes = await axios.get(
-              `${BASE_URL}/api/v1/rental/penalty/${rental._id}`,
-              {
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${token}`,
-                },
-                withCredentials: true,
-              }
-            );
-            return { ...rental, penalty: penaltyRes.data.penalty };
-          })
-        );
-        setData(rentalsWithPenalties);
-        setOriginalData(rentalsWithPenalties);
+        setData(activeRentals);
+        setOriginalData(activeRentals);
       } catch (error) {
         console.error("Failed to fetch data:", error);
       } finally {
@@ -343,32 +331,18 @@ function Rentals() {
 
   const columns = [
     {
-      accessorKey: "idNumber",
-      header: "ID Number",
-    },
-    {
       accessorKey: "coordinatorName",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Name" />
-      ),
+      header: "Name",
     },
     {
       accessorKey: "department",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Department" />
-      ),
+      header: "Department",
     },
     {
-      accessorKey: "quantity",
-      header: "Quantity",
-    },
-    {
-      accessorKey: "rentalDate",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Rental Date" />
-      ),
+      accessorKey: "possiblePickupDate",
+      header: "Possible Pickup Date",
       cell: ({ row }) => {
-        const date = new Date(row.getValue("rentalDate"));
+        const date = new Date(row.getValue("possiblePickupDate"));
         return date.toLocaleDateString("en-US", {
           year: "numeric",
           month: "long",
@@ -377,11 +351,50 @@ function Rentals() {
       },
     },
     {
-      accessorKey: "returnDate",
-      header: "ReturnDate",
-      key: "returnDate",
+      accessorKey: "pickupDate",
+      header: "Pickup Date",
       cell: ({ row }) => {
-        const date = new Date(row.getValue("returnDate"));
+        const dateValue = row.getValue("pickupDate");
+        if (!dateValue) {
+          return (
+            <Button variant="ghost" onClick={() => setDialogOpen(true)}>
+              Set Pickup Date
+            </Button>
+          );
+        }
+        const date = new Date(dateValue);
+        return date.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+      },
+    },
+    {
+      accessorKey: "small",
+      header: "Small",
+    },
+    {
+      accessorKey: "medium",
+      header: "Medium",
+    },
+    {
+      accessorKey: "large",
+      header: "Large",
+    },
+    {
+      accessorKey: "extraLarge",
+      header: "Extra Large",
+    },
+    {
+      accessorKey: "returnDate",
+      header: "Return Date",
+      cell: ({ row }) => {
+        const dateValue = row.getValue("returnDate");
+        if (!dateValue) {
+          return "Not set"; // Render "Not set" if there's no date
+        }
+        const date = new Date(dateValue);
         return date.toLocaleDateString("en-US", {
           year: "numeric",
           month: "long",
@@ -399,13 +412,18 @@ function Rentals() {
         const { color, badgeText } =
           statusColors[status] || statusColors.default;
 
-        return <CustomBadge color={color} badgeText={badgeText} />;
+        return (
+          <div className="status-badge">
+            <div
+              className="size-2 rounded-full"
+              style={{ backgroundColor: color }}
+            />
+            <p className="text-[12px] font-semibold" style={{ color }}>
+              {badgeText}
+            </p>
+          </div>
+        );
       },
-    },
-    {
-      accessorKey: "penalty",
-      header: "Penalty",
-      render: (penalty) => `₱${penalty}`,
     },
     {
       id: "actions",
@@ -445,10 +463,17 @@ function Rentals() {
                 >
                   Approve
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleGiven(rental)}>
+                <DropdownMenuItem onClick={() => handleGiven(rental)}
+                  disabled={["REJECTED", "APPROVED", "GIVEN", "RETURNED"].includes(
+                    rental.status
+                  )}>
                   Given
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleReturn(rental)}>
+                <DropdownMenuItem onClick={() => handleReturn(rental)}
+                   disabled={["REJECTED", "APPROVED", "GIVEN", "RETURNED"].includes(
+                    rental.status
+                  )}
+                  >
                   Returned
                 </DropdownMenuItem>
               </DropdownMenuGroup>
@@ -512,6 +537,17 @@ function Rentals() {
           <CustomTable columns={columns} data={data} loading={loading} />
         </div>
       </div>
+
+      <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Set Pickup Date</AlertDialogTitle>
+        </AlertDialogHeader>
+        <div className="p-4">
+          <p className="text-sm text-gray-600 dark:text-gray-300">
+            This feature is not yet implemented.
+          </p>
+        </div>
+      </AlertDialog>
     </Spin>
   );
 }

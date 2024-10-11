@@ -78,6 +78,8 @@ const AddProduction = ({ onProductionAdded, setIsOpen }) => {
       ? ["S33+34", "S35", "S36", "S37", "S38+40", "S42+45"]
       : productType === "PE TSHIRT"
       ? ["2XL", "XS/S", "M/L", "XL", "XXL"]
+      : productType === "ACADEMIC GOWN"
+      ?  ["Small", "Medium", "Large", "Extra Large"]
       : [];
 
   const { fields, append, remove } = useFieldArray({
@@ -216,6 +218,7 @@ const AddProduction = ({ onProductionAdded, setIsOpen }) => {
                         "BLOUSE",
                         "PE TSHIRT",
                         "JPANTS",
+                        "ACADEMIC GOWN",
                       ]}
                       placeholder="Type"
                     />
