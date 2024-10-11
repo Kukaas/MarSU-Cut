@@ -470,7 +470,7 @@ function Rentals() {
                   Given
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => handleReturn(rental)}
-                   disabled={["REJECTED", "APPROVED", "GIVEN", "RETURNED"].includes(
+                   disabled={["REJECTED", "APPROVED", "RETURNED"].includes(
                     rental.status
                   )}
                   >
