@@ -24,6 +24,7 @@ import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomInput from "../custom-components/CustomInput";
 import { AlertDialogCancel } from "@/components/ui/alert-dialog";
+import SelectField from "../custom-components/SelectField";
 
 const AddNewRawMaterial = ({ onRawMaterialAdded, setIsDialogOpen }) => {
   const [addRawMaterialLoading, setAddRawMaterialLoading] = useState(false);
@@ -87,11 +88,17 @@ const AddNewRawMaterial = ({ onRawMaterialAdded, setIsDialogOpen }) => {
           label="Type"
           placeholder="e.g Fabric, Thread, etc."
         />
-        <CustomInput
-          form={addRawMaterialForm}
+        <FormField
+          control={addRawMaterialForm.control}
           name="unit"
-          label="Unit"
-          placeholder="e.g Yard, Kilo, etc."
+          render={({ field }) => (
+            <SelectField
+              field={field}
+              label="Unit"
+              options={["Yard", "Kilo", "Meter", "Piece"]}
+              placeholder="Unit"
+            />
+          )}
         />
         <FormField
           control={addRawMaterialForm.control}

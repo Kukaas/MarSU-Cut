@@ -48,6 +48,7 @@ import ToasterError from "@/lib/Toaster";
 import CustomTable from "@/components/components/custom-components/CustomTable";
 import DataTableColumnHeader from "@/components/components/custom-components/DataTableColumnHeader";
 import DeleteDialog from "@/components/components/custom-components/DeleteDialog";
+import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 const AccomplishmentReport = () => {
   const [data, setData] = useState([]);
@@ -410,26 +411,26 @@ const AccomplishmentReport = () => {
               filteredData={filteredData}
             />
             <Tooltip title="Create Accomplishment Report">
-              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogTrigger asChild>
+              <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <AlertDialogTrigger asChild>
                   <Button variant="default" className="m-2 h-8">
                     <PlusCircle size={20} className="mr-2 h-4 w-4" />
                     Create
                   </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px]">
-                  <DialogHeader>
-                    <DialogTitle>Create an Accomplishment</DialogTitle>
-                    <DialogDescription>
+                </AlertDialogTrigger>
+                <AlertDialogContent className="sm:max-w-[425px]">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Create an Accomplishment</AlertDialogTitle>
+                    <AlertDialogDescription>
                       Click create when you&apos;re done.
-                    </DialogDescription>
-                  </DialogHeader>
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
                   <CreateAccomplishment
                     onAccomplishmentCreate={handleCreateAccomplishment}
                     setIsDialogOpen={setIsDialogOpen}
                   />
-                </DialogContent>
-              </Dialog>
+                </AlertDialogContent>
+              </AlertDialog>
             </Tooltip>
           </div>
         </div>

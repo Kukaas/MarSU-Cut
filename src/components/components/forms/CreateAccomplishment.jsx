@@ -1,5 +1,5 @@
 // UI
-import { Form } from "@/components/ui/form";
+import { Form, FormField } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -17,6 +17,8 @@ import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomInput from "../custom-components/CustomInput";
 import { DialogClose } from "@/components/ui/dialog";
+import SelectField from "../custom-components/SelectField";
+import { AlertDialogCancel } from "@/components/ui/alert-dialog";
 
 const CreateAccomplishment = ({ onAccomplishmentCreate, setIsDialogOpen }) => {
   const [loading, setLoading] = useState();
@@ -67,11 +69,17 @@ const CreateAccomplishment = ({ onAccomplishmentCreate, setIsDialogOpen }) => {
             onSubmit={form.handleSubmit(handleCreateAccomplishment)}
             className="space-y-4"
           >
-            <CustomInput
-              form={form}
+            <FormField
+              control={form.control}
               name="type"
-              label="Type"
-              placeholder="eg. Pattern Making, Cutting, Sewing, etc."
+              render={({ field }) => (
+                <SelectField
+                  field={field}
+                  label="Accomplishment Type"
+                  options={["Cutting", "Sewing", "Pattern Making"]}
+                  placeholder="Select a Type"
+                />
+              )}
             />
             <CustomInput
               form={form}
@@ -80,11 +88,11 @@ const CreateAccomplishment = ({ onAccomplishmentCreate, setIsDialogOpen }) => {
               placeholder="eg. 100 pcs of shirt, 50 pcs of pants, etc."
             />
             <div className="flex items-center justify-end">
-              <DialogClose asChild>
+              <AlertDialogCancel asChild>
                 <Button variant="outline" className="mr-2">
                   Cancel
                 </Button>
-              </DialogClose>
+              </AlertDialogCancel>
               <Button type="submit" variant="default" disabled={loading}>
                 {loading ? (
                   <div className="flex items-center">
