@@ -69,15 +69,17 @@ CustomHeader.propTypes = {
 
 export const CustomCalendar = () => {
   const [schedules, setSchedules] = useState([]);
+  const [commercialJobSchedules, setCommercialJobSchedules] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedSchedules, setSelectedSchedules] = useState([]);
-  const [view, setView] = useState("dayGridMonth"); // State to track current view
-  const [currentDate, setCurrentDate] = useState(new Date()); // State to track the current date
-  const calendarRef = useRef(null); // Ref to access the FullCalendar instance
+  const [selectedCommercialSchedules, setSelectedCommercialSchedules] = useState([]); // State for commercial job schedules
+  const [view, setView] = useState("dayGridMonth");
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const calendarRef = useRef(null);
 
-  // Fetch schedules from the API
+  // Fetch student schedules from the API
   useEffect(() => {
     const fetchSchedules = async () => {
       setLoading(true);
@@ -115,21 +117,66 @@ export const CustomCalendar = () => {
     fetchSchedules();
   }, []);
 
-  const handleDateClick = (info) => {
-    const selectedDateString = info.dateStr; // Use dateStr from the dateClick event
+  // Fetch commercial job schedules from the API
+  useEffect(() => {
+    const fetchCommercialJobSchedules = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get(
+          `${BASE_URL}/api/v1/commercial-job/schedule/all`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
+        );
 
+        const data = response.data.schedules;
+        if (Array.isArray(data)) {
+          const formattedSchedules = data.map((schedule) => {
+            const date = moment(schedule.schedule).format("YYYY-MM-DD");
+            return {
+              title: schedule.cbName,
+              start: date,
+              allDay: true,
+            };
+          });
+          setCommercialJobSchedules(formattedSchedules);
+        }
+      } catch (error) {
+        console.error("Error fetching schedules:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCommercialJobSchedules();
+  }, []);
+
+  // Handle date click
+  const handleDateClick = (info) => {
+    const selectedDateString = info.dateStr;
+
+    // Filter student schedules and commercial job schedules for the selected date
     const schedulesForDate = schedules.filter(
+      (schedule) => schedule.start === selectedDateString
+    );
+    const commercialSchedulesForDate = commercialJobSchedules.filter(
       (schedule) => schedule.start === selectedDateString
     );
 
     setSelectedDate(selectedDateString);
     setSelectedSchedules(schedulesForDate);
+    setSelectedCommercialSchedules(commercialSchedulesForDate); // Set commercial job schedules
     setIsDialogOpen(true);
   };
 
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
     setSelectedSchedules([]);
+    setSelectedCommercialSchedules([]); // Reset commercial job schedules
   };
 
   const formatDate = (date) => {
@@ -139,21 +186,21 @@ export const CustomCalendar = () => {
 
   const handlePrev = () => {
     const calendarApi = calendarRef.current.getApi();
-    calendarApi.prev(); // Go to previous view
-    setCurrentDate(calendarApi.getDate()); // Update currentDate to the new date
+    calendarApi.prev();
+    setCurrentDate(calendarApi.getDate());
   };
 
   const handleNext = () => {
     const calendarApi = calendarRef.current.getApi();
-    calendarApi.next(); // Go to next view
-    setCurrentDate(calendarApi.getDate()); // Update currentDate to the new date
+    calendarApi.next();
+    setCurrentDate(calendarApi.getDate());
   };
 
   const handleViewChange = (newView) => {
     setView(newView);
     const calendarApi = calendarRef.current.getApi();
-    calendarApi.changeView(newView); // Change the view in the calendar
-    setCurrentDate(calendarApi.getDate()); // Update currentDate to reflect the new view's start date
+    calendarApi.changeView(newView);
+    setCurrentDate(calendarApi.getDate());
   };
 
   return (
@@ -165,14 +212,14 @@ export const CustomCalendar = () => {
       ) : (
         <>
           <CustomHeader
-            date={currentDate} // Pass the current date
-            prev={handlePrev} // Update previous date
-            next={handleNext} // Update next date
+            date={currentDate}
+            prev={handlePrev}
+            next={handleNext}
             view={view}
-            setView={handleViewChange} // Use the handler to change view
+            setView={handleViewChange}
           />
           <FullCalendar
-            ref={calendarRef} // Attach the ref to the FullCalendar instance
+            ref={calendarRef}
             height={"85vh"}
             width={"100%"}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -181,19 +228,20 @@ export const CustomCalendar = () => {
             selectable={true}
             selectMirror={true}
             dayMaxEvents={true}
-            events={schedules}
-            select={handleDateClick} // Maintain select for range selection
-            dateClick={handleDateClick} // Add dateClick event
-            headerToolbar={false} // Disable the default header
+            events={[...schedules, ...commercialJobSchedules]} // Show both schedules in calendar
+            select={handleDateClick}
+            dateClick={handleDateClick}
+            headerToolbar={false}
           />
         </>
       )}
       <Dialog open={isDialogOpen} onOpenChange={handleCloseDialog}>
-        <DialogContent>
+        <DialogContent className="overflow-auto">
           <DialogHeader>
             <DialogTitle>Schedules for {formatDate(selectedDate)}</DialogTitle>
           </DialogHeader>
           <div className="mt-3">
+            <h3 className="font-semibold">Student Schedules</h3>
             {selectedSchedules.length > 0 ? (
               <ul>
                 {selectedSchedules.map((schedule, index) => (
@@ -203,7 +251,20 @@ export const CustomCalendar = () => {
                 ))}
               </ul>
             ) : (
-              <p>No schedules available for this day.</p>
+              <p>No student schedules available for this day.</p>
+            )}
+
+            <h3 className="font-semibold mt-4">Commercial Job Schedules</h3>
+            {selectedCommercialSchedules.length > 0 ? (
+              <ul>
+                {selectedCommercialSchedules.map((schedule, index) => (
+                  <li key={index} className="mt-2">
+                    {schedule.title}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No commercial job schedules available for this day.</p>
             )}
           </div>
 
@@ -219,4 +280,3 @@ export const CustomCalendar = () => {
 };
 
 export default CustomCalendar;
-

@@ -108,6 +108,22 @@ const CommercialJob = () => {
       header: "Contact",
     },
     {
+      accessorKey: "schedule",
+      header: "Schedule",
+      cell: ({ row }) => {
+        const scheduleValue = row.getValue("schedule");
+        if (!scheduleValue) {
+          return "Not scheduled yet";
+        }
+        const date = new Date(scheduleValue);
+        return date.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+      },
+    },
+    {
       accessorKey: "status",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Status" />
