@@ -42,6 +42,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import PrintableForm from "@/hooks/PrintableForm";
 
 const Productions = () => {
   const [data, setData] = useState([]);
@@ -246,46 +247,51 @@ const Productions = () => {
                 className="h-8 w-[270px]"
               />
             </div>
-            <Tooltip title="Add new production">
-              <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-                <AlertDialogTrigger asChild>
-                  <Button className="m-2 h-8">
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Add Production
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent className="max-h-[550px] overflow-auto">
-                  <Tabs defaultValue="uniform" className="mt-4">
-                    <TabsList className="grid w-full grid-cols-2">
-                      <TabsTrigger value="uniform">Uniform</TabsTrigger>
-                      <TabsTrigger value="academicGown">
-                        Academic Gown
-                      </TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="uniform" className="mt-4">
-                      <AlertDialogTitle>
-                        Add a new uniform production
-                      </AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Click submit when you&apos;re done.
-                      </AlertDialogDescription>
-                      <AddProduction
-                        onProductionAdded={handleProductionAdded}
-                        setIsOpen={setIsOpen}
-                      />
-                    </TabsContent>
-                    <TabsContent value="academicGown" className="mt-4">
-                      <AlertDialogTitle>
-                        Add a new academic gown production
-                      </AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Click submit when you&apos;re done.
-                      </AlertDialogDescription>
-                    </TabsContent>
-                  </Tabs>
-                </AlertDialogContent>
-              </AlertDialog>
-            </Tooltip>
+
+            <div className="flex justify-between items-center">
+              
+              <Tooltip title="Add new production">
+                <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+                  <AlertDialogTrigger asChild>
+                    <Button className="m-2 h-8">
+                      <PlusCircle className="mr-2 h-4 w-4" />
+                      Add Production
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent className="max-h-[550px] overflow-auto">
+                    <Tabs defaultValue="uniform" className="mt-4">
+                      <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="uniform">Uniform</TabsTrigger>
+                        <TabsTrigger value="academicGown">
+                          Academic Gown
+                        </TabsTrigger>
+                      </TabsList>
+                      <TabsContent value="uniform" className="mt-4">
+                        <AlertDialogTitle>
+                          Add a new uniform production
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Click submit when you&apos;re done.
+                        </AlertDialogDescription>
+                        <AddProduction
+                          onProductionAdded={handleProductionAdded}
+                          setIsOpen={setIsOpen}
+                        />
+                      </TabsContent>
+                      <TabsContent value="academicGown" className="mt-4">
+                        <AlertDialogTitle>
+                          Add a new academic gown production
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Click submit when you&apos;re done.
+                        </AlertDialogDescription>
+                      </TabsContent>
+                    </Tabs>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </Tooltip>
+              <PrintableForm />
+            </div>
           </div>
           <Tabs defaultValue="table">
             <TabsList className="grid w-[300px] grid-cols-2">
