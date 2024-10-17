@@ -24,7 +24,7 @@ const PrintableForm = () => {
     const printContent = document
       .getElementById("printableContent")
       .innerHTML.replace("{sewerName}", sewerName);
-    const printWindow = window.open("", "_self");
+    const printWindow = window.open("", "_blank");
 
     if (printWindow) {
       printWindow.document.write(`
@@ -49,11 +49,17 @@ const PrintableForm = () => {
                     }
                     th, td {
                         border: 1px solid black;
-                        padding: 12px; /* Increase padding for height */
+                        padding: 15px; /* Increase padding for height */
                         text-align: center;
                     }
                     th {
                         background-color: #f2f2f2;
+                    }
+  
+                    @media print {
+                    header, footer {
+                        display: none;
+                    }
                     }
                 </style>
             </head>
@@ -120,6 +126,9 @@ const PrintableForm = () => {
               className="mb-4"
             />
             <div className="flex justify-end">
+              <AlertDialogCancel asChild>
+                <Button variant="secondary" className="mr-2">Cancel</Button>
+              </AlertDialogCancel>
               <Button
                 onClick={() => {
                   if (sewerName) {
@@ -129,14 +138,10 @@ const PrintableForm = () => {
                     toast.error("Please add the name of the sewer");
                   }
                 }}
-                className="mr-2"
-                variant="secondary"
+                type="submit"
               >
                 Confirm
               </Button>
-              <AlertDialogCancel asChild>
-                <Button variant="secondary">Cancel</Button>
-              </AlertDialogCancel>
             </div>
           </div>
         </AlertDialogContent>
@@ -172,7 +177,15 @@ const PrintableForm = () => {
             </thead>
             <tbody>
               {/* Render 20 blank rows */}
-              {Array.from({ length: 20 }).map((_, index) => (
+              <td>COLLEGE</td>
+              <td>POLO</td>
+              <td>S16</td>
+              <td>JANUARY 4, 2024</td>
+              <td>JANUARY 10, 2024</td>
+              <td>6</td>
+              <td>CVC WHITE, CVC WHAT, ANOTHER MATERIAL</td>
+              <td>2, 4, 10</td>
+              {Array.from({ length: 15 }).map((_, index) => (
                 <tr key={index}>
                   <td></td>
                   <td></td>
