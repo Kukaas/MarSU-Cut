@@ -281,3 +281,7 @@ export const measureCommercialJobSchema = z.object({
   KL: z.string().min(1, { message: "KL must be at least 1 characters" }),
   PLBW: z.string().min(1, { message: "PLBW must be at least 1 characters" }),
 });
+
+export const addPickUpDateSchema = z.object({
+  pickupDate: z.string(),
+});

@@ -8,6 +8,28 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogAction,
+  AlertDialog,
+  AlertDialogDescription,
+} from "@/components/ui/alert-dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Spin, Typography } from "antd";
 import { toast } from "sonner";
@@ -25,11 +47,15 @@ import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomTable from "@/components/components/custom-components/CustomTable";
 import { statusColors } from "@/lib/utils";
-import CustomBadge from "@/components/components/custom-components/CustomBadge";
 import DataTableColumnHeader from "@/components/components/custom-components/DataTableColumnHeader";
 import DataTableToolBar from "@/components/components/custom-components/DataTableToolBar";
-import { AlertDialog } from "@radix-ui/react-alert-dialog";
-import { AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { CalendarIcon } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { addPickUpDateSchema } from "@/schema/shema";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { Calendar } from "@/components/ui/calendar";
 
 function Rentals() {
   const [data, setData] = useState([]);
@@ -39,7 +65,15 @@ function Rentals() {
   const [loadingUpdate, setLoadingUpdate] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedRental, setSelectedRental] = useState(null);
   const navigate = useNavigate();
+
+  const form = useForm({
+    resolver: zodResolver(addPickUpDateSchema),
+    defaultValues: {
+      possiblePickupDate: null,
+    },
+  });
 
   useEffect(() => {
     const fetchRentals = async () => {
@@ -79,6 +113,57 @@ function Rentals() {
       setData(originalData);
     }
   }, [searchValue, originalData]);
+
+  const handlePickupDateUpdate = async () => {
+    // Use form.getValues to access the form values
+    const { pickupDate: selectedDate } = form.getValues();
+    if (selectedRental.status !== "APPROVED") {
+      toast.error("Rental must be approved first!");
+      return;
+    }
+
+    if (!selectedDate) {
+      toast.error("Please select a date");
+      return; // Early return if no date is selected
+    }
+
+    try {
+      setLoadingUpdate(true);
+      const res = await axios.put(
+        `${BASE_URL}/api/v1/rental/pickup-date/${selectedRental._id}`,
+        { pickupDate: selectedDate }, // Send the selected date
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+
+      if (res.status === 200) {
+        toast.success(
+          `Pickup date for ${selectedRental.coordinatorName} has been set!`
+        );
+        // Update the data in the state
+        setData((prevData) => {
+          return prevData.map((item) => {
+            if (item._id === selectedRental._id) {
+              return { ...item, pickupDate: selectedDate }; // Update with selected date
+            }
+            return item;
+          });
+        });
+        setDialogOpen(false); // Close the dialog
+      } else {
+        ToasterError();
+      }
+    } catch (error) {
+      ToasterError();
+    } finally {
+      setLoadingUpdate(false); // Make sure to reset loading state
+    }
+  };
 
   const handleReject = async (rental) => {
     try {
@@ -164,6 +249,9 @@ function Rentals() {
   };
 
   const handleGiven = async (rental) => {
+    if (!rental.pickupDate) {
+      return toast.error("Please set the pickup date first!");
+    }
     try {
       setLoadingUpdate(true);
       const res = await axios.put(
@@ -340,7 +428,9 @@ function Rentals() {
     },
     {
       accessorKey: "possiblePickupDate",
-      header: "Possible Pickup Date",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Date Needed" />
+      ),
       cell: ({ row }) => {
         const date = new Date(row.getValue("possiblePickupDate"));
         return date.toLocaleDateString("en-US", {
@@ -352,13 +442,21 @@ function Rentals() {
     },
     {
       accessorKey: "pickupDate",
-      header: "Pickup Date",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Pickup Date" />
+      ),
       cell: ({ row }) => {
         const dateValue = row.getValue("pickupDate");
         if (!dateValue) {
           return (
-            <Button variant="ghost" onClick={() => setDialogOpen(true)}>
-              Set Pickup Date
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setSelectedRental(row.original); // Set selected rental
+                setDialogOpen(true); // Open the dialog
+              }}
+            >
+              Set Date
             </Button>
           );
         }
@@ -388,7 +486,9 @@ function Rentals() {
     },
     {
       accessorKey: "returnDate",
-      header: "Return Date",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="SReturn Date" />
+      ),
       cell: ({ row }) => {
         const dateValue = row.getValue("returnDate");
         if (!dateValue) {
@@ -463,17 +563,26 @@ function Rentals() {
                 >
                   Approve
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleGiven(rental)}
-                  disabled={["REJECTED", "APPROVED", "GIVEN", "RETURNED"].includes(
-                    rental.status
-                  )}>
+                <DropdownMenuItem
+                  onClick={() => handleGiven(rental)}
+                  disabled={[
+                    "REJECTED",
+                    "GIVEN",
+                    "RETURNED",
+                    "PENDING",
+                  ].includes(rental.status)}
+                >
                   Given
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleReturn(rental)}
-                   disabled={["REJECTED", "APPROVED", "RETURNED"].includes(
-                    rental.status
-                  )}
-                  >
+                <DropdownMenuItem
+                  onClick={() => handleReturn(rental)}
+                  disabled={[
+                    "REJECTED",
+                    "APPROVED",
+                    "RETURNED",
+                    "PENDING",
+                  ].includes(rental.status)}
+                >
                   Returned
                 </DropdownMenuItem>
               </DropdownMenuGroup>
@@ -539,14 +648,87 @@ function Rentals() {
       </div>
 
       <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Set Pickup Date</AlertDialogTitle>
-        </AlertDialogHeader>
-        <div className="p-4">
-          <p className="text-sm text-gray-600 dark:text-gray-300">
-            This feature is not yet implemented.
-          </p>
-        </div>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Set Pickup Date</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will be the date the coordinator will pick up the rental
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="p-4">
+            <Form {...form}>
+              <form>
+                <FormField
+                  control={form.control}
+                  name="pickupDate"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Pick up Date</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "pl-3 text-left font-normal",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value ? (
+                                format(field.value, "PPP")
+                              ) : (
+                                <span>Add Pick Up Date</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            disabled={(date) => {
+                              const possiblePickupDate =
+                                selectedRental?.possiblePickupDate
+                                  ? new Date(selectedRental.possiblePickupDate)
+                                  : null;
+                              const today = new Date().setHours(0, 0, 0); // Current date at midnight
+
+                              const day = date.getDay(); // Get the day of the week (0-6, where 0 is Sunday)
+
+                              return (
+                                (possiblePickupDate &&
+                                  date > possiblePickupDate) || // Disable dates after possible pickup date
+                                date < today || // Disable past dates
+                                day === 0 || // Disable Sundays
+                                day === 6 // Disable Saturdays
+                              );
+                            }}
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </form>
+            </Form>
+          </div>
+          <div className="p-4 flex justify-end gap-2">
+            <AlertDialogCancel asChild>
+              <Button variant="outline" onClick={() => setDialogOpen(false)}>
+                Cancel
+              </Button>
+            </AlertDialogCancel>
+            <AlertDialogAction asChild>
+              <Button variant="primary" onClick={handlePickupDateUpdate}>
+                Confirm
+              </Button>
+            </AlertDialogAction>
+          </div>
+        </AlertDialogContent>
       </AlertDialog>
     </Spin>
   );
