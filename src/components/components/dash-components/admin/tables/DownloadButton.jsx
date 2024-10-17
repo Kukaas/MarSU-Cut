@@ -1,37 +1,34 @@
-// UI
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-
-import { PopoverClose } from "@radix-ui/react-popover";
-
-// libraries
 import PropTypes from "prop-types";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
+import React, { useState } from "react";
+import { Printer } from "lucide-react";
 
 function DownloadButton({ selectedDate, filteredData }) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [fileName, setFileName] = useState("accomplishment_report.pdf");
+
   const toastError = () => {
-    toast.error("No data to download, please select a month", {
+    toast.error("No data to print, please select a month", {
       action: {
         label: "Ok",
       },
     });
   };
 
-  const handleDownload = () => {
-    const selectedMonth = selectedDate?.from
-      ? selectedDate?.from.getMonth()
-      : null;
-    const selectedYear = selectedDate?.from
-      ? selectedDate?.from.getFullYear()
-      : null;
+  const handlePrint = () => {
+    const startDate = selectedDate?.from;
+    const endDate = selectedDate?.to;
 
-    if (selectedMonth === null || selectedYear === null) {
+    if (!startDate || !endDate) {
       toastError();
       return;
     }
@@ -40,8 +37,6 @@ function DownloadButton({ selectedDate, filteredData }) {
       toastError();
       return;
     }
-
-    const doc = new jsPDF();
 
     const formatDate = (dateString) => {
       const date = new Date(dateString);
@@ -52,18 +47,19 @@ function DownloadButton({ selectedDate, filteredData }) {
       });
     };
 
-    const formatTitle = (selectedMonth) => {
-      const date = new Date();
-      date.setMonth(selectedMonth);
-      date.setFullYear(selectedYear);
-      date.setDate(1);
-
-      const month = date.toLocaleString("default", { month: "long" });
-      const year = date.getFullYear();
-      return `ACCOMPLISHMENT REPORT FOR THE MONTH OF ${month.toUpperCase()} ${year}`;
+    const getMonthsInRange = (start, end) => {
+      const months = [];
+      let current = new Date(start);
+      while (current <= end) {
+        months.push(current.toLocaleString("default", { month: "long" }));
+        current.setMonth(current.getMonth() + 1);
+      }
+      return months;
     };
 
-    const title = formatTitle(selectedMonth);
+    const monthNames = getMonthsInRange(startDate, endDate);
+    const formattedMonths = monthNames.join(", ");
+    const title = `ACCOMPLISHMENT REPORT FOR THE MONTH(S) OF ${formattedMonths.toUpperCase()} ${endDate.getFullYear()}`;
 
     // Sort by date (ascending order)
     const sortedData = filteredData.sort(
@@ -71,85 +67,142 @@ function DownloadButton({ selectedDate, filteredData }) {
     );
 
     const tableData = sortedData.map((item) => {
-      const splitAccomplishment = doc.splitTextToSize(item.accomplishment, 60);
-      const joinedAccomplishment = splitAccomplishment.join("\n");
+      const splitAccomplishment = item.accomplishment.split("\n");
       const remarks =
         item.remarks?.charAt(0).toUpperCase() +
         item.remarks?.slice(1).toLowerCase();
-      return [formatDate(item.date), item.type, joinedAccomplishment, remarks];
+      return [
+        formatDate(item.date),
+        item.type,
+        splitAccomplishment.join("<br/>"),
+        remarks,
+      ];
     });
 
-    const itemsPerPage = 14;
-    const totalPages = Math.ceil(tableData.length / itemsPerPage);
+    // Open a new window for printing
+    const printWindow = window.open("", "_blank");
 
-    for (let pageIndex = 0; pageIndex < totalPages; pageIndex++) {
-      if (pageIndex > 0) {
-        doc.addPage();
-      }
+    if (printWindow) {
+      printWindow.document.write(`
+        <html>
+            <head>
+                <title>${title}</title>
+                <style>
+                    @page {
+                        size: portrait;
+                        margin: 10mm;
+                    }
+                    body {
+                        font-family: Arial, sans-serif;
+                        margin: 0;
+                        padding: 0;
+                    }
+                    table {
+                        border-collapse: collapse;
+                        width: 100%;
+                        font-size: 12px;
+                        margin-top: 20px;
+                    }
+                    th, td {
+                        border: 1px solid black;
+                        padding: 8px;
+                        text-align: left;
+                    }
+                    th {
+                        background-color: #f2f2f2;
+                    }
+                </style>
+            </head>
+            <body>
+                <h1 style="text-align: center; font-size: 18px;">${title}</h1>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Accomplishment</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      ${tableData
+                        .map(
+                          (row) => `
+                        <tr>
+                          <td>${row[0]}</td>
+                          <td>${row[1]}</td>
+                          <td>${row[2]}</td>
+                          <td>${row[3]}</td>
+                        </tr>
+                      `
+                        )
+                        .join("")}
+                    </tbody>
+                </table>
+                <footer style="position: absolute; bottom: 20px; left: 20px;">
+                    <p>Prepared By:</p>
+                    <p>MECHAELA F. BABIERA</p>
+                    <p>Support Staff</p>
+                    <p>RHODA N. MOLBOG</p>
+                    <p>Head BAO</p>
+                </footer>
+            </body>
+        </html>
+      `);
+      printWindow.document.close();
+      printWindow.focus();
 
-      doc.setFontSize(16); // Ensure the title font size is consistent
-      doc.text(title, 105, 30, { align: "center" });
-
-      const startItemIndex = pageIndex * itemsPerPage;
-      const endItemIndex = Math.min(
-        startItemIndex + itemsPerPage,
-        tableData.length
-      );
-      const pageData = tableData.slice(startItemIndex, endItemIndex);
-
-      autoTable(doc, {
-        startY: 40,
-        body: pageData,
-        head: [["Date", "Type", "Accomplishment", "Remarks"]],
-        styles: { fontSize: 12 },
-      });
-
-      if (pageIndex === 0) {
-        const pageHeight =
-          doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
-        doc.setFontSize(10);
-        doc.text("Prepared By:", 40, pageHeight - 50);
-        doc.text("MECHAELA F. BABIERA", 40, pageHeight - 40);
-        doc.text("Support Staff", 46, pageHeight - 35);
-
-        doc.text(
-          "RHODA N. MOLBOG",
-          doc.internal.pageSize.width / 2 + 30,
-          pageHeight - 40,
-          { align: "center" }
-        );
-        doc.text(
-          "Head BAO",
-          doc.internal.pageSize.width / 2 + 30,
-          pageHeight - 35,
-          { align: "center" }
-        );
-      }
+      setTimeout(() => {
+        printWindow.print();
+        printWindow.close();
+      }, 250);
+    } else {
+      alert("Please allow popups for this website");
     }
-
-    doc.save("accomplishment_report.pdf");
   };
 
   return (
     <div>
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="outline" className="mr-2 h-8">
-            Download
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent>
-          <span className="text-sm text-gray-500">
-            Download the report for the selected month
-          </span>
-          <div className="flex items-end justify-center gap-2 mt-2">
-            <PopoverClose>
-              <Button variant="outline">Cancel</Button>
-            </PopoverClose>
-            <Button onClick={handleDownload}>Download</Button>
+      <Button
+        className="h-8"
+        onClick={() => setIsDialogOpen(true)}
+        variant="outline"
+      >
+        <Printer className="mr-2 h-4" />
+        Print
+      </Button>
+
+      <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Print Report</AlertDialogTitle>
+          </AlertDialogHeader>
+          <div className="mt-3">
+            <Input
+              type="text"
+              placeholder="Enter file name"
+              value={fileName}
+              onChange={(e) => setFileName(e.target.value)}
+              className="mb-4"
+            />
+            <div className="flex justify-end">
+              <AlertDialogCancel asChild>
+                <Button variant="secondary" className="mr-2">
+                  Cancel
+                </Button>
+              </AlertDialogCancel>
+              <Button
+                onClick={() => {
+                  handlePrint();
+                  setIsDialogOpen(false);
+                }}
+              >
+                Confirm
+              </Button>
+            </div>
           </div>
-        </PopoverContent>
-      </Popover>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

@@ -487,7 +487,7 @@ function Rentals() {
     {
       accessorKey: "returnDate",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="SReturn Date" />
+        <DataTableColumnHeader column={column} title="Return Date" />
       ),
       cell: ({ row }) => {
         const dateValue = row.getValue("returnDate");

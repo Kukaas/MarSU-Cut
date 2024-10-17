@@ -248,12 +248,11 @@ const Productions = () => {
               />
             </div>
 
-            <div className="flex justify-between items-center">
-              
+            <div className="flex items-center py-2 justify-between overflow-y-auto">
               <Tooltip title="Add new production">
                 <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
                   <AlertDialogTrigger asChild>
-                    <Button className="m-2 h-8">
+                    <Button className="h-8">
                       <PlusCircle className="mr-2 h-4 w-4" />
                       Add Production
                     </Button>

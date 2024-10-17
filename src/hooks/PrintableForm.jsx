@@ -45,7 +45,7 @@ const PrintableForm = () => {
                     table {
                         border-collapse: collapse;
                         width: 100%;
-                        font-size: 8px;
+                        font-size: 10px;
                     }
                     th, td {
                         border: 1px solid black;
