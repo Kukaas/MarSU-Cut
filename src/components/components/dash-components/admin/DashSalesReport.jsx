@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Typography } from "antd";
 import SalesSummary from "./sales-components/SalesSummary";
+import { Button } from "@/components/ui/button";
 
 const DashSalesReport = () => {
   const navigate = useNavigate();
@@ -21,9 +22,14 @@ const DashSalesReport = () => {
 
   return (
     <div className="w-full p-5 h-screen">
-      <Typography.Title level={2} className="text-black dark:text-white">
-        Sales Report
-      </Typography.Title>
+      <div className="flex justify-between items-center">
+        <Typography.Title level={2} className="text-black dark:text-white">
+          Sales Report
+        </Typography.Title>
+        <Button type="primary" onClick={() => window.print()}>
+          Print
+        </Button>
+      </div>
       <Helmet>
         <title>MarSU Cut | Sales Report</title>
         <meta name="description" content="" />
