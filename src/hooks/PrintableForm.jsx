@@ -20,64 +20,60 @@ const PrintableForm = () => {
       toast.error("Please add the name of the sewer");
       return;
     }
-
+  
     const printContent = document
       .getElementById("printableContent")
       .innerHTML.replace("{sewerName}", sewerName);
-    const printWindow = window.open("", "_blank");
-
-    if (printWindow) {
-      printWindow.document.write(`
-        <html>
-            <head>
-                <style>
-                    @page {
-                        size: landscape;
-                        margin: 10mm;
-                    }
-                    body {
-                        font-family: Arial, sans-serif;
-                        width: 100%;
-                        height: 100%;
-                        margin: 0;
-                        padding: 0;
-                    }
-                    table {
-                        border-collapse: collapse;
-                        width: 100%;
-                        font-size: 10px;
-                    }
-                    th, td {
-                        border: 1px solid black;
-                        padding: 15px; /* Increase padding for height */
-                        text-align: center;
-                    }
-                    th {
-                        background-color: #f2f2f2;
-                    }
   
-                    @media print {
-                    header, footer {
-                        display: none;
-                    }
-                    }
-                </style>
-            </head>
-            <body>
-                ${printContent}
-            </body>
-        </html>
-      `);
-      printWindow.document.close();
-      printWindow.focus();
-
-      setTimeout(() => {
-        printWindow.print();
-        printWindow.close();
-      }, 250);
-    } else {
-      alert("Please allow popups for this website");
-    }
+    // Create a temporary print area
+    const originalContent = document.body.innerHTML;
+    document.body.innerHTML = `
+      <html>
+          <head>
+              <style>
+                  @page {
+                      size: landscape;
+                      margin: 10mm;
+                  }
+                  body {
+                      font-family: Arial, sans-serif;
+                      width: 100%;
+                      height: 100%;
+                      margin: 0;
+                      padding: 0;
+                      background-color: #ffff;
+                      color: #000;
+                  }
+                  table {
+                      border-collapse: collapse;
+                      width: 100%;
+                      font-size: 10px;
+                  }
+                  th, td {
+                      border: 1px solid black;
+                      padding: 15px;
+                      text-align: center;
+                  }
+  
+                  @media print {
+                      header, footer {
+                          display: none;
+                      }
+                  }
+              </style>
+          </head>
+          <body>
+              ${printContent}
+          </body>
+      </html>
+    `;
+  
+    // Trigger the print dialog
+    window.print();
+  
+    // Restore original content after printing
+    document.body.innerHTML = originalContent;
+    window.location.reload(); // Reload to reset the React state and DOM
   };
 
   // Get the current month and year
@@ -150,7 +146,7 @@ const PrintableForm = () => {
       {/* Hidden content for printing */}
       <div style={{ display: "none" }}>
         <div id="printableContent">
-          <div className="header text-center mb-2 p-20">
+          <div className="header text-center mb-5">
             <h2 className="text-lg font-semibold">Production Details Form</h2>
             <p className="text-sm">
               For the Month of: {currentMonth} {currentYear}
