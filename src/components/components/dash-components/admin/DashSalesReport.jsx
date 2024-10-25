@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -10,6 +10,9 @@ import {
   AlertDialog,
   AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import {
@@ -19,37 +22,58 @@ import {
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select";
-import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { toast, Toaster } from "sonner";
 import React from "react";
+import { BASE_URL } from "@/lib/api";
 import axios from "axios";
 import { token } from "@/lib/token";
-import { BASE_URL } from "@/lib/api";
+import ToasterError from "@/lib/Toaster";
 
 const DashSalesReport = () => {
   const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
+  const [salesReports, setSalesReports] = useState([]);
   const [tab, setTab] = useState("monthly");
-  const [salesData, setSalesData] = useState(null);
+  const currentYear = new Date().getFullYear();
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
+  const [selectedYear, setSelectedYear] = useState(currentYear);
+
+  useEffect(() => {
+    const fetchSalesReports = async () => {
+      try {
+        const response = await axios(`${BASE_URL}/api/v1/sales-report/all`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        });
+        const data = await response.data;
+        if (response.status === 200) {
+          setSalesReports(data.salesReports);
+        } else {
+          toast.error(data.message);
+        }
+      } catch (error) {
+        toast.error("Error fetching sales reports.");
+      }
+    };
+
+    fetchSalesReports();
+  }, []);
 
   useEffect(() => {
     if (currentUser && currentUser.isAdmin) {
       navigate("/dashboard?tab=sales-report");
-    } else if (currentUser && currentUser.isAdmin === false) {
+    } else if (currentUser) {
       navigate("/dashboard?tab=home");
     } else {
       navigate("/");
     }
   }, [currentUser, navigate]);
-
-  const currentYear = new Date().getFullYear();
-  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1); // Month starts from 0, so +1 for 1-based month
-  const [selectedYear, setSelectedYear] = useState(currentYear); // New state for selected year
-  const [printData, setPrintData] = useState(null); // State for data to be printed
-
-  console.log(printData);
 
   // Month names for display
   const monthNames = [
@@ -73,7 +97,6 @@ const DashSalesReport = () => {
     { length: currentYear - startYear + 1 },
     (_, i) => startYear + i
   );
-
   const monthOptions = years.flatMap((year) =>
     monthNames.map((month, index) => ({
       value: `${index + 1}-${year}`, // Format: "MM-YYYY"
@@ -81,41 +104,135 @@ const DashSalesReport = () => {
     }))
   );
 
-  // Print monthly sales report
-  const fetchSales = async (month, year) => {
-    try {
-      const res = await axios.get(`${BASE_URL}/api/v1/sales-report/all`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        withCredentials: true,
+  const handlePrint = () => {
+    let filteredData = [];
+  
+    // Determine the title based on the selected tab
+    const title = tab === "monthly" 
+      ? `Sales Report for ${monthNames[selectedMonth - 1]} ${selectedYear}` 
+      : `Sales Report for Year ${selectedYear}`;
+  
+    if (tab === "monthly") {
+      const startDate = new Date(Date.UTC(selectedYear, selectedMonth - 1, 1));
+      const endDate = new Date(Date.UTC(selectedYear, selectedMonth, 1));
+  
+      filteredData = salesReports.filter((report) => {
+        const salesDate = new Date(report.salesDate);
+        return salesDate >= startDate && salesDate < endDate;
       });
-
-      if (res.status === 200) {
-        const filteredSales = res.data.salesReports.filter((sale) => {
-          const saleDate = new Date(sale.salesDate);
-          return (
-            saleDate.getFullYear() === year && saleDate.getMonth() + 1 === month
-          );
-        });
-        setSalesData(filteredSales);
-        setPrintData(filteredSales); // Set the data to be printed
+    } else if (tab === "yearly") {
+      // Calculate total revenue for each month
+      const monthlyRevenue = Array(12).fill(0); // Array to hold revenue for each month
+  
+      // First, filter sales reports for the selected year
+      const yearlyReports = salesReports.filter((report) => {
+        const salesDate = new Date(report.salesDate);
+        return salesDate.getFullYear() === selectedYear; // Check if the year matches
+      });
+  
+      // If there are no sales reports for the selected year, show an error and return
+      if (yearlyReports.length === 0) {
+        toast.error("No sales data available for the selected year.");
+        return;
       }
-    } catch (error) {
-      console.error(error);
+  
+      yearlyReports.forEach((report) => {
+        const salesDate = new Date(report.salesDate);
+        const month = salesDate.getMonth(); // Get month (0-11)
+        monthlyRevenue[month] += report.totalRevenue; // Sum revenue for each month
+      });
+  
+      // Create filteredData with month names and total revenue
+      filteredData = monthlyRevenue.map((revenue, index) => ({
+        month: monthNames[index],
+        totalRevenue: revenue,
+      })).filter((report) => report.totalRevenue > 0); // Exclude months with no revenue
+    }
+  
+    // If there is no data for monthly tab
+    if (tab === "monthly" && filteredData.length === 0) {
+      toast.error("No sales data available for the selected month.");
+      return;
+    }
+  
+    // Calculate overall total revenue for the footer
+    const totalRevenue = filteredData.reduce(
+      (sum, report) => sum + report.totalRevenue,
+      0
+    );
+  
+    const printWindow = window.open("", "_blank");
+    if (printWindow) {
+      console.log("Print window opened successfully."); // Debugging log
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>${title}</title>
+            <style>
+              body { font-family: Arial, sans-serif; }
+              h1 { text-align: center; }
+              table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+              th, td { border: 1px solid black; padding: 8px; text-align: left; }
+              th { background-color: #f2f2f2; }
+              tfoot { font-weight: bold; }
+            </style>
+          </head>
+          <body>
+            <h1>${title}</h1>
+            <table>
+              <thead>
+                <tr>
+                  <th>${tab === "monthly" ? "Sales Date" : "Month"}</th>
+                  <th>Total Revenue</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${filteredData
+                  .map(
+                    (report) => `
+                    <tr>
+                      <td>${tab === "monthly" 
+                        ? new Date(report.salesDate).toLocaleDateString(
+                            "en-US", 
+                            { year: "numeric", month: "long", day: "numeric" }
+                          ) 
+                        : report.month}</td>
+                      <td>${Intl.NumberFormat("en-PH", {
+                        style: "currency",
+                        currency: "PHP",
+                      }).format(report.totalRevenue)}</td>
+                    </tr>
+                  `
+                  )
+                  .join("")}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td>Total Revenue for ${
+                    tab === "monthly" ? monthNames[selectedMonth - 1] : "the year"
+                  } ${selectedYear}</td>
+                  <td>${Intl.NumberFormat("en-PH", {
+                    style: "currency",
+                    currency: "PHP",
+                  }).format(totalRevenue)}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+      printWindow.focus();
+  
+      setTimeout(() => {
+        printWindow.print();
+        printWindow.close();
+      }, 250);
+    } else {
+      toast.error("Failed to open print window.");
     }
   };
-
-  // Print monthly sales report
-  const handlePrintMonthlySales = (month, year) => {
-    fetchSales(month, year);
-  };
-
-  // Print yearly sales report
-  const handlePrintYearlySales = (year) => {
-    // Add logic to handle yearly sales report printing
-  };
+  
 
   return (
     <div className="w-full p-5 h-screen">
@@ -132,15 +249,12 @@ const DashSalesReport = () => {
           </AlertDialogTrigger>
           <AlertDialogContent>
             <div className="p-4">
-              <Typography.Title
-                level={4}
-                className="text-black dark:text-white"
-              >
-                Print Sales Report
-              </Typography.Title>
-              <Typography.Paragraph className="text-black dark:text-white">
-                Select a date range to print the sales report.
-              </Typography.Paragraph>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Print Sales Report</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Select the time period you want to print.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
               <Tabs defaultValue="monthly">
                 <TabsList className="w-full">
                   <TabsTrigger
@@ -163,16 +277,15 @@ const DashSalesReport = () => {
                     <Select
                       onValueChange={(value) => {
                         const [month, year] = value.split("-");
-                        setSelectedMonth(Number(month)); // Set selected month
-                        setSelectedYear(Number(year)); // Set selected year from value
+                        setSelectedMonth(Number(month));
+                        setSelectedYear(Number(year));
                       }}
-                      defaultValue={`${selectedMonth}-${selectedYear}`} // Default value set to current month and year
+                      defaultValue={`${selectedMonth}-${selectedYear}`}
                     >
                       <SelectTrigger className="w-full mb-5">
                         <span>{`${
                           monthNames[selectedMonth - 1]
                         } ${selectedYear}`}</span>
-                        {/* Dynamically display selected month and year */}
                       </SelectTrigger>
                       <SelectContent>
                         <ScrollArea className="h-72 p-3">
@@ -193,34 +306,24 @@ const DashSalesReport = () => {
                   <div className="flex gap-2 mt-3">
                     <Select
                       onValueChange={(value) => {
-                        setSelectedYear(Number(value)); // Update the selected year
+                        setSelectedYear(Number(value));
                       }}
                       defaultValue={currentYear.toString()}
                     >
                       <SelectTrigger className="w-full mb-5">
-                        <span>{selectedYear}</span>{" "}
-                        {/* Display the currently selected year */}
+                        <span>{selectedYear}</span>
                       </SelectTrigger>
                       <SelectContent>
                         <ScrollArea className="h-72 p-3">
                           <SelectGroup>
-                            {/* Display years from 2016 to current year, with the current year last */}
-                            {years.slice(0, -1).map(
-                              (
-                                year // Years from 2016 to the previous year
-                              ) => (
-                                <React.Fragment key={year}>
-                                  <SelectItem value={year.toString()}>
-                                    {year}
-                                  </SelectItem>
-                                  <Separator className="my-2" />
-                                </React.Fragment>
-                              )
-                            )}
-                            <SelectItem value={currentYear.toString()}>
-                              {currentYear}
-                            </SelectItem>
-                            <Separator className="my-2" />
+                            {years.map((year) => (
+                              <React.Fragment key={year}>
+                                <SelectItem value={year.toString()}>
+                                  {year}
+                                </SelectItem>
+                                <Separator className="my-2" />
+                              </React.Fragment>
+                            ))}
                           </SelectGroup>
                         </ScrollArea>
                       </SelectContent>
@@ -232,20 +335,7 @@ const DashSalesReport = () => {
                 <AlertDialogCancel asChild>
                   <Button variant="secondary">Cancel</Button>
                 </AlertDialogCancel>
-                <Button
-                  onClick={() => {
-                    if (tab === "monthly") {
-                      // Print monthly sales report
-                      handlePrintMonthlySales(selectedMonth, selectedYear);
-                    }
-                    if (tab === "yearly") {
-                      // Print yearly sales report
-                      handlePrintYearlySales(selectedYear);
-                    }
-                  }}
-                >
-                  Print
-                </Button>
+                <Button onClick={handlePrint}>Print</Button>
               </div>
             </div>
           </AlertDialogContent>
@@ -256,6 +346,8 @@ const DashSalesReport = () => {
         <meta name="description" content="" />
       </Helmet>
       <SalesSummary />
+      <Toaster position="top-center" closeButton={true} richColors={true} />
+        
     </div>
   );
 };
