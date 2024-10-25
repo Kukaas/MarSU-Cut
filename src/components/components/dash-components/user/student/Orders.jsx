@@ -337,6 +337,20 @@ function Orders() {
       cell: ({ row }) => {
         const order = row.original;
 
+        // Calculate the currentBalance here
+        const totalPrice = order.orderItems.reduce(
+          (acc, item) => acc + parseFloat(item.totalPrice || 0),
+          0
+        );
+
+        const receipts = order.receipts || [];
+        const totalAmountPaid = receipts.reduce(
+          (acc, receipt) => acc + parseFloat(receipt.amount || 0),
+          0
+        );
+
+        const currentBalance = totalPrice - totalAmountPaid;
+
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -364,7 +378,11 @@ function Orders() {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => handleClaimed(order)}
-                disabled={order.status === "CLAIMED" || order.status !== "DONE"}
+                disabled={
+                  order.status === "CLAIMED" ||
+                  order.status !== "DONE" ||
+                  currentBalance > 0 // Disable if currentBalance is not zero
+                }
               >
                 Claimed
               </DropdownMenuItem>
