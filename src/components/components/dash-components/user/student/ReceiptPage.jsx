@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import axios from "axios";
 import { Typography } from "antd";
 import { BASE_URL } from "@/lib/api";
@@ -24,15 +24,18 @@ import {
 import AddNewReceipt from "@/components/components/forms/AddNewReceipt";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSelector } from "react-redux";
+import { Toaster } from "sonner";
 
 function ReceiptsPage() {
   const { orderId } = useParams();
+  const location = useLocation();
+  const selectedOrder = location.state?.selectedOrder || {};
   const [receipts, setReceipts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isFullPayment, setIsFullPayment] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
-
+  
   useEffect(() => {
     const fetchReceipts = async () => {
       setLoading(true);
@@ -170,12 +173,14 @@ function ReceiptsPage() {
                 <AddNewReceipt
                   addNewReceipt={addNewReceipt}
                   orderId={orderId}
+                  selectedOrder={selectedOrder}
                 />
               </AlertDialogHeader>
             </AlertDialogContent>
           </AlertDialog>
         )}
       </div>
+      <Toaster position="top-center" closeButton={true} richColors={true} />
     </div>
   );
 }

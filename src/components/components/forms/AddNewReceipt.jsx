@@ -130,7 +130,7 @@ const AddNewReceipt = ({ addNewReceipt, orderId }) => {
     );
   };
 
-  const handleCreateOrder = async (values, event) => {
+  const handleAddReceipt = async (values, event) => {
     event.preventDefault();
     event.stopPropagation();
 
@@ -173,13 +173,14 @@ const AddNewReceipt = ({ addNewReceipt, orderId }) => {
       setLoading(false);
       if (error.response) {
         const { status, data } = error.response;
-        if (status === 401) {
+        if (status === 400) {
           toast.error(data.message);
+        } else if (status === 500) {
+          ToasterError({
+            description: "Check your internet connection and try again."
+          })
         }
       }
-      ToasterError({
-        description: "Please check your internet connection and try again.",
-      });
     }
   };
 
@@ -187,7 +188,7 @@ const AddNewReceipt = ({ addNewReceipt, orderId }) => {
     <div className="grid gap-4 py-4">
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(handleCreateOrder)}
+          onSubmit={form.handleSubmit(handleAddReceipt)}
           className="space-y-1 w-full"
         >
           <CustomInput
@@ -358,7 +359,7 @@ const AddNewReceipt = ({ addNewReceipt, orderId }) => {
                 </DialogClose>
                 <Button
                   onClick={(event) => {
-                    handleCreateOrder(form.getValues(), event);
+                    handleAddReceipt(form.getValues(), event);
                   }}
                   className="m-2"
                   variant="default"
@@ -370,7 +371,7 @@ const AddNewReceipt = ({ addNewReceipt, orderId }) => {
                       <span>Submitting</span>
                     </div>
                   ) : (
-                    "Submit Order"
+                    "Submit Receipt"
                   )}
                 </Button>
               </div>

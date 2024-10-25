@@ -42,7 +42,11 @@ function Orders() {
   const navigate = useNavigate();
 
   const handleViewReceipts = (order) => {
-    navigate(`/orders/receipts/${order}`);
+    navigate(`/orders/receipts/${order._id}`, {
+      state: {
+        selectedOrder: order, // Pass the selected order here
+      },
+    });
   };
 
   // Fetch the data
@@ -343,7 +347,7 @@ function Orders() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => handleViewReceipts(order._id)}>
+              <DropdownMenuItem onClick={() => handleViewReceipts(order)}>
                 View Receipts
               </DropdownMenuItem>
               <DropdownMenuItem
