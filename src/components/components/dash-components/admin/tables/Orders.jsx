@@ -427,13 +427,14 @@ function Orders() {
                     "MEASURED",
                     "DONE",
                     "CLAIMED",
+                    "PENDING"
                   ].includes(order.status)}
                 >
                   Measure
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => handleDone(order)}
-                  disabled={["REJECTED", "DONE", "CLAIMED"].includes(
+                  disabled={["REJECTED", "DONE", "CLAIMED", "PENDING"].includes(
                     order.status
                   )}
                 >

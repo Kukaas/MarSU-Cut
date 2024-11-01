@@ -158,6 +158,16 @@ export const CreateOrderSchema = z.object({
   datePaid: z.string().optional(),
 });
 
+export const UploadreceiptSchema = z.object({
+  ORNumber: z.string().min(1, "OR Number is required"), // Ensure it's a non-empty string
+  receiptType: z.enum(["Full Payment", "Partial Payment"], {
+    required_error: "Receipt Type is required",
+  }),
+  amount: z.number().min(0, "Amount must be greater than or equal to 0"), // Validate that it's a number
+  datePaid: z.string().min(1, "Date Paid is required"), // Ensure it's a non-empty string, or use z.date() if you're working with Date objects
+  url: z.string().url("Invalid URL").optional(), // Ensure URL is valid
+});
+
 export const NewReceiptSchema = z.object({
   type: z.string().min(3, { message: "Type must be at least 3 characters" }),
   ORNumber: z

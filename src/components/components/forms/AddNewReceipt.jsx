@@ -30,7 +30,7 @@ import {
 } from "firebase/storage";
 
 // others
-import { CreateOrderSchema } from "@/schema/shema";
+import { UploadreceiptSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import PropTypes from "prop-types";
@@ -49,10 +49,16 @@ import {
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
-import { AlertDialogCancel } from "@/components/ui/alert-dialog";
+import {
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import SelectField from "../custom-components/SelectField";
 
-const AddNewReceipt = ({ addNewReceipt, orderId }) => {
+const AddNewReceipt = ({ addNewReceipt, selectedOrder, currentBalance }) => {
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -60,16 +66,32 @@ const AddNewReceipt = ({ addNewReceipt, orderId }) => {
   const fileInputRef = useRef(null);
 
   const form = useForm({
-    resolver: zodResolver(CreateOrderSchema),
+    resolver: zodResolver(UploadreceiptSchema),
     defaultValues: {
       receipt: "",
       url: "",
-      receiptType: "",
+      receiptType: "Full Payment",
       ORNumber: "",
       amount: 0,
       datePaid: "",
     },
   });
+
+  const { watch, setValue } = form;
+  const receiptType = watch("receiptType");
+
+  useEffect(() => {
+    const subscription = form.watch((value) => {});
+    return () => subscription.unsubscribe();
+  }, [form]);
+
+  useEffect(() => {
+    if (receiptType === "Full Payment") {
+      setValue("amount", currentBalance);
+    } else {
+      setValue("amount", "");
+    }
+  }, [receiptType, currentBalance, setValue]);
 
   // Function to handle image change
   const handleImageChange = (e) => {
@@ -130,6 +152,7 @@ const AddNewReceipt = ({ addNewReceipt, orderId }) => {
     );
   };
 
+
   const handleAddReceipt = async (values, event) => {
     event.preventDefault();
     event.stopPropagation();
@@ -142,10 +165,10 @@ const AddNewReceipt = ({ addNewReceipt, orderId }) => {
     try {
       setLoading(true);
       const res = await axios.post(
-        `${BASE_URL}/api/v1/order/student/receipt/${orderId}`,
+        `${BASE_URL}/api/v1/order/student/receipt/${selectedOrder._id}`,
         {
           url: imageFileUrl,
-          type: values.type,
+          type: values.receiptType,
           ORNumber: values.ORNumber,
           amount: values.amount,
           datePaid: values.datePaid,
@@ -164,7 +187,7 @@ const AddNewReceipt = ({ addNewReceipt, orderId }) => {
         setLoading(false);
         addNewReceipt(res.data.receipts);
         form.reset();
-        toast.success("Order submitted successfully!");
+        toast.success("Receipt added successfully!");
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }
@@ -175,10 +198,12 @@ const AddNewReceipt = ({ addNewReceipt, orderId }) => {
         const { status, data } = error.response;
         if (status === 400) {
           toast.error(data.message);
+        } else if (status === 401){
+
         } else if (status === 500) {
           ToasterError({
-            description: "Check your internet connection and try again."
-          })
+            description: "Check your internet connection and try again.",
+          });
         }
       }
     }
@@ -186,206 +211,227 @@ const AddNewReceipt = ({ addNewReceipt, orderId }) => {
 
   return (
     <div className="grid gap-4 py-4">
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(handleAddReceipt)}
-          className="space-y-1 w-full"
-        >
-          <CustomInput
-            form={form}
-            name="ORNumber"
-            label="OR Number"
-            placeholder="eg. 123456"
-          />
-          <FormField
-            control={form.control}
-            name="type"
-            render={({ field }) => (
-              <SelectField
-                field={field}
-                label="Receipt Type"
-                options={["Full Payment", "Partial Payment"]}
-                placeholder="Select Receipt Type"
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Upload a new receipt</AlertDialogTitle>
+          <AlertDialogDescription>
+            {selectedOrder
+              ? `Upload a new receipt for order ${selectedOrder.id}`
+              : "No order selected. Please select an order to add a receipt."}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        {selectedOrder && (
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleAddReceipt)}
+              className="space-y-1 w-full"
+            >
+              <CustomInput
+                form={form}
+                name="ORNumber"
+                label="OR Number"
+                placeholder="eg. 123456"
               />
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="amount"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Amount</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    {...field}
-                    value={field.value !== undefined ? field.value : ""}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      field.onChange(value !== "" ? parseFloat(value) : "");
+              <FormField
+                control={form.control}
+                name="receiptType" // This should match the field name you're watching
+                render={({ field }) => (
+                  <SelectField
+                    field={field}
+                    label="Receipt Type"
+                    options={["Full Payment", "Partial Payment"]}
+                    placeholder="Select Receipt Type"
+                    onChange={(value) => {
+                      field.onChange(value); // Update form state
                     }}
-                    placeholder="Amount"
-                    className="w-full"
                   />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                )}
+              />
 
-          <div className="flex space-x-4 mt-4">
-            <FormField
-              control={form.control}
-              name="datePaid"
-              render={({ field }) => (
-                <FormItem className="flex flex-col w-full">
-                  <FormLabel>Date Paid</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "pl-3 text-left font-normal w-full",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value
-                            ? format(new Date(field.value), "MMMM dd")
-                            : "Select Date"}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value ? new Date(field.value) : null}
-                        onSelect={field.onChange}
-                        initialFocus
+              <FormField
+                control={form.control}
+                name="amount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Amount</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        {...field}
+                        value={field.value !== undefined ? field.value : ""}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          field.onChange(value !== "" ? parseFloat(value) : ""); // Ensure the value is parsed as float
+                        }}
+                        placeholder="Amount"
+                        className="w-full"
+                        disabled={receiptType === "Full Payment"}
                       />
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <FormField
-            control={form.control}
-            name="url"
-            render={() => (
-              <FormItem>
-                <FormLabel>Upload Receipt</FormLabel>
-                <FormControl>
-                  <div>
-                    <div className="flex items-center relative justify-between">
-                      {imageFileUrl ? (
-                        <img
-                          src={imageFileUrl}
-                          alt="receipt"
-                          className="h-8 w-8 absolute ml-5"
-                        />
-                      ) : (
-                        <UploadIcon className="h-5 w-5 absolute ml-5" />
-                      )}
-                      <Button
-                        type="button"
-                        onClick={() => fileInputRef.current.click()}
-                        className="w-full flex justify-start"
-                        variant="outline"
-                      >
-                        <span className="truncate ml-12">
-                          {" "}
-                          {imageFile
-                            ? imageFile.name.slice(0, 20) + "..."
-                            : "Upload Receipt"}{" "}
-                        </span>
-                      </Button>
-                    </div>
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => {
-                        handleImageChange(e);
-                        // Field value will be set after upload is complete
-                      }}
-                      className="hidden"
-                      ref={fileInputRef}
-                    />
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="flex flex-col">
-            <p className="text-sm text-red-500 mt-2">
-              <i>Note: Wait for the upload to reach 100%</i>
-            </p>
-            <Progress
-              percent={progress}
-              status="active"
-              strokeColor={{
-                from: "#108ee9",
-                to: "#87d068",
-              }}
-              format={(percent) => (
-                <span className="dark:text-white">{percent}%</span>
-              )}
-            />
-          </div>
-          <Dialog>
-            <div className="flex items-center justify-end gap-2">
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <DialogTrigger asChild>
-                <Button variant="default">Submit Receipt</Button>
-              </DialogTrigger>
-            </div>
-            <DialogContent className="sm:max-w-[425px] mx-auto">
-              <DialogHeader>
-                <DialogTitle>Confirm Submission</DialogTitle>
-                <DialogDescription>
-                  <div>
-                    <p>Are you sure you want to submit these details?</p>
-                  </div>
-                </DialogDescription>
-              </DialogHeader>
-              <div className="flex justify-end">
-                <DialogClose asChild>
-                  <Button variant="outline" className="m-2">
-                    Cancel
-                  </Button>
-                </DialogClose>
-                <Button
-                  onClick={(event) => {
-                    handleAddReceipt(form.getValues(), event);
-                  }}
-                  className="m-2"
-                  variant="default"
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <div className="flex items-center">
-                      <Loader2 className="mr-2 animate-spin" />
-                      <span>Submitting</span>
-                    </div>
-                  ) : (
-                    "Submit Receipt"
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="flex space-x-4 mt-4">
+                <FormField
+                  control={form.control}
+                  name="datePaid"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col w-full">
+                      <FormLabel>Date Paid</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "pl-3 text-left font-normal w-full",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value
+                                ? format(new Date(field.value), "MMMM dd")
+                                : "Select Date"}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={
+                              field.value ? new Date(field.value) : null
+                            }
+                            onSelect={field.onChange}
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
                   )}
-                </Button>
+                />
               </div>
-            </DialogContent>
-          </Dialog>
-        </form>
-      </Form>
+              <FormField
+                control={form.control}
+                name="url"
+                render={() => (
+                  <FormItem>
+                    <FormLabel>Upload Receipt</FormLabel>
+                    <FormControl>
+                      <div>
+                        <div className="flex items-center relative justify-between">
+                          {imageFileUrl ? (
+                            <img
+                              src={imageFileUrl}
+                              alt="receipt"
+                              className="h-8 w-8 absolute ml-5"
+                            />
+                          ) : (
+                            <UploadIcon className="h-5 w-5 absolute ml-5" />
+                          )}
+                          <Button
+                            type="button"
+                            onClick={() => fileInputRef.current.click()}
+                            className="w-full flex justify-start"
+                            variant="outline"
+                          >
+                            <span className="truncate ml-12">
+                              {" "}
+                              {imageFile
+                                ? imageFile.name.slice(0, 20) + "..."
+                                : "Upload Receipt"}{" "}
+                            </span>
+                          </Button>
+                        </div>
+                        <Input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            handleImageChange(e);
+                            // Field value will be set after upload is complete
+                          }}
+                          className="hidden"
+                          ref={fileInputRef}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex flex-col">
+                <p className="text-sm text-red-500 mt-2">
+                  <i>Note: Wait for the upload to reach 100%</i>
+                </p>
+                <Progress
+                  percent={progress}
+                  status="active"
+                  strokeColor={{
+                    from: "#108ee9",
+                    to: "#87d068",
+                  }}
+                  format={(percent) => (
+                    <span className="dark:text-white">{percent}%</span>
+                  )}
+                />
+              </div>
+              <Dialog>
+                <div className="flex items-center justify-end gap-2">
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <DialogTrigger asChild>
+                    <Button variant="default">Submit Receipt</Button>
+                  </DialogTrigger>
+                </div>
+                <DialogContent className="sm:max-w-[425px] mx-auto">
+                  <DialogHeader>
+                    <DialogTitle>Confirm Submission</DialogTitle>
+                    <DialogDescription>
+                      <div>
+                        <p>Are you sure you want to submit these details?</p>
+                      </div>
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="flex justify-end">
+                    <DialogClose asChild>
+                      <Button variant="outline" className="m-2">
+                        Cancel
+                      </Button>
+                    </DialogClose>
+                    <Button
+                      onClick={(event) => {
+                        handleAddReceipt(form.getValues(), event);
+                      }}
+                      className="m-2"
+                      variant="default"
+                      disabled={loading}
+                    >
+                      {loading ? (
+                        <div className="flex items-center">
+                          <Loader2 className="mr-2 animate-spin" />
+                          <span>Submitting</span>
+                        </div>
+                      ) : (
+                        "Submit Receipt"
+                      )}
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </form>
+          </Form>
+        )}
+      </AlertDialogContent>
     </div>
   );
 };
 
 AddNewReceipt.propTypes = {
   addNewReceipt: PropTypes.func,
-  orderId: PropTypes.string,
+  selectedOrder: PropTypes.shape({
+    id: PropTypes.string,
+  }),
 };
 
 export default AddNewReceipt;

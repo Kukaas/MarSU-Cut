@@ -31,13 +31,17 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import AddNewReceipt from "@/components/components/forms/AddNewReceipt";
 
 function Orders() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [openReceiptForm, setOpenReceiptForm] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
   const [loadingDelete, setLoadingDelete] = useState(false);
   const [loadingUpdate, setLoadingUpdate] = useState(false);
+  const [currentBalance, setCurrentBalance] = useState(0);
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
@@ -49,29 +53,46 @@ function Orders() {
     });
   };
 
+  const setNewCurrentBalance = (order) => {
+    const totalPrice = order.orderItems.reduce(
+      (acc, item) => acc + parseFloat(item.totalPrice || 0),
+      0
+    );
+
+    const receipts = order.receipts || [];
+    const totalAmountPaid = receipts.reduce(
+      (acc, receipt) => acc + parseFloat(receipt.amount || 0),
+      0
+    );
+
+    const currentBalance = totalPrice - totalAmountPaid;
+
+    setCurrentBalance(currentBalance);
+  };
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get(
+        `${BASE_URL}/api/v1/order/student/${currentUser._id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+      setData(res.data.orders);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Fetch the data
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const res = await axios.get(
-          `${BASE_URL}/api/v1/order/student/${currentUser._id}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-          }
-        );
-        setData(res.data.orders);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchData();
   }, [currentUser._id]);
 
@@ -113,6 +134,11 @@ function Orders() {
   const addNewOrder = (newOrder) => {
     setData((prevData) => [newOrder, ...prevData]);
     setIsDialogOpen(false);
+  };
+
+  const addNewReceipt = () => {
+    setOpenReceiptForm(false);
+    fetchData()
   };
 
   const handleClaimed = (order) => updateOrderStatus(order, "CLAIMED");
@@ -361,6 +387,21 @@ function Orders() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              {currentUser.role === "Student" && (
+                <DropdownMenuItem
+                  onClick={() => {
+                    if (currentBalance > 0 && order.status !== "APPROVED") {
+                      setSelectedOrder(order);
+                      setNewCurrentBalance(order);
+                      setOpenReceiptForm(true);
+                    }
+                  }}
+                  disabled={currentBalance === 0 || order.status === "APPROVED"}
+                >
+                  Add New Receipt
+                </DropdownMenuItem>
+              )}
+
               <DropdownMenuItem onClick={() => handleViewReceipts(order)}>
                 View Receipts
               </DropdownMenuItem>
@@ -446,6 +487,13 @@ function Orders() {
           <CustomTable columns={columns} data={data} loading={loading} />
         </div>
       </div>
+      <AlertDialog open={openReceiptForm} onOpenChange={setOpenReceiptForm}>
+        <AddNewReceipt
+          selectedOrder={selectedOrder}
+          currentBalance={currentBalance}
+          addNewReceipt={addNewReceipt}
+        />
+      </AlertDialog>
     </Spin>
   );
 }

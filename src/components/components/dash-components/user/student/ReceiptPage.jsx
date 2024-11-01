@@ -13,29 +13,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import AddNewReceipt from "@/components/components/forms/AddNewReceipt";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useSelector } from "react-redux";
 import { Toaster } from "sonner";
 
 function ReceiptsPage() {
   const { orderId } = useParams();
   const location = useLocation();
-  const selectedOrder = location.state?.selectedOrder || {};
   const [receipts, setReceipts] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [isFullPayment, setIsFullPayment] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { currentUser } = useSelector((state) => state.user);
-  
   useEffect(() => {
     const fetchReceipts = async () => {
       setLoading(true);
@@ -159,26 +144,6 @@ function ReceiptsPage() {
         >
           Back
         </Button>
-        {currentUser.isAdmin === false && (
-          <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <AlertDialogTrigger disabled={isFullPayment}>
-              <Button disabled={isFullPayment}>Add New Receipt</Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Upload a new receipt</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Upload a new receipt for order {orderId}
-                </AlertDialogDescription>
-                <AddNewReceipt
-                  addNewReceipt={addNewReceipt}
-                  orderId={orderId}
-                  selectedOrder={selectedOrder}
-                />
-              </AlertDialogHeader>
-            </AlertDialogContent>
-          </AlertDialog>
-        )}
       </div>
       <Toaster position="top-center" closeButton={true} richColors={true} />
     </div>
