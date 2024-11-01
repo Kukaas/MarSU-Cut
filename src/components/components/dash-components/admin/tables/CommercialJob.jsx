@@ -37,10 +37,12 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import MeasureMentForm from "@/components/components/forms/MeasureMentForm";
+import CommercialJobDetails from "./CommercialJobDetails";
 
 const CommercialJob = () => {
   const [data, setData] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [originalData, setOriginalData] = useState([]);
   const [statusFilter, setStatusFilter] = useState("All");
@@ -220,9 +222,12 @@ const CommercialJob = () => {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(commercial._id)}
+                onClick={() => {
+                  setSelectedOrder(commercial);
+                  setDetailsDialogOpen(true);
+                }}
               >
-                Copy Commercial Job ID
+                Show Details
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
@@ -319,6 +324,9 @@ const CommercialJob = () => {
             setIsDialogOpen={setIsDialogOpen}
           />
         </AlertDialogContent>
+      </AlertDialog>
+      <AlertDialog open={detailsDialogOpen} onOpenChange={setDetailsDialogOpen}>
+        <CommercialJobDetails selectedOrder={selectedOrder} />
       </AlertDialog>
     </Spin>
   );

@@ -273,6 +273,7 @@ export const measureCommercialJobSchema = z.object({
   b: z.string().min(1, { message: "B must be at least 1 characters" }),
   fbl: z.string().min(1, { message: "Fbl must be at least 1 characters" }),
   UAG: z.string().min(1, { message: "UAG must be at least 1 characters" }),
+  LAG: z.string().min(1, { message: "LAG must be at least 1 characters" }),
   SL: z.string().min(1, { message: "SL must be at least 1 characters" }),
   W: z.string().min(1, { message: "W must be at least 1 characters" }),
   H: z.string().min(1, { message: "H must be at least 1 characters" }),

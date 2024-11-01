@@ -22,6 +22,7 @@ const MeasureMentForm = ({ selectedOrder, setIsDialogOpen }) => {
       b: "",
       fbl: "",
       UAG: "",
+      LAG: "",
       SL: "",
       W: "",
       H: "",
@@ -71,94 +72,101 @@ const MeasureMentForm = ({ selectedOrder, setIsDialogOpen }) => {
           <div className="flex justify-between w-full gap-2">
             <CustomInput
               form={form}
-              label="SH"
+              label="Shoulder"
               name="sh"
               type="text"
-              placeholder="Enter SH"
+              placeholder="Shoulder measurement"
             />
             <CustomInput
               form={form}
-              label="B"
+              label="Bust"
               name="b"
               type="text"
-              placeholder="Enter B"
+              placeholder="Bust measurement"
             />
           </div>
           <div className="flex justify-between w-full gap-2 mt-2">
             <CustomInput
               form={form}
-              label="FBL"
+              label="Figure/Backlength"
               name="fbl"
               type="text"
-              placeholder="Enter FBL"
+              placeholder="Figure/Backlenth measurement"
             />
             <CustomInput
               form={form}
-              label="UAG"
+              label="Upper Arm Gurt"
               name="UAG"
               type="text"
-              placeholder="Enter UAG"
+              placeholder="UAG measurement"
             />
           </div>
 
           <div className="flex justify-between w-full gap-2 mt-2">
             <CustomInput
               form={form}
-              label="SL"
+              label="Sleeve Length"
               name="SL"
               type="text"
-              placeholder="Enter SL"
+              placeholder="Sleeve Length measurement"
             />
             <CustomInput
               form={form}
-              label="W"
-              name="W"
+              label="Lower Arm Gurt"
+              name="LAG"
               type="text"
-              placeholder="Enter W"
+              placeholder="LAG measurement"
             />
           </div>
 
           <div className="flex justify-between w-full gap-2 mt-2">
             <CustomInput
               form={form}
-              label="H"
+              label="Hips"
               name="H"
               type="text"
-              placeholder="Enter H"
+              placeholder="Hips measurement"
             />
             <CustomInput
               form={form}
-              label="Cr"
-              name="Cr"
+              label="Waist Line"
+              name="W"
               type="text"
-              placeholder="Enter Cr"
+              placeholder="Waiste Line measurement"
             />
           </div>
 
           <div className="flex justify-between w-full gap-2 mt-2">
             <CustomInput
               form={form}
-              label="Th"
+              label="Thigh"
               name="Th"
               type="text"
-              placeholder="Enter Th"
+              placeholder="Thigh measurement"
             />
             <CustomInput
               form={form}
-              label="KL"
-              name="KL"
+              label="Cronch"
+              name="Cr"
               type="text"
-              placeholder="Enter KL"
+              placeholder="Cronch measurement"
             />
           </div>
 
           <div className="flex justify-between w-full gap-2 mt-2">
             <CustomInput
               form={form}
-              label="PLBW"
+              label="Pants Length/Bottoms Width"
               name="PLBW"
               type="text"
-              placeholder="Enter PLBW"
+              placeholder="PLBW measurement"
+            />
+            <CustomInput
+              form={form}
+              label="Knee Length"
+              name="KL"
+              type="text"
+              placeholder="Knee Length measurement"
             />
           </div>
 

@@ -157,7 +157,7 @@ function ReceiptsPage() {
           variant="secondary"
           onClick={() => window.history.back()}
         >
-          Cancel
+          Back
         </Button>
         {currentUser.isAdmin === false && (
           <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
