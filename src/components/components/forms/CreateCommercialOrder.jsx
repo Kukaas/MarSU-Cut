@@ -17,7 +17,7 @@ import { useSelector } from "react-redux";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomInput from "../custom-components/CustomInput";
-import { AlertDialogCancel } from "@/components/ui/alert-dialog";
+import { AlertDialogCancel, AlertDialogFooter } from "@/components/ui/alert-dialog";
 
 const CreateCommercialOrder = ({
   onCommercialOrderCreated,
@@ -79,39 +79,42 @@ const CreateCommercialOrder = ({
             )}
           >
             <div className="grid gap-4 mb-6">
-            <CustomInput
-              form={commercialJobForm}
-              name="cbName"
-              label="Commercial Job Name"
-              placeholder="eg. Jhon Doe"
-            />
-            <CustomInput
-              form={commercialJobForm}
-              name="contactNumber"
-              label="Contact Number"
-              placeholder="eg. 0912345678"
-            />
+              <CustomInput
+                form={commercialJobForm}
+                name="cbName"
+                label="Commercial Job Name"
+                placeholder="eg. Jhon Doe"
+              />
+              <CustomInput
+                form={commercialJobForm}
+                name="contactNumber"
+                label="Contact Number"
+                placeholder="eg. 0912345678"
+              />
             </div>
-            
-            <div className="flex items-center justify-end gap-2">
-              <AlertDialogCancel asChild>
-                <Button variant="outline">
-                  Cancel
+
+            <div className="flex flex-col items-center gap-4 mt-4">
+              <AlertDialogFooter className="w-full flex flex-col items-center gap-4">
+                <AlertDialogCancel asChild>
+                  <Button variant="outline" className="w-full">
+                    Cancel
+                  </Button>
+                </AlertDialogCancel>
+                <Button
+                  type="submit"
+                  disabled={commercialOrderLoading}
+                  className="w-full flex items-center justify-center"
+                >
+                  {commercialOrderLoading ? (
+                    <div className="flex items-center">
+                      <Loader2 className="mr-2 animate-spin" />
+                      <span>Submitting</span>
+                    </div>
+                  ) : (
+                    "Submit"
+                  )}
                 </Button>
-              </AlertDialogCancel>
-              <Button
-                type="submit"
-                disabled={commercialOrderLoading}
-              >
-                {commercialOrderLoading ? (
-                  <div className="flex items-center">
-                    <Loader2 className="mr-2 animate-spin" />
-                    <span>Submitting</span>
-                  </div>
-                ) : (
-                  "Submit"
-                )}
-              </Button>
+              </AlertDialogFooter>
             </div>
           </form>
         </Form>

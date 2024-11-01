@@ -1,14 +1,6 @@
 // UI
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form, FormField } from "@/components/ui/form";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
@@ -23,8 +15,12 @@ import { useForm } from "react-hook-form";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomInput from "../custom-components/CustomInput";
-import { AlertDialogCancel } from "@/components/ui/alert-dialog";
+import {
+  AlertDialogCancel,
+  AlertDialogFooter,
+} from "@/components/ui/alert-dialog";
 import SelectField from "../custom-components/SelectField";
+import CustomNumberInput from "../custom-components/CustomNumberInput";
 
 const AddNewRawMaterial = ({ onRawMaterialAdded, setIsDialogOpen }) => {
   const [addRawMaterialLoading, setAddRawMaterialLoading] = useState(false);
@@ -100,43 +96,36 @@ const AddNewRawMaterial = ({ onRawMaterialAdded, setIsDialogOpen }) => {
             />
           )}
         />
-        <FormField
+        <CustomNumberInput
           control={addRawMaterialForm.control}
+          label="Quantity"
           name="quantity"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Quantity</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  {...field}
-                  value={field.value !== undefined ? field.value : ""}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    field.onChange(value !== "" ? parseFloat(value) : "");
-                  }}
-                  placeholder="Quantity"
-                  className="w-full"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          placeholder="Quantity"
+          type="number"
         />
-        <div className="flex items-center justify-end gap-2">
-          <AlertDialogCancel asChild>
-            <Button variant="outline">Cancel</Button>
-          </AlertDialogCancel>
-          <Button type="submit" disabled={addRawMaterialLoading}>
-            {addRawMaterialLoading ? (
-              <div className="flex items-center">
-                <Loader2 className="mr-2 animate-spin" />
-                <span>Adding</span>
-              </div>
-            ) : (
-              "Add Material"
-            )}
-          </Button>
+        <div className="flex flex-col items-center gap-4 mt-4">
+          <AlertDialogFooter className="flex flex-col items-center gap-4 w-full">
+            <AlertDialogCancel asChild>
+              <Button variant="outline" className="w-full">
+                Cancel
+              </Button>
+            </AlertDialogCancel>
+
+            <Button
+              type="submit"
+              disabled={addRawMaterialLoading}
+              className="flex items-center justify-center w-full"
+            >
+              {addRawMaterialLoading ? (
+                <div className="flex items-center">
+                  <Loader2 className="mr-2 animate-spin" />
+                  <span>Adding</span>
+                </div>
+              ) : (
+                "Add Material"
+              )}
+            </Button>
+          </AlertDialogFooter>
         </div>
       </form>
     </Form>

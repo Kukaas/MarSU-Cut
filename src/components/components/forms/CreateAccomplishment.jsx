@@ -17,7 +17,10 @@ import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomInput from "../custom-components/CustomInput";
 import SelectField from "../custom-components/SelectField";
-import { AlertDialogCancel } from "@/components/ui/alert-dialog";
+import {
+  AlertDialogCancel,
+  AlertDialogFooter,
+} from "@/components/ui/alert-dialog";
 
 const CreateAccomplishment = ({ onAccomplishmentCreate, setIsDialogOpen }) => {
   const [loading, setLoading] = useState();
@@ -86,22 +89,30 @@ const CreateAccomplishment = ({ onAccomplishmentCreate, setIsDialogOpen }) => {
               label="Accomplishment"
               placeholder="eg. 100 pcs of shirt, 50 pcs of pants, etc."
             />
-            <div className="flex items-center justify-end">
-              <AlertDialogCancel asChild>
-                <Button variant="outline" className="mr-2">
-                  Cancel
+            <div className="flex flex-col items-center gap-4 mt-4">
+              <AlertDialogFooter className="flex flex-col items-center gap-4 w-full">
+                <AlertDialogCancel asChild>
+                  <Button variant="outline" className="w-full">
+                    Cancel
+                  </Button>
+                </AlertDialogCancel>
+
+                <Button
+                  type="submit"
+                  variant="default"
+                  disabled={loading}
+                  className="w-full flex items-center justify-center"
+                >
+                  {loading ? (
+                    <div className="flex items-center">
+                      <Loader2 className="mr-2 animate-spin" />
+                      <span>Creating</span>
+                    </div>
+                  ) : (
+                    "Create"
+                  )}
                 </Button>
-              </AlertDialogCancel>
-              <Button type="submit" variant="default" disabled={loading}>
-                {loading ? (
-                  <div className="flex items-center">
-                    <Loader2 className="mr-2 animate-spin" />
-                    <span>Creating</span>
-                  </div>
-                ) : (
-                  "Create"
-                )}
-              </Button>
+              </AlertDialogFooter>
             </div>
           </form>
         </Form>

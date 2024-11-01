@@ -2,15 +2,18 @@ import { Form } from "@/components/ui/form";
 import { measureCommercialJobSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import CustomInput from "../custom-components/CustomInput";
 import { useState } from "react";
-import { AlertDialogCancel } from "@/components/ui/alert-dialog";
+import {
+  AlertDialogCancel,
+  AlertDialogFooter,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { toast } from "sonner";
 import { BASE_URL } from "@/lib/api";
 import { token } from "@/lib/token";
 import { Loader2 } from "lucide-react";
+import CustomNumberInput from "../custom-components/CustomNumberInput";
 
 const MeasureMentForm = ({ selectedOrder, setIsDialogOpen }) => {
   const [loading, setLoading] = useState(false);
@@ -70,118 +73,128 @@ const MeasureMentForm = ({ selectedOrder, setIsDialogOpen }) => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleMeasurement)}>
           <div className="flex justify-between w-full gap-2">
-            <CustomInput
-              form={form}
+            <CustomNumberInput
+              control={form.control}
               label="Shoulder"
               name="sh"
-              type="text"
+              type="number"
               placeholder="Shoulder measurement"
             />
-            <CustomInput
-              form={form}
+            <CustomNumberInput
+              control={form.control}
               label="Bust"
               name="b"
-              type="text"
+              type="number"
               placeholder="Bust measurement"
             />
           </div>
           <div className="flex justify-between w-full gap-2 mt-2">
-            <CustomInput
-              form={form}
+            <CustomNumberInput
+              control={form.control}
               label="Figure/Backlength"
               name="fbl"
-              type="text"
-              placeholder="Figure/Backlenth measurement"
+              type="number"
+              placeholder="Figure/Backlength measurement"
             />
-            <CustomInput
-              form={form}
+            <CustomNumberInput
+              control={form.control}
               label="Upper Arm Gurt"
               name="UAG"
-              type="text"
+              type="number"
               placeholder="UAG measurement"
             />
           </div>
 
           <div className="flex justify-between w-full gap-2 mt-2">
-            <CustomInput
-              form={form}
+            <CustomNumberInput
+              control={form.control}
               label="Sleeve Length"
               name="SL"
-              type="text"
+              type="number"
               placeholder="Sleeve Length measurement"
             />
-            <CustomInput
-              form={form}
+            <CustomNumberInput
+              control={form.control}
               label="Lower Arm Gurt"
               name="LAG"
-              type="text"
+              type="number"
               placeholder="LAG measurement"
             />
           </div>
 
           <div className="flex justify-between w-full gap-2 mt-2">
-            <CustomInput
-              form={form}
+            <CustomNumberInput
+              control={form.control}
               label="Hips"
               name="H"
-              type="text"
+              type="number"
               placeholder="Hips measurement"
             />
-            <CustomInput
-              form={form}
+            <CustomNumberInput
+              control={form.control}
               label="Waist Line"
               name="W"
-              type="text"
-              placeholder="Waiste Line measurement"
+              type="number"
+              placeholder="Waist Line measurement"
             />
           </div>
 
           <div className="flex justify-between w-full gap-2 mt-2">
-            <CustomInput
-              form={form}
+            <CustomNumberInput
+              control={form.control}
               label="Thigh"
               name="Th"
-              type="text"
+              type="number"
               placeholder="Thigh measurement"
             />
-            <CustomInput
-              form={form}
-              label="Cronch"
+            <CustomNumberInput
+              control={form.control}
+              label="Crotch"
               name="Cr"
-              type="text"
-              placeholder="Cronch measurement"
+              type="number"
+              placeholder="Crotch measurement"
             />
           </div>
 
           <div className="flex justify-between w-full gap-2 mt-2">
-            <CustomInput
-              form={form}
+            <CustomNumberInput
+              control={form.control}
               label="Pants Length/Bottoms Width"
               name="PLBW"
-              type="text"
+              type="number"
               placeholder="PLBW measurement"
             />
-            <CustomInput
-              form={form}
+            <CustomNumberInput
+              control={form.control}
               label="Knee Length"
               name="KL"
-              type="text"
+              type="number"
               placeholder="Knee Length measurement"
             />
           </div>
 
-          <div className="flex items-center justify-end mt-4 gap-2">
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <Button type="submit" disabled={loading}>
-              {loading ? (
-                <div className="flex items-center">
-                  <Loader2 className="mr-2 animate-spin" />
-                  <span>Submitting</span>
-                </div>
-              ) : (
-                "Submit"
-              )}
-            </Button>
+          <div className="flex flex-col items-center gap-4 mt-4">
+            <AlertDialogFooter className="w-full flex flex-col items-center gap-4">
+              <AlertDialogCancel asChild>
+                <Button variant="outline" className="w-full">
+                  Cancel
+                </Button>
+              </AlertDialogCancel>
+              <Button
+                type="submit"
+                disabled={loading}
+                className="w-full flex items-center justify-center"
+              >
+                {loading ? (
+                  <div className="flex items-center">
+                    <Loader2 className="mr-2 animate-spin" />
+                    <span>Submitting</span>
+                  </div>
+                ) : (
+                  "Submit"
+                )}
+              </Button>
+            </AlertDialogFooter>
           </div>
         </form>
       </Form>

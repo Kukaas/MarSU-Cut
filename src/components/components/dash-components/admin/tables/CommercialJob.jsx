@@ -249,6 +249,7 @@ const CommercialJob = () => {
                   }}
                   disabled={[
                     "REJECTED",
+                    "PENDING",
                     "MEASURED",
                     "DONE",
                     "CLAIMED",

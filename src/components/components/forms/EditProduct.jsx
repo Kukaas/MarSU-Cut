@@ -14,7 +14,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
 import { Loader2 } from "lucide-react";
@@ -29,7 +28,11 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
-import { AlertDialogCancel } from "@/components/ui/alert-dialog";
+import {
+  AlertDialogCancel,
+  AlertDialogFooter,
+} from "@/components/ui/alert-dialog";
+import CustomNumberInput from "../custom-components/CustomNumberInput";
 
 const EditProduct = ({
   selectedProduct,
@@ -209,43 +212,35 @@ const EditProduct = ({
             </FormItem>
           )}
         />
-        <FormField
+        <CustomNumberInput
           control={editProductForm.control}
+          label="Quantity"
           name="quantity"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Quantity</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  {...field}
-                  value={field.value !== undefined ? field.value : ""}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    field.onChange(value !== "" ? parseFloat(value) : "");
-                  }}
-                  placeholder="Quantity"
-                  className="w-full"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          placeholder="Quantity"
+          type="number"
         />
-        <div className="flex items-center justify-end gap-2">
-          <AlertDialogCancel asChild>
-            <Button variant="outline">Cancel</Button>
-          </AlertDialogCancel>
-          <Button type="submit" disabled={editProductLoading}>
-            {editProductLoading ? (
-              <div className="flex items-center">
-                <Loader2 className="mr-2 animate-spin" />
-                <span>Updating</span>
-              </div>
-            ) : (
-              "Update"
-            )}
-          </Button>
+        <div className="flex flex-col items-center gap-4 mt-4">
+          <AlertDialogFooter className="w-full flex flex-col items-center gap-4">
+            <AlertDialogCancel asChild>
+              <Button variant="outline" className="w-full">
+                Cancel
+              </Button>
+            </AlertDialogCancel>
+            <Button
+              type="submit"
+              disabled={editProductLoading}
+              className="w-full flex items-center justify-center"
+            >
+              {editProductLoading ? (
+                <div className="flex items-center">
+                  <Loader2 className="mr-2 animate-spin" />
+                  <span>Updating</span>
+                </div>
+              ) : (
+                "Update"
+              )}
+            </Button>
+          </AlertDialogFooter>
         </div>
       </form>
     </Form>

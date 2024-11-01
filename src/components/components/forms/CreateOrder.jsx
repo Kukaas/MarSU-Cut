@@ -46,10 +46,12 @@ import {
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
+  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { AlertDialogTrigger } from "@radix-ui/react-alert-dialog";
+import CustomNumberInput from "../custom-components/CustomNumberInput";
 
 const CreateOrder = ({ addNewOrder, setIsDialogOpen }) => {
   const [imageFile, setImageFile] = useState(null);
@@ -208,28 +210,12 @@ const CreateOrder = ({ addNewOrder, setIsDialogOpen }) => {
             label="OR Number"
             placeholder="eg. 123456"
           />
-          <FormField
+          <CustomNumberInput
             control={form.control}
+            label="Amount"
             name="amount"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Amount</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    {...field}
-                    value={field.value !== undefined ? field.value : ""}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      field.onChange(value !== "" ? parseFloat(value) : "");
-                    }}
-                    placeholder="Amount"
-                    className="w-full"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            placeholder="Amount"
+            type="number"
           />
           <div className="flex space-x-4 mt-4">
             <FormField
@@ -334,15 +320,20 @@ const CreateOrder = ({ addNewOrder, setIsDialogOpen }) => {
             />
           </div>
           <AlertDialog>
-            <div className="flex items-center justify-end gap-2">
-              <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>
-                Cancel
-              </AlertDialogCancel>
-              <AlertDialogTrigger asChild>
-                <Button variant="default" className="mt-2 sm:mt-0">
-                  Submit Order
-                </Button>
-              </AlertDialogTrigger>
+            <div className="flex flex-col items-center gap-4 mt-4">
+              <AlertDialogFooter className="flex flex-col items-center gap-4 w-full">
+                <AlertDialogCancel
+                  onClick={() => setIsDialogOpen(false)}
+                  className="w-full"
+                >
+                  Cancel
+                </AlertDialogCancel>
+                <AlertDialogTrigger asChild>
+                  <Button variant="default" className="w-full mt-2 sm:mt-0">
+                    Submit Order
+                  </Button>
+                </AlertDialogTrigger>
+              </AlertDialogFooter>
             </div>
             <AlertDialogContent className="sm:max-w-[425px] mx-auto">
               <AlertDialogHeader>

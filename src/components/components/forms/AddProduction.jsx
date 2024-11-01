@@ -34,7 +34,11 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import SelectField from "../custom-components/SelectField";
-import { AlertDialogCancel } from "@/components/ui/alert-dialog";
+import {
+  AlertDialogCancel,
+  AlertDialogFooter,
+} from "@/components/ui/alert-dialog";
+import CustomNumberInput from "../custom-components/CustomNumberInput";
 
 const AddProduction = ({ onProductionAdded, setIsOpen }) => {
   const [addProductionLoading, setAddProductionLoading] = useState(false);
@@ -79,7 +83,7 @@ const AddProduction = ({ onProductionAdded, setIsOpen }) => {
       : productType === "PE TSHIRT"
       ? ["2XL", "XS/S", "M/L", "XL", "XXL"]
       : productType === "ACADEMIC GOWN"
-      ?  ["Small", "Medium", "Large", "Extra Large"]
+      ? ["Small", "Medium", "Large", "Extra Large"]
       : [];
 
   const { fields, append, remove } = useFieldArray({
@@ -321,30 +325,12 @@ const AddProduction = ({ onProductionAdded, setIsOpen }) => {
                 />
               </div>
 
-              <FormField
+              <CustomNumberInput
                 control={productionForm.control}
+                label="Quantity"
                 name="quantity"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Quantity</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        {...field}
-                        value={field.value !== undefined ? field.value : ""}
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          const parsedValue =
-                            value !== "" ? parseFloat(value) : "";
-                          field.onChange(parsedValue >= 0 ? parsedValue : 0);
-                        }}
-                        placeholder="Quantity"
-                        className="w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                placeholder="Quantity"
+                type="number"
               />
             </fieldset>
 
@@ -459,31 +445,36 @@ const AddProduction = ({ onProductionAdded, setIsOpen }) => {
                 </div>
               </div>
             </fieldset>
-            <div className="flex items-center justify-end gap-2 mt-4">
-              <AlertDialogCancel asChild>
+            <div className="flex flex-col items-center gap-4 mt-4">
+              <AlertDialogFooter className="w-full flex flex-col items-center gap-4">
+                <AlertDialogCancel asChild>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      localStorage.removeItem("formState");
+                    }}
+                    className="w-full"
+                  >
+                    Cancel
+                  </Button>
+                </AlertDialogCancel>
+
                 <Button
-                  variant="outline"
-                  onClick={() => {
-                    localStorage.removeItem("formState");
-                  }}
+                  onClick={handleButtonClick}
+                  type="button"
+                  disabled={addProductionLoading}
+                  className="w-full flex items-center justify-center"
                 >
-                  Cancel
+                  {addProductionLoading ? (
+                    <div className="flex items-center">
+                      <Loader2 className="mr-2 animate-spin" />
+                      <span>Adding</span>
+                    </div>
+                  ) : (
+                    "Add Production"
+                  )}
                 </Button>
-              </AlertDialogCancel>
-              <Button
-                onClick={handleButtonClick}
-                type="button"
-                disabled={addProductionLoading}
-              >
-                {addProductionLoading ? (
-                  <div className="flex items-center">
-                    <Loader2 className="mr-2 animate-spin" />
-                    <span>Adding</span>
-                  </div>
-                ) : (
-                  "Add Production"
-                )}
-              </Button>
+              </AlertDialogFooter>
             </div>
           </form>
         </Form>

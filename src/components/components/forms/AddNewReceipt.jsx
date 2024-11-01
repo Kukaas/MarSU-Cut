@@ -53,6 +53,7 @@ import {
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
+  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
@@ -152,7 +153,6 @@ const AddNewReceipt = ({ addNewReceipt, selectedOrder, currentBalance }) => {
     );
   };
 
-
   const handleAddReceipt = async (values, event) => {
     event.preventDefault();
     event.stopPropagation();
@@ -198,8 +198,7 @@ const AddNewReceipt = ({ addNewReceipt, selectedOrder, currentBalance }) => {
         const { status, data } = error.response;
         if (status === 400) {
           toast.error(data.message);
-        } else if (status === 401){
-
+        } else if (status === 401) {
         } else if (status === 500) {
           ToasterError({
             description: "Check your internet connection and try again.",
@@ -211,7 +210,7 @@ const AddNewReceipt = ({ addNewReceipt, selectedOrder, currentBalance }) => {
 
   return (
     <div className="grid gap-4 py-4">
-      <AlertDialogContent>
+      <AlertDialogContent className="sm:max-w-[425px] overflow-auto">
         <AlertDialogHeader>
           <AlertDialogTitle>Upload a new receipt</AlertDialogTitle>
           <AlertDialogDescription>
@@ -378,11 +377,23 @@ const AddNewReceipt = ({ addNewReceipt, selectedOrder, currentBalance }) => {
                 />
               </div>
               <Dialog>
-                <div className="flex items-center justify-end gap-2">
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <DialogTrigger asChild>
-                    <Button variant="default">Submit Receipt</Button>
-                  </DialogTrigger>
+                <div className="flex flex-col items-center gap-4 mt-4">
+                  <AlertDialogFooter className="w-full flex flex-col items-center gap-4">
+                    <AlertDialogCancel asChild>
+                      <Button variant="outline" className="w-full">
+                        Cancel
+                      </Button>
+                    </AlertDialogCancel>
+
+                    <DialogTrigger asChild>
+                      <Button
+                        variant="default"
+                        className="w-full flex items-center justify-center"
+                      >
+                        Submit Receipt
+                      </Button>
+                    </DialogTrigger>
+                  </AlertDialogFooter>
                 </div>
                 <DialogContent className="sm:max-w-[425px] mx-auto">
                   <DialogHeader>

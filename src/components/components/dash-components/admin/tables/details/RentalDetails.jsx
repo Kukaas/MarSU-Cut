@@ -6,6 +6,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 
 const RentalDetails = ({ selectedRental }) => {
   if (!selectedRental) return null;
@@ -97,8 +98,11 @@ const RentalDetails = ({ selectedRental }) => {
       </div>
 
       <AlertDialogFooter className="mt-6">
-        <AlertDialogCancel className="px-4 py-2 font-medium text-white rounded-md">
-          Close
+        <AlertDialogCancel
+          asChild
+          className="px-4 py-2 font-medium text-white w-full"
+        >
+          <Button className="w-full">Close</Button>
         </AlertDialogCancel>
       </AlertDialogFooter>
     </AlertDialogContent>

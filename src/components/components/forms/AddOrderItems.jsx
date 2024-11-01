@@ -23,7 +23,10 @@ import ToasterError from "@/lib/Toaster";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import SelectField from "../custom-components/SelectField";
-import { AlertDialogCancel } from "@/components/ui/alert-dialog";
+import {
+  AlertDialogCancel,
+  AlertDialogFooter,
+} from "@/components/ui/alert-dialog";
 
 const AddOrderItems = ({
   selectedOrder,
@@ -375,26 +378,32 @@ const AddOrderItems = ({
             className="mt-5 w-full cursor-pointer"
           />
         </Tooltip>
-        <div className="flex justify-end items-center">
-          <AlertDialogCancel asChild>
+        <div className="flex flex-col items-center gap-4 mt-4">
+          <AlertDialogFooter className="flex flex-col items-center mt-5 gap-4 w-full">
+            <AlertDialogCancel asChild>
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => form.reset()}
+              >
+                Cancel
+              </Button>
+            </AlertDialogCancel>
             <Button
-              variant="outline"
-              className="mr-2"
-              onClick={() => form.reset()}
+              type="submit"
+              className="w-full flex items-center justify-center"
+              disabled={loadingAddItems}
             >
-              Cancel
+              {loadingAddItems ? (
+                <div className="flex items-center">
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Adding Items...
+                </div>
+              ) : (
+                "Add Items"
+              )}
             </Button>
-          </AlertDialogCancel>
-          <Button type="submit" className="" disabled={loadingAddItems}>
-            {loadingAddItems ? (
-              <div className="flex items-center">
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Adding Items...
-              </div>
-            ) : (
-              "Add Items"
-            )}
-          </Button>
+          </AlertDialogFooter>
         </div>
       </form>
     </Form>

@@ -6,6 +6,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 
 const CommercialJobDetails = ({ selectedOrder }) => {
   if (!selectedOrder) return null;
@@ -17,6 +18,21 @@ const CommercialJobDetails = ({ selectedOrder }) => {
       year: "numeric",
     });
   };
+
+  const measurements = [
+    { label: "Shoulder", key: "sh" },
+    { label: "Bust", key: "b" },
+    { label: "Figure/Backlength", key: "fbl" },
+    { label: "Upper Arm Gurt", key: "UAG" },
+    { label: "Lower Arm Gurt", key: "LAG" },
+    { label: "Sleeve Length", key: "SL" },
+    { label: "Waist Line", key: "W" },
+    { label: "Hips", key: "H" },
+    { label: "Crotch", key: "Cr" },
+    { label: "Thigh", key: "Th" },
+    { label: "Knee Length", key: "KL" },
+    { label: "Pants Length/Bottoms Width", key: "PLBW" },
+  ];
 
   return (
     <AlertDialogContent className="h-[500px] overflow-auto">
@@ -74,49 +90,26 @@ const CommercialJobDetails = ({ selectedOrder }) => {
           <div className="flex justify-center mt-4">
             <h2 className="font-medium text-lg">Measurements</h2>
           </div>
-          <div className="flex justify-between">
-            <span>Shoulder:</span> <span>{selectedOrder.sh} cm</span>
-          </div>
-          <div className="flex justify-between">
-            <span>Bust:</span> <span>{selectedOrder.b} cm</span>
-          </div>
-          <div className="flex justify-between">
-            <span>Figure/Backlength:</span> <span>{selectedOrder.fbl} cm</span>
-          </div>
-          <div className="flex justify-between">
-            <span>Upper Arm Gurt:</span> <span>{selectedOrder.UAG} cm</span>
-          </div>
-          <div className="flex justify-between">
-            <span>Lower Arm Gurt:</span> <span>{selectedOrder.LAG} cm</span>
-          </div>
-          <div className="flex justify-between">
-            <span>Sleeve Length:</span> <span>{selectedOrder.SL} cm</span>
-          </div>
-          <div className="flex justify-between">
-            <span>Waiste Line:</span> <span>{selectedOrder.W} cm</span>
-          </div>
-          <div className="flex justify-between">
-            <span>Hips:</span> <span>{selectedOrder.H} cm</span>
-          </div>
-          <div className="flex justify-between">
-            <span>Cronch:</span> <span>{selectedOrder.Cr} cm</span>
-          </div>
-          <div className="flex justify-between">
-            <span>Thigh:</span> <span>{selectedOrder.Th} cm</span>
-          </div>
-          <div className="flex justify-between">
-            <span>Knee Length:</span> <span>{selectedOrder.KL} cm</span>
-          </div>
-          <div className="flex justify-between">
-            <span>Pants Length/Bottoms Width:</span>{" "}
-            <span>{selectedOrder.PLBW} cm</span>
-          </div>
+
+          {measurements.map(({ label, key }) => (
+            <div className="flex justify-between" key={key}>
+              <span>{label}:</span>
+              <span>
+                {selectedOrder[key]
+                  ? `${selectedOrder[key]} cm`
+                  : "Not yet Measured"}
+              </span>
+            </div>
+          ))}
         </div>
       </div>
 
       <AlertDialogFooter className="mt-6">
-        <AlertDialogCancel className="px-4 py-2 font-medium ">
-          Close
+        <AlertDialogCancel
+          asChild
+          className="px-4 py-2 font-medium text-white w-full"
+        >
+          <Button className="w-full">Close</Button>
         </AlertDialogCancel>
       </AlertDialogFooter>
     </AlertDialogContent>

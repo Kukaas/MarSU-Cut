@@ -258,34 +258,14 @@ const Productions = () => {
                     </Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent className="max-h-[550px] overflow-auto">
-                    <Tabs defaultValue="uniform" className="mt-4">
-                      <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="uniform">Uniform</TabsTrigger>
-                        <TabsTrigger value="academicGown">
-                          Academic Gown
-                        </TabsTrigger>
-                      </TabsList>
-                      <TabsContent value="uniform" className="mt-4">
-                        <AlertDialogTitle>
-                          Add a new uniform production
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Click submit when you&apos;re done.
-                        </AlertDialogDescription>
-                        <AddProduction
-                          onProductionAdded={handleProductionAdded}
-                          setIsOpen={setIsOpen}
-                        />
-                      </TabsContent>
-                      <TabsContent value="academicGown" className="mt-4">
-                        <AlertDialogTitle>
-                          Add a new academic gown production
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Click submit when you&apos;re done.
-                        </AlertDialogDescription>
-                      </TabsContent>
-                    </Tabs>
+                    <AlertDialogTitle>Add a new production</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Click submit when you&apos;re done.
+                    </AlertDialogDescription>
+                    <AddProduction
+                      onProductionAdded={handleProductionAdded}
+                      setIsOpen={setIsOpen}
+                    />
                   </AlertDialogContent>
                 </AlertDialog>
               </Tooltip>

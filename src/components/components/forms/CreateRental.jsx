@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
 import { CalendarIcon, Loader2 } from "lucide-react";
@@ -38,12 +37,14 @@ import {
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
+  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { DialogClose } from "@/components/ui/dialog";
 import SelectField from "../custom-components/SelectField";
+import CustomNumberInput from "../custom-components/CustomNumberInput";
 
 const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
   const [loading, setLoading] = useState(false);
@@ -215,108 +216,36 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
                 )}
               />
               <div className="flex justify-between gap-4">
-                <FormField
+                <CustomNumberInput
                   control={form.control}
+                  label="Small"
                   name="small"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Small</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          {...field}
-                          value={field.value !== undefined ? field.value : ""}
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            const parsedValue =
-                              value !== "" ? parseFloat(value) : "";
-                            field.onChange(parsedValue >= 0 ? parsedValue : 0);
-                          }}
-                          placeholder="Quantity of small"
-                          className="w-full"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  placeholder="Small"
+                  type="number"
                 />
-                <FormField
+                <CustomNumberInput
                   control={form.control}
+                  label="Medium"
                   name="medium"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Medium</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          {...field}
-                          value={field.value !== undefined ? field.value : ""}
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            const parsedValue =
-                              value !== "" ? parseFloat(value) : "";
-                            field.onChange(parsedValue >= 0 ? parsedValue : 0);
-                          }}
-                          placeholder="Quantity of medium"
-                          className="w-full"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  placeholder="Medium"
+                  type="number"
                 />
               </div>
 
               <div className="flex justify-between gap-4">
-                <FormField
+                <CustomNumberInput
                   control={form.control}
+                  label="Large"
                   name="large"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Large</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          {...field}
-                          value={field.value !== undefined ? field.value : ""}
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            const parsedValue =
-                              value !== "" ? parseFloat(value) : "";
-                            field.onChange(parsedValue >= 0 ? parsedValue : 0);
-                          }}
-                          placeholder="Quantity of large"
-                          className="w-full"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  placeholder="Large"
+                  type="number"
                 />
-                <FormField
+                <CustomNumberInput
                   control={form.control}
+                  label="Extra Large"
                   name="extraLarge"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Extra Large</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          {...field}
-                          value={field.value !== undefined ? field.value : ""}
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            const parsedValue =
-                              value !== "" ? parseFloat(value) : "";
-                            field.onChange(parsedValue >= 0 ? parsedValue : 0);
-                          }}
-                          placeholder="Quantity of extra large"
-                          className="w-full"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  placeholder="Extra Large"
+                  type="number"
                 />
               </div>
             </div>
@@ -324,23 +253,30 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
 
           {/* Submission Section */}
           <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <div className="flex items-center justify-end gap-2">
-              <DialogClose asChild>
-                <Button
-                  variant="secondary"
-                  onClick={() => {
-                    localStorage.removeItem("createRentalForm");
-                  }}
-                >
-                  Cancel
-                </Button>
-              </DialogClose>
-              <AlertDialogTrigger asChild>
-                <Button onClick={() => setDialogOpen(true)}>
-                  Submit Rental
-                </Button>
-              </AlertDialogTrigger>
+            <div className="flex flex-col items-center gap-4 mt-4">
+              <AlertDialogFooter className="w-full flex flex-col items-center gap-4">
+                <DialogClose asChild>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      localStorage.removeItem("createRentalForm");
+                    }}
+                    className="w-full"
+                  >
+                    Cancel
+                  </Button>
+                </DialogClose>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    onClick={() => setDialogOpen(true)}
+                    className="w-full flex items-center justify-center"
+                  >
+                    Submit Rental
+                  </Button>
+                </AlertDialogTrigger>
+              </AlertDialogFooter>
             </div>
+
             <AlertDialogContent className="sm:max-w-[425px] mx-auto overflow-y-auto">
               <AlertDialogHeader>
                 <AlertDialogTitle>Confirm Submission</AlertDialogTitle>
@@ -350,26 +286,31 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
                   </div>
                 </AlertDialogDescription>
               </AlertDialogHeader>
-              <div className="flex justify-end gap-2">
-                <AlertDialogCancel asChild>
-                  <Button variant="secondary">Cancel</Button>
-                </AlertDialogCancel>
-                <Button
-                  onClick={() => {
-                    handleCreateRental(form.getValues());
-                  }}
-                  variant="default"
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <div className="flex items-center">
-                      <Loader2 className="mr-2 animate-spin" />
-                      <span>Submitting</span>
-                    </div>
-                  ) : (
-                    "Submit"
-                  )}
-                </Button>
+              <div className="flex flex-col items-center gap-4 mt-4">
+                <AlertDialogFooter className="w-full flex flex-col items-center gap-4">
+                  <AlertDialogCancel asChild>
+                    <Button variant="outline" className="w-full">
+                      Cancel
+                    </Button>
+                  </AlertDialogCancel>
+                  <Button
+                    onClick={() => {
+                      handleCreateRental(form.getValues());
+                    }}
+                    variant="default"
+                    disabled={loading}
+                    className="w-full flex items-center justify-center"
+                  >
+                    {loading ? (
+                      <div className="flex items-center">
+                        <Loader2 className="mr-2 animate-spin" />
+                        <span>Submitting</span>
+                      </div>
+                    ) : (
+                      "Submit"
+                    )}
+                  </Button>
+                </AlertDialogFooter>
               </div>
             </AlertDialogContent>
           </AlertDialog>
