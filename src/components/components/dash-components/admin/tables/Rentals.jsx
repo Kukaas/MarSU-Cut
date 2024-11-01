@@ -56,6 +56,7 @@ import { addPickUpDateSchema } from "@/schema/shema";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
+import RentalDetails from "./RentalDetails";
 
 function Rentals() {
   const [data, setData] = useState([]);
@@ -65,6 +66,7 @@ function Rentals() {
   const [loadingUpdate, setLoadingUpdate] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [detailsDialogOpen, setDetailsDialogOpen] = useState(true);
   const [selectedRental, setSelectedRental] = useState(null);
   const navigate = useNavigate();
 
@@ -433,11 +435,15 @@ function Rentals() {
       ),
       cell: ({ row }) => {
         const date = new Date(row.getValue("possiblePickupDate"));
-        return date.toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        });
+        return (
+          <span className="text-sm">
+            {date.toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </span>
+        );
       },
     },
     {
@@ -468,22 +474,22 @@ function Rentals() {
         });
       },
     },
-    {
-      accessorKey: "small",
-      header: "Small",
-    },
-    {
-      accessorKey: "medium",
-      header: "Medium",
-    },
-    {
-      accessorKey: "large",
-      header: "Large",
-    },
-    {
-      accessorKey: "extraLarge",
-      header: "Extra Large",
-    },
+    // {
+    //   accessorKey: "small",
+    //   header: "Small",
+    // },
+    // {
+    //   accessorKey: "medium",
+    //   header: "Medium",
+    // },
+    // {
+    //   accessorKey: "large",
+    //   header: "Large",
+    // },
+    // {
+    //   accessorKey: "extraLarge",
+    //   header: "Extra Large",
+    // },
     {
       accessorKey: "returnDate",
       header: ({ column }) => (
@@ -541,9 +547,12 @@ function Rentals() {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(rental._id)}
+                onClick={() => {
+                  setSelectedRental(rental);
+                  setDetailsDialogOpen(true);
+                }}
               >
-                Copy Rental ID
+                Show Details
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
@@ -729,6 +738,12 @@ function Rentals() {
             </AlertDialogAction>
           </div>
         </AlertDialogContent>
+      </AlertDialog>
+      <AlertDialog open={detailsDialogOpen} onOpenChange={setDetailsDialogOpen}>
+        <RentalDetails
+          setDetailsDialogOpen={setDetailsDialogOpen}
+          selectedRental={selectedRental}
+        />
       </AlertDialog>
     </Spin>
   );
