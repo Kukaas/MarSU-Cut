@@ -2,6 +2,7 @@ import {
   AlertDialog,
   AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
@@ -224,20 +225,24 @@ function DownloadButton({ selectedDate, filteredData }) {
               onChange={(e) => setFileName(e.target.value)}
               className="mb-4"
             />
-            <div className="flex justify-end">
-              <AlertDialogCancel asChild>
-                <Button variant="secondary" className="mr-2">
-                  Cancel
+            <div className="flex flex-col items-center gap-4">
+              <AlertDialogFooter className="flex flex-col items-center gap-4 w-full">
+                <AlertDialogCancel asChild>
+                  <Button variant="outline" className="w-full">
+                    Cancel
+                  </Button>
+                </AlertDialogCancel>
+
+                <Button
+                  onClick={() => {
+                    handlePrint();
+                    setIsDialogOpen(false);
+                  }}
+                  className="flex items-center justify-center w-full"
+                >
+                  Confirm
                 </Button>
-              </AlertDialogCancel>
-              <Button
-                onClick={() => {
-                  handlePrint();
-                  setIsDialogOpen(false);
-                }}
-              >
-                Confirm
-              </Button>
+              </AlertDialogFooter>
             </div>
           </div>
         </AlertDialogContent>
