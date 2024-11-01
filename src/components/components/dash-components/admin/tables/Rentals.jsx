@@ -56,7 +56,7 @@ import { addPickUpDateSchema } from "@/schema/shema";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
-import RentalDetails from "./RentalDetails";
+import RentalDetails from "./details/RentalDetails";
 
 function Rentals() {
   const [data, setData] = useState([]);

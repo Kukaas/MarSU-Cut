@@ -37,7 +37,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import MeasureMentForm from "@/components/components/forms/MeasureMentForm";
-import CommercialJobDetails from "./CommercialJobDetails";
+import CommercialJobDetails from "./details/CommercialJobDetails";
 
 const CommercialJob = () => {
   const [data, setData] = useState([]);

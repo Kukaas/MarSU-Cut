@@ -70,17 +70,27 @@ const RentalDetails = ({ selectedRental }) => {
           </span>
         </div>
 
-        <div className="flex justify-between">
-          <span className="font-medium">Sizes Ordered:</span>
-          <span>
-            Small: {selectedRental.small}, Medium: {selectedRental.medium},
-            Large: {selectedRental.large}, XL: {selectedRental.extraLarge}
-          </span>
+        <div className="mt-4 space-y-2">
+          <div className="flex justify-center mt-4">
+            <h2 className="font-medium text-lg">Sizes Ordered</h2>
+          </div>
+          <div className="flex justify-between">
+            <span>Small:</span> <span>{selectedRental.small}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Medium:</span> <span>{selectedRental.medium}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Large:</span> <span>{selectedRental.large}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Extra Large:</span> <span>{selectedRental.extraLarge}</span>
+          </div>
         </div>
       </div>
 
       <AlertDialogFooter className="mt-6">
-        <AlertDialogCancel className="px-4 py-2 font-medium text-white rounded-md hover:bg-blue-700">
+        <AlertDialogCancel className="px-4 py-2 font-medium text-white rounded-md">
           Close
         </AlertDialogCancel>
       </AlertDialogFooter>

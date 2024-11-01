@@ -65,7 +65,7 @@ const CommercialJobDetails = ({ selectedOrder }) => {
         {/* Measurements */}
         <div className="mt-4 space-y-2">
           <div className="flex justify-center mt-4">
-          <h2 className="font-medium text-lg">Measurements</h2>
+            <h2 className="font-medium text-lg">Measurements</h2>
           </div>
           <div className="flex justify-between">
             <span>Shoulder:</span> <span>{selectedOrder.sh} cm</span>
