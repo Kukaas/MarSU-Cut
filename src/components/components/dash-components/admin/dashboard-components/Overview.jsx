@@ -11,6 +11,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Overview = () => {
   const [overview, setOverview] = useState([]);
@@ -36,12 +37,12 @@ const Overview = () => {
           }),
         ]);
 
-        const productionData = productionRes.data.data;
-        const salesData = salesRes.data.data;
+        if (productionRes.status === 200) {
+          setOverview(productionRes.data.data);
+        }
 
-        if (productionRes.status === 200 && salesRes.status === 200) {
-          setOverview(productionData);
-          setSalesOverview(salesData);
+        if (salesRes.status === 200) {
+          setSalesOverview(salesRes.data.data);
         }
       } catch (error) {
         console.log(error);
@@ -51,71 +52,114 @@ const Overview = () => {
     fetchOverviews();
   }, []);
 
-  const chartData = overview.map((productionItem) => {
-    const salesItem = salesOverview.find(
-      (sale) => sale.productType === productionItem.productType
-    );
-
-    return {
+  // Create production chart data, excluding "LOGO"
+  const productionChartData = overview
+    .filter(item => item.productType !== "LOGO")
+    .map((productionItem) => ({
       productType: productionItem.productType,
       totalQuantity: productionItem.totalQuantity,
-      currentMonthSales: salesItem ? salesItem.currentMonthSales : 0,
-    };
-  });
+    }));
 
-  const chartConfig = {
+  // Create sales chart data, including "LOGO"
+  const salesChartData = salesOverview.map((salesItem) => ({
+    productType: salesItem.productType,
+    currentMonthSales: salesItem.currentMonthSales,
+  }));
+
+  const productionChartConfig = {
     totalQuantity: {
       label: "Production Quantity",
     },
+  };
+
+  const salesChartConfig = {
     currentMonthSales: {
       label: "Current Month Sales",
     },
   };
 
-  // Define colors for the areas
-  const totalQuantityColor = "#8884d8"; // Blue for production quantity
-  const currentMonthSalesColor = "#ff9c33"; // Orange for current month sales
+  // Define colors for the bars
+  const productionColor = "#8884d8"; // Blue for production quantity
+  const salesColor = "#ff9c33"; // Orange for current month sales
 
   return (
     <>
-      {chartData.length > 0 ? (
-        <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
-          <BarChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis
-              dataKey="productType"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-            />
-            <YAxis />
-            <ChartTooltip content={<ChartTooltipContent />} />
-            <ChartLegend content={<ChartLegendContent />} />
-            <Bar
-              type="monotone"
-              dataKey="totalQuantity"
-              stroke={totalQuantityColor}
-              fillOpacity={1}
-              fill={totalQuantityColor}
-              radius={5}
-              barSize={30}
-            />
-            <Bar
-              type="monotone"
-              dataKey="currentMonthSales"
-              stroke={currentMonthSalesColor}
-              fillOpacity={1}
-              fill={currentMonthSalesColor}
-              radius={5}
-              barSize={30}
-            />
-          </BarChart>
-        </ChartContainer>
-      ) : (
-        <div className="h-full w-full flex items-center justify-center">
-          <p className="text-gray-500 mt-20">No data available</p>
-        </div>
-      )}
+      <Tabs defaultValue="sales" className="w-full p-2">
+        <TabsList className="grid w-full grid-cols-2 ml-2 mb-4">
+          <TabsTrigger value="sales">Sales</TabsTrigger>
+          <TabsTrigger value="production">Production</TabsTrigger>
+        </TabsList>
+        <TabsContent value="production">
+          {productionChartData.length > 0 ? (
+            <ChartContainer
+              config={productionChartConfig}
+              className="min-h-[200px] w-full mb-4"
+            >
+              <BarChart data={productionChartData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis
+                  dataKey="productType"
+                  tickLine={false}
+                  tickMargin={10}
+                  axisLine={false}
+                />
+                <YAxis />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <ChartLegend content={<ChartLegendContent />} />
+                <Bar
+                  type="monotone"
+                  dataKey="totalQuantity"
+                  stroke={productionColor}
+                  fillOpacity={1}
+                  fill={productionColor}
+                  radius={5}
+                  barSize={30}
+                />
+              </BarChart>
+            </ChartContainer>
+          ) : (
+            <div className="h-full w-full flex items-center justify-center mb-4">
+              <p className="text-gray-500 mt-20">
+                No production data available
+              </p>
+            </div>
+          )}
+        </TabsContent>
+        <TabsContent value="sales">
+          {salesChartData.length > 0 ? (
+            <ChartContainer
+              config={salesChartConfig}
+              className="min-h-[200px] w-full"
+            >
+              <BarChart data={salesChartData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis
+                  dataKey="productType"
+                  tickLine={false}
+                  tickMargin={10}
+                  axisLine={false}
+                />
+                <YAxis />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <ChartLegend content={<ChartLegendContent />} />
+                <Bar
+                  type="monotone"
+                  dataKey="currentMonthSales"
+                  stroke={salesColor}
+                  fillOpacity={1}
+                  fill={salesColor}
+                  radius={5}
+                  barSize={30}
+                />
+              </BarChart>
+            </ChartContainer>
+          ) : (
+            <div className="h-full w-full flex items-center justify-center">
+              <p className="text-gray-500 mt-20">No sales data available</p>
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
     </>
   );
 };

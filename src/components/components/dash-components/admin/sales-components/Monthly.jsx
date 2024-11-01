@@ -33,26 +33,9 @@ const Monthly = () => {
             month,
             ...monthlySales[month],
           }));
+          
+          // Set all monthly sales data to comparisonData
           setComparisonData(transformedData);
-
-          // Prepare comparison data
-          const currentMonth = transformedData[transformedData.length - 1];
-          const previousMonth = transformedData[transformedData.length - 2];
-
-          if (currentMonth && previousMonth) {
-            setComparisonData([
-              {
-                month: previousMonth.month,
-                totalRevenue: previousMonth.totalRevenue,
-                totalOrders: previousMonth.totalOrders,
-              },
-              {
-                month: currentMonth.month,
-                totalRevenue: currentMonth.totalRevenue,
-                totalOrders: currentMonth.totalOrders,
-              },
-            ]);
-          }
         }
       } catch (error) {
         console.error(error);
@@ -91,7 +74,6 @@ const Monthly = () => {
                 axisLine={false}
               />
               <YAxis
-                dataKey="totalRevenue"
                 tickLine={false}
                 tickMargin={10}
                 tickFormatter={formatCurrency}
