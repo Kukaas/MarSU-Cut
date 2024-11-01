@@ -1,4 +1,4 @@
-import Rentals from "./tables/Rentals";
+import Rentals from "./Rentals";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";

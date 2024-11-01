@@ -1,8 +1,10 @@
 import {
   AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
+  AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
 const CommercialJobDetails = ({ selectedOrder }) => {
@@ -18,8 +20,13 @@ const CommercialJobDetails = ({ selectedOrder }) => {
 
   return (
     <AlertDialogContent className="h-[500px] overflow-auto">
-      <AlertDialogHeader className="text-xl font-semibold ">
-        Commercial Job Details of {selectedOrder.cbName}
+      <AlertDialogHeader>
+        <AlertDialogTitle>
+          Commercial Job Details of {selectedOrder.cbName}
+        </AlertDialogTitle>
+        <AlertDialogDescription>
+          This shows the commercial job order details
+        </AlertDialogDescription>
       </AlertDialogHeader>
 
       <div className="mt-4 space-y-3 text-sm">

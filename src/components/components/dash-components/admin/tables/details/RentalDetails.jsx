@@ -1,8 +1,10 @@
 import {
   AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
+  AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
 const RentalDetails = ({ selectedRental }) => {
@@ -17,9 +19,14 @@ const RentalDetails = ({ selectedRental }) => {
   };
 
   return (
-    <AlertDialogContent className="max-w-lg p-4 rounded-md shadow-lg md:max-w-xl">
-      <AlertDialogHeader className="text-xl font-semibold ">
-        Rental Details of {selectedRental.coordinatorName}
+    <AlertDialogContent>
+      <AlertDialogHeader>
+        <AlertDialogTitle>
+          Rental Details of {selectedRental.coordinatorName}
+        </AlertDialogTitle>
+        <AlertDialogDescription>
+          This shows the rental details
+        </AlertDialogDescription>
       </AlertDialogHeader>
 
       <div className="mt-4 space-y-3 text-sm">
@@ -72,7 +79,7 @@ const RentalDetails = ({ selectedRental }) => {
 
         <div className="mt-4 space-y-2">
           <div className="flex justify-center mt-4">
-            <h2 className="font-medium text-lg">Sizes Ordered</h2>
+            <AlertDialogTitle>Sizes Ordered</AlertDialogTitle>
           </div>
           <div className="flex justify-between">
             <span>Small:</span> <span>{selectedRental.small}</span>

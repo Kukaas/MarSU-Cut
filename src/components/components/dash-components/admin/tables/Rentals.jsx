@@ -474,22 +474,6 @@ function Rentals() {
         });
       },
     },
-    // {
-    //   accessorKey: "small",
-    //   header: "Small",
-    // },
-    // {
-    //   accessorKey: "medium",
-    //   header: "Medium",
-    // },
-    // {
-    //   accessorKey: "large",
-    //   header: "Large",
-    // },
-    // {
-    //   accessorKey: "extraLarge",
-    //   header: "Extra Large",
-    // },
     {
       accessorKey: "returnDate",
       header: ({ column }) => (

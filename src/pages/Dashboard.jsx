@@ -1,29 +1,31 @@
 // Components import
-import DashProfile from "@/components/components/dash-components/DashProfile";
-import DashHomeAdmin from "../components/components/dash-components/admin/DashHomeAdmin";
-import DashHome from "../components/components/dash-components/user/DashHome";
-import DashRental from "@/components/components/dash-components/user/DashRental";
-import DashCommercial from "@/components/components/dash-components/user/DashCommercial";
-import DashOrderAdmin from "@/components/components/dash-components/admin/DashOrderAdmin";
-import DashRentalAdmin from "@/components/components/dash-components/admin/DashRentalAdmin";
-import DashSchedules from "@/components/components/dash-components/admin/DashSchedules";
-import DashFinishedProduct from "@/components/components/dash-components/admin/DashFinishedProduct";
-import DashRawMaterials from "@/components/components/dash-components/admin/DashRawMaterials";
+
 import DashAccomplishmentReport from "@/components/components/dash-components/admin/DashAccomplishmentReport";
-import DashSalesReport from "@/components/components/dash-components/admin/DashSalesReport";
 import DashArchiveOrders from "@/components/components/dash-components/admin/DashArchiveOrders";
 import DashArchiveRentals from "@/components/components/dash-components/admin/DashArchiveRentals";
-import DashUsers from "@/components/components/dash-components/admin/DashUsers";
-import PropTypes from "prop-types";
-import DashProductions from "@/components/components/dash-components/admin/DashProductions";
 import DashCommercialJob from "@/components/components/dash-components/admin/DashCommercialJob";
-import Sidebar from "@/components/components/Sidebar";
+import DashFinishedProduct from "@/components/components/dash-components/admin/DashFinishedProduct";
+import DashHomeAdmin from "@/components/components/dash-components/admin/DashHomeAdmin";
+import DashOrderAdmin from "@/components/components/dash-components/admin/DashOrderAdmin";
+import DashProductions from "@/components/components/dash-components/admin/DashProductions";
+import DashRawMaterials from "@/components/components/dash-components/admin/DashRawMaterials";
+import DashRentalAdmin from "@/components/components/dash-components/admin/DashRentalAdmin";
+import DashSalesReport from "@/components/components/dash-components/admin/DashSalesReport";
+import DashSchedules from "@/components/components/dash-components/admin/DashSchedules";
+import DashUsers from "@/components/components/dash-components/admin/DashUsers";
+import OrderDetails from "@/components/components/dash-components/admin/OrderDetails";
+import DashProfile from "@/components/components/dash-components/DashProfile";
+import DashCommercial from "@/components/components/dash-components/user/commercial/DashCommercial";
+import DashHome from "@/components/components/dash-components/user/DashHome";
+import DashRental from "@/components/components/dash-components/user/rental/DashRental";
+import DashOrder from "@/components/components/dash-components/user/student/DashOrder";
+
 
 // Other Imports
 import { useEffect, useState } from "react";
-import OrderDetails from "@/components/components/dash-components/admin/OrderDetails";
 import { useParams } from "react-router-dom";
-import DashOrder from "@/components/components/dash-components/user/student/DashOrder";
+import PropTypes from "prop-types"
+import Sidebar from "@/components/components/Sidebar";
 
 const Dashboard = ({ tab }) => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);

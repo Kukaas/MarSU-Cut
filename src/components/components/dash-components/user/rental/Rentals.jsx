@@ -31,12 +31,16 @@ import { BASE_URL } from "@/lib/api";
 import CustomTable from "@/components/components/custom-components/CustomTable";
 import DataTableColumnHeader from "@/components/components/custom-components/DataTableColumnHeader";
 import { statusColors } from "@/lib/utils";
+import RentalDetails from "../../admin/tables/details/RentalDetails";
+import { AlertDialog } from "@/components/ui/alert-dialog";
 
 function Rentals() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [detailsDialogOpen, setDetailsDialogOpen] = useState(true);
+  const [selectedRental, setSelectedRental] = useState(null);
   const { currentUser } = useSelector((state) => state.user);
 
   // Fetch the data
@@ -107,7 +111,9 @@ function Rentals() {
     },
     {
       accessorKey: "possiblePickupDate",
-      header: "Possible Pickup Date",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Date Needed" />
+      ),
       cell: ({ row }) => {
         const date = new Date(row.getValue("possiblePickupDate"));
         return date.toLocaleDateString("en-US", {
@@ -119,7 +125,9 @@ function Rentals() {
     },
     {
       accessorKey: "pickupDate",
-      header: "Pickup Date",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Pickup Date" />
+      ),
       cell: ({ row }) => {
         const dateValue = row.getValue("pickupDate");
         if (!dateValue) {
@@ -134,24 +142,10 @@ function Rentals() {
       },
     },
     {
-      accessorKey: "small",
-      header: "Small",
-    },
-    {
-      accessorKey: "medium",
-      header: "Medium",
-    },
-    {
-      accessorKey: "large",
-      header: "Large",
-    },
-    {
-      accessorKey: "extraLarge",
-      header: "Extra Large"
-    },
-    {
       accessorKey: "returnDate",
-      header: "Pickup Date",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Return Date" />
+      ),
       cell: ({ row }) => {
         const dateValue = row.getValue("returnDate");
         if (!dateValue) {
@@ -204,9 +198,12 @@ function Rentals() {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(rental._id)}
+                onClick={() => {
+                  setSelectedRental(rental);
+                  setDetailsDialogOpen(true);
+                }}
               >
-                Copy Rental ID
+                Show Details
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
@@ -267,6 +264,12 @@ function Rentals() {
           <CustomTable columns={columns} data={data} loading={loading} />
         </div>
       </div>
+      <AlertDialog open={detailsDialogOpen} onOpenChange={setDetailsDialogOpen}>
+        <RentalDetails
+          setDetailsDialogOpen={setDetailsDialogOpen}
+          selectedRental={selectedRental}
+        />
+      </AlertDialog>
     </Spin>
   );
 }

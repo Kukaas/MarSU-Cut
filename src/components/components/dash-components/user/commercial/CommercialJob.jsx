@@ -30,7 +30,15 @@ import ToasterError from "@/lib/Toaster";
 import CustomTable from "@/components/components/custom-components/CustomTable";
 import { statusColors } from "@/lib/utils";
 import DataTableColumnHeader from "@/components/components/custom-components/DataTableColumnHeader";
-import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import CommercialJobDetails from "../../admin/tables/details/CommercialJobDetails";
 
 const CommercialJob = () => {
   const [data, setData] = useState([]);
@@ -38,6 +46,8 @@ const CommercialJob = () => {
   const [loading, setLoading] = useState(true);
   const [loadingDelete, setLoadingDelete] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
   useEffect(() => {
     const fetchCommercialJob = async () => {
@@ -162,9 +172,12 @@ const CommercialJob = () => {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(commercial._id)}
+                onClick={() => {
+                  setSelectedOrder(commercial);
+                  setDetailsDialogOpen(true);
+                }}
               >
-                Copy Commercial Job ID
+                Show Details
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
@@ -213,7 +226,9 @@ const CommercialJob = () => {
               </AlertDialogTrigger>
               <AlertDialogContent className="sm:max-w-[425px]">
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Create a commercial job order</AlertDialogTitle>
+                  <AlertDialogTitle>
+                    Create a commercial job order
+                  </AlertDialogTitle>
                   <AlertDialogDescription>
                     Click submit when you&apos;re done.
                   </AlertDialogDescription>
@@ -230,6 +245,9 @@ const CommercialJob = () => {
           <CustomTable columns={columns} data={data} loading={loading} />
         </div>
       </div>
+      <AlertDialog open={detailsDialogOpen} onOpenChange={setDetailsDialogOpen}>
+        <CommercialJobDetails selectedOrder={selectedOrder} />
+      </AlertDialog>
     </Spin>
   );
 };
