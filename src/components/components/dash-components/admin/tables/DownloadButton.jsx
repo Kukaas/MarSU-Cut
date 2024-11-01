@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
 import { Printer } from "lucide-react";
+import logo from "../../../../../assets/logo_msc.jpg";
 
 function DownloadButton({ selectedDate, filteredData }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -97,6 +98,30 @@ function DownloadButton({ selectedDate, filteredData }) {
                         margin: 0;
                         padding: 0;
                     }
+                    .header {
+                      position: relative; /* Set relative positioning for the header */
+                      text-align: center;
+                      margin-bottom: 20px;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                    }
+                    .header img {
+                      position: absolute; /* Set absolute positioning for the logo */
+                      left: 20px; /* Adjust as needed to position the logo */
+                      width: 60px;
+                    }
+                    .header h1 {
+                      font-size: 24px;
+                      font-weight: bold;
+                      color: #800000;
+                      margin: 0;
+                    }
+                    .header p {
+                      font-size: 14px;
+                      color: #555;
+                      margin: 5px 0 0 0;
+                    }
                     table {
                         border-collapse: collapse;
                         width: 100%;
@@ -109,12 +134,21 @@ function DownloadButton({ selectedDate, filteredData }) {
                         text-align: left;
                     }
                     th {
-                        background-color: #f2f2f2;
+                         background-color: #800000;
+                        color: white;
                     }
                 </style>
             </head>
             <body>
-                <h1 style="text-align: center; font-size: 18px;">${title}</h1>
+                <div class="header">
+                    <img src="${logo}" alt="Company Logo" />
+                    <div>
+                        <p>Republic of the Philippines</p>
+                        <h1>Marinduque State University</h1>
+                        <p>Panfilio M. Manguera Sr. Road, Tanza, Boac, Marinduque</p>
+                    </div>
+                </div>
+                <h1 style="text-align: center; font-size: 18px; color: #800000;">${title}</h1>
                 <table>
                     <thead>
                         <tr>
@@ -139,13 +173,18 @@ function DownloadButton({ selectedDate, filteredData }) {
                         .join("")}
                     </tbody>
                 </table>
-                <footer style="position: absolute; bottom: 20px; left: 20px;">
-                    <p>Prepared By:</p>
-                    <p>MECHAELA F. BABIERA</p>
-                    <p>Support Staff</p>
-                    <p>RHODA N. MOLBOG</p>
-                    <p>Head BAO</p>
+                <footer style="position: absolute; bottom: 20px; left: 20px; width: calc(100% - 40px); display: flex; justify-content: space-between;">
+                    <div>
+                        <p>Prepared By:</p>
+                        <p>MECHAELA F. BABIERA</p>
+                        <p>Support Staff</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <p>RHODA N. MOLBOG</p>
+                        <p>Head BAO</p>
+                    </div>
                 </footer>
+  
             </body>
         </html>
       `);

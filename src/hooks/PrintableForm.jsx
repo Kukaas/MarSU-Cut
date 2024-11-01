@@ -2,6 +2,7 @@ import {
   AlertDialog,
   AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
@@ -20,11 +21,11 @@ const PrintableForm = () => {
       toast.error("Please add the name of the sewer");
       return;
     }
-  
+
     const printContent = document
       .getElementById("printableContent")
       .innerHTML.replace("{sewerName}", sewerName);
-  
+
     // Create a temporary print area
     const originalContent = document.body.innerHTML;
     document.body.innerHTML = `
@@ -54,7 +55,13 @@ const PrintableForm = () => {
                       padding: 15px;
                       text-align: center;
                   }
-  
+                  th {
+                      background-color: #800000;
+                      color: white;
+                  }
+                  h2 {
+                      color: #800000;
+                  }
                   @media print {
                       header, footer {
                           display: none;
@@ -67,10 +74,10 @@ const PrintableForm = () => {
           </body>
       </html>
     `;
-  
+
     // Trigger the print dialog
     window.print();
-  
+
     // Restore original content after printing
     document.body.innerHTML = originalContent;
     window.location.reload(); // Reload to reset the React state and DOM
@@ -121,23 +128,28 @@ const PrintableForm = () => {
               onChange={(e) => setSewerName(e.target.value)}
               className="mb-4"
             />
-            <div className="flex justify-end">
-              <AlertDialogCancel asChild>
-                <Button variant="secondary" className="mr-2">Cancel</Button>
-              </AlertDialogCancel>
-              <Button
-                onClick={() => {
-                  if (sewerName) {
-                    handlePrint();
-                    setIsDialogOpen(false);
-                  } else {
-                    toast.error("Please add the name of the sewer");
-                  }
-                }}
-                type="submit"
-              >
-                Confirm
-              </Button>
+            <div className="flex flex-col items-center gap-4 mt-4">
+              <AlertDialogFooter className="w-full flex flex-col items-center gap-4">
+                <AlertDialogCancel asChild>
+                  <Button variant="secondary" className="w-full">
+                    Cancel
+                  </Button>
+                </AlertDialogCancel>
+                <Button
+                  onClick={() => {
+                    if (sewerName) {
+                      handlePrint();
+                      setIsDialogOpen(false);
+                    } else {
+                      toast.error("Please add the name of the sewer");
+                    }
+                  }}
+                  type="submit"
+                  className="w-full flex items-center justify-center"
+                >
+                  Confirm
+                </Button>
+              </AlertDialogFooter>
             </div>
           </div>
         </AlertDialogContent>
@@ -172,15 +184,19 @@ const PrintableForm = () => {
               </tr>
             </thead>
             <tbody>
-              {/* Render 20 blank rows */}
-              <td>COLLEGE</td>
-              <td>POLO</td>
-              <td>S16</td>
-              <td>JANUARY 4, 2024</td>
-              <td>JANUARY 10, 2024</td>
-              <td>6</td>
-              <td>CVC WHITE, CVC WHAT, ANOTHER MATERIAL</td>
-              <td>2, 4, 10</td>
+              <tr>
+                <td style={{ backgroundColor: "#f7f7f7" }}>COLLEGE</td>
+                <td style={{ backgroundColor: "#f7f7f7" }}>POLO</td>
+                <td style={{ backgroundColor: "#f7f7f7" }}>S16</td>
+                <td style={{ backgroundColor: "#f7f7f7" }}>JANUARY 4, 2024</td>
+                <td style={{ backgroundColor: "#f7f7f7" }}>JANUARY 10, 2024</td>
+                <td style={{ backgroundColor: "#f7f7f7" }}>6</td>
+                <td style={{ backgroundColor: "#f7f7f7" }}>
+                  CVC WHITE, CVC WHAT, ANOTHER MATERIAL
+                </td>
+                <td style={{ backgroundColor: "#f7f7f7" }}>2, 4, 10</td>
+              </tr>
+
               {Array.from({ length: 15 }).map((_, index) => (
                 <tr key={index}>
                   <td></td>

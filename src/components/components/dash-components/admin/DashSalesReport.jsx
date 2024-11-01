@@ -11,6 +11,7 @@ import {
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
+  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
@@ -30,7 +31,7 @@ import React from "react";
 import { BASE_URL } from "@/lib/api";
 import axios from "axios";
 import { token } from "@/lib/token";
-import ToasterError from "@/lib/Toaster";
+import logo from "../../../../assets/logo_msc.jpg";
 
 const DashSalesReport = () => {
   const navigate = useNavigate();
@@ -106,124 +107,196 @@ const DashSalesReport = () => {
 
   const handlePrint = () => {
     let filteredData = [];
-  
-    // Determine the title based on the selected tab
-    const title = tab === "monthly" 
-      ? `Sales Report for ${monthNames[selectedMonth - 1]} ${selectedYear}` 
-      : `Sales Report for Year ${selectedYear}`;
-  
+    let totalRevenue = 0; // Initialize totalRevenue
+
+    // Determine the title for the document
+    const title =
+      tab === "monthly"
+        ? `Sales Report for ${monthNames[selectedMonth - 1]} ${selectedYear}`
+        : `Sales Report for Year ${selectedYear}`;
+
+    // Your existing filtering logic remains unchanged
     if (tab === "monthly") {
       const startDate = new Date(Date.UTC(selectedYear, selectedMonth - 1, 1));
       const endDate = new Date(Date.UTC(selectedYear, selectedMonth, 1));
-  
+
       filteredData = salesReports.filter((report) => {
         const salesDate = new Date(report.salesDate);
         return salesDate >= startDate && salesDate < endDate;
       });
     } else if (tab === "yearly") {
-      // Calculate total revenue for each month
-      const monthlyRevenue = Array(12).fill(0); // Array to hold revenue for each month
-  
-      // First, filter sales reports for the selected year
+      const monthlyRevenue = Array(12).fill(0);
+
       const yearlyReports = salesReports.filter((report) => {
         const salesDate = new Date(report.salesDate);
-        return salesDate.getFullYear() === selectedYear; // Check if the year matches
+        return salesDate.getFullYear() === selectedYear;
       });
-  
-      // If there are no sales reports for the selected year, show an error and return
+
       if (yearlyReports.length === 0) {
         toast.error("No sales data available for the selected year.");
         return;
       }
-  
+
       yearlyReports.forEach((report) => {
         const salesDate = new Date(report.salesDate);
-        const month = salesDate.getMonth(); // Get month (0-11)
-        monthlyRevenue[month] += report.totalRevenue; // Sum revenue for each month
+        const month = salesDate.getMonth();
+        monthlyRevenue[month] += report.totalRevenue;
       });
-  
-      // Create filteredData with month names and total revenue
-      filteredData = monthlyRevenue.map((revenue, index) => ({
-        month: monthNames[index],
-        totalRevenue: revenue,
-      })).filter((report) => report.totalRevenue > 0); // Exclude months with no revenue
+
+      filteredData = monthlyRevenue
+        .map((revenue, index) =>
+          revenue > 0
+            ? { month: monthNames[index], totalRevenue: revenue }
+            : null
+        )
+        .filter(Boolean);
     }
-  
-    // If there is no data for monthly tab
+
     if (tab === "monthly" && filteredData.length === 0) {
       toast.error("No sales data available for the selected month.");
       return;
     }
-  
-    // Calculate overall total revenue for the footer
-    const totalRevenue = filteredData.reduce(
-      (sum, report) => sum + report.totalRevenue,
-      0
-    );
-  
+
+    // Calculate total revenue
+    filteredData.forEach((report) => {
+      totalRevenue += report.totalRevenue;
+    });
+
     const printWindow = window.open("", "_blank");
     if (printWindow) {
-      console.log("Print window opened successfully."); // Debugging log
       printWindow.document.write(`
-        <html>
-          <head>
-            <title>${title}</title>
-            <style>
-              body { font-family: Arial, sans-serif; }
-              h1 { text-align: center; }
-              table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-              th, td { border: 1px solid black; padding: 8px; text-align: left; }
-              th { background-color: #f2f2f2; }
-              tfoot { font-weight: bold; }
-            </style>
-          </head>
-          <body>
-            <h1>${title}</h1>
-            <table>
-              <thead>
+    <html>
+      <head>
+        <title>${title}</title>
+        <style>
+          body { font-family: Arial, sans-serif; }
+          .header { 
+            position: relative; /* Set relative positioning for the header */
+            text-align: center; 
+            margin-bottom: 20px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+          }
+          .header img { 
+            position: absolute; /* Set absolute positioning for the logo */
+            left: 20px; /* Position logo from the left */
+            width: 60px; 
+          }
+          .header h1 { 
+            font-size: 24px; 
+            font-weight: bold; 
+            color: #800000; 
+            margin: 0; 
+          }
+          .header p { 
+            font-size: 14px; 
+            color: #555; 
+            margin: 5px 0 0 0; 
+          }
+          table { 
+            border-collapse: collapse; 
+            width: 100%; 
+            margin-top: 20px; 
+          }
+          th, td { 
+            border: 1px solid black; 
+            padding: 8px; 
+            text-align: center; 
+          }
+          th { 
+            background-color: #800000; 
+            color: white; 
+          }
+          tfoot { font-weight: bold; }
+          h1.title { 
+            color: #800000; 
+            text-align: center; 
+            margin-top: 20px; 
+          }
+          .signatures { 
+            display: flex; 
+            justify-content: space-between; 
+            position: absolute; 
+            bottom: 30px; 
+            width: 100%; 
+          }
+          .signatures p { margin: 10px; }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <img src="${logo}" alt="MarSu Logo" />
+          <div>
+            <p>Republic of the Philippines</p>
+            <h1>Marinduque State University</h1>
+            <p>Panfilio M. Manguera Sr. Road, Tanza, Boac, Marinduque</p>
+          </div>
+        </div>
+  
+        <h1 class="title">${title}</h1>
+        <table>
+          <thead>
+            <tr>
+              <th>${tab === "monthly" ? "Date" : "Month"}</th>
+              <th>Total Revenue</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${filteredData
+              .map(
+                (report) => `
                 <tr>
-                  <th>${tab === "monthly" ? "Sales Date" : "Month"}</th>
-                  <th>Total Revenue</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${filteredData
-                  .map(
-                    (report) => `
-                    <tr>
-                      <td>${tab === "monthly" 
-                        ? new Date(report.salesDate).toLocaleDateString(
-                            "en-US", 
-                            { year: "numeric", month: "long", day: "numeric" }
-                          ) 
-                        : report.month}</td>
-                      <td>${Intl.NumberFormat("en-PH", {
-                        style: "currency",
-                        currency: "PHP",
-                      }).format(report.totalRevenue)}</td>
-                    </tr>
-                  `
-                  )
-                  .join("")}
-              </tbody>
-              <tfoot>
-                <tr>
-                  <td>Total Revenue for ${
-                    tab === "monthly" ? monthNames[selectedMonth - 1] : "the year"
-                  } ${selectedYear}</td>
+                  <td>${
+                    tab === "monthly"
+                      ? new Date(report.salesDate).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })
+                      : report.month
+                  }</td>
                   <td>${Intl.NumberFormat("en-PH", {
                     style: "currency",
                     currency: "PHP",
-                  }).format(totalRevenue)}</td>
+                  }).format(report.totalRevenue)}</td>
                 </tr>
-              </tfoot>
-            </table>
-          </body>
-        </html>
-      `);
+              `
+              )
+              .join("")}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td>
+                <strong>
+                  Total Revenue for ${
+                    tab === "monthly"
+                      ? monthNames[selectedMonth - 1]
+                      : selectedYear
+                  }:
+                </strong>
+              </td>
+              <td>
+                <strong>
+                  ${Intl.NumberFormat("en-PH", {
+                    style: "currency",
+                    currency: "PHP",
+                  }).format(totalRevenue)}
+                </strong>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+        <div class="signatures">
+          <p>Signed by: ______________________</p>
+          <p>Submitted by: ______________________</p>
+        </div>
+      </body>
+    </html>
+  `);
       printWindow.document.close();
       printWindow.focus();
-  
+
       setTimeout(() => {
         printWindow.print();
         printWindow.close();
@@ -232,7 +305,6 @@ const DashSalesReport = () => {
       toast.error("Failed to open print window.");
     }
   };
-  
 
   return (
     <div className="w-full p-5 h-screen">
@@ -248,7 +320,7 @@ const DashSalesReport = () => {
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
-            <div className="p-4">
+            <div className="p-2">
               <AlertDialogHeader>
                 <AlertDialogTitle>Print Sales Report</AlertDialogTitle>
                 <AlertDialogDescription>
@@ -331,12 +403,21 @@ const DashSalesReport = () => {
                   </div>
                 </TabsContent>
               </Tabs>
-              <div className="flex justify-end gap-2">
+            </div>
+            <div className="flex flex-col items-center gap-4">
+              <AlertDialogFooter className="w-full flex justify-end gap-2">
                 <AlertDialogCancel asChild>
-                  <Button variant="secondary">Cancel</Button>
+                  <Button variant="secondary" className="w-full">
+                    Cancel
+                  </Button>
                 </AlertDialogCancel>
-                <Button onClick={handlePrint}>Print</Button>
-              </div>
+                <Button
+                  onClick={handlePrint}
+                  className="w-full flex items-center justify-center"
+                >
+                  Print
+                </Button>
+              </AlertDialogFooter>
             </div>
           </AlertDialogContent>
         </AlertDialog>
@@ -347,7 +428,6 @@ const DashSalesReport = () => {
       </Helmet>
       <SalesSummary />
       <Toaster position="top-center" closeButton={true} richColors={true} />
-        
     </div>
   );
 };
