@@ -22,13 +22,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Calendar } from "@/components/ui/calendar";
-import { Spin, Tooltip, Typography } from "antd";
+import { Tooltip, Typography } from "antd";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
 // icons
-import { LoadingOutlined } from "@ant-design/icons";
+// import { LoadingOutlined } from "@ant-design/icons";
 import { CalendarIcon, Loader2, PlusCircle } from "lucide-react";
 
 // others
@@ -47,15 +47,22 @@ import { BASE_URL } from "@/lib/api";
 import ToasterError from "@/lib/Toaster";
 import CustomTable from "@/components/components/custom-components/CustomTable";
 import DataTableColumnHeader from "@/components/components/custom-components/DataTableColumnHeader";
-import DeleteDialog from "@/components/components/custom-components/DeleteDialog";
-import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+// import DeleteDialog from "@/components/components/custom-components/DeleteDialog";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const AccomplishmentReport = () => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [updateLoading, setUpdateLoading] = useState(false);
-  const [loadingDelete, setLoadingDelete] = useState(false);
+  // const [loadingDelete, setLoadingDelete] = useState(false);
   const [selectedAccomplishment, setSelectedAccomplishment] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isDialogEditOpen, setIsDialogEditOpen] = useState(false);
@@ -188,38 +195,38 @@ const AccomplishmentReport = () => {
   };
 
   // Function to delete an accomplishment report
-  const handleDeleteAccomplishment = async (accomplishment) => {
-    try {
-      setLoadingDelete(true);
-      const res = await axios.delete(
-        `${BASE_URL}/api/v1/accomplishment-report/delete/${accomplishment._id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        }
-      );
-      if (res.status === 200) {
-        setLoadingDelete(false);
-        toast.success(
-          `Accomplishment with ID ${accomplishment._id} is deleted successfully!`
-        );
-        setData((prevData) => {
-          return prevData.filter((item) => item._id !== accomplishment._id);
-        });
-      } else {
-        setLoadingDelete(false);
-        ToasterError();
-      }
-    } catch (error) {
-      setLoadingDelete(false);
-      ToasterError({
-        description: "Please check you internet connection and try again.",
-      });
-    }
-  };
+  // const handleDeleteAccomplishment = async (accomplishment) => {
+  //   try {
+  //     setLoadingDelete(true);
+  //     const res = await axios.delete(
+  //       `${BASE_URL}/api/v1/accomplishment-report/delete/${accomplishment._id}`,
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //         withCredentials: true,
+  //       }
+  //     );
+  //     if (res.status === 200) {
+  //       setLoadingDelete(false);
+  //       toast.success(
+  //         `Accomplishment with ID ${accomplishment._id} is deleted successfully!`
+  //       );
+  //       setData((prevData) => {
+  //         return prevData.filter((item) => item._id !== accomplishment._id);
+  //       });
+  //     } else {
+  //       setLoadingDelete(false);
+  //       ToasterError();
+  //     }
+  //   } catch (error) {
+  //     setLoadingDelete(false);
+  //     ToasterError({
+  //       description: "Please check you internet connection and try again.",
+  //     });
+  //   }
+  // };
 
   const columns = [
     {
@@ -301,12 +308,12 @@ const AccomplishmentReport = () => {
                 </DialogContent>
               </Dialog>
             </Tooltip>
-            <Tooltip title="Delete Accomplishment">
+            {/* <Tooltip title="Delete Accomplishment">
               <DeleteDialog
                 item={`accompishment with ID ${accomplishment?._id}`}
                 handleDelete={() => handleDeleteAccomplishment(accomplishment)}
               />
-            </Tooltip>
+            </Tooltip> */}
           </div>
         );
       },
@@ -318,12 +325,13 @@ const AccomplishmentReport = () => {
   };
 
   return (
-    <Spin
-      spinning={loadingDelete}
-      indicator={
-        <LoadingOutlined className="dark:text-white" style={{ fontSize: 48 }} />
-      }
-    >
+    // <Spin
+    //   spinning={loadingDelete}
+    //   indicator={
+    //     <LoadingOutlined className="dark:text-white" style={{ fontSize: 48 }} />
+    //   }
+    // >
+    <>
       <div className="w-full p-5 h-screen">
         <Typography.Title level={2} className="text-black dark:text-white">
           Accomplishment Report
@@ -420,7 +428,9 @@ const AccomplishmentReport = () => {
                 </AlertDialogTrigger>
                 <AlertDialogContent className="sm:max-w-[425px]">
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Create an Accomplishment</AlertDialogTitle>
+                    <AlertDialogTitle>
+                      Create an Accomplishment
+                    </AlertDialogTitle>
                     <AlertDialogDescription>
                       Click create when you&apos;re done.
                     </AlertDialogDescription>
@@ -503,7 +513,8 @@ const AccomplishmentReport = () => {
           </Form>
         </DialogContent>
       </Dialog>
-    </Spin>
+    </>
+    // </Spin>
   );
 };
 

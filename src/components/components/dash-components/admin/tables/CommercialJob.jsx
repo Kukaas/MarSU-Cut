@@ -124,37 +124,37 @@ const CommercialJob = () => {
     }
   };
 
-  const handleDelete = async (commercial) => {
-    try {
-      setLoadingUpdate(true);
-      const res = await axios.delete(
-        `${BASE_URL}/api/v1/commercial-job/${commercial._id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        }
-      );
+  // const handleDelete = async (commercial) => {
+  //   try {
+  //     setLoadingUpdate(true);
+  //     const res = await axios.delete(
+  //       `${BASE_URL}/api/v1/commercial-job/${commercial._id}`,
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //         withCredentials: true,
+  //       }
+  //     );
 
-      if (res.status === 200) {
-        const updatedData = data.filter((item) => item._id !== commercial._id);
-        setData(updatedData);
-        setLoadingUpdate(false);
-        toast.success(
-          `Commercial job order of ${commercial.cbName} has been deleted.`
-        );
-      } else {
-        ToasterError();
-      }
-    } catch (error) {
-      ToasterError({
-        description: "Please check you internet connection and try again.",
-      });
-      setLoadingUpdate(false);
-    }
-  };
+  //     if (res.status === 200) {
+  //       const updatedData = data.filter((item) => item._id !== commercial._id);
+  //       setData(updatedData);
+  //       setLoadingUpdate(false);
+  //       toast.success(
+  //         `Commercial job order of ${commercial.cbName} has been deleted.`
+  //       );
+  //     } else {
+  //       ToasterError();
+  //     }
+  //   } catch (error) {
+  //     ToasterError({
+  //       description: "Please check you internet connection and try again.",
+  //     });
+  //     setLoadingUpdate(false);
+  //   }
+  // };
 
   const columns = [
     {
@@ -259,9 +259,9 @@ const CommercialJob = () => {
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => handleDelete(commercial)}>
+              {/* <DropdownMenuItem onClick={() => handleDelete(commercial)}>
                 <span className="text-red-500 hover:text-red-400">Delete</span>
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
             </DropdownMenuContent>
           </DropdownMenu>
         );

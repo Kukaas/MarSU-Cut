@@ -127,40 +127,40 @@ function ArchiveRentals() {
   };
 
   // Delete the rental
-  const handleDelete = async (rental) => {
-    try {
-      setLoadingUpdate(true);
-      const res = await axios.delete(
-        `${BASE_URL}/api/v1/rental/${rental._id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        }
-      );
+  // const handleDelete = async (rental) => {
+  //   try {
+  //     setLoadingUpdate(true);
+  //     const res = await axios.delete(
+  //       `${BASE_URL}/api/v1/rental/${rental._id}`,
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //         withCredentials: true,
+  //       }
+  //     );
 
-      if (res.status === 200) {
-        setLoadingUpdate(false);
-        toast.success(
-          `Rental of ${rental.coordinatorName} is deleted successfully!`
-        );
-        // Update the data in the state
-        setData((prevData) => {
-          return prevData.filter((item) => item._id !== rental._id);
-        });
-      } else {
-        ToasterError();
-        setLoadingUpdate(false);
-      }
-    } catch (error) {
-      ToasterError({
-        description: "Please check you internet connection and try again.",
-      });
-      setLoadingUpdate(false);
-    }
-  };
+  //     if (res.status === 200) {
+  //       setLoadingUpdate(false);
+  //       toast.success(
+  //         `Rental of ${rental.coordinatorName} is deleted successfully!`
+  //       );
+  //       // Update the data in the state
+  //       setData((prevData) => {
+  //         return prevData.filter((item) => item._id !== rental._id);
+  //       });
+  //     } else {
+  //       ToasterError();
+  //       setLoadingUpdate(false);
+  //     }
+  //   } catch (error) {
+  //     ToasterError({
+  //       description: "Please check you internet connection and try again.",
+  //     });
+  //     setLoadingUpdate(false);
+  //   }
+  // };
 
   const columns = [
     {
@@ -253,9 +253,9 @@ function ArchiveRentals() {
               <DropdownMenuItem onClick={() => handleUnarchive(rental)}>
                 Unarchive
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleDelete(rental)}>
+              {/* <DropdownMenuItem onClick={() => handleDelete(rental)}>
                 <span className="text-red-500 hover:text-red-400">Delete</span>
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
             </DropdownMenuContent>
           </DropdownMenu>
         );

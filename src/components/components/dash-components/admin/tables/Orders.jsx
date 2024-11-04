@@ -174,38 +174,38 @@ function Orders() {
     }
   };
 
-  const handleDelete = async (order) => {
-    try {
-      setLoadingUpdate(true);
-      const res = await axios.delete(
-        `${BASE_URL}/api/v1/order/student/delete/${order._id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        }
-      );
+  // const handleDelete = async (order) => {
+  //   try {
+  //     setLoadingUpdate(true);
+  //     const res = await axios.delete(
+  //       `${BASE_URL}/api/v1/order/student/delete/${order._id}`,
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //         withCredentials: true,
+  //       }
+  //     );
 
-      if (res.status === 200) {
-        setLoadingUpdate(false);
-        toast.success(`Order of ${order.studentName} is deleted successfully!`);
-        setData((prevData) =>
-          prevData.filter((item) => item._id !== order._id)
-        );
-      } else {
-        ToasterError();
-      }
-    } catch (error) {
-      ToasterError({
-        description: "Please check you internet connection and try again.",
-      });
-      setLoadingUpdate(false);
-    } finally {
-      setLoadingUpdate(false);
-    }
-  };
+  //     if (res.status === 200) {
+  //       setLoadingUpdate(false);
+  //       toast.success(`Order of ${order.studentName} is deleted successfully!`);
+  //       setData((prevData) =>
+  //         prevData.filter((item) => item._id !== order._id)
+  //       );
+  //     } else {
+  //       ToasterError();
+  //     }
+  //   } catch (error) {
+  //     ToasterError({
+  //       description: "Please check you internet connection and try again.",
+  //     });
+  //     setLoadingUpdate(false);
+  //   } finally {
+  //     setLoadingUpdate(false);
+  //   }
+  // };
 
   const columns = [
     {
@@ -427,7 +427,7 @@ function Orders() {
                     "MEASURED",
                     "DONE",
                     "CLAIMED",
-                    "PENDING"
+                    "PENDING",
                   ].includes(order.status)}
                 >
                   Measure
@@ -445,9 +445,9 @@ function Orders() {
               <DropdownMenuItem onClick={() => handleArchive(order)}>
                 Archive
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleDelete(order)}>
+              {/* <DropdownMenuItem onClick={() => handleDelete(order)}>
                 <span className="text-red-500 hover:text-red-400">Delete</span>
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
             </DropdownMenuContent>
           </DropdownMenu>
         );

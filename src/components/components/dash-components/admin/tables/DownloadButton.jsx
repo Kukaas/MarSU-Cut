@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import PropTypes from "prop-types";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Printer } from "lucide-react";
 import logo from "../../../../../assets/logo_msc.jpg";
 
