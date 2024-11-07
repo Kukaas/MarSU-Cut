@@ -153,7 +153,7 @@ const CreateOrder = ({ addNewOrder, setIsDialogOpen }) => {
           userId: currentUser._id,
           studentNumber: values.studentNumber,
           studentName: values.studentName,
-          studentEmail: values.studentEmail,
+          email: currentUser.email,
           studentGender: values.studentGender,
           level: currentUser.level,
           department: currentUser.department,

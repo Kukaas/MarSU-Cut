@@ -110,6 +110,12 @@ const Users = () => {
       ),
     },
     {
+      accessorKey: "role",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Role" />
+      ),
+    },
+    {
       accessorKey: "verified",
       header: "Verified",
       cell: ({ row }) => (
