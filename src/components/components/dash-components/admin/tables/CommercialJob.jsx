@@ -124,6 +124,43 @@ const CommercialJob = () => {
     }
   };
 
+  const handleReject = async (commercial) => {
+    try {
+      setLoadingUpdate(true);
+      const res = await axios.put(
+        `${BASE_URL}/api/v1/commercial-job/update/${commercial._id}`,
+        {
+          status: "REJECTED",
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+
+      if (res.status === 200) {
+        setLoadingUpdate(false);
+        const updatedData = data.map((item) =>
+          item._id === commercial._id ? { ...item, status: "REJECTED" } : item
+        );
+        setData(updatedData);
+        toast.success(
+          `Commercial job order of ${commercial.cbName} has been rejected.`
+        );
+      } else {
+        ToasterError();
+      }
+    } catch (error) {
+      setLoadingUpdate(false);
+      ToasterError({
+        description: "Please check you internet connection and try again.",
+      });
+    }
+  };
+
   // const handleDelete = async (commercial) => {
   //   try {
   //     setLoadingUpdate(true);
@@ -231,6 +268,20 @@ const CommercialJob = () => {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
+              <DropdownMenuItem
+                  onClick={() => {
+                    handleReject(commercial)
+                  }}
+                  disabled={[
+                    "REJECTED",
+                    // "APPROVED",
+                    "MEASURED",
+                    "DONE",
+                    "CLAIMED",
+                  ].includes(commercial.status)}
+                >
+                  Reject
+                </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => handleApprove(commercial)}
                   disabled={[
