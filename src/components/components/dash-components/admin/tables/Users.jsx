@@ -2,7 +2,7 @@
 import { Input } from "@/components/ui/input";
 import { Typography } from "antd";
 
-import { CheckCheckIcon, XIcon } from "lucide-react";
+import { CheckCheckIcon, EyeIcon, XIcon } from "lucide-react";
 // import { LoadingOutlined } from "@ant-design/icons";
 
 import { useEffect, useState } from "react";
@@ -12,6 +12,25 @@ import { BASE_URL } from "@/lib/api";
 import CustomTable from "@/components/components/custom-components/CustomTable";
 // import { toast } from "sonner";
 import DataTableColumnHeader from "@/components/components/custom-components/DataTableColumnHeader";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { AlertDialogCancel } from "@radix-ui/react-alert-dialog";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import CustomInput from "@/components/components/custom-components/CustomInput";
+import { FormField } from "@/components/ui/form";
+import SelectField from "@/components/components/custom-components/SelectField";
 // import DeleteDialog from "@/components/components/custom-components/DeleteDialog";
 
 const Users = () => {
@@ -141,24 +160,177 @@ const Users = () => {
         </div>
       ),
     },
-    // {
-    //   id: "actions",
-    //   header: "Actions",
-    //   cell: ({ row }) => {
-    //     const user = row.original;
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => {
+        const user = row.original;
 
-    //     return (
-    //       <div className="flex items-center justify-center space-x-2">
-    //         <Tooltip title="Delete product">
-    //           <DeleteDialog
-    //             item={`user with name ${user?.name}`}
-    //             handleDelete={() => handleDelete(user)}
-    //           />
-    //         </Tooltip>
-    //       </div>
-    //     );
-    //   },
-    // },
+        return (
+          <div className="flex items-center justify-center space-x-2">
+            <AlertDialog>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <AlertDialogTrigger>
+                      <EyeIcon />
+                    </AlertDialogTrigger>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>View Profile</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              <AlertDialogContent className="sm:max-w-lg sm:w-full p-6">
+                <AlertDialogHeader className="space-y-4">
+                  {user.role === "Student" && (
+                    <>
+                      {" "}
+                      <div className="flex items-center justify-center gap-5 mt-4">
+                        <div className="flex flex-col items-center">
+                          <div className="relative w-20 h-20 mt-3 cursor-default shadow-md overflow-hidden rounded-full">
+                            <Avatar className="w-full rounded-full h-full border-7 border-[lightgray] object-cover">
+                              <AvatarImage src={user.photo} />
+                              <AvatarFallback>
+                                {`${user.name.split(" ")[0][0]}${
+                                  user.name.split(" ").slice(-1)[0][0]
+                                }`.toUpperCase()}
+                              </AvatarFallback>
+                            </Avatar>
+                          </div>
+                          <div className="mt-2 flex flex-col justify-center items-center">
+                            <h2 className="text-sm font-semibold">
+                              {user.name}
+                            </h2>
+                            <Typography.Text className="text-xs text-gray-400">
+                              {user.email}
+                            </Typography.Text>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex flex-col gap-4">
+                        <div className="flex w-full justify-between gap-2 mt-10">
+                          <div className="w-full flex flex-col items-center">
+                            <h2 className="text-sm font-semibold">
+                              {user.studentNumber}
+                            </h2>
+                            <Typography.Text className="text-xs text-gray-400">
+                              Student Number
+                            </Typography.Text>
+                          </div>
+                          <div className="w-full flex flex-col items-center">
+                            <h2 className="text-sm font-semibold">
+                              {user.level}
+                            </h2>
+                            <p className="text-xs text-gray-400">Level</p>
+                          </div>
+                        </div>
+                        <div className="flex w-full justify-between gap-2 mt-2">
+                          <div className="w-full flex flex-col items-center">
+                            <h2 className="text-sm font-semibold">
+                              {user.department}
+                            </h2>
+                            <Typography.Text className="text-xs text-gray-400">
+                              Department
+                            </Typography.Text>
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                  {user.role === "Coordinator" && (
+                    <>
+                      <div className="flex items-center justify-center gap-5 mt-4">
+                        <div className="flex flex-col items-center">
+                          <div className="relative w-20 h-20 mt-3 cursor-default shadow-md overflow-hidden rounded-full">
+                            <Avatar className="w-full rounded-full h-full border-7 border-[lightgray] object-cover">
+                              <AvatarImage src={user.photo} />
+                              <AvatarFallback>
+                                {`${user.name.split(" ")[0][0]}${
+                                  user.name.split(" ").slice(-1)[0][0]
+                                }`.toUpperCase()}
+                              </AvatarFallback>
+                            </Avatar>
+                          </div>
+                          <div className="mt-2 flex flex-col justify-center items-center">
+                            <h2 className="text-sm font-semibold">
+                              {user.name}
+                            </h2>
+                            <Typography.Text className="text-xs text-gray-400">
+                              {user.email}
+                            </Typography.Text>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex flex-col gap-4">
+                        <div className="flex w-full justify-between gap-2 mt-10">
+                          <div className="w-full flex flex-col items-center">
+                            <h2 className="text-sm font-semibold">
+                              {user.department}
+                            </h2>
+                            <Typography.Text className="text-xs text-gray-400">
+                              Department
+                            </Typography.Text>
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                  {user.role === "CommercialJob" && (
+                    <>
+                      <div className="flex items-center justify-center gap-5 mt-4">
+                        <div className="flex flex-col items-center">
+                          <div className="relative w-20 h-20 mt-3 cursor-default shadow-md overflow-hidden rounded-full">
+                            <Avatar className="w-full rounded-full h-full border-7 border-[lightgray] object-cover">
+                              <AvatarImage src={user.photo} />
+                              <AvatarFallback>
+                                {`${user.name.split(" ")[0][0]}${
+                                  user.name.split(" ").slice(-1)[0][0]
+                                }`.toUpperCase()}
+                              </AvatarFallback>
+                            </Avatar>
+                          </div>
+                          <div className="mt-2 flex flex-col justify-center items-center">
+                            <h2 className="text-sm font-semibold">
+                              {user.name}
+                            </h2>
+                            <Typography.Text className="text-xs text-gray-400">
+                              {user.email}
+                            </Typography.Text>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex flex-col gap-4">
+                        <div className="flex w-full justify-between gap-2 mt-10">
+                          <div className="w-full flex flex-col items-center">
+                            <h2 className="text-sm font-semibold">
+                              {user.address}
+                            </h2>
+                            <Typography.Text className="text-xs text-gray-400">
+                              Address
+                            </Typography.Text>
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </AlertDialogHeader>
+
+                <AlertDialogFooter>
+                  <AlertDialogCancel asChild>
+                    <Button variant="outline" className="w-full sm:w-auto">
+                      Close
+                    </Button>
+                  </AlertDialogCancel>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+        );
+      },
+    },
   ];
 
   return (
