@@ -16,6 +16,7 @@ import { token } from "@/lib/token";
 import moment from "moment";
 import { Button } from "@/components/ui/button";
 import PropTypes from "prop-types";
+import { Check, X } from "lucide-react";
 
 const CustomHeader = ({ date, prev, next, setView }) => {
   const formattedDate = new Date(date);
@@ -74,7 +75,8 @@ export const CustomCalendar = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedSchedules, setSelectedSchedules] = useState([]);
-  const [selectedCommercialSchedules, setSelectedCommercialSchedules] = useState([]); // State for commercial job schedules
+  const [selectedCommercialSchedules, setSelectedCommercialSchedules] =
+    useState([]); // State for commercial job schedules
   const [view, setView] = useState("dayGridMonth");
   const [currentDate, setCurrentDate] = useState(new Date());
   const calendarRef = useRef(null);
@@ -101,6 +103,7 @@ export const CustomCalendar = () => {
             const date = moment(schedule.schedule).format("YYYY-MM-DD");
             return {
               title: schedule.studentName,
+              status: schedule.status,
               start: date,
               allDay: true,
             };
@@ -139,6 +142,7 @@ export const CustomCalendar = () => {
             const date = moment(schedule.schedule).format("YYYY-MM-DD");
             return {
               title: schedule.cbName,
+              status: schedule.status,
               start: date,
               allDay: true,
             };
@@ -245,8 +249,15 @@ export const CustomCalendar = () => {
             {selectedSchedules.length > 0 ? (
               <ul>
                 {selectedSchedules.map((schedule, index) => (
-                  <li key={index} className="mt-2">
+                  <li key={index} className="mt-2 flex items-center">
                     {schedule.title}
+                    {["MEASURED", "CLAIMED", "DONE"].includes(
+                      schedule.status
+                    ) ? (
+                      <Check className="w-4 h-4 text-green-500 ml-3" />
+                    ) : (
+                      <X className="w-4 h-4 text-red-500 ml-3" />
+                    )}
                   </li>
                 ))}
               </ul>
@@ -260,6 +271,13 @@ export const CustomCalendar = () => {
                 {selectedCommercialSchedules.map((schedule, index) => (
                   <li key={index} className="mt-2">
                     {schedule.title}
+                    {["MEASURED", "CLAIMED", "DONE"].includes(
+                      schedule.status
+                    ) ? (
+                      <Check className="w-4 h-4 text-green-500 ml-3" />
+                    ) : (
+                      <X className="w-4 h-4 text-red-500 ml-3" />
+                    )}
                   </li>
                 ))}
               </ul>
