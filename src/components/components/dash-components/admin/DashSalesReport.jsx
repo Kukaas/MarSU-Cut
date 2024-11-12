@@ -105,198 +105,230 @@ const DashSalesReport = () => {
     }))
   );
 
-  const handlePrint = () => {
+   const handlePrint = () => {
     let filteredData = [];
-    let totalRevenue = 0; // Initialize totalRevenue
-
-    // Determine the title for the document
+    let totalRevenue = 0;
+  
     const title =
       tab === "monthly"
         ? `Sales Report for ${monthNames[selectedMonth - 1]} ${selectedYear}`
         : `Sales Report for Year ${selectedYear}`;
-
-    // Your existing filtering logic remains unchanged
+  
     if (tab === "monthly") {
       const startDate = new Date(Date.UTC(selectedYear, selectedMonth - 1, 1));
       const endDate = new Date(Date.UTC(selectedYear, selectedMonth, 1));
-
       filteredData = salesReports.filter((report) => {
         const salesDate = new Date(report.salesDate);
         return salesDate >= startDate && salesDate < endDate;
       });
     } else if (tab === "yearly") {
       const monthlyRevenue = Array(12).fill(0);
-
       const yearlyReports = salesReports.filter((report) => {
         const salesDate = new Date(report.salesDate);
         return salesDate.getFullYear() === selectedYear;
       });
-
+  
+      console.log("Yearly Reports:", yearlyReports); // Debugging log
+  
       if (yearlyReports.length === 0) {
         toast.error("No sales data available for the selected year.");
         return;
       }
-
+  
       yearlyReports.forEach((report) => {
         const salesDate = new Date(report.salesDate);
         const month = salesDate.getMonth();
         monthlyRevenue[month] += report.totalRevenue;
       });
-
+  
       filteredData = monthlyRevenue
         .map((revenue, index) =>
           revenue > 0
-            ? { month: monthNames[index], totalRevenue: revenue }
+            ? {
+                month: monthNames[index],
+                totalRevenue: revenue,
+                orderItems: aggregateOrderItems(
+                  yearlyReports.filter(
+                    (report) => new Date(report.salesDate).getMonth() === index
+                  )
+                ),
+              }
             : null
         )
         .filter(Boolean);
+  
+      console.log("Filtered Data:", filteredData); // Debugging log
     }
-
+  
     if (tab === "monthly" && filteredData.length === 0) {
       toast.error("No sales data available for the selected month.");
       return;
     }
-
-    // Calculate total revenue
+  
     filteredData.forEach((report) => {
       totalRevenue += report.totalRevenue;
     });
-
+  
     const printWindow = window.open("", "_blank");
     if (printWindow) {
       printWindow.document.write(`
-    <html>
-      <head>
-        <title>${title}</title>
-        <style>
-          body { font-family: Arial, sans-serif; }
-          .header { 
-            position: relative; /* Set relative positioning for the header */
-            text-align: center; 
-            margin-bottom: 20px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-          }
-          .header img { 
-            position: absolute; /* Set absolute positioning for the logo */
-            left: 20px; /* Position logo from the left */
-            width: 60px; 
-          }
-          .header h1 { 
-            font-size: 24px; 
-            font-weight: bold; 
-            color: #800000; 
-            margin: 0; 
-          }
-          .header p { 
-            font-size: 14px; 
-            color: #555; 
-            margin: 5px 0 0 0; 
-          }
-          table { 
-            border-collapse: collapse; 
-            width: 100%; 
-            margin-top: 20px; 
-          }
-          th, td { 
-            border: 1px solid black; 
-            padding: 8px; 
-            text-align: center; 
-          }
-          th { 
-            background-color: #800000; 
-            color: white; 
-          }
-          tfoot { font-weight: bold; }
-          h1.title { 
-            color: #800000; 
-            text-align: center; 
-            margin-top: 20px; 
-          }
-          .signatures { 
-            display: flex; 
-            justify-content: space-between; 
-            position: absolute; 
-            bottom: 30px; 
-            width: 100%; 
-          }
-          .signatures p { margin: 10px; }
-        </style>
-      </head>
-      <body>
-        <div class="header">
-          <img src="${logo}" alt="MarSu Logo" />
-          <div>
-            <p>Republic of the Philippines</p>
-            <h1>Marinduque State University</h1>
-            <p>Panfilio M. Manguera Sr. Road, Tanza, Boac, Marinduque</p>
+      <html>
+        <head>
+          <title>${title}</title>
+          <style>
+            body { font-family: Arial, sans-serif; }
+            .header { 
+              position: relative; 
+              text-align: center; 
+              margin-bottom: 20px; 
+              display: flex; 
+              align-items: center; 
+              justify-content: center; 
+            }
+            .header img { 
+              position: absolute; 
+              left: 20px; 
+              width: 60px; 
+            }
+            .header h1 { 
+              font-size: 24px; 
+              font-weight: bold; 
+              color: #800000; 
+              margin: 0; 
+            }
+            table { 
+              border-collapse: collapse; 
+              width: 100%; 
+              margin-top: 20px; 
+            }
+            th, td { 
+              border: 1px solid black; 
+              padding: 8px; 
+              text-align: center; 
+            }
+            th { 
+              background-color: #800020; 
+              color: white; 
+            }
+            .order-items-table {
+              margin: 10px 0;
+              width: 90%;
+            }
+            .order-items-table th {
+              background-color: #800020;
+              color: white;
+            }
+            tfoot { font-weight: bold; }
+            h1.title { 
+              color: #800000; 
+              text-align: center; 
+              margin-top: 20px; 
+            }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <img src="${logo}" alt="MarSu Logo" />
+            <div>
+              <p>Republic of the Philippines</p>
+              <h1>Marinduque State University</h1>
+              <p>Panfilio M. Manguera Sr. Road, Tanza, Boac, Marinduque</p>
+            </div>
           </div>
-        </div>
-  
-        <h1 class="title">${title}</h1>
-        <table>
-          <thead>
-            <tr>
-              <th>${tab === "monthly" ? "Date" : "Month"}</th>
-              <th>Total Revenue</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${filteredData
-              .map(
-                (report) => `
-                <tr>
-                  <td>${
-                    tab === "monthly"
-                      ? new Date(report.salesDate).toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        })
-                      : report.month
-                  }</td>
-                  <td>${Intl.NumberFormat("en-PH", {
-                    style: "currency",
-                    currency: "PHP",
-                  }).format(report.totalRevenue)}</td>
-                </tr>
-              `
-              )
-              .join("")}
-          </tbody>
-          <tfoot>
-            <tr>
-              <td>
-                <strong>
-                  Total Revenue for ${
+    
+          <h1 class="title">${title}</h1>
+          <table>
+            <thead>
+              <tr>
+                <th>${tab === "monthly" ? "Date" : "Month"}</th>
+                <th>Total Revenue</th>
+                <th>Order Items</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${filteredData
+                .map(
+                  (report) => `
+                  <tr>
+                    <td>${
+                      tab === "monthly"
+                        ? new Date(report.salesDate).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })
+                        : report.month
+                    }</td>
+                    <td>${Intl.NumberFormat("en-PH", {
+                      style: "currency",
+                      currency: "PHP",
+                    }).format(report.totalRevenue)}</td>
+                    <td>
+                      <table class="order-items-table">
+                        <thead>
+                          <tr>
+                            <th>Product Type</th>
+                            <th>Level</th>
+                            <th>Size</th>
+                            <th>Quantity</th>
+                            <th>Unit Price</th>
+                            <th>Total Price</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          ${report.orderItems
+                            .map(
+                              (item) => `
+                              <tr>
+                                <td>${item.productType}</td>
+                                <td>${item.level || "-"}</td>
+                                <td>${item.size || "-"}</td>
+                                <td>${item.quantity}</td>
+                                <td>${Intl.NumberFormat("en-PH", {
+                                  style: "currency",
+                                  currency: "PHP",
+                                }).format(item.unitPrice)}</td>
+                                <td>${Intl.NumberFormat("en-PH", {
+                                  style: "currency",
+                                  currency: "PHP",
+                                }).format(item.totalPrice)}</td>
+                              </tr>
+                            `
+                            )
+                            .join("")}
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                `
+                )
+                .join("")}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="2">
+                  <strong>Total Revenue for ${
                     tab === "monthly"
                       ? monthNames[selectedMonth - 1]
                       : selectedYear
-                  }:
-                </strong>
-              </td>
-              <td>
-                <strong>
-                  ${Intl.NumberFormat("en-PH", {
+                  }:</strong>
+                </td>
+                <td>
+                  <strong>${Intl.NumberFormat("en-PH", {
                     style: "currency",
                     currency: "PHP",
-                  }).format(totalRevenue)}
-                </strong>
-              </td>
-            </tr>
-          </tfoot>
-        </table>
-        <div class="signatures">
-          <p>Signed by: ______________________</p>
-          <p>Submitted by: ______________________</p>
-        </div>
-      </body>
-    </html>
-  `);
+                  }).format(totalRevenue)}</strong>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </body>
+      </html>
+    `);
+  
       printWindow.document.close();
       printWindow.focus();
-
+  
       setTimeout(() => {
         printWindow.print();
         printWindow.close();
@@ -304,6 +336,25 @@ const DashSalesReport = () => {
     } else {
       toast.error("Failed to open print window.");
     }
+  };
+  
+  // Function to aggregate order items
+  const aggregateOrderItems = (reports) => {
+    const aggregatedItems = {};
+  
+    reports.forEach((report) => {
+      report.orderItems.forEach((item) => {
+        const key = `${item.productType}-${item.level}-${item.size}`;
+        if (!aggregatedItems[key]) {
+          aggregatedItems[key] = { ...item };
+        } else {
+          aggregatedItems[key].quantity += item.quantity;
+          aggregatedItems[key].totalPrice += item.totalPrice;
+        }
+      });
+    });
+  
+    return Object.values(aggregatedItems);
   };
 
   return (
