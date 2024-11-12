@@ -15,8 +15,10 @@ import DataTableColumnHeader from "@/components/components/custom-components/Dat
 import {
   AlertDialog,
   AlertDialogContent,
+  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
+  AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import {
@@ -31,6 +33,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import CustomInput from "@/components/components/custom-components/CustomInput";
 import { FormField } from "@/components/ui/form";
 import SelectField from "@/components/components/custom-components/SelectField";
+import { Separator } from "@/components/ui/separator";
 // import DeleteDialog from "@/components/components/custom-components/DeleteDialog";
 
 const Users = () => {
@@ -182,7 +185,12 @@ const Users = () => {
                 </Tooltip>
               </TooltipProvider>
               <AlertDialogContent className="sm:max-w-lg sm:w-full p-6">
-                <AlertDialogHeader className="space-y-4">
+                <AlertDialogHeader className="space-y-1">
+                  <AlertDialogTitle>
+                    <p className="text-sm font-semibold mb-5">
+                      Profile Details of {user.name}
+                    </p>
+                  </AlertDialogTitle>
                   {user.role === "Student" && (
                     <>
                       {" "}
@@ -225,6 +233,7 @@ const Users = () => {
                             <p className="text-xs text-gray-400">Level</p>
                           </div>
                         </div>
+                        <Separator />
                         <div className="flex w-full justify-between gap-2 mt-2">
                           <div className="w-full flex flex-col items-center">
                             <h2 className="text-sm font-semibold">
@@ -274,6 +283,25 @@ const Users = () => {
                             </Typography.Text>
                           </div>
                         </div>
+                        <Separator />
+                        <div className="w-full flex justify-between items-center">
+                          <div className="w-full flex flex-col items-center">
+                            <h2 className="text-sm font-semibold">
+                              {user.role}
+                            </h2>
+                            <Typography.Text className="text-xs text-gray-400">
+                              Role
+                            </Typography.Text>
+                          </div>
+                          <div className="w-full flex flex-col items-center">
+                            <h2 className="text-sm font-semibold">
+                              {user.gender}
+                            </h2>
+                            <Typography.Text className="text-xs text-gray-400">
+                              Gender
+                            </Typography.Text>
+                          </div>
+                        </div>
                       </div>
                     </>
                   )}
@@ -313,8 +341,40 @@ const Users = () => {
                             </Typography.Text>
                           </div>
                         </div>
+                        <Separator />
+                        <div className="w-full flex justify-between items-center">
+                          <div className="w-full flex flex-col items-center">
+                            <h2 className="text-sm font-semibold">
+                              {user.role}
+                            </h2>
+                            <Typography.Text className="text-xs text-gray-400">
+                              Role
+                            </Typography.Text>
+                          </div>
+                          <div className="w-full flex flex-col items-center">
+                            <h2 className="text-sm font-semibold">
+                              {user.gender}
+                            </h2>
+                            <Typography.Text className="text-xs text-gray-400">
+                              Gender
+                            </Typography.Text>
+                          </div>
+                        </div>
                       </div>
                     </>
+                  )}
+
+                  {user.isAdmin && (
+                    <div className="flex flex-col gap-4 mt-4">
+                      <div className="flex w-full justify-between gap-2">
+                        <div className="w-full flex flex-col items-center">
+                          <h2 className="text-sm font-semibold">Admin</h2>
+                          <p className="text-xs text-gray-400">
+                            This user is an admin
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   )}
                 </AlertDialogHeader>
 
