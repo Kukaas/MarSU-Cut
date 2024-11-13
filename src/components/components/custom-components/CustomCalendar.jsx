@@ -269,7 +269,7 @@ export const CustomCalendar = () => {
             {selectedCommercialSchedules.length > 0 ? (
               <ul>
                 {selectedCommercialSchedules.map((schedule, index) => (
-                  <li key={index} className="mt-2">
+                  <li key={index} className="mt-2 flex items-center">
                     {schedule.title}
                     {["MEASURED", "CLAIMED", "DONE"].includes(
                       schedule.status
