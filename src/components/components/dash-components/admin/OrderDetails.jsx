@@ -273,7 +273,7 @@ const OrderDetails = () => {
                         ) : currentBalance > 0 ? (
                           `₱${currentBalance.toFixed(2)}`
                         ) : (
-                          <StatusBadge status="Down" />
+                          <StatusBadge status="downPayment" />
                         )}
                       </span>
                     </h6>

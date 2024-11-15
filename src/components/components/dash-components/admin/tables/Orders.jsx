@@ -514,7 +514,7 @@ function Orders() {
         </div>
       </div>
       <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <AlertDialogContent className="overflow-auto">
+        <AlertDialogContent className="max-h-[550px] max-w-[550px] overflow-auto">
           <AlertDialogHeader>
             <AlertDialogTitle>Add Order Items</AlertDialogTitle>
             <AlertDialogDescription>

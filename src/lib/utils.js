@@ -53,4 +53,8 @@ export const statusColors = {
     color: "#6b7280",
     badgeText: "Unknown",
   },
+  downPayment: {
+    color: "#6b7280",
+    badgeText: "Down",
+  },
 };
