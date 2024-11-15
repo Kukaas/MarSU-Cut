@@ -323,18 +323,7 @@ const Sidebar = () => {
             ) : (
               <div>
                 {currentUser.role === "Student" && (
-                  <>
-                    <Link
-                      to="/dashboard?tab=home"
-                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                        isActive("/dashboard?tab=home")
-                          ? "bg-muted text-primary"
-                          : "text-muted-foreground hover:text-primary"
-                      }`}
-                    >
-                      <Home className="h-4 w-4" />
-                      Dashboard
-                    </Link>
+                  <>     
                     <Link
                       to="/dashboard?tab=orders"
                       className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
@@ -346,7 +335,17 @@ const Sidebar = () => {
                       <ShoppingCart className="h-4 w-4" />
                       Orders
                     </Link>
-                    
+                    <Link
+                      to="/dashboard?tab=schedules"
+                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                        isActive("/dashboard?tab=home")
+                          ? "bg-muted text-primary"
+                          : "text-muted-foreground hover:text-primary"
+                      }`}
+                    >
+                      <Calendar className="h-4 w-4" />
+                      Schedules
+                    </Link>
                   </>
                 )}
 
@@ -380,17 +379,6 @@ const Sidebar = () => {
                 {currentUser.role === "CommercialJob" && (
                   <>
                     <Link
-                      to="/dashboard?tab=home"
-                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                        isActive("/dashboard?tab=home")
-                          ? "bg-muted text-primary"
-                          : "text-muted-foreground hover:text-primary"
-                      }`}
-                    >
-                      <Home className="h-4 w-4" />
-                      Dashboard
-                    </Link>
-                    <Link
                       to="/dashboard?tab=commercial-job"
                       className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
                         isActive("/dashboard?tab=commercial-job")
@@ -399,7 +387,18 @@ const Sidebar = () => {
                       }`}
                     >
                       <Building2Icon className="h-4 w-4" />
-                      Commercial Job
+                      Orders
+                    </Link>
+                    <Link
+                      to="/dashboard?tab=schedules"
+                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                        isActive("/dashboard?tab=home")
+                          ? "bg-muted text-primary"
+                          : "text-muted-foreground hover:text-primary"
+                      }`}
+                    >
+                      <Calendar className="h-4 w-4" />
+                      Schedules
                     </Link>
                   </>
                 )}
