@@ -506,6 +506,8 @@ function Orders() {
           navigate={() => navigate("/dashboard?tab=archive-orders")}
           status={status}
           placeholder="Filter by student number or name"
+          title="Go to Archive Orders"
+          name="Archive"
         />
         <div className="rounded-md border">
           <CustomTable columns={columns} data={data} loading={loading} />

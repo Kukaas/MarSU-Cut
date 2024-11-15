@@ -125,6 +125,8 @@ const CommercialJob = () => {
       ToasterError({
         description: "Please check you internet connection and try again.",
       });
+    } finally {
+      setLoadingUpdate(false);
     }
   };
 
@@ -335,7 +337,7 @@ const CommercialJob = () => {
                     handleClaimed(commercial);
                     setSelectedOrder(commercial);
                   }}
-                  disabled={["REJECTED", "PENDING", "DONE", "CLAIMED"].includes(
+                  disabled={["REJECTED", "PENDING", "CLAIMED"].includes(
                     commercial.status
                   )}
                 >
@@ -395,6 +397,8 @@ const CommercialJob = () => {
           navigate={() => navigate("/dashboard?tab=archive-commercial-job")}
           status={status}
           placeholder="Filter by name..."
+          title="Go to Archive Commercial Job Orders"
+          name="Archive"
         />
         <div className="rounded-md border">
           <CustomTable columns={columns} data={data} loading={loading} />

@@ -148,9 +148,7 @@ function ArchiveOrders() {
   const columns = [
     {
       accessorKey: "studentNumber",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Student Number" />
-      ),
+      header: "Student Number",
     },
     {
       accessorKey: "studentName",

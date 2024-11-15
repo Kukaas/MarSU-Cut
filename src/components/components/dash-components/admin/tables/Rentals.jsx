@@ -634,6 +634,8 @@ function Rentals() {
           navigate={() => navigate("/dashboard?tab=archive-rentals")}
           status={status}
           placeholder="Filter by coordinator name..."
+          title="Go to Archive Rentals"
+          name="Archive"
         />
         <div className="rounded-md border">
           <CustomTable columns={columns} data={data} loading={loading} />
