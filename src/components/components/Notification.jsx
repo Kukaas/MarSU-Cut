@@ -16,12 +16,14 @@ import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import ToasterError from "@/lib/Toaster";
 import { formatDistanceToNow } from "date-fns";
+import { Input } from "../ui/input";
 
 const Notification = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [readNotifications, setReadNotifications] = useState([]);
   const [unreadNotifications, setUnreadNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -92,39 +94,6 @@ const Notification = () => {
     }
   };
 
-  const handleDeleteNotification = async (notification) => {
-    try {
-      const res = await axios.delete(
-        `${BASE_URL}/api/v1/user/notifications/${currentUser._id}/${notification._id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        }
-      );
-
-      if (res.status === 200) {
-        toast.success("Notification deleted.", {
-          description: `Notification with ID "${notification._id}" has been deleted.`,
-        });
-
-        // Update state
-        const updatedReadNotifications = readNotifications.filter(
-          (readNotification) => readNotification._id !== notification._id
-        );
-        setReadNotifications(updatedReadNotifications);
-      } else {
-        toast.error("Failed to delete notification.");
-      }
-    } catch (error) {
-      ToasterError({
-        description: "Please check your internet connection and try again.",
-      });
-    }
-  };
-
   const handleMarkAllNotificationsAsRead = async () => {
     try {
       setLoading(true);
@@ -158,38 +127,20 @@ const Notification = () => {
     }
   };
 
-  const handleDeleteAllNotification = async () => {
-    try {
-      setLoading(true);
-      const res = await axios.delete(
-        `${BASE_URL}/api/v1/user/notifications/${currentUser._id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        }
-      );
+  // Filter notifications based on the search query
+  const filteredUnreadNotifications = unreadNotifications.filter(
+    (notification) =>
+      (notification.title && notification.title.toLowerCase().includes(searchValue.toLowerCase())) ||
+      (notification.message && notification.message.toLowerCase().includes(searchValue.toLowerCase())) ||
+      (notification.createdAt && notification.createdAt.toLowerCase().includes(searchValue.toLowerCase()))
+  );
 
-      if (res.status === 200) {
-        setLoading(false);
-        toast.success("All notifications deleted.");
-
-        // Update state
-        setReadNotifications([]);
-      } else {
-        setLoading(false);
-        toast.error("Failed to delete all notifications.");
-      }
-    } catch (error) {
-      setLoading(false);
-      ToasterError({
-        description: "Please check your internet connection and try again.",
-      });
-    }
-  };
-
+  const filteredReadNotifications = readNotifications.filter(
+    (notification) =>
+      (notification.title && notification.title.toLowerCase().includes(searchValue.toLowerCase())) ||
+      (notification.message && notification.message.toLowerCase().includes(searchValue.toLowerCase())) ||
+      (notification.createdAt && notification.createdAt.toLowerCase().includes(searchValue.toLowerCase()))
+  );
   return (
     <>
       <Tabs defaultValue="unread" className="mt-5">
@@ -197,6 +148,14 @@ const Notification = () => {
           <TabsTrigger value="unread">Unread</TabsTrigger>
           <TabsTrigger value="read">Read</TabsTrigger>
         </TabsList>
+        <div className="mt-3 w-full">
+          <Input
+            className="w-full"
+            placeholder="Search notifications"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)} // Update the search query
+          />
+        </div>
         <TabsContent
           value="unread"
           className="h-screen overflow-auto hide-scrollbar"
@@ -209,16 +168,14 @@ const Notification = () => {
               ? "You have 1 unread notification."
               : `You have ${unreadNotifications.length} unread notifications.`}
           </SheetDescription>
-          {unreadNotifications
-            .slice() // Create a copy of the array to avoid mutating the original
+          {filteredUnreadNotifications
+            .slice()
             .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort in descending order
             .map((notification) => (
               <div
-                key={notification.id}
+                key={notification._id}
                 className="p-4 border rounded-md border-gray-400 mt-2 cursor-pointer"
-                onClick={() => {
-                  handleReadNotification(notification);
-                }}
+                onClick={() => handleReadNotification(notification)}
               >
                 <SheetTitle>{notification?.title}</SheetTitle>
                 <SheetDescription>{notification?.message}</SheetDescription>
@@ -256,52 +213,22 @@ const Notification = () => {
               ? "You have 1 read notification."
               : `You have ${readNotifications.length} read notifications.`}
           </SheetDescription>
-          {readNotifications
+          {filteredReadNotifications
             .slice()
             .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort in descending order
             .map((notification) => (
               <div
-                key={notification.id}
-                className="p-4 border rounded-md border-gray-400 mt-2 overflow-auto cursor-pointer"
+                key={notification._id}
+                className="p-4 border rounded-md border-gray-400 mt-2 cursor-pointer"
               >
-                <div className="flex gap-2 flex-col">
-                  <SheetTitle className="text-sm">
-                    {notification?.title}
-                  </SheetTitle>
-                  <SheetDescription className="text-sm">
-                    {notification?.message}
-                  </SheetDescription>
-                  <SheetDescription className="text-xs text-gray-400">
-                    {notification?.createdAt} -{" "}
-                    {formatDistanceToNow(new Date(notification.createdAt))} ago
-                  </SheetDescription>
-                </div>
-                <Tooltip title="Delete notification">
-                  <Button
-                    variant="destructive"
-                    className="mt-2 h-6 w-6 relative"
-                    onClick={() => handleDeleteNotification(notification)}
-                  >
-                    <Trash className="h-4 w-4 absolute" />
-                  </Button>
-                </Tooltip>
+                <SheetTitle>{notification?.title}</SheetTitle>
+                <SheetDescription>{notification?.message}</SheetDescription>
+                <SheetDescription className="text-xs text-gray-400">
+                  {notification?.createdAt} -{" "}
+                  {formatDistanceToNow(new Date(notification.createdAt))} ago
+                </SheetDescription>
               </div>
             ))}
-          <Button
-            className="mt-5"
-            variant="destructive"
-            onClick={handleDeleteAllNotification}
-            disabled={loading}
-          >
-            {loading ? (
-              <div className="flex items-center">
-                <Loader2 className="mr-2 animate-spin" />
-                <span>Deleting</span>
-              </div>
-            ) : (
-              "Delete all"
-            )}
-          </Button>
         </TabsContent>
         <Toaster position="top-center" richColors closeButton />
       </Tabs>
