@@ -26,6 +26,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import PropTypes from "prop-types"
 import Sidebar from "@/components/components/Sidebar";
+import DashArchiveCommercialjob from "@/components/components/dash-components/admin/DashArchiveCommercialJob";
 
 const Dashboard = ({ tab }) => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
@@ -45,6 +46,8 @@ const Dashboard = ({ tab }) => {
         return <DashRentalAdmin />;
       case "commercial-job-admin":
         return <DashCommercialJob />;
+      case "archive-commercial-job":
+        return <DashArchiveCommercialjob />;
       case "archive-rentals":
         return <DashArchiveRentals />;
       case "schedules":

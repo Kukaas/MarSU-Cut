@@ -63,10 +63,12 @@ const CommercialJob = () => {
           withCredentials: true,
         });
         const data = res.data;
-        if (res.status === 200) {
-          setData(data.commercialOrders);
-          setOriginalData(data.commercialOrders);
-        }
+        const commercialOrders = res.data.commercialOrders.filter(
+          (order) => !order.isArchived
+        );
+        setOriginalData(commercialOrders);
+        setData(commercialOrders);
+
         setLoading(false);
       } catch (error) {
         console.error(error);
@@ -87,13 +89,13 @@ const CommercialJob = () => {
     }
   }, [searchValue, originalData]);
 
-  const handleApprove = async (commercial) => {
+  const handleUpdateStatus = async (commercial, status) => {
     try {
       setLoadingUpdate(true);
       const res = await axios.put(
-        `${BASE_URL}/api/v1/commercial-job/update/${commercial._id}`,
+        `http://localhost:3000/api/v1/commercial-job/update/${commercial._id}`,
         {
-          status: "APPROVED",
+          status,
         },
         {
           headers: {
@@ -107,30 +109,40 @@ const CommercialJob = () => {
       if (res.status === 200) {
         setLoadingUpdate(false);
         const updatedData = data.map((item) =>
-          item._id === commercial._id ? { ...item, status: "APPROVED" } : item
+          item._id === commercial._id ? { ...item, status } : item
         );
         setData(updatedData);
         toast.success(
-          `Commercial job order of ${commercial.cbName} has been approved.`
+          `Commercial job order of ${
+            commercial.cbName
+          } has been ${status.toLowerCase()}.`
         );
       } else {
         ToasterError();
       }
     } catch (error) {
-      setLoadingUpdate(false);
+      console.error(error);
       ToasterError({
         description: "Please check you internet connection and try again.",
       });
     }
   };
 
-  const handleReject = async (commercial) => {
+  const handleApprove = (commercial) =>
+    handleUpdateStatus(commercial, "APPROVED");
+  const handleReject = (commercial) =>
+    handleUpdateStatus(commercial, "REJECTED");
+  const handleDone = (commercial) => handleUpdateStatus(commercial, "DONE");
+  const handleClaimed = (commercial) =>
+    handleUpdateStatus(commercial, "CLAIMED");
+
+  const handleArchive = async (commercial) => {
     try {
       setLoadingUpdate(true);
       const res = await axios.put(
-        `${BASE_URL}/api/v1/commercial-job/update/${commercial._id}`,
+        `http://localhost:3000/api/v1/commercial-job/archive/${commercial._id}`,
         {
-          status: "REJECTED",
+          isArchived: true,
         },
         {
           headers: {
@@ -142,19 +154,18 @@ const CommercialJob = () => {
       );
 
       if (res.status === 200) {
-        setLoadingUpdate(false);
-        const updatedData = data.map((item) =>
-          item._id === commercial._id ? { ...item, status: "REJECTED" } : item
-        );
+        const updatedData = data.filter((item) => item._id !== commercial._id);
         setData(updatedData);
+        setLoadingUpdate(false);
         toast.success(
-          `Commercial job order of ${commercial.cbName} has been rejected.`
+          `Commercial job order of ${commercial.cbName} has been archived.`
         );
       } else {
-        ToasterError();
+        ToasterError({
+          description: "Please check you internet connection and try again.",
+        });
       }
     } catch (error) {
-      setLoadingUpdate(false);
       ToasterError({
         description: "Please check you internet connection and try again.",
       });
@@ -268,13 +279,13 @@ const CommercialJob = () => {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-              <DropdownMenuItem
+                <DropdownMenuItem
                   onClick={() => {
-                    handleReject(commercial)
+                    handleReject(commercial);
                   }}
                   disabled={[
                     "REJECTED",
-                    // "APPROVED",
+                    "APPROVED",
                     "MEASURED",
                     "DONE",
                     "CLAIMED",
@@ -308,11 +319,33 @@ const CommercialJob = () => {
                 >
                   Measure
                 </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    handleDone(commercial);
+                    setSelectedOrder(commercial);
+                  }}
+                  disabled={["REJECTED", "PENDING", "DONE", "CLAIMED"].includes(
+                    commercial.status
+                  )}
+                >
+                  Done
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    handleClaimed(commercial);
+                    setSelectedOrder(commercial);
+                  }}
+                  disabled={["REJECTED", "PENDING", "DONE", "CLAIMED"].includes(
+                    commercial.status
+                  )}
+                >
+                  Claimed
+                </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              {/* <DropdownMenuItem onClick={() => handleDelete(commercial)}>
-                <span className="text-red-500 hover:text-red-400">Delete</span>
-              </DropdownMenuItem> */}
+              <DropdownMenuItem onClick={() => handleArchive(commercial)}>
+                Archive
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -332,6 +365,10 @@ const CommercialJob = () => {
   const status = {
     PENDING: "PENDING",
     APPROVED: "APPROVED",
+    REJECTED: "REJECTED",
+    MEASURED: "MEASURED",
+    DONE: "DONE",
+    CLAIMED: "CLAIMED",
   };
 
   return (
@@ -355,7 +392,7 @@ const CommercialJob = () => {
           setSearchValue={setSearchValue}
           handleStatusChange={handleStatusChange}
           statusFilter={statusFilter}
-          navigate={() => navigate("/dashboard?tab=commercial-job-archive")}
+          navigate={() => navigate("/dashboard?tab=archive-commercial-job")}
           status={status}
           placeholder="Filter by name..."
         />

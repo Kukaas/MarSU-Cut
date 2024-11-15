@@ -13,6 +13,8 @@ const DataTableToolBar = ({
   navigate,
   status,
   placeholder,
+  title,
+  name
 }) => {
   return (
     <div className="flex flex-wrap items-center justify-between pb-2">
@@ -29,10 +31,10 @@ const DataTableToolBar = ({
           statusFilter={statusFilter}
         />
       </div>
-      <Tooltip title="Archive Orders">
+      <Tooltip title={title}>
         <Button className="m-2 h-8" onClick={navigate}>
           <ArchiveIcon size={20} className="mr-2 h-4 w-4" />
-          Archive
+          {name}
         </Button>
       </Tooltip>
     </div>
@@ -47,6 +49,7 @@ DataTableToolBar.propTypes = {
   navigate: PropTypes.func.isRequired,
   status: PropTypes.string.isRequired,
   placeholder: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
 };
 
 export default DataTableToolBar;
