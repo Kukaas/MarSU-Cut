@@ -9,6 +9,7 @@ import {
 import { Input } from "../../ui/input";
 import { Eye, EyeOff } from "lucide-react"; // Assuming you use lucide-react for icons
 import PropTypes from "prop-types";
+import { cn } from "@/lib/utils";
 
 const CustomInput = ({ form, name, label, placeholder, type, maxLength }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -22,15 +23,15 @@ const CustomInput = ({ form, name, label, placeholder, type, maxLength }) => {
       control={form.control}
       name={name}
       render={({ field }) => (
-        <FormItem className="relative">
+        <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <div className="relative">
+            <div>
               <Input
                 placeholder={placeholder}
                 {...field}
                 type={showPassword && type === "password" ? "text" : type}
-                className={type === "password" ? "pr-10" : ""}
+                className={type === "password" ? "pr-10" : "" }
                 maxLength={maxLength}
                 disabled={type === "disabled"}
               />

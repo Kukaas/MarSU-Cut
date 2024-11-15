@@ -19,11 +19,12 @@ const SelectField = ({
   placeholder,
   onValueChange,
   type,
+  className,
 }) => {
   const hasManyOptions = options.length > 2; // Adjust the threshold as needed
 
   return (
-    <FormItem>
+    <FormItem className={className}>
       <FormLabel>{label}</FormLabel>
       <FormControl>
         <Select

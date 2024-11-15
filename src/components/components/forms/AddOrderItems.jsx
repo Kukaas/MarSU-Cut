@@ -1,25 +1,12 @@
-/* eslint-disable react/prop-types */
-// UI
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
+import { useEffect, useState } from "react";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
+import PropTypes from "prop-types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tooltip } from "antd";
 import { toast } from "sonner";
-
 import { Loader2, MinusCircle, PlusCircle } from "lucide-react";
-
-// Others
 import axios from "axios";
-import { useEffect, useState } from "react";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
-import PropTypes from "prop-types";
-import ToasterError from "@/lib/Toaster";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import SelectField from "../custom-components/SelectField";
@@ -27,6 +14,14 @@ import {
   AlertDialogCancel,
   AlertDialogFooter,
 } from "@/components/ui/alert-dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
+import { Separator } from "@/components/ui/separator";
 
 const AddOrderItems = ({
   selectedOrder,
@@ -34,6 +29,7 @@ const AddOrderItems = ({
   onOrderItemsAdded,
 }) => {
   const [loadingAddItems, setLoadingAddItems] = useState(false);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   const form = useForm({
     defaultValues: {
@@ -99,10 +95,23 @@ const AddOrderItems = ({
     form.setValue(`orderItems[${fieldName}].unitPrice`, unitPrice);
   };
 
+  const { watch } = form;
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "orderItems",
   });
+
+  useEffect(() => {
+    const subscription = watch((values) => {
+      const total = values.orderItems.reduce((acc, curr) => {
+        const unitPrice = curr.unitPrice || 0;
+        const quantity = curr.quantity || 0;
+        return acc + unitPrice * quantity;
+      }, 0);
+      setTotalPrice(total);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch]);
 
   const handleAddItems = async (values) => {
     setLoadingAddItems(true);
@@ -226,119 +235,147 @@ const AddOrderItems = ({
         : [];
 
     return (
-      <div
-        key={index}
-        className="flex gap-4 w-full justify-between items-center"
-      >
-        <div className="flex gap-4 w-full items-center">
-          <Controller
-            control={form.control}
-            name={`orderItems[${index}].level`}
-            rules={{ required: "Missing level" }}
-            render={({ field }) => (
-              <SelectField
-                field={field}
-                options={["SHS", "COLLEGE"]}
-                placeholder="Level"
-                onValueChange={(value) => {
-                  const { productType, size } = getValues([
-                    `orderItems[${index}].productType`,
-                    `orderItems[${index}].size`,
-                  ]);
-                  updateUnitPrice(index, productType, size, value);
-                }}
-                className="w-32"
-                type="disabled"
+      <>
+        <div
+          key={index}
+          className="flex gap-6 w-full justify-between items-center"
+        >
+          {/* Form Fields Container */}
+          <div className="flex flex-col gap-4 w-full">
+            {/* First Row: Level and Product Type */}
+            <div className="flex gap-4 items-center w-full">
+              <Controller
+                control={form.control}
+                name={`orderItems[${index}].level`}
+                rules={{ required: "Missing level" }}
+                render={({ field }) => (
+                  <SelectField
+                    field={field}
+                    options={["SHS", "COLLEGE"]}
+                    placeholder="Level"
+                    onValueChange={(value) => {
+                      const { productType, size } = getValues([
+                        `orderItems[${index}].productType`,
+                        `orderItems[${index}].size`,
+                      ]);
+                      updateUnitPrice(index, productType, size, value);
+                    }}
+                    className="w-full"
+                    type="disabled"
+                  />
+                )}
               />
-            )}
-          />
-          <Controller
-            control={form.control}
-            name={`orderItems[${index}].productType`}
-            rules={{ required: "Missing product type" }}
-            render={({ field }) => (
-              <SelectField
-                field={field}
-                options={[
-                  "SKIRT",
-                  "POLO",
-                  "PANTS",
-                  "BLOUSE",
-                  "PE TSHIRT",
-                  "JPANTS",
-                ]}
-                placeholder="Type"
-                onValueChange={(value) => {
-                  const { level, size } = getValues([
-                    `orderItems[${index}].level`,
-                    `orderItems[${index}].size`,
-                  ]);
-                  updateUnitPrice(index, value, size, level);
-                }}
-                className="w-32"
+              <Controller
+                control={form.control}
+                name={`orderItems[${index}].productType`}
+                rules={{ required: "Missing product type" }}
+                render={({ field }) => (
+                  <SelectField
+                    field={field}
+                    options={[
+                      "SKIRT",
+                      "POLO",
+                      "PANTS",
+                      "BLOUSE",
+                      "PE TSHIRT",
+                      "JPANTS",
+                    ]}
+                    placeholder="Type"
+                    onValueChange={(value) => {
+                      const { level, size } = getValues([
+                        `orderItems[${index}].level`,
+                        `orderItems[${index}].size`,
+                      ]);
+                      updateUnitPrice(index, value, size, level);
+                    }}
+                    className="w-full"
+                  />
+                )}
               />
-            )}
-          />
-          <Controller
-            control={form.control}
-            name={`orderItems[${index}].size`}
-            render={({ field }) => (
-              <SelectField
-                field={field}
-                options={sizes}
-                placeholder="Size"
-                onValueChange={(value) => {
-                  const { productType, level } = getValues([
-                    `orderItems[${index}].productType`,
-                    `orderItems[${index}].level`,
-                  ]);
-                  updateUnitPrice(index, productType, value, level);
-                }}
-                className="w-32"
+            </div>
+
+            {/* Second Row: Size and Unit Price */}
+            <div className="flex gap-4 items-center w-full">
+              <Controller
+                control={form.control}
+                name={`orderItems[${index}].size`}
+                render={({ field }) => (
+                  <SelectField
+                    field={field}
+                    options={sizes}
+                    placeholder="Size"
+                    onValueChange={(value) => {
+                      const { productType, level } = getValues([
+                        `orderItems[${index}].productType`,
+                        `orderItems[${index}].level`,
+                      ]);
+                      updateUnitPrice(index, productType, value, level);
+                    }}
+                    className="w-full"
+                  />
+                )}
               />
-            )}
-          />
-          <FormField
-            control={form.control}
-            name={`orderItems[${index}].unitPrice`}
-            render={({ field }) => (
-              <FormItem className="w-32 mt-2">
-                <FormControl>
-                  <Tooltip title="Unit Price" className="cursor-pointer w-full">
-                    <Input
-                      {...field}
-                      placeholder="Unit Price"
-                      type="number"
-                      readOnly
-                      className="w-full"
-                    />
-                  </Tooltip>
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name={`orderItems[${index}].quantity`}
-            rules={{ required: "Missing quantity" }}
-            render={({ field }) => (
-              <FormItem className="w-32 mt-2">
-                <FormControl>
-                  <Tooltip title="Quantity" className="cursor-pointer w-full">
-                    <Input {...field} placeholder="Quantity" type="number" />
-                  </Tooltip>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <MinusCircle
-            onClick={() => remove(index)}
-            style={{ width: "25px", height: "25px" }}
-            className="cursor-pointer"
-          />
+              <FormField
+                control={form.control}
+                name={`orderItems[${index}].unitPrice`}
+                render={({ field }) => (
+                  <FormItem className="w-40">
+                    <FormControl>
+                      <Tooltip
+                        title="Unit Price"
+                        className="cursor-pointer w-full"
+                      >
+                        <Input
+                          {...field}
+                          placeholder="Unit Price"
+                          type="number"
+                          readOnly
+                          className="w-full mt-2"
+                        />
+                      </Tooltip>
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name={`orderItems[${index}].quantity`}
+                rules={{ required: "Missing quantity" }}
+                render={({ field }) => (
+                  <FormItem className="w-40">
+                    <FormControl>
+                      <Tooltip
+                        title="Quantity"
+                        className="cursor-pointer w-full"
+                      >
+                        <Input
+                          {...field}
+                          placeholder="Quantity"
+                          type="number"
+                          className="w-full mt-2"
+                        />
+                      </Tooltip>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
+
+          {/* Remove Button */}
+          <div className="flex items-center">
+            <Tooltip title="Remove field">
+              <MinusCircle
+                onClick={() => remove(index)}
+                style={{ width: "25px", height: "25px" }}
+                className="cursor-pointer text-red-500"
+              />
+            </Tooltip>
+          </div>
         </div>
-      </div>
+        <Separator />
+      </>
     );
   };
 
@@ -378,6 +415,19 @@ const AddOrderItems = ({
             className="mt-5 w-full cursor-pointer"
           />
         </Tooltip>
+        <Separator />
+
+        {/* Total Price Preview */}
+        <div className="flex justify-between items-center">
+          <span className="text-lg">Total Price:</span>
+          <span className="text-lg font-bold ">
+            {totalPrice.toLocaleString("en-PH", {
+              style: "currency",
+              currency: "PHP",
+            })}
+          </span>
+        </div>
+
         <div className="flex flex-col items-center gap-4 mt-4">
           <AlertDialogFooter className="flex flex-col items-center mt-5 gap-4 w-full">
             <AlertDialogCancel asChild>

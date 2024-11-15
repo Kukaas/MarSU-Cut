@@ -277,7 +277,7 @@ function Orders() {
           (acc, item) => acc + parseFloat(item.totalPrice || 0),
           0
         );
-        return `Php${totalPrice.toFixed(2)}`; // Format as currency
+        return `₱${totalPrice.toFixed(2)}`; // Format as currency
       },
     },
     {
