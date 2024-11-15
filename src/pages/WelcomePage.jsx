@@ -33,7 +33,7 @@ const WelcomePage = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen mt-[-80px]">
       <Helmet>
-        <title>MarSU Cut | Get Started</title>
+        <title>MarSUKAT | Get Started</title>
         <meta
           name="description"
           content="Welcome to MarSU Cut. We are glad to have you here. Login or Register to explore our features"
@@ -52,8 +52,8 @@ const WelcomePage = () => {
             }}
           >
             MarSU
-          </span>{" "}
-          Cut
+          </span>
+          KAT
         </Link>
         <p className="text-xl mt-7">Welcome to MarSU Cut!</p>
         <p className="mt-5 ">

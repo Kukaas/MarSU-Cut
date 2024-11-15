@@ -53,6 +53,7 @@ const Header = () => {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
   const isActive = (path) => currentPath === path;
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   // Check screen size
   useEffect(() => {
@@ -114,8 +115,8 @@ const Header = () => {
               }}
             >
               MarSU
-            </span>{" "}
-            Cut
+            </span>
+            KAT
           </div>
         ) : (
           <Link to="/" className="font-bold hover:text-current text-2xl">
@@ -129,36 +130,23 @@ const Header = () => {
               }}
             >
               MarSU
-            </span>{" "}
-            Cut
+            </span>
+            KAT
           </Link>
         )}
-        <div className="flex flex-row gap-4">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="icon">
-                <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                <span className="sr-only">Toggle theme</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="mt-5">
-              <DropdownMenuItem onClick={() => setTheme("light")}>
-                Light
-                <DropdownMenuShortcut>⇧⌘L</DropdownMenuShortcut>
-              </DropdownMenuItem>
-
-              <DropdownMenuItem onClick={() => setTheme("dark")}>
-                Dark
-                <DropdownMenuShortcut>⇧⌘D</DropdownMenuShortcut>
-              </DropdownMenuItem>
-
-              <DropdownMenuItem onClick={() => setTheme("system")}>
-                System
-                <DropdownMenuShortcut>⇧⌘S</DropdownMenuShortcut>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+        <div className="flex flex-row gap-5">
+          {
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => {
+                setIsDarkMode((isDarkMode) => !isDarkMode);
+                setTheme(isDarkMode ? "light" : "dark");
+              }}
+            >
+              {isDarkMode ? <SunIcon /> : <MoonIcon />}
+            </Button>
+          }
 
           {currentUser && (
             <DropdownMenu className="">
@@ -254,8 +242,8 @@ const Header = () => {
                           }}
                         >
                           MarSU
-                        </span>{" "}
-                        Cut
+                        </span>
+                        KAT
                       </Link>
                     </SheetHeader>
                     <div className="grid gap-4 py-4">

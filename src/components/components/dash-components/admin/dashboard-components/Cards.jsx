@@ -14,9 +14,9 @@ import CountUp from "react-countup";
 
 import CardLoading from "./loading-components/CardLoading";
 import Overview from "./Overview";
-import RecentSales from "./RecentSales";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
+import TopDepartments from "./TopDepartments";
 
 const Cards = () => {
   const [loading, setLoading] = useState(true);
@@ -459,13 +459,13 @@ const Cards = () => {
         </Card>
         <Card className="lg:col-span-3">
           <CardHeader>
-            <CardTitle>Recent Orders</CardTitle>
-            <CardDescription>
-              You made <span>{ordersThisMonth.length}</span> orders this month.
+            <CardTitle className="font-bold">Top departments</CardTitle>
+            <CardDescription className="text-sm">
+              This shows the top departments with the most orders this year.
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <RecentSales />
+            <TopDepartments />
           </CardContent>
         </Card>
       </div>

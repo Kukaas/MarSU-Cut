@@ -93,7 +93,7 @@ const CommercialJob = () => {
     try {
       setLoadingUpdate(true);
       const res = await axios.put(
-        `http://localhost:3000/api/v1/commercial-job/update/${commercial._id}`,
+        `${BASE_URL}/api/v1/commercial-job/update/${commercial._id}`,
         {
           status,
         },
@@ -142,7 +142,7 @@ const CommercialJob = () => {
     try {
       setLoadingUpdate(true);
       const res = await axios.put(
-        `http://localhost:3000/api/v1/commercial-job/archive/${commercial._id}`,
+        `${BASE_URL}/api/v1/commercial-job/archive/${commercial._id}`,
         {
           isArchived: true,
         },
