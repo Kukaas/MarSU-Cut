@@ -17,6 +17,7 @@ import {
 import CoordinatorSignUp from "./sign-up-components/CoordinatorSignUp";
 import StudentSignUp from "./sign-up-components/StudentSignUp";
 import CommercialSignUp from "./sign-up-components/CommercialSignUp";
+import LeftSideDescription from "@/components/components/custom-components/LeftSideDescription";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -42,25 +43,7 @@ const SignUp = () => {
       </Helmet>
       <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center">
         {/* left */}
-        <div className="flex-1 mb-4">
-          <Link to="/" className="font-bold hover:text-current text-4xl ">
-            <div className="flex flex-col items-start">
-              Welcome to
-              <span
-                className="rounded-lg text-white"
-                style={{
-                  background:
-                    "linear-gradient(90deg, hsla(48, 80%, 66%, 1) 0%, hsla(0, 100%, 25%, 1) 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}
-              >
-                MSC Garments
-              </span>
-            </div>
-          </Link>
-          <p className="text-l mt-4">Sign up with your email.</p>
-        </div>
+        <LeftSideDescription black="Welcome to " gradient="MarSUKAT" description="Sign up to get started" />
         {/* right */}
         <div className="flex-1">
           <Tabs defaultValue="student" className="w-full">
@@ -112,8 +95,8 @@ const SignUp = () => {
           <div>
             <p className="text-center text-sm  mt-4">
               Already have an account?{" "}
-              <Link to="/sign-in" className="text-blue-500">
-                Sign In
+              <Link to="/sign-in" className="text-blue-400 underline hover:text-blue-500">
+                Sign in
               </Link>
             </p>
           </div>

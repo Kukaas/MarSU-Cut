@@ -39,7 +39,7 @@ const CustomInput = ({ form, name, label, placeholder, type, maxLength }) => {
                 <button
                   type="button"
                   onClick={toggleShowPassword}
-                  className="absolute right-2 top-2"
+                  className="absolute right-2 top-10"
                 >
                   {showPassword ? (
                     <EyeOff className="h-5 w-5 text-gray-500" />

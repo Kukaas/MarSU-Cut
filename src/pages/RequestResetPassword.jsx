@@ -27,6 +27,7 @@ import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "@/lib/api";
 import ToasterError from "@/lib/Toaster";
 import CustomInput from "@/components/components/custom-components/CustomInput";
+import LeftSideDescription from "@/components/components/custom-components/LeftSideDescription";
 
 const RequestResetPassword = () => {
   const dispatch = useDispatch();
@@ -99,25 +100,7 @@ const RequestResetPassword = () => {
       ) : (
         <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center">
           {/* left */}
-          <div className="flex-1 mb-4">
-            <h1 className="font-bold text-4xl">
-              Password{" "}
-              <span
-                className="rounded-lg text-white"
-                style={{
-                  background:
-                    "linear-gradient(90deg, hsla(48, 80%, 66%, 1) 0%, hsla(0, 100%, 25%, 1) 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}
-              >
-                Recovery
-              </span>
-            </h1>
-            <p className="text-l mt-4">
-              Enter your email to receive reset password instructions.
-            </p>
-          </div>
+          <LeftSideDescription black="Forgot your " gradient="password?" description="Enter your email to reset your password" />
           {/* right */}
           <div className="flex-1">
             <Form {...form}>
@@ -154,7 +137,7 @@ const RequestResetPassword = () => {
             <div>
               <p className="text-center text-sm mt-3">
                 Remembered your password?{" "}
-                <Link to="/sign-in" className="text-blue-500">
+                <Link to="/sign-in" className="text-blue-400 underline hover:text-blue-500">
                   Sign in
                 </Link>
               </p>

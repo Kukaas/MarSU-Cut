@@ -28,6 +28,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import LeftSideDescription from "@/components/components/custom-components/LeftSideDescription";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -125,24 +126,7 @@ const SignIn = () => {
       </Helmet>
       <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center">
         {/* left */}
-        <div className="flex-1 mb-4">
-          <h2 className="font-bold hover:text-current text-4xl ">
-            Welcome{" "}
-            <span
-              className="rounded-lg text-white"
-              style={{
-                background:
-                  "linear-gradient(90deg, hsla(48, 80%, 66%, 1) 0%, hsla(0, 100%, 25%, 1) 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }}
-            >
-              Back!
-            </span>
-          </h2>
-
-          <p className="text-l mt-4 ">Sign in with your email and password.</p>
-        </div>
+        <LeftSideDescription black="Welcome to " gradient="MarSUKAT" description="Sign in to get started" />
         {/* right */}
         <div className="flex-1">
           <Card>
@@ -174,7 +158,7 @@ const SignIn = () => {
                     />
                     <Link
                       to="/forgot-password"
-                      className=" right-0 bottom-0 text-sm mt-3"
+                      className=" right-0 bottom-0 text-sm mt-3 text-blue-400 underline hover:text-blue-500"
                       style={{ fontFamily: "'Poppins', sans-serif" }}
                     >
                       Forgot password?
@@ -202,7 +186,7 @@ const SignIn = () => {
           <div>
             <p className="text-center text-sm mt-4">
               Don&apos;t have an account?{" "}
-              <Link to="/sign-up" className="text-blue-500">
+              <Link to="/sign-up" className="text-blue-400 underline hover:text-blue-500">
                 Sign up
               </Link>
             </p>

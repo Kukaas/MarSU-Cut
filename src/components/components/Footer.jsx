@@ -33,8 +33,8 @@ const ResponsiveFooter = () => {
             }}
           >
             MarSU
-          </span>{" "}
-          Cut
+          </span>
+          KAT
         </Link>
       </div>
       <Row

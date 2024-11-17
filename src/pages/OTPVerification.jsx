@@ -24,6 +24,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { BASE_URL } from "@/lib/api";
 import CustomInput from "@/components/components/custom-components/CustomInput";
+import LeftSideDescription from "@/components/components/custom-components/LeftSideDescription";
 
 const OTPVerification = () => {
   const navigate = useNavigate();
@@ -179,23 +180,7 @@ const OTPVerification = () => {
     <div className="min-h-[450px] mt-[140px]">
       <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center">
         {/* left */}
-        <div className="flex-1 mb-4">
-          <h1 className="font-bold text-4xl">
-            OTP{" "}
-            <span
-              className="rounded-lg text-white"
-              style={{
-                background:
-                  "linear-gradient(90deg, hsla(48, 80%, 66%, 1) 0%, hsla(0, 100%, 25%, 1) 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }}
-            >
-              Verification
-            </span>
-          </h1>
-          <p className="text-l mt-4 ">Enter the OTP sent to your email.</p>
-        </div>
+        <LeftSideDescription black="Enter the " gradient="OTP" description="Enter the OTP sent to your email" />
         {/* right */}
         <div className="flex-1">
           <Form {...form}>
@@ -234,7 +219,7 @@ const OTPVerification = () => {
             <p className="text-center text-sm mt-3">
               Didn&apos;t receive the OTP?{" "}
               <span
-                className={`text-blue-500 cursor-pointer ${
+                className={`text-blue-400 underline hover:text-blue-500 cursor-pointer ${
                   resendLoading && countdown > 0 ? "opacity-50" : ""
                 }`}
                 onClick={

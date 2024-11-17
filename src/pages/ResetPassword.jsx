@@ -23,6 +23,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ResetPasswordSchema } from "@/schema/shema";
 import { BASE_URL } from "@/lib/api";
 import CustomInput from "@/components/components/custom-components/CustomInput";
+import LeftSideDescription from "@/components/components/custom-components/LeftSideDescription";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -101,23 +102,7 @@ const ResetPassword = () => {
     <div className="min-h-[400px] mt-[100px] mb-5">
       <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center">
         {/* left */}
-        <div className="flex-1 mb-4">
-          <h1 className="font-bold text-4xl">
-            Reset{" "}
-            <span
-              className="rounded-lg text-white"
-              style={{
-                background:
-                  "linear-gradient(90deg, hsla(48, 80%, 66%, 1) 0%, hsla(0, 100%, 25%, 1) 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }}
-            >
-              Password
-            </span>
-          </h1>
-          <p className="text-l mt-4 text-gray-600">Enter your new password.</p>
-        </div>
+        <LeftSideDescription black="Reset " gradient="Password" description="Reset your password" />
         {/* right */}
         <div className="flex-1">
           <Form {...form}>
