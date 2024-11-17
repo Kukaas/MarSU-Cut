@@ -290,7 +290,7 @@ const AddNewReceipt = ({ addNewReceipt, selectedOrder, currentBalance }) => {
                               )}
                             >
                               {field.value
-                                ? format(new Date(field.value), "MMMM dd")
+                                ? format(new Date(field.value), "MMMM dd, YYY")
                                 : "Select Date"}
                               <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                             </Button>

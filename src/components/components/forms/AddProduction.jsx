@@ -260,7 +260,7 @@ const AddProduction = ({ onProductionAdded, setIsOpen }) => {
                               )}
                             >
                               {field.value ? (
-                                format(new Date(field.value), "MMMM dd")
+                                format(new Date(field.value), "MMMM dd, YYY")
                               ) : (
                                 <span>From</span>
                               )}
@@ -300,7 +300,7 @@ const AddProduction = ({ onProductionAdded, setIsOpen }) => {
                               )}
                             >
                               {field.value ? (
-                                format(new Date(field.value), "MMMM dd")
+                                format(new Date(field.value), "MMMM dd, YYY")
                               ) : (
                                 <span>To</span>
                               )}

@@ -196,6 +196,13 @@ const CreateOrder = ({ addNewOrder, setIsDialogOpen }) => {
       });
     }
   };
+   // Disable date from tomorrow onwards
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowDate = tomorrow.toISOString().split("T")[0];
+    const disabledDate = (date) => date > new Date(tomorrow
+    );
 
   return (
     <div className="grid gap-4 py-4">
@@ -235,7 +242,7 @@ const CreateOrder = ({ addNewOrder, setIsDialogOpen }) => {
                           )}
                         >
                           {field.value
-                            ? format(new Date(field.value), "MMMM dd")
+                            ? format(new Date(field.value), "MMMM dd, YYY")
                             : "Select Date"}
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
@@ -247,6 +254,9 @@ const CreateOrder = ({ addNewOrder, setIsDialogOpen }) => {
                         selected={field.value ? new Date(field.value) : null}
                         onSelect={field.onChange}
                         initialFocus
+                        disabled={(date) =>
+                          date > new Date() || date < new Date("1900-01-01")
+                        }
                       />
                     </PopoverContent>
                   </Popover>

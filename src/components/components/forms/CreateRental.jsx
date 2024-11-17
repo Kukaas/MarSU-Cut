@@ -191,7 +191,7 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
                             )}
                           >
                             {field.value ? (
-                              format(field.value, "PPP")
+                              format(field.value, "MMMM dd, YYY")
                             ) : (
                               <span>Pick your possible pickup date</span>
                             )}
