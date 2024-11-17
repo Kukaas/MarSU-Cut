@@ -3,7 +3,7 @@ import { Card, CardDescription } from "@/components/ui/card";
 const CustomPageTitle = ({ title, description }) => {
   return (
     <Card
-      className="w-full p-4 mb-2 shadow-lg rounded-lg text-white"
+      className="w-full p-4 mb-3 shadow-md rounded-lg text-white"
       style={{
         background:
           "linear-gradient(280deg, hsla(48, 80%, 66%, 1) 0%, hsla(0, 100%, 25%, 1) 100%)",

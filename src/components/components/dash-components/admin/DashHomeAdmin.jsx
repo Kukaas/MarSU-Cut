@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
 import Cards from "./dashboard-components/Cards";
+import CustomPageTitle from "../../custom-components/CustomPageTitle";
 
 const DashHomeAdmin = () => {
   const navigate = useNavigate();
@@ -29,24 +30,12 @@ const DashHomeAdmin = () => {
         <title>MarSUKAT | Dashboard</title>
         <meta name="description" content="" />
       </Helmet>
-      <Row gutter={[16, 16]}>
-        <Col xs={24} sm={12} lg={18}>
-          <div>
-            <Typography.Title level={2} className="text-black dark:text-white">
-              Dashboard
-            </Typography.Title>
-            <Typography.Text className="text-black dark:text-gray-500">
-              Welcome to the dashboard.
-            </Typography.Text>
-          </div>
-        </Col>
-        <Col xs={24} sm={12} lg={6}>
-          <div className="flex lg:justify-end justify-start">
-            <Button>Download</Button>
-          </div>
-        </Col>
-      </Row>
-      <Row gutter={[16, 16]} className="mt-5">
+
+      <div className="w-full flex items-center justify-center overflow-x-auto">
+        <CustomPageTitle title="Dashboard" description="Welcome to MarSUKAT" />
+      </div>
+
+      <Row gutter={[16, 16]} className="mt-2">
         <Cards />
       </Row>
     </div>
