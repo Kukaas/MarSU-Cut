@@ -3,13 +3,63 @@ import {
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
-  ChartTooltipContent,
 } from "@/components/ui/chart";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
+
+const ChartTooltipContent = ({ active, payload, mode }) => {
+  if (active && payload && payload.length) {
+    const isDarkMode = mode === "dark";
+    const tooltipStyles = {
+      backgroundColor: isDarkMode ? "#1e293b" : "#f9fafb",
+      color: isDarkMode ? "#e2e8f0" : "#1f2937",
+      border: `1px solid ${isDarkMode ? "#374151" : "#e5e7eb"}`,
+      borderRadius: "10px",
+      padding: "12px 16px",
+      boxShadow: isDarkMode
+        ? "0 4px 12px rgba(0, 0, 0, 0.8)"
+        : "0 4px 12px rgba(0, 0, 0, 0.1)",
+      minWidth: "180px",
+    };
+
+    const labelStyles = {
+      margin: "0",
+      fontSize: "0.875rem",
+      fontWeight: "500",
+      color: isDarkMode ? "#cbd5e1" : "#4b5563",
+    };
+
+    const valueStyles = {
+      margin: "8px 0 0",
+      fontSize: "1rem",
+      fontWeight: "600",
+      color: isDarkMode ? "#f8fafc" : "#111827",
+    };
+
+    return (
+      <div style={tooltipStyles}>
+        <p style={labelStyles}>{payload[0].payload.productType}</p>
+        <div className="text-violet-600 h-2 w-2"></div>
+        <p style={valueStyles}>
+          Current Year Production: {" "}
+          <span>
+            {(payload[0].value)}
+          </span>
+        </p>
+        <p style={valueStyles}>
+          Last Year Production:{" "}
+          <span>
+            {(payload[1].value)}
+          </span>
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
 
 const ProductionChart = () => {
   const [data, setData] = useState([]);
