@@ -59,7 +59,7 @@ const DashProfile = () => {
             {skeletonLoading ? (
               <SkeletonProfile />
             ) : (
-              <CardContent className="max-h-[450px] overflow-auto">
+              <CardContent className="max-h-[650px] overflow-auto">
                 {currentUser.role === "Student" && <StudentProfile />}
                 {currentUser.role === "Coordinator" && <CoordinatorProfile />}
                 {currentUser.role === "CommercialJob" && <CommercialProfile />}
@@ -68,7 +68,7 @@ const DashProfile = () => {
                     level={5}
                     className="text-black dark:text-white mt-5"
                   >
-                    You are an admin, you can&apos;t edit your profile
+                    You are an admin, you don&apos;t need to edit your profile
                   </Typography.Title>
                 )}
               </CardContent>
