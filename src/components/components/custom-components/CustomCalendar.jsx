@@ -17,6 +17,7 @@ import moment from "moment";
 import { Button } from "@/components/ui/button";
 import PropTypes from "prop-types";
 import { Check, X } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const CustomHeader = ({ date, prev, next, setView }) => {
   const formattedDate = new Date(date);
@@ -67,6 +68,29 @@ CustomHeader.propTypes = {
   view: PropTypes.string.isRequired,
   setView: PropTypes.func.isRequired,
 };
+
+const Loading = () => (
+  <div className="flex flex-col space-y-6 p-4 w-full -mt-20">
+    {/* Calendar Header */}
+    <div className="flex flex-col space-y-2 items-center">
+      <Skeleton className="h-6 w-[150px] rounded-md" />
+    </div>
+
+    {/* Weekdays Header */}
+    <div className="grid grid-cols-7 gap-2">
+      {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day, index) => (
+        <Skeleton key={index} className="h-6 w-full text-center" />
+      ))}
+    </div>
+
+    {/* Calendar Days Placeholder */}
+    <div className="grid grid-cols-7 gap-2 mt-2">
+      {Array.from({ length: 42 }).map((_, index) => (
+        <Skeleton key={index} className="h-12 w-full rounded-md" /> // Placeholder for each calendar cell
+      ))}
+    </div>
+  </div>
+);
 
 export const CustomCalendar = () => {
   const [schedules, setSchedules] = useState([]);
@@ -210,9 +234,9 @@ export const CustomCalendar = () => {
   return (
     <div className="w-full px-0">
       {loading ? (
-        <div className="flex items-center justify-center h-64">
-          <p>Loading schedules...</p>
-        </div>
+        <>
+          <Loading />
+        </>
       ) : (
         <>
           <CustomHeader
