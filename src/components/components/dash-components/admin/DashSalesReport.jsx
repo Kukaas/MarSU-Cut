@@ -106,15 +106,15 @@ const DashSalesReport = () => {
     }))
   );
 
-   const handlePrint = () => {
+  const handlePrint = () => {
     let filteredData = [];
     let totalRevenue = 0;
-  
+
     const title =
       tab === "monthly"
         ? `Sales Report for ${monthNames[selectedMonth - 1]} ${selectedYear}`
         : `Sales Report for Year ${selectedYear}`;
-  
+
     if (tab === "monthly") {
       const startDate = new Date(Date.UTC(selectedYear, selectedMonth - 1, 1));
       const endDate = new Date(Date.UTC(selectedYear, selectedMonth, 1));
@@ -128,20 +128,20 @@ const DashSalesReport = () => {
         const salesDate = new Date(report.salesDate);
         return salesDate.getFullYear() === selectedYear;
       });
-  
+
       console.log("Yearly Reports:", yearlyReports); // Debugging log
-  
+
       if (yearlyReports.length === 0) {
         toast.error("No sales data available for the selected year.");
         return;
       }
-  
+
       yearlyReports.forEach((report) => {
         const salesDate = new Date(report.salesDate);
         const month = salesDate.getMonth();
         monthlyRevenue[month] += report.totalRevenue;
       });
-  
+
       filteredData = monthlyRevenue
         .map((revenue, index) =>
           revenue > 0
@@ -157,19 +157,19 @@ const DashSalesReport = () => {
             : null
         )
         .filter(Boolean);
-  
+
       console.log("Filtered Data:", filteredData); // Debugging log
     }
-  
+
     if (tab === "monthly" && filteredData.length === 0) {
       toast.error("No sales data available for the selected month.");
       return;
     }
-  
+
     filteredData.forEach((report) => {
       totalRevenue += report.totalRevenue;
     });
-  
+
     const printWindow = window.open("", "_blank");
     if (printWindow) {
       printWindow.document.write(`
@@ -253,11 +253,14 @@ const DashSalesReport = () => {
                   <tr>
                     <td>${
                       tab === "monthly"
-                        ? new Date(report.salesDate).toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          })
+                        ? new Date(report.salesDate).toLocaleDateString(
+                            "en-US",
+                            {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            }
+                          )
                         : report.month
                     }</td>
                     <td>${Intl.NumberFormat("en-PH", {
@@ -326,10 +329,10 @@ const DashSalesReport = () => {
         </body>
       </html>
     `);
-  
+
       printWindow.document.close();
       printWindow.focus();
-  
+
       setTimeout(() => {
         printWindow.print();
         printWindow.close();
@@ -338,11 +341,11 @@ const DashSalesReport = () => {
       toast.error("Failed to open print window.");
     }
   };
-  
+
   // Function to aggregate order items
   const aggregateOrderItems = (reports) => {
     const aggregatedItems = {};
-  
+
     reports.forEach((report) => {
       report.orderItems.forEach((item) => {
         const key = `${item.productType}-${item.level}-${item.size}`;
@@ -354,123 +357,128 @@ const DashSalesReport = () => {
         }
       });
     });
-  
+
     return Object.values(aggregatedItems);
   };
 
   return (
     <div className="w-full p-5 h-screen">
       <div className="flex justify-between items-center mb-4">
-        <CustomPageTitle title="Sales Report" description="View and download sales reports" />
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button variant="secondary">
-              <PrinterIcon className="h-4 w-4 mr-2" />
-              Print
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <div className="p-2">
-              <AlertDialogHeader>
-                <AlertDialogTitle>Print Sales Report</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Select the time period you want to print.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <Tabs defaultValue="monthly">
-                <TabsList className="w-full">
-                  <TabsTrigger
-                    value="monthly"
-                    className="w-full"
-                    onClick={() => setTab("monthly")}
-                  >
-                    Monthly
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="yearly"
-                    className="w-full"
-                    onClick={() => setTab("yearly")}
-                  >
-                    Yearly
-                  </TabsTrigger>
-                </TabsList>
-                <TabsContent value="monthly">
-                  <div className="flex gap-2 mt-3">
-                    <Select
-                      onValueChange={(value) => {
-                        const [month, year] = value.split("-");
-                        setSelectedMonth(Number(month));
-                        setSelectedYear(Number(year));
-                      }}
-                      defaultValue={`${selectedMonth}-${selectedYear}`}
-                    >
-                      <SelectTrigger className="w-full mb-5">
-                        <span>{`${
-                          monthNames[selectedMonth - 1]
-                        } ${selectedYear}`}</span>
-                      </SelectTrigger>
-                      <SelectContent>
-                        <ScrollArea className="h-72 p-3">
-                          <SelectGroup>
-                            {monthOptions.map(({ value, label }) => (
-                              <React.Fragment key={value}>
-                                <SelectItem value={value}>{label}</SelectItem>
-                                <Separator className="my-2" />
-                              </React.Fragment>
-                            ))}
-                          </SelectGroup>
-                        </ScrollArea>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </TabsContent>
-                <TabsContent value="yearly">
-                  <div className="flex gap-2 mt-3">
-                    <Select
-                      onValueChange={(value) => {
-                        setSelectedYear(Number(value));
-                      }}
-                      defaultValue={currentYear.toString()}
-                    >
-                      <SelectTrigger className="w-full mb-5">
-                        <span>{selectedYear}</span>
-                      </SelectTrigger>
-                      <SelectContent>
-                        <ScrollArea className="h-72 p-3">
-                          <SelectGroup>
-                            {years.map((year) => (
-                              <React.Fragment key={year}>
-                                <SelectItem value={year.toString()}>
-                                  {year}
-                                </SelectItem>
-                                <Separator className="my-2" />
-                              </React.Fragment>
-                            ))}
-                          </SelectGroup>
-                        </ScrollArea>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </TabsContent>
-              </Tabs>
-            </div>
-            <div className="flex flex-col items-center gap-4">
-              <AlertDialogFooter className="w-full flex justify-end gap-2">
-                <AlertDialogCancel asChild>
-                  <Button variant="secondary" className="w-full">
-                    Cancel
-                  </Button>
-                </AlertDialogCancel>
-                <Button
-                  onClick={handlePrint}
-                  className="w-full flex items-center justify-center"
+        <CustomPageTitle
+          title="Sales Report"
+          description="View and download sales reports"
+        />
+      </div>
+      <div className="mb-4 flex justify-end">
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <Button>
+            <PrinterIcon className="h-4 w-4 mr-2" />
+            Print
+          </Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <div className="p-2">
+            <AlertDialogHeader>
+              <AlertDialogTitle>Print Sales Report</AlertDialogTitle>
+              <AlertDialogDescription>
+                Select the time period you want to print.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <Tabs defaultValue="monthly">
+              <TabsList className="w-full">
+                <TabsTrigger
+                  value="monthly"
+                  className="w-full"
+                  onClick={() => setTab("monthly")}
                 >
-                  Print
+                  Monthly
+                </TabsTrigger>
+                <TabsTrigger
+                  value="yearly"
+                  className="w-full"
+                  onClick={() => setTab("yearly")}
+                >
+                  Yearly
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent value="monthly">
+                <div className="flex gap-2 mt-3">
+                  <Select
+                    onValueChange={(value) => {
+                      const [month, year] = value.split("-");
+                      setSelectedMonth(Number(month));
+                      setSelectedYear(Number(year));
+                    }}
+                    defaultValue={`${selectedMonth}-${selectedYear}`}
+                  >
+                    <SelectTrigger className="w-full mb-5">
+                      <span>{`${
+                        monthNames[selectedMonth - 1]
+                      } ${selectedYear}`}</span>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <ScrollArea className="h-72 p-3">
+                        <SelectGroup>
+                          {monthOptions.map(({ value, label }) => (
+                            <React.Fragment key={value}>
+                              <SelectItem value={value}>{label}</SelectItem>
+                              <Separator className="my-2" />
+                            </React.Fragment>
+                          ))}
+                        </SelectGroup>
+                      </ScrollArea>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </TabsContent>
+              <TabsContent value="yearly">
+                <div className="flex gap-2 mt-3">
+                  <Select
+                    onValueChange={(value) => {
+                      setSelectedYear(Number(value));
+                    }}
+                    defaultValue={currentYear.toString()}
+                  >
+                    <SelectTrigger className="w-full mb-5">
+                      <span>{selectedYear}</span>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <ScrollArea className="h-72 p-3">
+                        <SelectGroup>
+                          {years.map((year) => (
+                            <React.Fragment key={year}>
+                              <SelectItem value={year.toString()}>
+                                {year}
+                              </SelectItem>
+                              <Separator className="my-2" />
+                            </React.Fragment>
+                          ))}
+                        </SelectGroup>
+                      </ScrollArea>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </TabsContent>
+            </Tabs>
+          </div>
+          <div className="flex flex-col items-center gap-4">
+            <AlertDialogFooter className="w-full flex justify-end gap-2">
+              <AlertDialogCancel asChild>
+                <Button variant="secondary" className="w-full">
+                  Cancel
                 </Button>
-              </AlertDialogFooter>
-            </div>
-          </AlertDialogContent>
-        </AlertDialog>
+              </AlertDialogCancel>
+              <Button
+                onClick={handlePrint}
+                className="w-full flex items-center justify-center"
+              >
+                Print
+              </Button>
+            </AlertDialogFooter>
+          </div>
+        </AlertDialogContent>
+      </AlertDialog>
       </div>
       <Helmet>
         <title>MarSUKAT | Sales Report</title>
