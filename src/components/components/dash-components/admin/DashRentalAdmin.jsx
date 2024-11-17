@@ -22,7 +22,7 @@ const DashRentalAdmin = () => {
   return (
     <div className="w-full h-screen overflow-x-auto">
       <Helmet>
-        <title>MarSU Cut | Rentals</title>
+        <title>MarSUKAT | Rentals</title>
         <meta name="description" content="" />
       </Helmet>
       <Rentals />

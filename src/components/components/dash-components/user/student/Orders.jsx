@@ -32,6 +32,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import AddNewReceipt from "@/components/components/forms/AddNewReceipt";
+import CustomPageTitle from "@/components/components/custom-components/CustomPageTitle";
 
 function Orders() {
   const [data, setData] = useState([]);
@@ -456,9 +457,7 @@ function Orders() {
       }
     >
       <div className="w-full p-5 h-screen">
-        <Typography.Title level={2} className="text-black dark:text-white">
-          Orders
-        </Typography.Title>
+        <CustomPageTitle title="Orders" description="View and manage your orders" />
         <div className="flex items-center py-4 justify-end">
           <Tooltip title="Create an Order">
             <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

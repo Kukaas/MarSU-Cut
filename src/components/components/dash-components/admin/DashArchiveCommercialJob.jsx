@@ -23,7 +23,7 @@ const DashArchiveCommercialjob = () => {
   return (
     <div className="w-full h-screen overflow-x-auto">
       <Helmet>
-        <title>MarSU Cut | Archive Commercial Job Orders</title>
+        <title>MarSUKAT | Archive Commercial Job Orders</title>
         <meta name="description" content="" />
       </Helmet>
       <ArchiveCommercialJob />

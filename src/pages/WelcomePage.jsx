@@ -36,9 +36,9 @@ const WelcomePage = () => {
         <title>MarSUKAT | Get Started</title>
         <meta
           name="description"
-          content="Welcome to MarSU Cut. We are glad to have you here. Login or Register to explore our features"
+          content="Welcome to MarSUKAT. We are glad to have you here. Login or Register to explore our features"
         />
-        <meta name="keywords" content="marsu, marsu cut" />
+        <meta name="keywords" content="marsu, MarSUKAT" />
       </Helmet>
       <div className="p-3 max-w-3xl mx-auto text-center">
         <Link to="/" className="font-bold hover:text-current text-6xl ">
@@ -55,7 +55,7 @@ const WelcomePage = () => {
           </span>
           KAT
         </Link>
-        <p className="text-xl mt-7">Welcome to MarSU Cut!</p>
+        <p className="text-xl mt-7">Welcome to MarSUKAT!</p>
         <p className="mt-5 ">
           We&apos;re glad to have you here. Start exploring our features now.
         </p>

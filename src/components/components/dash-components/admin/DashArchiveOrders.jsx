@@ -23,7 +23,7 @@ const DashArchiveOrders = () => {
   return (
     <div className="w-full h-screen overflow-x-auto">
       <Helmet>
-        <title>MarSU Cut | Archive Orders</title>
+        <title>MarSUKAT | Archive Orders</title>
         <meta name="description" content="" />
       </Helmet>
       <ArchiveOrders />

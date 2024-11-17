@@ -36,6 +36,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import CustomPageTitle from "@/components/components/custom-components/CustomPageTitle";
 
 function Orders() {
   const [data, setData] = useState([]);
@@ -495,9 +496,7 @@ function Orders() {
       }
     >
       <div className="w-full p-5 h-screen">
-        <Typography.Title level={2} className="text-black dark:text-white">
-          Orders
-        </Typography.Title>
+        <CustomPageTitle title="Orders" description={<span>Total Orders: {data.length}</span>} />
         <DataTableToolBar
           searchValue={searchValue}
           setSearchValue={setSearchValue}

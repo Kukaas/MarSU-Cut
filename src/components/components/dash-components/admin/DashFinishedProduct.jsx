@@ -23,7 +23,7 @@ const DashFinishedProduct = () => {
   return (
     <div className="w-full h-screen overfolow-x-auto">
       <Helmet>
-        <title>MarSU Cut | Finished Products</title>
+        <title>MarSUKAT | Finished Products</title>
         <meta name="description" content="" />
       </Helmet>
       <FinishedProduct />

@@ -56,6 +56,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import CustomPageTitle from "@/components/components/custom-components/CustomPageTitle";
 
 const AccomplishmentReport = () => {
   const [data, setData] = useState([]);
@@ -333,9 +334,7 @@ const AccomplishmentReport = () => {
     // >
     <>
       <div className="w-full p-5 h-screen">
-        <Typography.Title level={2} className="text-black dark:text-white">
-          Accomplishment Report
-        </Typography.Title>
+        <CustomPageTitle title="Accomplishment Report" description="View, manage, and download accomplishment reports" />
         <div className="flex flex-wrap items-center justify-between pb-2">
           <div className="flex flex-1 flex-wrap items-center gap-2">
             <div className={cn("grid gap-2")}>

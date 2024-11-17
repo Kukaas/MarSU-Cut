@@ -57,6 +57,7 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import RentalDetails from "./details/RentalDetails";
+import CustomPageTitle from "@/components/components/custom-components/CustomPageTitle";
 
 function Rentals() {
   const [data, setData] = useState([]);
@@ -623,9 +624,7 @@ function Rentals() {
       }
     >
       <div className="w-full p-5 h-screen">
-        <Typography.Title level={2} className="text-black dark:text-white">
-          Rentals
-        </Typography.Title>
+        <CustomPageTitle title="Rentals" description={<span>Total Rentals: {data.length}</span>} />
         <DataTableToolBar
           searchValue={searchValue}
           setSearchValue={setSearchValue}

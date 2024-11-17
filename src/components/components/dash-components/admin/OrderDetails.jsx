@@ -155,7 +155,7 @@ const OrderDetails = () => {
   return (
     <div className="w-full h-screen p-6 overflow-auto">
       <Helmet>
-        <title>MarSU Cut | Order Details</title>
+        <title>MarSUKAT | Order Details</title>
         <meta
           name="description"
           content="View details of the selected order."

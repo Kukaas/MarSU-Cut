@@ -28,6 +28,7 @@ import CustomTable from "@/components/components/custom-components/CustomTable";
 import { statusColors } from "@/lib/utils";
 import CustomBadge from "@/components/components/custom-components/CustomBadge";
 import DataTableColumnHeader from "@/components/components/custom-components/DataTableColumnHeader";
+import CustomPageTitle from "@/components/components/custom-components/CustomPageTitle";
 
 function ArchiveOrders() {
   const [data, setData] = useState([]);
@@ -363,9 +364,7 @@ function ArchiveOrders() {
       }
     >
       <div className="w-full p-5 h-screen">
-        <Typography.Title level={2} className="text-black dark:text-white">
-          Archive Orders
-        </Typography.Title>
+        <CustomPageTitle title="Archived Orders" description="List of all archived orders" />
         <div className="flex flex-wrap items-center justify-between pb-2">
           <div className="flex flex-1 flex-wrap items-center gap-2">
             <Input

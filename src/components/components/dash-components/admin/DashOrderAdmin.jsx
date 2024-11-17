@@ -23,7 +23,7 @@ const DashOrderAdmin = () => {
   return (
     <div className="w-full h-screen overflow-x-auto">
       <Helmet>
-        <title>MarSU Cut | Orders</title>
+        <title>MarSUKAT | Orders</title>
         <meta name="description" content="" />
       </Helmet>
       <Orders />

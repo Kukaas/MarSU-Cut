@@ -13,6 +13,95 @@ import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+const ChartTooltipContentSales = ({ active, payload, mode }) => {
+  if (active && payload && payload.length) {
+    const isDarkMode = mode === "dark";
+    const tooltipStyles = {
+      backgroundColor: isDarkMode ? "#1e293b" : "#f9fafb",
+      color: isDarkMode ? "#e2e8f0" : "#1f2937",
+      border: `1px solid ${isDarkMode ? "#374151" : "#e5e7eb"}`,
+      borderRadius: "10px",
+      padding: "12px 16px",
+      boxShadow: isDarkMode
+        ? "0 4px 12px rgba(0, 0, 0, 0.8)"
+        : "0 4px 12px rgba(0, 0, 0, 0.1)",
+      minWidth: "180px",
+    };
+
+    const labelStyles = {
+      margin: "0",
+      fontSize: "0.875rem",
+      fontWeight: "500",
+      color: isDarkMode ? "#cbd5e1" : "#4b5563",
+    };
+
+    const valueStyles = {
+      margin: "8px 0 0",
+      fontSize: "1rem",
+      fontWeight: "600",
+      color: isDarkMode ? "#f8fafc" : "#111827",
+    };
+
+    return (
+      <div style={tooltipStyles}>
+        <p style={labelStyles}>{payload[0].payload.productType}</p>
+        <p style={valueStyles}>
+          Current Month Sales:
+          <span>
+            ₱{Intl.NumberFormat("en-PH").format(payload[0].value)}
+          </span>
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
+
+const ChartTooltipContentProduction = ({ active, payload, mode }) => {
+  if (active && payload && payload.length) {
+    const isDarkMode = mode === "dark";
+    const tooltipStyles = {
+      backgroundColor: isDarkMode ? "#1e293b" : "#f9fafb",
+      color: isDarkMode ? "#e2e8f0" : "#1f2937",
+      border: `1px solid ${isDarkMode ? "#374151" : "#e5e7eb"}`,
+      borderRadius: "10px",
+      padding: "12px 16px",
+      boxShadow: isDarkMode
+        ? "0 4px 12px rgba(0, 0, 0, 0.8)"
+        : "0 4px 12px rgba(0, 0, 0, 0.1)",
+      minWidth: "180px",
+    };
+
+    const labelStyles = {
+      margin: "0",
+      fontSize: "0.875rem",
+      fontWeight: "500",
+      color: isDarkMode ? "#cbd5e1" : "#4b5563",
+    };
+
+    const valueStyles = {
+      margin: "8px 0 0",
+      fontSize: "1rem",
+      fontWeight: "600",
+      color: isDarkMode ? "#f8fafc" : "#111827",
+    };
+
+    return (
+      <div style={tooltipStyles}>
+        <p style={labelStyles}>{payload[0].payload.productType}</p>
+        <p style={valueStyles}>
+          Production Quantity:
+          <span>
+            {(payload[0].value)}
+          </span>
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
+
+
 const Overview = () => {
   const [overview, setOverview] = useState([]);
   const [salesOverview, setSalesOverview] = useState([]);
@@ -54,7 +143,7 @@ const Overview = () => {
 
   // Create production chart data, excluding "LOGO"
   const productionChartData = overview
-    .filter(item => item.productType !== "LOGO")
+    .filter((item) => item.productType !== "LOGO")
     .map((productionItem) => ({
       productType: productionItem.productType,
       totalQuantity: productionItem.totalQuantity,
@@ -84,7 +173,7 @@ const Overview = () => {
 
   return (
     <>
-      <Tabs defaultValue="sales" className="w-full p-2">
+      <Tabs defaultValue="sales" className="w-full">
         <TabsList className="grid w-full grid-cols-2 ml-2 mb-4">
           <TabsTrigger value="sales">Sales</TabsTrigger>
           <TabsTrigger value="production">Production</TabsTrigger>
@@ -104,7 +193,7 @@ const Overview = () => {
                   axisLine={false}
                 />
                 <YAxis />
-                <ChartTooltip content={<ChartTooltipContent />} />
+                <ChartTooltip content={<ChartTooltipContentProduction />} />
                 <ChartLegend content={<ChartLegendContent />} />
                 <Bar
                   type="monotone"
@@ -139,8 +228,10 @@ const Overview = () => {
                   tickMargin={10}
                   axisLine={false}
                 />
-                <YAxis />
-                <ChartTooltip content={<ChartTooltipContent />} />
+                <YAxis 
+                  tickFormatter={(value) => `₱ ${Intl.NumberFormat("en-PH").format(value)}`}
+                />
+                <ChartTooltip content={<ChartTooltipContentSales />} />
                 <ChartLegend content={<ChartLegendContent />} />
                 <Bar
                   type="monotone"

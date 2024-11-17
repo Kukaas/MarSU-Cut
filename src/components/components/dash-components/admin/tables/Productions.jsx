@@ -43,6 +43,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import PrintableForm from "@/hooks/PrintableForm";
+import CustomPageTitle from "@/components/components/custom-components/CustomPageTitle";
 
 const Productions = () => {
   const [data, setData] = useState([]);
@@ -235,9 +236,7 @@ const Productions = () => {
     // >
     <div className="overflow-x-auto">
       <div className="w-full p-5 h-screen">
-        <Typography.Title level={2} className="text-black dark:text-white">
-          Productions
-        </Typography.Title>
+        <CustomPageTitle title="Productions" description="View and manage productions" />
         <div className="flex flex-wrap items-center justify-between pb-2">
           <div className="flex flex-1 flex-wrap items-center gap-2">
             <Input

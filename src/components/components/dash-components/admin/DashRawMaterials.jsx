@@ -23,7 +23,7 @@ const DashRawMaterials = () => {
   return (
     <div className="w-full h-screen overflow-x-auto">
       <Helmet>
-        <title>MarSU Cut | Raw Materials</title>
+        <title>MarSUKAT | Raw Materials</title>
         <meta name="description" content="" />
       </Helmet>
       <RawMaterials />

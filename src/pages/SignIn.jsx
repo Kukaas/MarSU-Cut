@@ -119,9 +119,9 @@ const SignIn = () => {
   return (
     <div className="min-h-[450px] mt-[120px] mb-8">
       <Helmet>
-        <title>MarSU Cut | Sign In</title>
+        <title>MarSUKAT | Sign In</title>
         <meta name="description" content="" />
-        <meta name="keywords" content="marsu sign in, marsu cut" />
+        <meta name="keywords" content="marsu sign in, MarSUKAT" />
       </Helmet>
       <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center">
         {/* left */}

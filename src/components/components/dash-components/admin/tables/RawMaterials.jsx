@@ -29,6 +29,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import CustomPageTitle from "@/components/components/custom-components/CustomPageTitle";
 
 const RawMaterials = () => {
   const [data, setData] = useState([]);
@@ -198,9 +199,7 @@ const RawMaterials = () => {
     // >
     <div className="overflow-x-auto">
       <div className="w-full p-5 h-screen">
-        <Typography.Title level={2} className="text-black dark:text-white">
-          Raw Materials
-        </Typography.Title>
+      <CustomPageTitle title="Raw Materials" description="View and manage raw materials" />
         <div className="flex flex-wrap items-center justify-between pb-2">
           <div className="flex flex-1 flex-wrap items-center gap-2">
             <Input

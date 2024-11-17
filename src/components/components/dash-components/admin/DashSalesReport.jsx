@@ -32,6 +32,7 @@ import { BASE_URL } from "@/lib/api";
 import axios from "axios";
 import { token } from "@/lib/token";
 import logo from "../../../../assets/logo_msc.jpg";
+import CustomPageTitle from "../../custom-components/CustomPageTitle";
 
 const DashSalesReport = () => {
   const navigate = useNavigate();
@@ -360,9 +361,7 @@ const DashSalesReport = () => {
   return (
     <div className="w-full p-5 h-screen">
       <div className="flex justify-between items-center mb-4">
-        <Typography.Title level={2} className="text-black dark:text-white">
-          Sales Report
-        </Typography.Title>
+        <CustomPageTitle title="Sales Report" description="View and download sales reports" />
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button variant="secondary">
@@ -474,7 +473,7 @@ const DashSalesReport = () => {
         </AlertDialog>
       </div>
       <Helmet>
-        <title>MarSU Cut | Sales Report</title>
+        <title>MarSUKAT | Sales Report</title>
         <meta name="description" content="" />
       </Helmet>
       <SalesSummary />

@@ -8,6 +8,7 @@ import { Helmet } from "react-helmet";
 import { useEffect } from "react";
 
 import CustomCalendar from "../../custom-components/CustomCalendar";
+import CustomPageTitle from "../../custom-components/CustomPageTitle";
 
 
 const DashSchedules = () => {
@@ -26,12 +27,10 @@ const DashSchedules = () => {
 
   return (
     <div className="w-full p-5">
-      <Typography.Title level={2} className="text-black dark:text-white">
-        Schedules
-      </Typography.Title>
+      <CustomPageTitle title="Schedules" description="View all schedules" />
       <div className="w-full h-screen flex items-center justify-center overflow-x-auto">
         <Helmet>
-          <title>MarSU Cut | Schedules</title>
+          <title>MarSUKAT | Schedules</title>
           <meta name="description" content="" />
         </Helmet>
         <CustomCalendar />

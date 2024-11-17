@@ -33,6 +33,7 @@ import DataTableColumnHeader from "@/components/components/custom-components/Dat
 import { statusColors } from "@/lib/utils";
 import RentalDetails from "../../admin/tables/details/RentalDetails";
 import { AlertDialog } from "@/components/ui/alert-dialog";
+import CustomPageTitle from "@/components/components/custom-components/CustomPageTitle";
 
 function Rentals() {
   const [data, setData] = useState([]);
@@ -233,9 +234,7 @@ function Rentals() {
       }
     >
       <div className="w-full p-5 h-screen">
-        <Typography.Title level={2} className="text-black dark:text-white">
-          Rentals
-        </Typography.Title>
+        <CustomPageTitle title="Rentals" description="View and manage rentals" />
         <div className="flex items-center py-4 justify-end overflow-auto">
           <Tooltip title="Create a rental">
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

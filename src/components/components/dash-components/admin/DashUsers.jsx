@@ -23,7 +23,7 @@ const DashUsers = () => {
   return (
     <div className="w-full h-screen overflow-x-auto">
       <Helmet>
-        <title>MarSU Cut | Users</title>
+        <title>MarSUKAT | Users</title>
         <meta name="description" content="" />
       </Helmet>
       <Users />

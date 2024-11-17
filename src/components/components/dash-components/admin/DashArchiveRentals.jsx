@@ -23,7 +23,7 @@ const DashArchiveRentals = () => {
   return (
     <div className="w-full h-screen overflow-x-auto">
       <Helmet>
-        <title>MarSU Cut | Archive Rentals</title>
+        <title>MarSUKAT | Archive Rentals</title>
         <meta name="description" content="" />
       </Helmet>
       <ArchiveRentals />

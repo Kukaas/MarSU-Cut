@@ -38,6 +38,7 @@ import {
   } from "@/components/ui/alert-dialog";
   import MeasureMentForm from "@/components/components/forms/MeasureMentForm";
   import CommercialJobDetails from "./details/CommercialJobDetails";
+import CustomPageTitle from "@/components/components/custom-components/CustomPageTitle";
   
   const ArchiveCommercialJob = () => {
     const [data, setData] = useState([]);
@@ -271,9 +272,7 @@ import {
         }
       >
         <div className="w-full p-5 h-screen">
-          <Typography.Title level={2} className="text-black dark:text-white">
-            Archived Commercial Job Orders
-          </Typography.Title>
+          <CustomPageTitle title="Archived Commercial Job Orders" description="View all archived commercial job orders" />
           <DataTableToolBar
             searchValue={searchValue}
             setSearchValue={setSearchValue}

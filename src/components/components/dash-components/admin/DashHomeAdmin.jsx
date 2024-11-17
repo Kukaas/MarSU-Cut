@@ -26,7 +26,7 @@ const DashHomeAdmin = () => {
   return (
     <div className="w-full min-h-screen p-5 overflow-x-auto">
       <Helmet>
-        <title>MarSU Cut | Dashboard</title>
+        <title>MarSUKAT | Dashboard</title>
         <meta name="description" content="" />
       </Helmet>
       <Row gutter={[16, 16]}>

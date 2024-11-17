@@ -23,7 +23,7 @@ const DashAccomplishmentReport = () => {
   return (
     <div className="w-full h-screen overflow-x-auto">
       <Helmet>
-        <title>MarSU Cut | Accomplishment Reports</title>
+        <title>MarSUKAT | Accomplishment Reports</title>
         <meta name="description" content="" />
       </Helmet>
       <AccomplishmentReport />

@@ -38,6 +38,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import MeasureMentForm from "@/components/components/forms/MeasureMentForm";
 import CommercialJobDetails from "./details/CommercialJobDetails";
+import CustomPageTitle from "@/components/components/custom-components/CustomPageTitle";
 
 const CommercialJob = () => {
   const [data, setData] = useState([]);
@@ -386,9 +387,7 @@ const CommercialJob = () => {
       }
     >
       <div className="w-full p-5 h-screen">
-        <Typography.Title level={2} className="text-black dark:text-white">
-          Commercial Job Orders
-        </Typography.Title>
+        <CustomPageTitle title="Commercial Job Orders" description={<span>Total Commercial Job Orders: {data.length}</span>} />
         <DataTableToolBar
           searchValue={searchValue}
           setSearchValue={setSearchValue}

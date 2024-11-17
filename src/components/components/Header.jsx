@@ -210,8 +210,8 @@ const Header = () => {
                       }}
                     >
                       MarSU
-                    </span>{" "}
-                    Cut
+                    </span>
+                    KAT
                   </div>
                 </SheetTitle>
                 <MenuSmallScreen />

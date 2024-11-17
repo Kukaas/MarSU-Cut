@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { CustomCalendar } from "../../custom-components/CustomCalendar";
+import CustomPageTitle from "../../custom-components/CustomPageTitle";
 
 const DashHome = () => {
   const navigate = useNavigate();
@@ -20,9 +21,12 @@ const DashHome = () => {
 
   return (
     <div className="w-full h-screen p-5 overflow-x-auto">
+      {currentUser.role !== "Coordinator" && (
+        <CustomPageTitle title="Schedules" description="View all schedules" />
+      )}
       <div className="w-full h-screen flex items-center justify-center overflow-x-auto">
         <Helmet>
-          <title>MarSU Cut | Dashboard</title>
+          <title>MarSUKAT | Dashboard</title>
           <meta name="description" content="" />
         </Helmet>
         {currentUser.role === "Coordinator" ? (

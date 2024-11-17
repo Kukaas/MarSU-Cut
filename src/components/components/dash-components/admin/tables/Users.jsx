@@ -34,6 +34,7 @@ import CustomInput from "@/components/components/custom-components/CustomInput";
 import { FormField } from "@/components/ui/form";
 import SelectField from "@/components/components/custom-components/SelectField";
 import { Separator } from "@/components/ui/separator";
+import CustomPageTitle from "@/components/components/custom-components/CustomPageTitle";
 // import DeleteDialog from "@/components/components/custom-components/DeleteDialog";
 
 const Users = () => {
@@ -406,9 +407,7 @@ const Users = () => {
     //   }
     // >
     <div className="w-full p-5 h-screen">
-      <Typography.Title level={2} className="text-black dark:text-white">
-        Users
-      </Typography.Title>
+      <CustomPageTitle title="Users" description="View all users" />
       <div className="flex flex-wrap items-center justify-between pb-2">
         <div className="flex flex-1 flex-wrap items-center gap-2">
           <Input

@@ -18,6 +18,7 @@ import { Separator } from "@/components/ui/separator";
 import StudentProfile from "./profile-components/StudentProfile";
 import CoordinatorProfile from "./profile-components/CoordinatorProfile";
 import CommercialProfile from "./profile-components/CommercialProfile";
+import CustomPageTitle from "../custom-components/CustomPageTitle";
 
 const DashProfile = () => {
   const navigate = useNavigate();
@@ -43,12 +44,10 @@ const DashProfile = () => {
 
   return (
     <div className="p-5 h-screen w-full overflow-auto">
-      <Typography.Title level={2} className="text-black dark:text-white">
-        Profile
-      </Typography.Title>
+      <CustomPageTitle  title="Profile" description="View and edit your profile" />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <Helmet>
-          <title>MarSU Cut | Profile</title>
+          <title>MarSUKAT | Profile</title>
           <meta name="description" content="" />
         </Helmet>
         <div className="p-2">
