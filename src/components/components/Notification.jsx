@@ -15,18 +15,21 @@ import { Tooltip } from "antd";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import ToasterError from "@/lib/Toaster";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow, set } from "date-fns";
 import { Input } from "../ui/input";
+import CardLoading from "./custom-components/CardLoading";
 
 const Notification = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [readNotifications, setReadNotifications] = useState([]);
   const [unreadNotifications, setUnreadNotifications] = useState([]);
+  const [loadingRead, setLoadingRead] = useState(false);
   const [loading, setLoading] = useState(false);
   const [searchValue, setSearchValue] = useState("");
 
   useEffect(() => {
     const fetchNotifications = async () => {
+      setLoading(true);
       try {
         const res = await axios.get(
           `${BASE_URL}/api/v1/user/notifications/${currentUser._id}`,
@@ -55,6 +58,7 @@ const Notification = () => {
           // Update state
           setReadNotifications(read);
           setUnreadNotifications(unread);
+          setLoading(false);
         } else {
           console.error(
             "Notifications is not an array:",
@@ -96,7 +100,7 @@ const Notification = () => {
 
   const handleMarkAllNotificationsAsRead = async () => {
     try {
-      setLoading(true);
+     setLoadingRead(true);
       const res = await axios.put(
         `${BASE_URL}/api/v1/user/notifications/${currentUser._id}`,
         {
@@ -109,7 +113,7 @@ const Notification = () => {
       );
 
       if (res.status === 200) {
-        setLoading(false);
+        setLoadingRead(false);
         toast.success("All notifications marked as read.");
 
         // Update state
@@ -117,13 +121,13 @@ const Notification = () => {
         setUnreadNotifications([]);
       } else {
         toast.error("Failed to mark all notifications as read.");
-        setLoading(false);
+        setLoadingRead(false);
       }
     } catch (error) {
       ToasterError({
         description: "Please check your internet connection and try again.",
       });
-      setLoading(false);
+      setLoadingRead(false);
     }
   };
 
@@ -168,30 +172,39 @@ const Notification = () => {
               ? "You have 1 unread notification."
               : `You have ${unreadNotifications.length} unread notifications.`}
           </SheetDescription>
-          {filteredUnreadNotifications
-            .slice()
-            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort in descending order
-            .map((notification) => (
-              <div
-                key={notification._id}
-                className="p-4 border rounded-md border-gray-400 mt-2 cursor-pointer"
-                onClick={() => handleReadNotification(notification)}
-              >
-                <SheetTitle>{notification?.title}</SheetTitle>
-                <SheetDescription>{notification?.message}</SheetDescription>
-                <SheetDescription className="text-xs text-gray-400">
-                  {notification?.createdAt} -{" "}
-                  {formatDistanceToNow(new Date(notification.createdAt))} ago
-                </SheetDescription>
-              </div>
-            ))}
+          {loading ? (
+            <div className="mt-5 flex flex-col gap-4">
+              <CardLoading />
+              <CardLoading />
+              <CardLoading />
+              <CardLoading />
+            </div>
+          ) : (
+            filteredUnreadNotifications
+              .slice()
+              .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort in descending order
+              .map((notification) => (
+                <div
+                  key={notification._id}
+                  className="p-4 border rounded-md border-gray-400 mt-2 cursor-pointer"
+                  onClick={() => handleReadNotification(notification)}
+                >
+                  <SheetTitle>{notification?.title}</SheetTitle>
+                  <SheetDescription>{notification?.message}</SheetDescription>
+                  <SheetDescription className="text-xs text-gray-400">
+                    {notification?.createdAt} -{" "}
+                    {formatDistanceToNow(new Date(notification.createdAt))} ago
+                  </SheetDescription>
+                </div>
+              ))
+          )}
           <Button
             className="mt-5"
             onClick={handleMarkAllNotificationsAsRead}
             unreadNotification={unreadNotifications}
-            disabled={loading}
+            disabled={loadingRead}
           >
-            {loading ? (
+            {loadingRead ? (
               <div className="flex items-center">
                 <Loader2 className="mr-2 animate-spin" />
                 <span>Marking as read</span>
@@ -213,22 +226,29 @@ const Notification = () => {
               ? "You have 1 read notification."
               : `You have ${readNotifications.length} read notifications.`}
           </SheetDescription>
-          {filteredReadNotifications
-            .slice()
-            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort in descending order
-            .map((notification) => (
-              <div
-                key={notification._id}
-                className="p-4 border rounded-md border-gray-400 mt-2 cursor-pointer"
-              >
-                <SheetTitle>{notification?.title}</SheetTitle>
-                <SheetDescription>{notification?.message}</SheetDescription>
-                <SheetDescription className="text-xs text-gray-400">
-                  {notification?.createdAt} -{" "}
-                  {formatDistanceToNow(new Date(notification.createdAt))} ago
-                </SheetDescription>
-              </div>
-            ))}
+          {loading ? (<div className="mt-5 flex flex-col gap-4">
+              <CardLoading />
+              <CardLoading />
+              <CardLoading />
+              <CardLoading />
+            </div>) : (
+            filteredReadNotifications
+              .slice()
+              .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort in descending order
+              .map((notification) => (
+                <div
+                  key={notification._id}
+                  className="p-4 border rounded-md border-gray-400 mt-2 cursor-pointer"
+                >
+                  <SheetTitle>{notification?.title}</SheetTitle>
+                  <SheetDescription>{notification?.message}</SheetDescription>
+                  <SheetDescription className="text-xs text-gray-400">
+                    {notification?.createdAt} -{" "}
+                    {formatDistanceToNow(new Date(notification.createdAt))} ago
+                  </SheetDescription>
+                </div>
+              ))
+          )}
         </TabsContent>
         <Toaster position="top-center" richColors closeButton />
       </Tabs>

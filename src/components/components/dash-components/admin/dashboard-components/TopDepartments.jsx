@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-import TableLoading from "./loading-components/TableLoading";
+import TableLoading from "../../../custom-components/TableLoading";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import { statusColors } from "@/lib/utils";

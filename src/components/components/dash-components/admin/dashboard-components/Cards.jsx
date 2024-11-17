@@ -12,7 +12,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import CountUp from "react-countup";
 
-import CardLoading from "./loading-components/CardLoading";
+import CardLoading from "../../../custom-components/CardLoading";
 import Overview from "./Overview";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
