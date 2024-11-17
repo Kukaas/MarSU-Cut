@@ -32,7 +32,6 @@ const DashHome = () => {
         {currentUser.role === "Coordinator" ? (
           <div>
             <h1 className="text-3xl font-bold">Welcome, Coordinator</h1>
-            <p className="text-lg">Please wait for the admin to approve your account.</p>
           </div>
         ) : (
           <CustomCalendar />
