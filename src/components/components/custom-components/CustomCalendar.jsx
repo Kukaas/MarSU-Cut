@@ -70,11 +70,16 @@ CustomHeader.propTypes = {
 };
 
 const Loading = () => (
-  <div className="flex flex-col space-y-6 p-4 w-full -mt-20">
+  <div className="flex flex-col space-y-6 p-4 w-full">
     {/* Calendar Header */}
-    <div className="flex flex-col space-y-2 items-center">
-      <Skeleton className="h-6 w-[150px] rounded-md" />
-    </div>
+    {/* <div className="flex flex-col justify-between space-y-2 lg:flex-row items-center">
+      <Skeleton className="h-8 w-[150px] rounded-md" />
+      <div className="flex flex-row justify-between gap-3">
+      <Skeleton className="h-8 w-[50px] rounded-md" />
+      <Skeleton className="h-8 w-[50px] rounded-md" />
+      <Skeleton className="h-8 w-[50px] rounded-md" />
+      </div>
+    </div> */}
 
     {/* Weekdays Header */}
     <div className="grid grid-cols-7 gap-2">
@@ -233,19 +238,20 @@ export const CustomCalendar = () => {
 
   return (
     <div className="w-full px-0">
-      {loading ? (
-        <>
-          <Loading />
-        </>
-      ) : (
-        <>
-          <CustomHeader
+      <CustomHeader
             date={currentDate}
             prev={handlePrev}
             next={handleNext}
             view={view}
             setView={handleViewChange}
           />
+      {loading ? (
+        <>
+          <Loading />
+        </>
+      ) : (
+        <>
+          
           <FullCalendar
             ref={calendarRef}
             height={"85vh"}
