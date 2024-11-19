@@ -379,19 +379,6 @@ const MenuSmallScreen = () => {
                   <>
                     <SheetTrigger asChild>
                       <Link
-                        to="/dashboard?tab=home"
-                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                          isActive("/dashboard?tab=home")
-                            ? "bg-muted text-primary"
-                            : "text-muted-foreground hover:text-primary"
-                        }`}
-                      >
-                        <Home className="h-4 w-4" />
-                        Dashboard
-                      </Link>
-                    </SheetTrigger>
-                    <SheetTrigger asChild>
-                      <Link
                         to="/dashboard?tab=orders"
                         className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
                           isActive("/dashboard?tab=orders")
@@ -403,11 +390,6 @@ const MenuSmallScreen = () => {
                         Orders
                       </Link>
                     </SheetTrigger>
-                  </>
-                )}
-
-                {currentUser.role === "Coordinator" && (
-                  <>
                     <SheetTrigger asChild>
                       <Link
                         to="/dashboard?tab=home"
@@ -417,10 +399,15 @@ const MenuSmallScreen = () => {
                             : "text-muted-foreground hover:text-primary"
                         }`}
                       >
-                        <Home className="h-4 w-4" />
-                        Dashboard
+                        <Calendar className="h-4 w-4" />
+                        Schedules
                       </Link>
                     </SheetTrigger>
+                  </>
+                )}
+
+                {currentUser.role === "Coordinator" && (
+                  <>
                     <SheetTrigger asChild>
                       <Link
                         to="/dashboard?tab=rentals"
@@ -432,6 +419,19 @@ const MenuSmallScreen = () => {
                       >
                         <Shirt className="h-4 w-4" />
                         Rentals
+                      </Link>
+                    </SheetTrigger>
+                    <SheetTrigger asChild>
+                      <Link
+                        to="/dashboard?tab=home"
+                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                          isActive("/dashboard?tab=home")
+                            ? "bg-muted text-primary"
+                            : "text-muted-foreground hover:text-primary"
+                        }`}
+                      >
+                        <Calendar className="h-4 w-4" />
+                        Schedules
                       </Link>
                     </SheetTrigger>
                   </>
@@ -449,7 +449,7 @@ const MenuSmallScreen = () => {
                         }`}
                       >
                         <Building2Icon className="h-4 w-4" />
-                       Orders
+                        Orders
                       </Link>
                     </SheetTrigger>
                     <SheetTrigger asChild>
