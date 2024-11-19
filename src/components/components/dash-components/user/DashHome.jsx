@@ -24,7 +24,7 @@ const DashHome = () => {
       {currentUser.role !== "Coordinator" && (
         <CustomPageTitle title="Schedules" description="View all schedules" />
       )}
-      <div className="w-full h-[650px] flex items-center justify-center overflow-x-auto pt-5">
+      <div className="w-full h-screen flex items-center justify-center overflow-x-auto pt-10">
         <Helmet>
           <title>MarSUKAT | Dashboard</title>
           <meta name="description" content="" />
