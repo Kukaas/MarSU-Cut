@@ -37,7 +37,7 @@ const Legend = () => {
               className="w-3 h-3 rounded-full"
               style={{ backgroundColor: productColors[productType] }}
             ></div>
-            <p>{productType}</p>
+            <p className="text-xs">{productType}</p>
           </div>
         ))}
       </div>
@@ -48,16 +48,16 @@ const Legend = () => {
 const TooltipContent = ({ active, payload, label }) => {
   if (active) {
     return (
-      <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-md">
+      <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-md text-black">
         <p className="text-lg font-semibold">{label}</p>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 p-5">
           {payload.map((item, index) => (
             <div key={index} className="flex items-center gap-2">
               <div
                 className="w-3 h-3"
                 style={{ backgroundColor: item.stroke }}
               ></div>
-              <p>
+              <p className="text-sm">
                 {item.name}: {item.value}
               </p>
             </div>
