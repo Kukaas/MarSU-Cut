@@ -24,7 +24,6 @@ import AddProduction from "@/components/components/forms/AddProduction";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomTable from "@/components/components/custom-components/CustomTable";
-import ProductionChart from "../production-components/ProductionChart";
 import {
   Card,
   CardContent,
@@ -32,7 +31,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import ProductionPerformance from "../production-components/ProductionPerformance";
 import DataTableColumnHeader from "@/components/components/custom-components/DataTableColumnHeader";
 // import DeleteDialog from "@/components/components/custom-components/DeleteDialog";
 import {
@@ -44,6 +42,9 @@ import {
 } from "@/components/ui/alert-dialog";
 import PrintableForm from "@/hooks/PrintableForm";
 import CustomPageTitle from "@/components/components/custom-components/CustomPageTitle";
+import ProductionYear from "../production-components/ProductionYear";
+import ProductionMonth from "../production-components/ProductionMonth";
+import ProductionWeekly from "../production-components/ProductionWeekly";
 
 const Productions = () => {
   const [data, setData] = useState([]);
@@ -52,6 +53,7 @@ const Productions = () => {
   const [loading, setLoading] = useState(true);
   // const [deleteLoading, setDeleteLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [tab, setTab] = useState("weekly");
 
   useEffect(() => {
     const fetchProductions = async () => {
@@ -236,7 +238,10 @@ const Productions = () => {
     // >
     <div className="overflow-x-auto">
       <div className="w-full p-5 h-screen">
-        <CustomPageTitle title="Productions" description="View and manage productions" />
+        <CustomPageTitle
+          title="Productions"
+          description="View and manage productions"
+        />
         <div className="flex flex-wrap items-center justify-between pb-2">
           <div className="flex flex-1 flex-wrap items-center gap-2">
             <Input
@@ -281,62 +286,72 @@ const Productions = () => {
               <CustomTable columns={columns} data={data} loading={loading} />
             </div>
           </TabsContent>
-          <TabsContent value="graph" className="mt-4">
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-              {/* Left Card */}
-              <Card className="lg:col-span-3">
-                <CardHeader>
-                  <CardTitle>Productions</CardTitle>
-                  <CardDescription>
-                    A graph showing the production quantity of each product type
-                    for the current year and the previous year.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="pl-2">
-                  <ProductionChart />
-                </CardContent>
-              </Card>
-
-              {/* Right Cards Container */}
-              <div className="lg:col-span-1 flex flex-col gap-4">
-                {/* Additional Card 1 */}
-                <Card className="flex-1">
-                  <CardHeader>
-                    <CardTitle className="text-md">Quantity Produced</CardTitle>
-                  </CardHeader>
-                  <CardContent className="pl-2">
-                    {/* Content for the first additional card */}
-                  </CardContent>
-                </Card>
-
-                {/* Additional Card 2 */}
-                <Card className="flex-1">
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-md">Performance</CardTitle>
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button variant="ghost">
-                            <Maximize2Icon className="h-4 w-4" />
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="max-h-[550px] overflow-auto">
-                          <DialogTitle>Performance</DialogTitle>
-                          <DialogDescription>
-                            A graph showing the performance of the production
-                            department.
-                          </DialogDescription>
-                          <ProductionPerformance />
-                        </DialogContent>
-                      </Dialog>
+          <TabsContent value="graph" className="mt-4 p-5">
+            <Card>
+              <CardContent>
+                <div className="w-full">
+                  <Tabs defaultValue="year" className="mt-5 flex flex-col">
+                    <div className="flex flex-col mb-4 lg:flex-row lg:justify-between md:flex-row md:justify-between">
+                      <div className="flex flex-col gap-3 mt-3">
+                        {tab === "weekly" ? (
+                          <div>
+                            <CardTitle>Weekly Production Summary</CardTitle>
+                            <CardDescription>
+                              View a summary of your weekly production
+                            </CardDescription>
+                          </div>
+                        ) : tab === "monthly" ? (
+                          <div>
+                            <CardTitle>Monthly Production Summary</CardTitle>
+                            <CardDescription>
+                              View a summary of your monthly production
+                            </CardDescription>
+                          </div>
+                        ) : (
+                          <div>
+                            <CardTitle>Yearly Production Summary</CardTitle>
+                            <CardDescription>
+                              View a summary of your yearly production
+                            </CardDescription>
+                          </div>
+                        )}
+                      </div>
+                      <div className="mt-3">
+                        <TabsList>
+                          <TabsTrigger
+                            value="weekly"
+                            onClick={() => setTab("weekly")}
+                          >
+                            Weekly
+                          </TabsTrigger>
+                          <TabsTrigger
+                            value="monthly"
+                            onClick={() => setTab("monthly")}
+                          >
+                            Monthly
+                          </TabsTrigger>
+                          <TabsTrigger
+                            value="yearly"
+                            onClick={() => setTab("yearly")}
+                          >
+                            Yearly
+                          </TabsTrigger>
+                        </TabsList>
+                      </div>
                     </div>
-                  </CardHeader>
-                  <CardContent>
-                    <ProductionPerformance />
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
+                    <TabsContent value="weekly">
+                      <ProductionWeekly />
+                    </TabsContent>
+                    <TabsContent value="monthly">
+                      <ProductionMonth />
+                    </TabsContent>
+                    <TabsContent value="yearly">
+                      <ProductionYear />
+                    </TabsContent>
+                  </Tabs>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>

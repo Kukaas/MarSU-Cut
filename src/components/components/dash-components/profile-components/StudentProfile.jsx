@@ -230,70 +230,74 @@ const StudentProfile = () => {
           className="space-y-4 w-full p-3"
         >
           <div className="flex items-center justify-center gap-5 mt-4">
-  <div className="flex flex-col items-center">
-    {imageFileUrl && ( // Show preview only if an image is uploaded
-      <div className="relative w-20 h-20 mt-3 shadow-md overflow-hidden rounded-full">
-        <img
-          src={imageFileUrl} // Display the preview image
-          alt="Uploaded Preview"
-          className="w-full h-full rounded-full object-cover"
-        />
-        {imageUploadProgress && (
-          <CircularProgressbar
-            value={imageUploadProgress || 0}
-            text={`${imageUploadProgress}%`}
-            strokeWidth={5}
-            styles={{
-              root: {
-                width: "100%",
-                height: "100%",
-                position: "absolute",
-                top: 0,
-                left: 0,
-              },
-              path: {
-                stroke: `rgba(62, 152, 199, ${imageUploadProgress / 100})`,
-              },
-            }}
-          />
-        )}
-      </div>
-    )}
-    {imageUploadError && <Alert message={imageUploadError} type="error" />}
-  </div>
-  <div
-    className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4 text-center cursor-pointer h-[200px] sm:h-[150px] md:h-[100px] flex flex-col justify-center items-center space-y-1 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-300"
-    onClick={() =>
-      filePickerRef.current && filePickerRef.current.click()
-    }
-    onDragOver={(e) => e.preventDefault()} // Allow the element to accept the drop
-    onDrop={(e) => {
-      e.preventDefault(); // Prevent default behavior (open as link for some elements)
-      handleImageChange(e); // Handle file drop
-    }}
-  >
-    <Camera className="w-8 h-8 mx-auto text-gray-400 sm:w-6 sm:h-6 md:w-4 md:h-4" />
-    <p className="text-blue-600 underline text-sm sm:text-xs md:text-[10px]">
-      Click to upload
-    </p>
-    <p className="text-sm text-gray-500 sm:text-xs md:text-[10px]">
-      or drag and drop
-    </p>
-    <p className="text-xs text-gray-400 sm:text-[10px] md:text-[9px]">
-      PNG, JPG
-    </p>
-    <p className="text-xs text-gray-400 sm:text-[10px] md:text-[9px]">
-      Max size: 2MB
-    </p>
-    <input
-      type="file"
-      accept="image/*"
-      ref={filePickerRef}
-      className="hidden"
-      onChange={handleImageChange}
-    />
-  </div>
-</div>
+            <div className="flex flex-col items-center">
+              {imageFileUrl && ( // Show preview only if an image is uploaded
+                <div className="relative w-20 h-20 mt-3 shadow-md overflow-hidden rounded-full">
+                  <img
+                    src={imageFileUrl} // Display the preview image
+                    alt="Uploaded Preview"
+                    className="w-full h-full rounded-full object-cover"
+                  />
+                  {imageUploadProgress && (
+                    <CircularProgressbar
+                      value={imageUploadProgress || 0}
+                      text={`${imageUploadProgress}%`}
+                      strokeWidth={5}
+                      styles={{
+                        root: {
+                          width: "100%",
+                          height: "100%",
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                        },
+                        path: {
+                          stroke: `rgba(62, 152, 199, ${
+                            imageUploadProgress / 100
+                          })`,
+                        },
+                      }}
+                    />
+                  )}
+                </div>
+              )}
+              {imageUploadError && (
+                <Alert message={imageUploadError} type="error" />
+              )}
+            </div>
+            <div
+              className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4 text-center cursor-pointer h-[200px] sm:h-[150px] md:h-[100px] flex flex-col justify-center items-center space-y-1 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-300"
+              onClick={() =>
+                filePickerRef.current && filePickerRef.current.click()
+              }
+              onDragOver={(e) => e.preventDefault()} // Allow the element to accept the drop
+              onDrop={(e) => {
+                e.preventDefault(); // Prevent default behavior (open as link for some elements)
+                handleImageChange(e); // Handle file drop
+              }}
+            >
+              <Camera className="w-8 h-8 mx-auto text-gray-400 sm:w-6 sm:h-6 md:w-4 md:h-4" />
+              <p className="text-blue-600 underline text-sm sm:text-xs md:text-[10px]">
+                Click to upload
+              </p>
+              <p className="text-sm text-gray-500 sm:text-xs md:text-[10px]">
+                or drag and drop
+              </p>
+              <p className="text-xs text-gray-400 sm:text-[10px] md:text-[9px]">
+                PNG, JPG
+              </p>
+              <p className="text-xs text-gray-400 sm:text-[10px] md:text-[9px]">
+                Max size: 2MB
+              </p>
+              <input
+                type="file"
+                accept="image/*"
+                ref={filePickerRef}
+                className="hidden"
+                onChange={handleImageChange}
+              />
+            </div>
+          </div>
 
           <div className="flex items-center gap-3 mt-4">
             <CustomInput

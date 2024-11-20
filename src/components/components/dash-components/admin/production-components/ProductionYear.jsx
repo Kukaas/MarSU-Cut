@@ -61,7 +61,7 @@ const ChartTooltipContent = ({ active, payload, mode }) => {
   return null;
 };
 
-const ProductionChart = () => {
+const ProductionYear = () => {
   const [data, setData] = useState([]);
   const [lastYearData, setLastYearData] = useState([]);
 
@@ -173,4 +173,4 @@ const ProductionChart = () => {
   );
 };
 
-export default ProductionChart;
+export default ProductionYear;
