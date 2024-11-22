@@ -11,6 +11,7 @@ import {
 } from "recharts";
 import { token } from "@/lib/token";
 import { ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { BASE_URL } from "@/lib/api";
 
 const Legend = () => {
     // Define all product types (matching the colors)
@@ -115,7 +116,7 @@ const ProductionMonth = () => {
   // Fetch production data on component mount
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/api/v1/production/all/this-month`, {
+      .get(`${BASE_URL}/api/v1/production/all/this-month`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
