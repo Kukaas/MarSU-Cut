@@ -15,14 +15,14 @@ import { BASE_URL } from "@/lib/api";
 import { token } from "@/lib/token";
 import moment from "moment";
 import { Button } from "@/components/ui/button";
-import PropTypes from "prop-types";
-import { Check, X } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useSelector } from "react-redux";
+import PropTypes from "prop-types";
 
 const CustomHeader = ({ date, prev, next, setView }) => {
   const formattedDate = new Date(date);
   return (
-    <div className="flex flex-col md:flex-row justify-between items-center mb-4">
+    <div className="flex flex-col md:flex-row justify-center items-center mb-6">
       <div className="flex items-center space-x-2">
         <button onClick={prev} className="p-2 border rounded">
           &lt;
@@ -35,26 +35,6 @@ const CustomHeader = ({ date, prev, next, setView }) => {
         </h2>
         <button onClick={next} className="p-2 border rounded">
           &gt;
-        </button>
-      </div>
-      <div className="flex space-x-2 mt-2 md:mt-0">
-        <button
-          onClick={() => setView("dayGridMonth")}
-          className="p-2 border rounded"
-        >
-          Month
-        </button>
-        <button
-          onClick={() => setView("timeGridWeek")}
-          className="p-2 border rounded"
-        >
-          Week
-        </button>
-        <button
-          onClick={() => setView("timeGridDay")}
-          className="p-2 border rounded"
-        >
-          Day
         </button>
       </div>
     </div>
@@ -71,27 +51,15 @@ CustomHeader.propTypes = {
 
 const Loading = () => (
   <div className="flex flex-col space-y-6 p-4 w-full">
-    {/* Calendar Header */}
-    {/* <div className="flex flex-col justify-between space-y-2 lg:flex-row items-center">
-      <Skeleton className="h-8 w-[150px] rounded-md" />
-      <div className="flex flex-row justify-between gap-3">
-      <Skeleton className="h-8 w-[50px] rounded-md" />
-      <Skeleton className="h-8 w-[50px] rounded-md" />
-      <Skeleton className="h-8 w-[50px] rounded-md" />
-      </div>
-    </div> */}
-
-    {/* Weekdays Header */}
     <div className="grid grid-cols-7 gap-2">
       {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day, index) => (
         <Skeleton key={index} className="h-6 w-full text-center" />
       ))}
     </div>
 
-    {/* Calendar Days Placeholder */}
     <div className="grid grid-cols-7 gap-2 mt-2">
       {Array.from({ length: 42 }).map((_, index) => (
-        <Skeleton key={index} className="h-12 w-full rounded-md" /> // Placeholder for each calendar cell
+        <Skeleton key={index} className="h-12 w-full rounded-md" />
       ))}
     </div>
   </div>
@@ -100,17 +68,17 @@ const Loading = () => (
 export const CustomCalendar = () => {
   const [schedules, setSchedules] = useState([]);
   const [commercialJobSchedules, setCommercialJobSchedules] = useState([]);
+  const [selectedSchedules, setSelectedSchedules] = useState([]);
+  const [selectedCommercialSchedules, setSelectedCommercialSchedules] =
+    useState([]);
   const [loading, setLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedSchedules, setSelectedSchedules] = useState([]);
-  const [selectedCommercialSchedules, setSelectedCommercialSchedules] =
-    useState([]); // State for commercial job schedules
   const [view, setView] = useState("dayGridMonth");
   const [currentDate, setCurrentDate] = useState(new Date());
   const calendarRef = useRef(null);
+  const { currentUser } = useSelector((state) => state.user);
 
-  // Fetch student schedules from the API
   useEffect(() => {
     const fetchSchedules = async () => {
       setLoading(true);
@@ -125,7 +93,6 @@ export const CustomCalendar = () => {
             withCredentials: true,
           }
         );
-
         const data = response.data.schedules;
         if (Array.isArray(data)) {
           const formattedSchedules = data.map((schedule) => {
@@ -135,6 +102,7 @@ export const CustomCalendar = () => {
               status: schedule.status,
               start: date,
               allDay: true,
+              userId: schedule.studentId,
             };
           });
           setSchedules(formattedSchedules);
@@ -149,7 +117,6 @@ export const CustomCalendar = () => {
     fetchSchedules();
   }, []);
 
-  // Fetch commercial job schedules from the API
   useEffect(() => {
     const fetchCommercialJobSchedules = async () => {
       setLoading(true);
@@ -164,7 +131,6 @@ export const CustomCalendar = () => {
             withCredentials: true,
           }
         );
-
         const data = response.data.schedules;
         if (Array.isArray(data)) {
           const formattedSchedules = data.map((schedule) => {
@@ -174,6 +140,7 @@ export const CustomCalendar = () => {
               status: schedule.status,
               start: date,
               allDay: true,
+              userId: schedule.cbId,
             };
           });
           setCommercialJobSchedules(formattedSchedules);
@@ -188,11 +155,22 @@ export const CustomCalendar = () => {
     fetchCommercialJobSchedules();
   }, []);
 
-  // Handle date click
+  const getVisibleSchedules = () => {
+    if (currentUser.isAdmin) {
+      return [...schedules, ...commercialJobSchedules]; // Admin sees all schedules
+    } else {
+      return schedules.map((schedule) => {
+        if (schedule.title === currentUser.name) {
+          return { ...schedule, title: schedule.title };
+        } else {
+          return { ...schedule, title: "Occupied" };
+        }
+      });
+    }
+  };
+
   const handleDateClick = (info) => {
     const selectedDateString = info.dateStr;
-
-    // Filter student schedules and commercial job schedules for the selected date
     const schedulesForDate = schedules.filter(
       (schedule) => schedule.start === selectedDateString
     );
@@ -202,125 +180,143 @@ export const CustomCalendar = () => {
 
     setSelectedDate(selectedDateString);
     setSelectedSchedules(schedulesForDate);
-    setSelectedCommercialSchedules(commercialSchedulesForDate); // Set commercial job schedules
+    setSelectedCommercialSchedules(commercialSchedulesForDate);
     setIsDialogOpen(true);
   };
 
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
-    setSelectedSchedules([]);
-    setSelectedCommercialSchedules([]); // Reset commercial job schedules
-  };
-
-  const formatDate = (date) => {
-    const options = { month: "long", day: "numeric", year: "numeric" };
-    return new Date(date).toLocaleDateString(undefined, options);
   };
 
   const handlePrev = () => {
-    const calendarApi = calendarRef.current.getApi();
-    calendarApi.prev();
-    setCurrentDate(calendarApi.getDate());
+    calendarRef.current.getApi().prev();
+    setCurrentDate(calendarRef.current.getApi().getDate());
   };
 
   const handleNext = () => {
-    const calendarApi = calendarRef.current.getApi();
-    calendarApi.next();
-    setCurrentDate(calendarApi.getDate());
+    calendarRef.current.getApi().next();
+    setCurrentDate(calendarRef.current.getApi().getDate());
   };
 
-  const handleViewChange = (newView) => {
-    setView(newView);
-    const calendarApi = calendarRef.current.getApi();
-    calendarApi.changeView(newView);
-    setCurrentDate(calendarApi.getDate());
+  const handleViewChange = (view) => {
+    setView(view);
   };
 
   return (
     <div className="w-full px-0">
       <CustomHeader
-            date={currentDate}
-            prev={handlePrev}
-            next={handleNext}
-            view={view}
-            setView={handleViewChange}
-          />
+        date={currentDate}
+        prev={() => handlePrev()}
+        next={() => handleNext()}
+        view={view}
+        setView={handleViewChange}
+      />
       {loading ? (
-        <>
-          <Loading />
-        </>
+        <Loading />
       ) : (
-        <>
-          
-          <FullCalendar
-            ref={calendarRef}
-            height={"85vh"}
-            width={"100%"}
-            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-            initialView={view}
-            editable={false}
-            selectable={true}
-            selectMirror={true}
-            dayMaxEvents={true}
-            events={[...schedules, ...commercialJobSchedules]} // Show both schedules in calendar
-            select={handleDateClick}
-            dateClick={handleDateClick}
-            headerToolbar={false}
-          />
-        </>
+        <FullCalendar
+          ref={calendarRef}
+          height={"85vh"}
+          width={"100%"}
+          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+          initialView={view}
+          editable={false}
+          selectable={true}
+          selectMirror={true}
+          dayMaxEvents={true}
+          events={getVisibleSchedules()}
+          dateClick={handleDateClick}
+          headerToolbar={false}
+        />
       )}
+
       <Dialog open={isDialogOpen} onOpenChange={handleCloseDialog}>
-        <DialogContent className="overflow-auto">
+        <DialogContent className="max-h-[450px] overflow-auto">
           <DialogHeader>
-            <DialogTitle>Schedules for {formatDate(selectedDate)}</DialogTitle>
+            <DialogTitle>
+              Schedules for {moment(selectedDate).format("MMMM DD, YYYY")}
+            </DialogTitle>
           </DialogHeader>
+
           <div className="mt-3">
             <h3 className="font-semibold">Student Schedules</h3>
-            {selectedSchedules.length > 0 ? (
-              <ul>
-                {selectedSchedules.map((schedule, index) => (
-                  <li key={index} className="mt-2 flex items-center">
-                    {schedule.title}
-                    {["MEASURED", "CLAIMED", "DONE"].includes(
-                      schedule.status
-                    ) ? (
-                      <Check className="w-4 h-4 text-green-500 ml-3" />
-                    ) : (
-                      <X className="w-4 h-4 text-red-500 ml-3" />
-                    )}
-                  </li>
-                ))}
-              </ul>
+            {currentUser.isAdmin ? (
+              <div className="mt-3">
+                {selectedSchedules.length > 0 ? (
+                  <ul>
+                    {selectedSchedules.map((schedule, index) => (
+                      <li key={index} className="mt-2 flex items-center">
+                        {schedule.title}{" "}
+                        {/* Display all schedules for admins */}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>No student schedules found.</p>
+                )}
+              </div>
+            ) : currentUser.role === "Student" ? (
+              <div className="mt-3">
+                {selectedSchedules.length > 0 ? (
+                  <ul>
+                    {selectedSchedules.map((schedule, index) => (
+                      <li key={index} className="mt-2 flex items-center">
+                        {schedule.title === currentUser.name
+                          ? schedule.title // Show current user's name if it's their schedule
+                          : "Occupied"}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>No student schedules found.</p>
+                )}
+              </div>
             ) : (
-              <p>No student schedules available for this day.</p>
+              <p>No student schedule available for this date.</p>
             )}
 
-            <h3 className="font-semibold mt-4">Commercial Job Schedules</h3>
-            {selectedCommercialSchedules.length > 0 ? (
-              <ul>
-                {selectedCommercialSchedules.map((schedule, index) => (
-                  <li key={index} className="mt-2 flex items-center">
-                    {schedule.title}
-                    {["MEASURED", "CLAIMED", "DONE"].includes(
-                      schedule.status
-                    ) ? (
-                      <Check className="w-4 h-4 text-green-500 ml-3" />
-                    ) : (
-                      <X className="w-4 h-4 text-red-500 ml-3" />
-                    )}
-                  </li>
-                ))}
-              </ul>
+            <h3 className="mt-6 font-semibold">Commercial Job Schedules</h3>
+            {currentUser.isAdmin ? (
+              <div className="mt-3">
+                {selectedCommercialSchedules.length > 0 ? (
+                  <ul>
+                    {selectedCommercialSchedules.map((schedule, index) => (
+                      <li key={index} className="mt-2 flex items-center">
+                        {schedule.title}{" "}
+                        {/* Show all commercial job schedules for admins */}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>No commercial job schedules found.</p>
+                )}
+              </div>
+            ) : currentUser.role === "CommercialJob" ? (
+              <div className="mt-3">
+                {selectedCommercialSchedules.length > 0 ? (
+                  <ul>
+                    {selectedCommercialSchedules.map((schedule, index) => (
+                      <li key={index} className="mt-2 flex items-center">
+                        {schedule.title === currentUser.name
+                          ? schedule.title // Show current commercial job user's name if it's their schedule
+                          : "Occupied"}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>No commercial job schedules found.</p>
+                )}
+              </div>
             ) : (
-              <p>No commercial job schedules available for this day.</p>
+              <p>No commercial job schedule available for this date.</p>
             )}
+
+            <div className="mt-6 flex w-full">
+              <Button className="w-full" onClick={handleCloseDialog}>
+                Close
+              </Button>
+            </div>
           </div>
-
-          <DialogClose asChild>
-            <Button variant="secondary" className="mt-2">
-              Close
-            </Button>
-          </DialogClose>
         </DialogContent>
       </Dialog>
     </div>
