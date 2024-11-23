@@ -107,8 +107,8 @@ const ProductionMonth = () => {
     "ACADEMIC GOWN": "#8884d8", // Light Purple
     PANTS: "#82ca9d", // Light Green
     POLO: "#ff7300", // Orange
-    SKIRT: "#ff6b6b", // Red
-    BLOUSE: "#8884d8", // Light Purple
+    SKIRT: "#ff6b6b", // Light Red
+    BLOUSE: "red", // Red
     "PE TSHIRT": "#ffbf00", // Yellow
     JPANTS: "#00bfff", // Light Blue
   };

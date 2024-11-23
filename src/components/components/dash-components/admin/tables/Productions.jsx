@@ -1,11 +1,4 @@
 // UI
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -44,7 +37,6 @@ import PrintableForm from "@/hooks/PrintableForm";
 import CustomPageTitle from "@/components/components/custom-components/CustomPageTitle";
 import ProductionYear from "../production-components/ProductionYear";
 import ProductionMonth from "../production-components/ProductionMonth";
-import ProductionWeekly from "../production-components/ProductionWeekly";
 
 const Productions = () => {
   const [data, setData] = useState([]);
@@ -53,7 +45,7 @@ const Productions = () => {
   const [loading, setLoading] = useState(true);
   // const [deleteLoading, setDeleteLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [tab, setTab] = useState("weekly");
+  const [tab, setTab] = useState("monthly");
 
   useEffect(() => {
     const fetchProductions = async () => {
@@ -290,17 +282,10 @@ const Productions = () => {
             <Card>
               <CardContent>
                 <div className="w-full">
-                  <Tabs defaultValue="year" className="mt-5 flex flex-col">
+                  <Tabs defaultValue="monthly" className="mt-5 flex flex-col">
                     <div className="flex flex-col mb-4 lg:flex-row lg:justify-between md:flex-row md:justify-between">
                       <div className="flex flex-col gap-3 mt-3">
-                        {tab === "weekly" ? (
-                          <div>
-                            <CardTitle>Weekly Production Summary</CardTitle>
-                            <CardDescription>
-                              View a summary of your weekly production
-                            </CardDescription>
-                          </div>
-                        ) : tab === "monthly" ? (
+                        {tab === "monthly" ? (
                           <div>
                             <CardTitle>Monthly Production Summary</CardTitle>
                             <CardDescription>
@@ -317,13 +302,7 @@ const Productions = () => {
                         )}
                       </div>
                       <div className="mt-3">
-                        <TabsList>
-                          <TabsTrigger
-                            value="weekly"
-                            onClick={() => setTab("weekly")}
-                          >
-                            Weekly
-                          </TabsTrigger>
+                        <TabsList >
                           <TabsTrigger
                             value="monthly"
                             onClick={() => setTab("monthly")}
@@ -339,9 +318,6 @@ const Productions = () => {
                         </TabsList>
                       </div>
                     </div>
-                    <TabsContent value="weekly">
-                      <ProductionWeekly />
-                    </TabsContent>
                     <TabsContent value="monthly">
                       <ProductionMonth />
                     </TabsContent>
