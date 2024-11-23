@@ -14,13 +14,20 @@ const CustomNumberInput = ({
   type = "number", // Default to "number" if not specified
   placeholder,
   disabled,
+  quantity,
 }) => (
   <FormField
     control={control}
     name={name}
     render={({ field }) => (
       <FormItem>
-        <FormLabel>{label}</FormLabel>
+        <FormLabel>
+          {label}{" "}
+          {quantity !== undefined && quantity !== null
+            ? `(Available: ${quantity})`
+            : ""}
+        </FormLabel>
+
         <FormControl>
           <Input
             type={type}

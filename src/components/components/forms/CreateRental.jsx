@@ -45,8 +45,10 @@ import {
 import { DialogClose } from "@/components/ui/dialog";
 import SelectField from "../custom-components/SelectField";
 import CustomNumberInput from "../custom-components/CustomNumberInput";
+import { Input } from "@/components/ui/input";
 
 const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
+  const [finishedProducts, setFinishedProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
@@ -76,6 +78,35 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
 
     return () => formValues.unsubscribe();
   }, [form]);
+
+  useEffect(() => {
+    const fetchFinishedProducts = async () => {
+      try {
+        const res = await axios.get(`${BASE_URL}/api/v1/finished-product/all`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        });
+
+        if (res.status === 200) {
+          // Filter and map to only include academic gown sizes and quantities
+          const academicGowns = res.data.finishedProducts
+            .filter((product) => product.productType === "ACADEMIC GOWN")
+            .map(({ size, quantity }) => ({ size, quantity }));
+
+          setFinishedProducts(academicGowns);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchFinishedProducts();
+  }, []);
+
+  console.log(finishedProducts);
 
   const departmentOptions = [
     "College of Engineering",
@@ -216,36 +247,205 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
                 )}
               />
               <div className="flex justify-between gap-4">
-                <CustomNumberInput
+                <FormField
                   control={form.control}
-                  label="Small"
                   name="small"
-                  placeholder="Small"
-                  type="number"
+                  render={({ field }) => {
+                    const maxQuantity =
+                      finishedProducts.find(
+                        (product) => product.size === "Small"
+                      )?.quantity || 0;
+
+                    return (
+                      <FormItem>
+                        <FormLabel>
+                          Small{" "}
+                          {maxQuantity > 0 ? `(Available: ${maxQuantity})` : ""}
+                        </FormLabel>
+
+                        <FormControl>
+                          <Input
+                            type="number"
+                            {...field}
+                            value={field.value !== undefined ? field.value : ""}
+                            onChange={(e) => {
+                              const value = e.target.value;
+
+                              // Allow empty input for backspacing or clearing
+                              if (value === "") {
+                                field.onChange("");
+                                return;
+                              }
+
+                              // Parse and validate the number
+                              const numericValue = parseFloat(value);
+                              if (
+                                numericValue >= 0 &&
+                                numericValue <= maxQuantity
+                              ) {
+                                field.onChange(numericValue);
+                              }
+                            }}
+                            placeholder="Small"
+                            className="w-full"
+                            max={maxQuantity} // This sets the max property for browsers
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    );
+                  }}
                 />
-                <CustomNumberInput
+
+                <FormField
                   control={form.control}
-                  label="Medium"
                   name="medium"
-                  placeholder="Medium"
-                  type="number"
+                  render={({ field }) => {
+                    const maxQuantity =
+                      finishedProducts.find(
+                        (product) => product.size === "Medium"
+                      )?.quantity || 0;
+
+                    return (
+                      <FormItem>
+                        <FormLabel>
+                          Medium{" "}
+                          {maxQuantity > 0 ? `(Available: ${maxQuantity})` : ""}
+                        </FormLabel>
+
+                        <FormControl>
+                          <Input
+                            type="number"
+                            {...field}
+                            value={field.value !== undefined ? field.value : ""}
+                            onChange={(e) => {
+                              const value = e.target.value;
+
+                              // Allow empty input for backspacing or clearing
+                              if (value === "") {
+                                field.onChange("");
+                                return;
+                              }
+
+                              // Parse and validate the number
+                              const numericValue = parseFloat(value);
+                              if (
+                                numericValue >= 0 &&
+                                numericValue <= maxQuantity
+                              ) {
+                                field.onChange(numericValue);
+                              }
+                            }}
+                            placeholder="Medium"
+                            className="w-full"
+                            max={maxQuantity} // This sets the max property for browsers
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    );
+                  }}
                 />
               </div>
 
               <div className="flex justify-between gap-4">
-                <CustomNumberInput
+                <FormField
                   control={form.control}
-                  label="Large"
                   name="large"
-                  placeholder="Large"
-                  type="number"
+                  render={({ field }) => {
+                    const maxQuantity =
+                      finishedProducts.find(
+                        (product) => product.size === "Large"
+                      )?.quantity || 0;
+
+                    return (
+                      <FormItem>
+                        <FormLabel>
+                          Large{" "}
+                          {maxQuantity > 0 ? `(Available: ${maxQuantity})` : ""}
+                        </FormLabel>
+
+                        <FormControl>
+                          <Input
+                            type="number"
+                            {...field}
+                            value={field.value !== undefined ? field.value : ""}
+                            onChange={(e) => {
+                              const value = e.target.value;
+
+                              // Allow empty input for backspacing or clearing
+                              if (value === "") {
+                                field.onChange("");
+                                return;
+                              }
+
+                              // Parse and validate the number
+                              const numericValue = parseFloat(value);
+                              if (
+                                numericValue >= 0 &&
+                                numericValue <= maxQuantity
+                              ) {
+                                field.onChange(numericValue);
+                              }
+                            }}
+                            placeholder="Large"
+                            className="w-full"
+                            max={maxQuantity} // This sets the max property for browsers
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    );
+                  }}
                 />
-                <CustomNumberInput
+                <FormField
                   control={form.control}
-                  label="Extra Large"
                   name="extraLarge"
-                  placeholder="Extra Large"
-                  type="number"
+                  render={({ field }) => {
+                    const maxQuantity =
+                      finishedProducts.find(
+                        (product) => product.size === "Extra Large"
+                      )?.quantity || 0;
+
+                    return (
+                      <FormItem>
+                        <FormLabel>
+                          Extra Large{" "}
+                          {maxQuantity > 0 ? `(Available: ${maxQuantity})` : ""}
+                        </FormLabel>
+
+                        <FormControl>
+                          <Input
+                            type="number"
+                            {...field}
+                            value={field.value !== undefined ? field.value : ""}
+                            onChange={(e) => {
+                              const value = e.target.value;
+
+                              // Allow empty input for backspacing or clearing
+                              if (value === "") {
+                                field.onChange("");
+                                return;
+                              }
+
+                              // Parse and validate the number
+                              const numericValue = parseFloat(value);
+                              if (
+                                numericValue >= 0 &&
+                                numericValue <= maxQuantity
+                              ) {
+                                field.onChange(numericValue);
+                              }
+                            }}
+                            placeholder="Extra Large"
+                            className="w-full"
+                            max={maxQuantity} // This sets the max property for browsers
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    );
+                  }}
                 />
               </div>
             </div>
