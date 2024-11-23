@@ -49,6 +49,10 @@ export const statusColors = {
     color: "green",
     badgeText: "In Stock",
   },
+  "Low Stock": {
+    color: "orange",
+    badgeText: "Low Stock",
+  },
   default: {
     color: "#6b7280",
     badgeText: "Unknown",
@@ -57,4 +61,5 @@ export const statusColors = {
     color: "#6b7280",
     badgeText: "Down",
   },
+  
 };
