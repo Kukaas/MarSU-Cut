@@ -131,6 +131,17 @@ function Orders() {
       ToasterError({
         description: "Please check your internet connection and try again.",
       });
+
+      setLoadingUpdate(false);
+      if (error.response && error.response.status === 400) {
+        ToasterError({
+          description: error.response.data.message,
+        });
+      } else if (error.response && error.response.status === 404) {
+        ToasterError({
+          description: error.response.data.message,
+        });
+      }
     } finally {
       setLoadingUpdate(false);
     }
@@ -139,6 +150,8 @@ function Orders() {
   const handleReject = (order) => updateOrderStatus(order, "REJECTED");
   const handleApprove = (order) => updateOrderStatus(order, "APPROVED");
   const handleDone = (order) => updateOrderStatus(order, "DONE");
+  const handleClaimed = (order) => updateOrderStatus(order, "CLAIMED");
+
 
   const handleArchive = async (order) => {
     try {
@@ -441,6 +454,14 @@ function Orders() {
                 >
                   Done
                 </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleClaimed(order)}
+                  disabled={["REJECTED", "PENDING", "APPROVED",].includes(
+                    order.status
+                  )}
+                >
+                  Claimed
+                </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => handleArchive(order)}>
@@ -471,6 +492,7 @@ function Orders() {
     APPROVED: "APPROVED",
     MEASURED: "MEASURED",
     DONE: "DONE",
+    CLAIMED: "CLAIMED",
   };
 
   const handleAddOrderItems = (order) => {
@@ -496,7 +518,10 @@ function Orders() {
       }
     >
       <div className="w-full p-5 h-screen">
-        <CustomPageTitle title="Orders" description={<span>Total Orders: {data.length}</span>} />
+        <CustomPageTitle
+          title="Orders"
+          description={<span>Total Orders: {data.length}</span>}
+        />
         <DataTableToolBar
           searchValue={searchValue}
           setSearchValue={setSearchValue}
