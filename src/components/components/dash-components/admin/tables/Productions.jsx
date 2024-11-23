@@ -37,6 +37,7 @@ import PrintableForm from "@/hooks/PrintableForm";
 import CustomPageTitle from "@/components/components/custom-components/CustomPageTitle";
 import ProductionYear from "../production-components/ProductionYear";
 import ProductionMonth from "../production-components/ProductionMonth";
+import { useSelector } from "react-redux";
 
 const Productions = () => {
   const [data, setData] = useState([]);
@@ -46,6 +47,7 @@ const Productions = () => {
   // const [deleteLoading, setDeleteLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [tab, setTab] = useState("monthly");
+  const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
     const fetchProductions = async () => {
@@ -247,12 +249,14 @@ const Productions = () => {
           <div className="flex items-center py-2 justify-between overflow-y-auto">
             <Tooltip title="Add new production">
               <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-                <AlertDialogTrigger asChild>
-                  <Button className="h-8">
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Add Production
-                  </Button>
-                </AlertDialogTrigger>
+                {currentUser.role === "Admin" && currentUser.isAdmin && (
+                  <AlertDialogTrigger asChild>
+                    <Button className="h-8">
+                      <PlusCircle className="mr-2 h-4 w-4" />
+                      Add Production
+                    </Button>
+                  </AlertDialogTrigger>
+                )}
                 <AlertDialogContent className="max-h-[550px] overflow-auto">
                   <AlertDialogTitle>Add a new production</AlertDialogTitle>
                   <AlertDialogDescription>
@@ -302,7 +306,7 @@ const Productions = () => {
                         )}
                       </div>
                       <div className="mt-3">
-                        <TabsList >
+                        <TabsList>
                           <TabsTrigger
                             value="monthly"
                             onClick={() => setTab("monthly")}

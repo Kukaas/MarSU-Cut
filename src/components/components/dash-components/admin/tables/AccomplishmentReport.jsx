@@ -57,6 +57,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import CustomPageTitle from "@/components/components/custom-components/CustomPageTitle";
+import { useSelector } from "react-redux";
 
 const AccomplishmentReport = () => {
   const [data, setData] = useState([]);
@@ -68,6 +69,7 @@ const AccomplishmentReport = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isDialogEditOpen, setIsDialogEditOpen] = useState(false);
   const form = useForm();
+  const { currentUser } = useSelector((state) => state.user);
 
   const [selectedDate, setSelectedDate] = useState({
     from: startOfMonth(new Date()),
@@ -334,7 +336,10 @@ const AccomplishmentReport = () => {
     // >
     <>
       <div className="w-full p-5 h-screen">
-        <CustomPageTitle title="Accomplishment Report" description="View, manage, and download accomplishment reports" />
+        <CustomPageTitle
+          title="Accomplishment Report"
+          description="View, manage, and download accomplishment reports"
+        />
         <div className="flex flex-wrap items-center justify-between pb-2">
           <div className="flex flex-1 flex-wrap items-center gap-2">
             <div className={cn("grid gap-2")}>
@@ -419,12 +424,14 @@ const AccomplishmentReport = () => {
             />
             <Tooltip title="Create Accomplishment Report">
               <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <AlertDialogTrigger asChild>
-                  <Button variant="default" className="m-2 h-8">
-                    <PlusCircle size={20} className="mr-2 h-4 w-4" />
-                    Create
-                  </Button>
-                </AlertDialogTrigger>
+                {currentUser.role === "Admin" && currentUser.isAdmin && (
+                  <AlertDialogTrigger asChild>
+                    <Button variant="default" className="m-2 h-8">
+                      <PlusCircle size={20} className="mr-2 h-4 w-4" />
+                      Create
+                    </Button>
+                  </AlertDialogTrigger>
+                )}
                 <AlertDialogContent className="sm:max-w-[425px]">
                   <AlertDialogHeader>
                     <AlertDialogTitle>

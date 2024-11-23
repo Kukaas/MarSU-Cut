@@ -30,6 +30,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import CustomPageTitle from "@/components/components/custom-components/CustomPageTitle";
+import { useSelector } from "react-redux";
 
 const FinishedProduct = () => {
   const [data, setData] = useState([]);
@@ -39,6 +40,7 @@ const FinishedProduct = () => {
   // const [deleteLoading, setDeleteLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
     const fetchFinishedProduct = async () => {
@@ -224,7 +226,10 @@ const FinishedProduct = () => {
     // >
     <div className="overflow-x-auto">
       <div className="w-full p-5 h-screen">
-       <CustomPageTitle title="Finished Products" description="View and manage finished products" />
+        <CustomPageTitle
+          title="Finished Products"
+          description="View and manage finished products"
+        />
         <div className="flex flex-wrap items-center justify-between pb-2">
           <div className="flex flex-1 flex-wrap items-center gap-2">
             <Input
@@ -236,12 +241,14 @@ const FinishedProduct = () => {
           </div>
           <Tooltip title="Add new product">
             <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <AlertDialogTrigger asChild>
-                <Button variant="default" className="m-2 h-8">
-                  <PlusCircle size={20} className="mr-2 h-4 w-4" />
-                  New Product
-                </Button>
-              </AlertDialogTrigger>
+              {currentUser.role === "Admin" && currentUser.isAdmin && (
+                <AlertDialogTrigger asChild>
+                  <Button variant="default" className="m-2 h-8">
+                    <PlusCircle size={20} className="mr-2 h-4 w-4" />
+                    New Product
+                  </Button>
+                </AlertDialogTrigger>
+              )}
               <AlertDialogContent className="sm:max-w-[425px]">
                 <AlertDialogHeader>
                   <AlertDialogTitle>Add a new product</AlertDialogTitle>

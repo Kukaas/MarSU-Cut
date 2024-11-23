@@ -30,6 +30,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import CustomPageTitle from "@/components/components/custom-components/CustomPageTitle";
+import { useSelector } from "react-redux";
 
 const RawMaterials = () => {
   const [data, setData] = useState([]);
@@ -39,6 +40,7 @@ const RawMaterials = () => {
   // const [deleteLoading, setDeleteLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedRawMaterial, setSelectedRawMaterial] = useState(null);
+  const {currentUser} = useSelector((state) => state.user)  
 
   useEffect(() => {
     const fetchRawMaterial = async () => {
@@ -211,12 +213,14 @@ const RawMaterials = () => {
           </div>
           <Tooltip title="Add new raw material">
             <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <AlertDialogTrigger asChild>
-                <Button variant="default" className="m-2 h-8">
-                  <PlusCircle size={20} className="mr-2 h-4 w-4" />
-                  New Material
-                </Button>
-              </AlertDialogTrigger>
+              {currentUser.role === "Admin" && currentUser.isAdmin && (
+                <AlertDialogTrigger asChild>
+                  <Button variant="default" className="m-2 h-8">
+                    <PlusCircle size={20} className="mr-2 h-4 w-4" />
+                    New Material
+                  </Button>
+                </AlertDialogTrigger>
+              )}
               <AlertDialogContent className="sm:max-w-[425px]">
                 <AlertDialogHeader>
                   <AlertDialogTitle>Add a new raw material</AlertDialogTitle>

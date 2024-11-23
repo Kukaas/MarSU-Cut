@@ -226,10 +226,10 @@ const CommercialJob = () => {
               <AlertDialogContent className="sm:max-w-[425px]">
                 <AlertDialogHeader>
                   <AlertDialogTitle>
-                    Create a commercial job order
+                    Create an Appointment
                   </AlertDialogTitle>
                   <AlertDialogDescription>
-                    Click submit when you&apos;re done.
+                    Fill in the form to create an appointment.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <CreateCommercialOrder

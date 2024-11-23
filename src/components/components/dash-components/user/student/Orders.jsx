@@ -142,13 +142,11 @@ function Orders() {
     fetchData()
   };
 
-  const handleClaimed = (order) => updateOrderStatus(order, "CLAIMED");
-
-  const updateOrderStatus = async (order, status) => {
+  const handleClaimed = async (order, status) => {
     try {
       setLoadingUpdate(true);
       const res = await axios.put(
-        `${BASE_URL}/api/v1/order/update/student/${order._id}`,
+        `${BASE_URL}/api/v1/order/update/student/claimed/${order._id}`,
         { status },
         {
           headers: {
@@ -161,9 +159,7 @@ function Orders() {
 
       if (res.status === 200) {
         toast.success(
-          `Order of ${
-            order.studentName
-          } is ${status.toLowerCase()} successfully!`
+          `Your order with ID ${order._id} has been marked as claimed.`
         );
         setData((prevData) =>
           prevData.map((item) =>
@@ -459,7 +455,7 @@ function Orders() {
       <div className="w-full p-5 h-screen">
         <CustomPageTitle title="Orders" description="View and manage your orders" />
         <div className="flex items-center py-4 justify-end">
-          <Tooltip title="Create an Order">
+          <Tooltip title="Create an Appointment">
             <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <AlertDialogTrigger asChild>
                 <Button variant="default" className="m-2 h-8">
@@ -469,9 +465,9 @@ function Orders() {
               </AlertDialogTrigger>
               <AlertDialogContent className="sm:max-w-[425px]">
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Create an order</AlertDialogTitle>
+                  <AlertDialogTitle>Create an Appointment</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Click submit when you&apos;re done.
+                    Fill in the form below to create a new order.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <CreateOrder

@@ -148,8 +148,130 @@ const MenuSmallScreen = () => {
           </Sheet>
         </div>
         <div className="flex-1 overflow-auto">
-          <nav className="grid items-start px-3 text-sm font-medium lg:px-4 gap-2 ov">
-            {currentUser.isAdmin ? (
+          <nav className="grid items-start px-3 text-sm font-medium lg:px-4 gap-2 overflow-auto">
+            {currentUser.role === "JO" && currentUser.isAdmin && (
+              <>
+                <Link
+                  to="/dashboard?tab=home"
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                    isActive("/dashboard?tab=home-admin")
+                      ? "bg-muted text-primary"
+                      : "text-muted-foreground hover:text-primary"
+                  }`}
+                >
+                  <Home className="h-4 w-4" />
+                  Dashboard
+                </Link>
+                <Link
+                  to="/dashboard?tab=productions"
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                    isActive("/dashboard?tab=productions")
+                      ? "bg-muted text-primary"
+                      : "text-muted-foreground hover:text-primary"
+                  }`}
+                >
+                  <Package className="h-4 w-4" />
+                  Productions
+                </Link>
+
+                {/* Inventory */}
+                <Accordion
+                  type="single"
+                  collapsible
+                  className="w-full rounded-lg"
+                >
+                  <AccordionItem value="item-2">
+                    <AccordionTrigger
+                      className={`flex items-center justify-between px-3 py-2 text-left transition-all ${
+                        isActive("item-2")
+                          ? "text-primary"
+                          : "text-muted-foreground hover:text-primary"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Store className="h-4 w-4" />
+                        Inventory
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="px-4 py-2">
+                      <div className="flex flex-col gap-1">
+                        <Link
+                          to="/dashboard?tab=raw-materials"
+                          className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                            isActive("/dashboard?tab=raw-materials")
+                              ? "bg-muted text-primary"
+                              : "text-muted-foreground hover:text-primary"
+                          }`}
+                        >
+                          <Package2Icon className="h-4 w-4" />
+                          Raw Materials
+                        </Link>
+                        <Link
+                          to="/dashboard?tab=finished-products"
+                          className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                            isActive("/dashboard?tab=finished-products")
+                              ? "bg-muted text-primary"
+                              : "text-muted-foreground hover:text-primary"
+                          }`}
+                        >
+                          <PackageOpen className="h-4 w-4" />
+                          Finished Product
+                        </Link>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+
+                {/* Reports */}
+                <Accordion
+                  type="single"
+                  collapsible
+                  className="w-full rounded-lg"
+                >
+                  <AccordionItem value="item-3">
+                    <AccordionTrigger
+                      className={`flex items-center justify-between px-3 py-2 text-left transition-all ${
+                        isActive("item-3")
+                          ? "text-primary"
+                          : "text-muted-foreground hover:text-primary"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <LineChart className="h-4 w-4" />
+                        Reports
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="px-4 py-2">
+                      <div className="flex flex-col gap-1">
+                        <Link
+                          to="/dashboard?tab=accomplishment-report"
+                          className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                            isActive("/dashboard?tab=accomplishment-report")
+                              ? "bg-muted text-primary"
+                              : "text-muted-foreground hover:text-primary"
+                          }`}
+                        >
+                          <PieChart className="h-4 w-4" />
+                          Accomplisment Report
+                        </Link>
+                        <Link
+                          to="/dashboard?tab=sales-report"
+                          className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                            isActive("/dashboard?tab=sales-report")
+                              ? "bg-muted text-primary"
+                              : "text-muted-foreground hover:text-primary"
+                          }`}
+                        >
+                          <BarChart className="h-4 w-4" />
+                          Sales Report
+                        </Link>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </>
+            )}
+            {currentUser.isAdmin && currentUser.role === "Admin" ? (
               <div>
                 <SheetTrigger asChild>
                   <Link

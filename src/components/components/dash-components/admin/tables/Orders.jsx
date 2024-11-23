@@ -150,8 +150,40 @@ function Orders() {
   const handleReject = (order) => updateOrderStatus(order, "REJECTED");
   const handleApprove = (order) => updateOrderStatus(order, "APPROVED");
   const handleDone = (order) => updateOrderStatus(order, "DONE");
-  const handleClaimed = (order) => updateOrderStatus(order, "CLAIMED");
+  const handleClaimed = async (order) => {
+    try {
+      setLoadingUpdate(true);
+      const res = await axios.put(
+        `${BASE_URL}/api/v1/order/update/student/claimed/${order._id}`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
 
+      if (res.status === 200) {
+        toast.success(`Order of ${order.studentName} is claimed successfully!`);
+        setData((prevData) =>
+          prevData.map((item) =>
+            item._id === order._id ? { ...item, status: "CLAIMED" } : item
+          )
+        );
+      } else {
+        ToasterError();
+      }
+    } catch (error) {
+      setLoadingUpdate(false);
+      ToasterError({
+        description: "Please check you internet connection and try again.",
+      });
+    } finally {
+      setLoadingUpdate(false);
+    }
+  };
 
   const handleArchive = async (order) => {
     try {
@@ -456,7 +488,7 @@ function Orders() {
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => handleClaimed(order)}
-                  disabled={["REJECTED", "PENDING", "APPROVED",].includes(
+                  disabled={["REJECTED", "PENDING", "APPROVED"].includes(
                     order.status
                   )}
                 >
