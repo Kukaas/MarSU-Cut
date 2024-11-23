@@ -227,6 +227,7 @@ export const CustomCalendar = () => {
           events={getVisibleSchedules()}
           dateClick={handleDateClick}
           headerToolbar={false}
+          
         />
       )}
 
@@ -312,9 +313,9 @@ export const CustomCalendar = () => {
             )}
 
             <div className="mt-6 flex w-full">
-              <Button className="w-full" onClick={handleCloseDialog}>
-                Close
-              </Button>
+              <DialogClose asChild>
+                <Button className="w-full">Close</Button>
+              </DialogClose>
             </div>
           </div>
         </DialogContent>
