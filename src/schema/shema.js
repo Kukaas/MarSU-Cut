@@ -177,6 +177,16 @@ export const NewReceiptSchema = z.object({
   description: z.string().optional(),
 });
 
+export const editReceiptSchema = z.object({
+  type: z.string().min(3, { message: "Type must be at least 3 characters" }),
+  ORNumber: z
+    .string()
+    .min(3, { message: "OR Number must be at least 3 characters" }),
+  amount: z.number().int().nonnegative(),
+  datePaid: z.date(),
+  description: z.string().optional(),
+});
+
 export const CreateRentalSchema = z.object({
   coordinatorName: z
     .string()

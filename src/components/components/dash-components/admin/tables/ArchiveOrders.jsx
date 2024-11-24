@@ -38,6 +38,10 @@ function ArchiveOrders() {
   const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
 
+  const handleViewReceipts = (order) => {
+    navigate(`/orders/receipts/${order}`);
+  };
+
   useEffect(() => {
     const fetchArchivedOrders = async () => {
       try {
@@ -328,6 +332,9 @@ function ArchiveOrders() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => handleViewReceipts(order._id)}>
+                View Receipts
+              </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
                   navigate(`/dashboard?tab=order-details`, {
@@ -364,7 +371,10 @@ function ArchiveOrders() {
       }
     >
       <div className="w-full p-5 h-screen">
-        <CustomPageTitle title="Archived Orders" description="List of all archived orders" />
+        <CustomPageTitle
+          title="Archived Orders"
+          description="List of all archived orders"
+        />
         <div className="flex flex-wrap items-center justify-between pb-2">
           <div className="flex flex-1 flex-wrap items-center gap-2">
             <Input

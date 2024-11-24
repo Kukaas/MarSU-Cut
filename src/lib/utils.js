@@ -61,5 +61,8 @@ export const statusColors = {
     color: "#6b7280",
     badgeText: "Down",
   },
-  
+  Paid : {
+    color: "#16a34a",
+    badgeText: "Paid",
+  },
 };

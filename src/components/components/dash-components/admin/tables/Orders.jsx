@@ -437,6 +437,15 @@ function Orders() {
               <DropdownMenuItem onClick={() => handleViewReceipts(order._id)}>
                 View Receipts
               </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  navigate(`/dashboard?tab=order-details`, {
+                    state: { selectedOrder: order },
+                  });
+                }}
+              >
+                View Order Details
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <DropdownMenuItem
@@ -488,7 +497,7 @@ function Orders() {
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => handleClaimed(order)}
-                  disabled={["REJECTED", "PENDING", "APPROVED"].includes(
+                  disabled={["REJECTED", "PENDING", "APPROVED", "CLAIMED"].includes(
                     order.status
                   )}
                 >

@@ -15,12 +15,25 @@ import {
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Toaster } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import EditReceipt from "@/components/components/forms/EditReciept";
 
 function ReceiptsPage() {
   const { orderId } = useParams();
   const location = useLocation();
+  const [selectedReceipt, setSelectedReceipt] = useState(null);
   const [receipts, setReceipts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
   useEffect(() => {
     const fetchReceipts = async () => {
       setLoading(true);
@@ -37,12 +50,6 @@ function ReceiptsPage() {
         );
         const fetchedReceipts = res.data.receipts;
         setReceipts(fetchedReceipts);
-
-        // Check if any receipt has type "Full Payment"
-        const hasFullPayment = fetchedReceipts.some(
-          (receipt) => receipt.type === "Full Payment"
-        );
-        setIsFullPayment(hasFullPayment);
       } catch (error) {
         console.error("Error fetching receipts:", error);
       } finally {
@@ -53,8 +60,15 @@ function ReceiptsPage() {
     fetchReceipts();
   }, [orderId]);
 
-  const addNewReceipt = () => {
-    setIsDialogOpen(false);
+  const updateReceipt = (updatedReceipt) => {
+    setDialogOpen(false);
+    const updatedReceipts = receipts.map((receipt) => {
+      if (receipt._id === updatedReceipt._id) {
+        return updatedReceipt;
+      }
+      return receipt;
+    });
+    setReceipts(updatedReceipts);
   };
 
   return (
@@ -120,16 +134,42 @@ function ReceiptsPage() {
                 />
               </CardContent>
               <CardFooter>
-                <a
-                  href={receipt.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full"
-                >
-                  <Button variant="outline" className="w-full">
-                    View Full Receipt
-                  </Button>
-                </a>
+                <div className="flex justify-between items-center w-full gap-2">
+                  <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        className="w-full"
+                        disabled={receipt.type === "Down Payment"}
+                        onClick={() => setSelectedReceipt(receipt)}
+                      >
+                        Edit Receipt
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent className="max-h-[550px] overflow-auto">
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Edit Receipt</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Are you sure you want to edit this receipt?
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <EditReceipt
+                        selectedReceipt={selectedReceipt}
+                        orderId={orderId}
+                        updateReceipt={updateReceipt}
+                      />
+                    </AlertDialogContent>
+                  </AlertDialog>
+                  <a
+                    href={receipt.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full"
+                  >
+                    <Button variant="outline" className="w-full">
+                      View Full Receipt
+                    </Button>
+                  </a>
+                </div>
               </CardFooter>
             </Card>
           ))}
