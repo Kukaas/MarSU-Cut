@@ -245,6 +245,9 @@ const EditReciept = ({ selectedReceipt, orderId, updateReceipt }) => {
                           selected={field.value ? new Date(field.value) : null}
                           onSelect={field.onChange}
                           initialFocus
+                          disabled={(date) =>
+                            date > new Date() || date < new Date("1900-01-01")
+                          }
                         />
                       </PopoverContent>
                     </Popover>

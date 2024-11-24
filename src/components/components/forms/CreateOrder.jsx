@@ -223,6 +223,7 @@ const CreateOrder = ({ addNewOrder, setIsDialogOpen }) => {
             name="amount"
             placeholder="Amount"
             type="number"
+            disabled
           />
           <div className="flex space-x-4 mt-4">
             <FormField
@@ -314,7 +315,7 @@ const CreateOrder = ({ addNewOrder, setIsDialogOpen }) => {
             )}
           />
           <div className="flex flex-col">
-            <p className="text-sm text-red-500 mt-2">
+            <p className="text-sm text-red-500 mt-2 mb-2">
               <i>Note: Wait for the upload to reach 100%</i>
             </p>
             <Progress
@@ -330,8 +331,8 @@ const CreateOrder = ({ addNewOrder, setIsDialogOpen }) => {
             />
           </div>
           <AlertDialog>
-            <div className="flex flex-col items-center gap-4 mt-4">
-              <AlertDialogFooter className="flex flex-col items-center gap-4 w-full">
+            <div className="flex flex-col items-center">
+              <AlertDialogFooter className="flex flex-col items-center w-full">
                 <AlertDialogCancel
                   onClick={() => setIsDialogOpen(false)}
                   className="w-full"

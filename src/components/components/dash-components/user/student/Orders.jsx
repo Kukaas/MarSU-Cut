@@ -463,7 +463,7 @@ function Orders() {
                   Create
                 </Button>
               </AlertDialogTrigger>
-              <AlertDialogContent className="sm:max-w-[425px]">
+              <AlertDialogContent className="sm:max-w-[450px] max-h-[550px] overflow-auto">
                 <AlertDialogHeader>
                   <AlertDialogTitle>Create an Appointment</AlertDialogTitle>
                   <AlertDialogDescription>
