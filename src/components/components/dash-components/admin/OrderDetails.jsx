@@ -23,7 +23,7 @@ const StatusBadge = ({ status }) => {
         style={{ backgroundColor: color }}
       />
       <p className="text-xs font-semibold" style={{ color }}>
-        {badgeText}
+        {status === "DONE" ? "For Claiming" : badgeText}
       </p>
     </div>
   );

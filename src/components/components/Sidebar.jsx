@@ -3,10 +3,8 @@ import {
   BarChart,
   Bell,
   Building,
-  Building2Icon,
   Calendar,
   Clipboard,
-  CoinsIcon,
   Home,
   LineChart,
   Package,
@@ -94,7 +92,11 @@ const Sidebar = () => {
             <span className="text-muted-foreground">
               {currentUser?.role === "JO" && currentUser.isAdmin ? "JO" : ""}
               {currentUser?.role === "Admin" ? "Admin" : ""}
-              {currentUser?.role === "Student" || currentUser?.role === "Coordinator" || currentUser?.role === "CommercialJob" ? "User" : ""}
+              {currentUser?.role === "Student" ||
+              currentUser?.role === "Coordinator" ||
+              currentUser?.role === "CommercialJob"
+                ? "User"
+                : ""}
             </span>
           </div>
           <Sheet>

@@ -335,7 +335,7 @@ function Orders() {
               style={{ backgroundColor: color }}
             />
             <p className="text-[12px] font-semibold" style={{ color }}>
-              {badgeText}
+              {status === "DONE" ? "For Claiming" : badgeText}
             </p>
           </div>
         );

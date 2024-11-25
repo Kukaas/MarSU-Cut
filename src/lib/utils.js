@@ -21,7 +21,7 @@ export const statusColors = {
   },
   DONE: {
     color: "#1d4ed8",
-    badgeText: "Done",
+    badgeText: "Finished",
   },
   CLAIMED: {
     color: "#16a34a",
@@ -61,7 +61,7 @@ export const statusColors = {
     color: "#6b7280",
     badgeText: "Down",
   },
-  Paid : {
+  Paid: {
     color: "#16a34a",
     badgeText: "Paid",
   },

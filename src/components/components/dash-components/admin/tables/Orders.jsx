@@ -44,6 +44,7 @@ function Orders() {
   const [loading, setLoading] = useState(false);
   const [loadingUpdate, setLoadingUpdate] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dialogClaimed, setDialogClaimed] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [statusFilter, setStatusFilter] = useState("All");
   const [searchValue, setSearchValue] = useState("");
@@ -520,10 +521,13 @@ function Orders() {
                     order.status
                   )}
                 >
-                  Done
+                  Finished
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={() => handleClaimed(order)}
+                  onClick={() => {
+                    setDialogClaimed(true);
+                    setSelectedOrder(order);
+                  }}
                   disabled={[
                     "REJECTED",
                     "PENDING",
@@ -621,6 +625,41 @@ function Orders() {
             setIsDialogOpen={setIsDialogOpen}
             onOrderItemsAdded={handleAddOrderItems}
           />
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Claimed confirmation dialog */}
+      <AlertDialog open={dialogClaimed} onOpenChange={setDialogClaimed}>
+        <AlertDialogContent className="sm:max-w-[450px] max-h-[350px] overflow-auto">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-lg font-semibold text-center">
+              Confirm Claimed
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-center mt-2">
+              Are you sure you this order is claimed? Once confirmed, the order
+              status will be marked as claimed, and further actions may not be
+              reversible.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="mt-6 flex justify-between w-full gap-2">
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => setDialogClaimed(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                handleClaimed(selectedOrder);
+                setDialogClaimed(false);
+              }}
+              className="w-full"
+              type="submit"
+            >
+              Confirm
+            </Button>
+          </div>
         </AlertDialogContent>
       </AlertDialog>
     </Spin>
