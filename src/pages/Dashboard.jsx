@@ -19,14 +19,14 @@ import DashCommercial from "@/components/components/dash-components/user/commerc
 import DashHome from "@/components/components/dash-components/user/DashHome";
 import DashRental from "@/components/components/dash-components/user/rental/DashRental";
 import DashOrder from "@/components/components/dash-components/user/student/DashOrder";
-
+import DashArchiveCommercialjob from "@/components/components/dash-components/admin/DashArchiveCommercialJob";
+import DashSystemMaintenance from "@/components/components/dash-components/admin/DashSystemMaintenance";
 
 // Other Imports
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import PropTypes from "prop-types"
+import PropTypes from "prop-types";
 import Sidebar from "@/components/components/Sidebar";
-import DashArchiveCommercialjob from "@/components/components/dash-components/admin/DashArchiveCommercialJob";
 
 const Dashboard = ({ tab }) => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
@@ -74,6 +74,8 @@ const Dashboard = ({ tab }) => {
         return <DashProductions />;
       case "order-details":
         return <OrderDetails orderId={id} />;
+      case "system-maintenance":
+        return <DashSystemMaintenance />;
       default:
         return null;
     }

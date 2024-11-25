@@ -305,3 +305,8 @@ export const measureCommercialJobSchema = z.object({
 export const addPickUpDateSchema = z.object({
   pickupDate: z.string(),
 });
+
+export const addNewProductTypeSchema = z.object({
+  productType: z.string(),
+  description: z.string(),
+});

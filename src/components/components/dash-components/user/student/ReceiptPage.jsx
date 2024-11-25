@@ -74,7 +74,7 @@ function ReceiptsPage() {
 
       // Verify receipt
       const verifyRes = await axios.put(
-        `http://localhost:3000/api/v1/order/student/receipt/verify/${orderId}/${receipt._id}`,
+        `${BASE_URL}/api/v1/order/student/receipt/verify/${orderId}/${receipt._id}`,
         {},
         {
           headers: {
@@ -131,7 +131,7 @@ function ReceiptsPage() {
       setLoading(true);
 
       const res = await axios.put(
-        `http://localhost:3000/api/v1/order/student/receipt/verify/${orderId}/${receipt._id}`,
+        `${BASE_URL}/api/v1/order/student/receipt/verify/${orderId}/${receipt._id}`,
         {},
         {
           headers: {

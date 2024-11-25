@@ -31,6 +31,7 @@ import { Button } from "../ui/button";
 import axios from "axios";
 import { BASE_URL } from "@/lib/api";
 import { token } from "@/lib/token";
+import { GearIcon } from "@radix-ui/react-icons";
 
 const Sidebar = () => {
   const location = useLocation();
@@ -444,6 +445,17 @@ const Sidebar = () => {
                 >
                   <Users className="h-4 w-4" />
                   Users
+                </Link>
+                <Link
+                  to="/dashboard?tab=system-maintenance"
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                    isActive("/dashboard?tab=system-maintenance")
+                      ? "bg-muted text-primary"
+                      : "text-muted-foreground hover:text-primary"
+                  }`}
+                >
+                  <GearIcon className="h-4 w-4" />
+                  System Maintenance
                 </Link>
               </div>
             ) : (
