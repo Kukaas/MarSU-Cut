@@ -15,7 +15,7 @@ import ToasterError from "@/lib/Toaster";
 import { token } from "@/lib/token";
 import { statusColors } from "@/lib/utils";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
-import { Spin, Tooltip, Typography } from "antd";
+import { Spin, Tooltip } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { PlusCircle } from "lucide-react";
@@ -41,7 +41,6 @@ function Orders() {
   const [openReceiptForm, setOpenReceiptForm] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [loadingDelete, setLoadingDelete] = useState(false);
-  const [loadingUpdate, setLoadingUpdate] = useState(false);
   const [currentBalance, setCurrentBalance] = useState(0);
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
@@ -139,45 +138,7 @@ function Orders() {
 
   const addNewReceipt = () => {
     setOpenReceiptForm(false);
-    fetchData()
-  };
-
-  const handleClaimed = async (order, status) => {
-    try {
-      setLoadingUpdate(true);
-      const res = await axios.put(
-        `${BASE_URL}/api/v1/order/update/student/claimed/${order._id}`,
-        { status },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        }
-      );
-
-      if (res.status === 200) {
-        toast.success(
-          `Your order with ID ${order._id} has been marked as claimed.`
-        );
-        setData((prevData) =>
-          prevData.map((item) =>
-            item._id === order._id
-              ? { ...item, status, schedule: res.data.schedule }
-              : item
-          )
-        );
-      } else {
-        ToasterError();
-      }
-    } catch (error) {
-      ToasterError({
-        description: "Please check your internet connection and try again.",
-      });
-    } finally {
-      setLoadingUpdate(false);
-    }
+    fetchData();
   };
 
   const columns = [
@@ -282,7 +243,6 @@ function Orders() {
       header: "Current Balance",
       cell: ({ row }) => {
         const orderItems = row.original.orderItems || [];
-
         const totalPrice = orderItems.reduce(
           (acc, item) => acc + parseFloat(item.totalPrice || 0),
           0
@@ -299,7 +259,7 @@ function Orders() {
                 className="text-[12px] font-semibold"
                 style={{ color: "gray" }}
               >
-                Down
+                Down Payment
               </p>
             </div>
           );
@@ -314,21 +274,47 @@ function Orders() {
         const currentBalance = totalPrice - totalAmountPaid;
 
         if (currentBalance === 0) {
-          return (
-            <div className="status-badge">
-              <div
-                className="size-2 rounded-full"
-                style={{ backgroundColor: "#32C75F" }}
-              />
-              <p
-                className="text-[12px] font-semibold"
-                style={{ color: "#32C75F" }}
-              >
-                Paid
-              </p>
-            </div>
+          // Check for full payment receipt
+          const fullPaymentReceipt = receipts.find(
+            (receipt) => receipt.type === "Full Payment"
           );
+
+          if (fullPaymentReceipt) {
+            if (fullPaymentReceipt.isVerified) {
+              return (
+                <div className="status-badge">
+                  <div
+                    className="size-2 rounded-full"
+                    style={{ backgroundColor: "#32C75F" }}
+                  />
+                  <p
+                    className="text-[12px] font-semibold"
+                    style={{ color: "#32C75F" }}
+                  >
+                    Paid - Verified
+                  </p>
+                </div>
+              );
+            } else {
+              return (
+                <div className="status-badge">
+                  <div
+                    className="size-2 rounded-full"
+                    style={{ backgroundColor: "#FFAB00" }}
+                  />
+                  <p
+                    className="text-[12px] font-semibold"
+                    style={{ color: "#FFAB00" }}
+                  >
+                    Paid - Not Verified
+                  </p>
+                </div>
+              );
+            }
+          }
         }
+
+        // If balance is not zero, show current balance
         return `₱${currentBalance.toFixed(2)}`;
       },
     },
@@ -415,16 +401,6 @@ function Orders() {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onClick={() => handleClaimed(order)}
-                disabled={
-                  order.status === "CLAIMED" ||
-                  order.status !== "DONE" ||
-                  currentBalance > 0 // Disable if currentBalance is not zero
-                }
-              >
-                Claimed
-              </DropdownMenuItem>
-              <DropdownMenuItem
                 onClick={() => handleDelete(order)}
                 disabled={["APPROVED", "MEASURED", "DONE", "CLAIMED"].includes(
                   order.status
@@ -441,7 +417,7 @@ function Orders() {
 
   return (
     <Spin
-      spinning={loadingDelete || loadingUpdate}
+      spinning={loadingDelete}
       indicator={
         <LoadingOutlined
           className="dark:text-white"
@@ -453,7 +429,10 @@ function Orders() {
       }
     >
       <div className="w-full p-5 h-screen">
-        <CustomPageTitle title="Orders" description="View and manage your orders" />
+        <CustomPageTitle
+          title="Orders"
+          description="View and manage your orders"
+        />
         <div className="flex items-center py-4 justify-end">
           <Tooltip title="Create an Appointment">
             <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
