@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { Typography } from "antd";
 import { BASE_URL } from "@/lib/api";
@@ -14,9 +14,10 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Toaster } from "sonner";
+import { Toaster, toast } from "sonner";
 import {
   AlertDialog,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
@@ -24,15 +25,17 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import EditReceipt from "@/components/components/forms/EditReciept";
+import { useSelector } from "react-redux";
+import EditReciept from "@/components/components/forms/EditReciept";
 
 function ReceiptsPage() {
   const { orderId } = useParams();
-  const location = useLocation();
-  const [selectedReceipt, setSelectedReceipt] = useState(null);
   const [receipts, setReceipts] = useState([]);
+  const [selectedReceipt, setSelectedReceipt] = useState(null);
   const [loading, setLoading] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const { currentUser } = useSelector((state) => state.user);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchReceipts = async () => {
@@ -48,10 +51,10 @@ function ReceiptsPage() {
             withCredentials: true,
           }
         );
-        const fetchedReceipts = res.data.receipts;
-        setReceipts(fetchedReceipts);
+        setReceipts(res.data.receipts);
       } catch (error) {
         console.error("Error fetching receipts:", error);
+        toast.error("Failed to load receipts.");
       } finally {
         setLoading(false);
       }
@@ -60,14 +63,113 @@ function ReceiptsPage() {
     fetchReceipts();
   }, [orderId]);
 
-  const updateReceipt = (updatedReceipt) => {
-    setDialogOpen(false);
-    const updatedReceipts = receipts.map((receipt) => {
-      if (receipt._id === updatedReceipt._id) {
-        return updatedReceipt;
+  const handleVerifyAndApprove = async (receipt) => {
+    if (!receipt) {
+      toast.error("No receipt selected for verification.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      // Verify receipt
+      const verifyRes = await axios.put(
+        `http://localhost:3000/api/v1/order/student/receipt/verify/${orderId}/${receipt._id}`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+
+      if (verifyRes.status === 200) {
+        const updatedReceipt = verifyRes.data.receipt;
+        updateReceipt(updatedReceipt);
+        toast.success("Receipt verified successfully!");
+
+        // Approve the order
+        const updateOrderRes = await axios.put(
+          `${BASE_URL}/api/v1/order/update/student/${orderId}`,
+          { status: "APPROVED" },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
+        );
+
+        if (updateOrderRes.status === 200) {
+          toast.success("Order approved successfully!");
+          navigate(-1); // Navigate back after success
+        } else {
+          toast.error("Failed to update the order status.");
+        }
+      } else {
+        toast.error("Failed to verify the receipt.");
       }
-      return receipt;
-    });
+    } catch (error) {
+      console.error("Error verifying receipt or approving order:", error);
+      toast.error("An error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+      setDialogOpen(false); // Close modal after operation
+    }
+  };
+
+  const handleVerify = async (receipt) => {
+    if (!receipt) {
+      toast.error("No receipt selected for verification.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const res = await axios.put(
+        `http://localhost:3000/api/v1/order/student/receipt/verify/${orderId}/${receipt._id}`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+
+      if (res.status === 200) {
+        const updatedReceipt = res.data.receipt;
+        updateReceipt(updatedReceipt);
+        toast.success("Receipt verified successfully!");
+      } else {
+        toast.error("Failed to verify the receipt.");
+      }
+    } catch (error) {
+      console.error("Error verifying receipt:", error);
+      toast.error("An error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+      setDialogOpen(false); // Close modal after operation
+    }
+  };
+
+  const updateReceipt = (updatedReceipt) => {
+    if (!updatedReceipt || !updatedReceipt._id) {
+      console.error(
+        "Invalid receipt data provided for update:",
+        updatedReceipt
+      );
+      return;
+    }
+
+    const updatedReceipts = receipts.map((receipt) =>
+      receipt._id === updatedReceipt._id ? updatedReceipt : receipt
+    );
     setReceipts(updatedReceipts);
   };
 
@@ -80,7 +182,7 @@ function ReceiptsPage() {
         Receipts for Order {orderId}
       </Typography.Title>
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(3)].map((_, index) => (
             <div key={index} className="w-full shadow-lg">
               <div className="p-4 border-2 border-gray-800 rounded-lg">
@@ -135,30 +237,118 @@ function ReceiptsPage() {
               </CardContent>
               <CardFooter>
                 <div className="flex justify-between items-center w-full gap-2">
-                  <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                    <AlertDialogTrigger asChild>
-                      <Button
-                        className="w-full"
-                        disabled={receipt.type === "Down Payment"}
-                        onClick={() => setSelectedReceipt(receipt)}
-                      >
-                        Edit Receipt
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent className="max-h-[550px] overflow-auto">
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Edit Receipt</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Are you sure you want to edit this receipt?
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <EditReceipt
-                        selectedReceipt={selectedReceipt}
-                        orderId={orderId}
-                        updateReceipt={updateReceipt}
-                      />
-                    </AlertDialogContent>
-                  </AlertDialog>
+                  {currentUser.role === "Student" && (
+                    <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          className="w-full"
+                          disabled={receipt.isVerified}
+                          onClick={() => setSelectedReceipt(receipt)}
+                        >
+                          Edit Receipt
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="max-h-[550px] overflow-auto">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Edit Receipt</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Are you sure you want to edit this receipt?
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <EditReciept
+                          selectedReceipt={selectedReceipt}
+                          orderId={orderId}
+                          updateReceipt={updateReceipt}
+                        />
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  )}
+                  {currentUser.isAdmin && receipt.type === "Down Payment" && (
+                    <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          className="w-full"
+                          onClick={() => {
+                            setSelectedReceipt(receipt);
+                            setDialogOpen(true);
+                          }}
+                          disabled={receipt.isVerified}
+                        >
+                          Verify Receipt
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="max-h-[550px] overflow-auto">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Confirm Receipt Verification
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Are you sure you want to verify this receipt? Once
+                            verified, the order status will be updated to{" "}
+                            <strong>APPROVED</strong>. This action cannot be
+                            undone.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel asChild>
+                            <Button className="w-full text-black dark:text-white">
+                              Cancel
+                            </Button>
+                          </AlertDialogCancel>
+                          <Button
+                            className="w-full"
+                            type="submit"
+                            onClick={() =>
+                              handleVerifyAndApprove(selectedReceipt)
+                            }
+                          >
+                            Verify Receipt
+                          </Button>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  )}
+                  {currentUser.isAdmin && receipt.type === "Full Payment" && (
+                    <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          className="w-full"
+                          onClick={() => {
+                            setSelectedReceipt(receipt);
+                            setDialogOpen(true);
+                          }}
+                          disabled={receipt.isVerified}
+                        >
+                          Verify Receipt
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="max-h-[550px] overflow-auto">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Confirm Receipt Verification
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Are you sure you want to verify this receipt? This
+                            action cannot be undone.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel asChild>
+                            <Button className="w-full text-black dark:text-white">
+                              Cancel
+                            </Button>
+                          </AlertDialogCancel>
+                          <Button
+                            className="w-full"
+                            type="submit"
+                            onClick={() => handleVerify(selectedReceipt)}
+                          >
+                            Verify Receipt
+                          </Button>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  )}
                   <a
                     href={receipt.url}
                     target="_blank"
@@ -176,16 +366,16 @@ function ReceiptsPage() {
         </div>
       )}
 
-      <div className="mt-8 flex justify-end">
+      <div className="mt-5">
         <Button
-          className="py-2 mr-2"
-          variant="secondary"
-          onClick={() => window.history.back()}
+          className="w-full"
+          variant="outline"
+          onClick={() => navigate(-1)}
         >
-          Back
+          Go Back
         </Button>
       </div>
-      <Toaster position="top-center" closeButton={true} richColors={true} />
+      <Toaster position="top-right" richColors />
     </div>
   );
 }

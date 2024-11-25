@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Spin, Typography } from "antd";
+import { Spin } from "antd";
 import { toast } from "sonner";
 
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
@@ -373,7 +373,7 @@ function Orders() {
                 className="text-[12px] font-semibold"
                 style={{ color: "gray" }}
               >
-                Down
+                Down Payment
               </p>
             </div>
           );
@@ -388,24 +388,51 @@ function Orders() {
         const currentBalance = totalPrice - totalAmountPaid;
 
         if (currentBalance === 0) {
-          return (
-            <div className="status-badge">
-              <div
-                className="size-2 rounded-full"
-                style={{ backgroundColor: "#32C75F" }}
-              />
-              <p
-                className="text-[12px] font-semibold"
-                style={{ color: "#32C75F" }}
-              >
-                Paid
-              </p>
-            </div>
+          // Check for full payment receipt
+          const fullPaymentReceipt = receipts.find(
+            (receipt) => receipt.type === "Full Payment"
           );
+
+          if (fullPaymentReceipt) {
+            if (fullPaymentReceipt.isVerified) {
+              return (
+                <div className="status-badge">
+                  <div
+                    className="size-2 rounded-full"
+                    style={{ backgroundColor: "#32C75F" }}
+                  />
+                  <p
+                    className="text-[12px] font-semibold"
+                    style={{ color: "#32C75F" }}
+                  >
+                    Paid - Verified
+                  </p>
+                </div>
+              );
+            } else {
+              return (
+                <div className="status-badge">
+                  <div
+                    className="size-2 rounded-full"
+                    style={{ backgroundColor: "#FFAB00" }}
+                  />
+                  <p
+                    className="text-[12px] font-semibold"
+                    style={{ color: "#FFAB00" }}
+                  >
+                    Paid - Not Verified
+                  </p>
+                </div>
+              );
+            }
+          }
         }
+
+        // If balance is not zero, show current balance
         return `₱${currentBalance.toFixed(2)}`;
       },
     },
+
     {
       accessorKey: "status",
       header: ({ column }) => (
@@ -497,9 +524,12 @@ function Orders() {
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => handleClaimed(order)}
-                  disabled={["REJECTED", "PENDING", "APPROVED", "CLAIMED"].includes(
-                    order.status
-                  )}
+                  disabled={[
+                    "REJECTED",
+                    "PENDING",
+                    "APPROVED",
+                    "CLAIMED",
+                  ].includes(order.status)}
                 >
                   Claimed
                 </DropdownMenuItem>

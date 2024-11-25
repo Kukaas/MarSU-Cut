@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/form";
 import { editReceiptSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import CustomInput from "../custom-components/CustomInput";
 import SelectField from "../custom-components/SelectField";
@@ -39,6 +39,7 @@ import axios from "axios";
 import { token } from "@/lib/token";
 import { toast } from "sonner";
 import { BASE_URL } from "@/lib/api";
+import PropTypes from "prop-types";
 
 const EditReciept = ({ selectedReceipt, orderId, updateReceipt }) => {
   const [imageFile, setImageFile] = useState(null);
@@ -183,7 +184,7 @@ const EditReciept = ({ selectedReceipt, orderId, updateReceipt }) => {
                 <SelectField
                   field={field}
                   label="Receipt Type"
-                  options={["Full Payment", "Partial Payment"]}
+                  options={["Down Payment", "Full Payment", "Partial Payment"]}
                   placeholder="Select Receipt Type"
                   onChange={(value) => {
                     field.onChange(value); // Update form state
@@ -339,6 +340,12 @@ const EditReciept = ({ selectedReceipt, orderId, updateReceipt }) => {
       )}
     </div>
   );
+};
+
+EditReciept.propTypes = {
+  selectedReceipt: PropTypes.object,
+  orderId: PropTypes.string,
+  updateReceipt: PropTypes.func,
 };
 
 export default EditReciept;
