@@ -196,13 +196,10 @@ const CreateOrder = ({ addNewOrder, setIsDialogOpen }) => {
       });
     }
   };
-   // Disable date from tomorrow onwards
-    const today = new Date();
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const tomorrowDate = tomorrow.toISOString().split("T")[0];
-    const disabledDate = (date) => date > new Date(tomorrow
-    );
+  // Disable date from tomorrow onwards
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
 
   return (
     <div className="grid gap-4 py-4">
