@@ -53,6 +53,7 @@ const Sizes = () => {
 
   useEffect(() => {
     const fetchSizes = async () => {
+      setLoading(true);
       try {
         const res = await axios.get(
           `${BASE_URL}/api/v1/system-maintenance/size/all`,
@@ -65,9 +66,11 @@ const Sizes = () => {
           }
         );
         setSizes(res.data.sizes);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching sizes:", error);
         toast.error("Failed to fetch sizes");
+        setLoading(false);
       }
     };
 
@@ -257,7 +260,7 @@ const Sizes = () => {
           </AlertDialogContent>
         </AlertDialog>
       </div>
-      <CustomTable columns={columns} data={sizes} loading={false} />
+      <CustomTable columns={columns} data={sizes} loading={loading} />
 
       {/* Delete Dialog */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>

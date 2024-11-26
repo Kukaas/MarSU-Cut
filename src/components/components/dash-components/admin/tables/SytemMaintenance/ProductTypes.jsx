@@ -47,17 +47,23 @@ const ProductTypes = () => {
 
   useEffect(() => {
     const fetchProductTypes = async () => {
-      const res = await axios.get(
-        `${BASE_URL}/api/v1/system-maintenance/product-type/all`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        }
-      );
-      setProductTypes(res.data.productTypes);
+      setLoading(true);
+      try {
+        const res = await axios.get(
+          `${BASE_URL}/api/v1/system-maintenance/product-type/all`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
+        );
+        setProductTypes(res.data.productTypes);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+      }
     };
 
     fetchProductTypes();
@@ -265,7 +271,7 @@ const ProductTypes = () => {
         </AlertDialog>
       </div>
 
-      <CustomTable columns={columns} data={productTypes} loading={false} />
+      <CustomTable columns={columns} data={productTypes} loading={loading} />
 
       {/* Delete Dialog */}
       <AlertDialog
