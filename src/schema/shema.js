@@ -309,3 +309,10 @@ export const addPickUpDateSchema = z.object({
 export const addNewProductTypeSchema = z.object({
   productType: z.string(),
 });
+
+export const addNewEmployeeSchema = z.object({
+  name: z.string(),
+  jobRole: z.string(),
+  address: z.string(),
+  contact: z.string(),
+});
