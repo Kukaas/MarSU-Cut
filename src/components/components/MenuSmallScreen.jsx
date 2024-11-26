@@ -38,6 +38,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { logout } from "@/redux/user/userSlice";
 import { toast } from "sonner";
 import ToasterError from "@/lib/Toaster";
+import { GearIcon } from "@radix-ui/react-icons";
 
 const MenuSmallScreen = () => {
   const location = useLocation();
@@ -492,6 +493,19 @@ const MenuSmallScreen = () => {
                   >
                     <Users className="h-4 w-4" />
                     Users
+                  </Link>
+                </SheetTrigger>
+                <SheetTrigger asChild>
+                  <Link
+                    to="/dashboard?tab=system-maintenance"
+                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                      isActive("/dashboard?tab=system-maintenance")
+                        ? "bg-muted text-primary"
+                        : "text-muted-foreground hover:text-primary"
+                    }`}
+                  >
+                    <GearIcon className="h-4 w-4" />
+                    System Maintenance
                   </Link>
                 </SheetTrigger>
               </div>
