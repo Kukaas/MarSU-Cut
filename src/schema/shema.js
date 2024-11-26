@@ -202,25 +202,27 @@ export const CreateRentalSchema = z.object({
 });
 
 export const CreateAccomplishmentSchema = z.object({
-  type: z
-    .string()
-    .min(3, { message: "Type must be at least 3 characters" })
-    .max(255, { message: "Type must be less than 256 characters" }),
-  accomplishment: z
-    .string()
-    .min(3, { message: "Accomplishment must be at least 3 characters" })
-    .max(255, { message: "Accomplishment must be less than 256 characters" }),
+  assignedEmployee: z.string().min(1, "Assigned employee is required"),
+  accomplishmentType: z.enum(["Cutting", "Sewing", "Pattern Making"], {
+    required_error: "Please select an accomplishment type",
+  }),
+  product: z.string().min(1, "Product is required"),
+  quantity: z.coerce
+    .number()
+    .int()
+    .positive("Quantity must be a positive number"),
 });
 
 export const EditAccomplishmentSchema = z.object({
-  type: z
-    .string()
-    .min(3, { message: "Type must be at least 3 characters" })
-    .max(255, { message: "Type must be less than 256 characters" }),
-  accomplishment: z
-    .string()
-    .min(3, { message: "Accomplishment must be at least 3 characters" })
-    .max(255, { message: "Accomplishment must be less than 256 characters" }),
+  assignedEmployee: z.string().min(1, "Assigned employee is required"),
+  accomplishmentType: z.enum(["Cutting", "Sewing", "Pattern Making"], {
+    required_error: "Please select an accomplishment type",
+  }),
+  product: z.string().min(1, "Product is required"),
+  quantity: z.coerce
+    .number()
+    .int()
+    .positive("Quantity must be a positive number"),
 });
 
 export const AddOrderItemsSchema = z.object({
