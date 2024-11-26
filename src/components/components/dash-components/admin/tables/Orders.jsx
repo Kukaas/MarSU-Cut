@@ -458,9 +458,14 @@ function Orders() {
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => handleEditOrderItems(order)}
-                disabled={["REJECTED", "MEASURED", "DONE", "CLAIMED"].includes(
-                  order.status
-                )}
+                disabled={[
+                  "REJECTED",
+                  "MEASURED",
+                  "DONE",
+                  "CLAIMED",
+                  "PENDING",
+                  "APPROVED",
+                ].includes(order.status)}
               >
                 Edit Items
               </DropdownMenuItem>
@@ -507,9 +512,13 @@ function Orders() {
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => handleDone(order)}
-                  disabled={["REJECTED", "DONE", "CLAIMED", "PENDING"].includes(
-                    order.status
-                  )}
+                  disabled={[
+                    "REJECTED",
+                    "DONE",
+                    "CLAIMED",
+                    "PENDING",
+                    "APPROVED",
+                  ].includes(order.status)}
                 >
                   Finished
                 </DropdownMenuItem>
