@@ -37,6 +37,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import CustomPageTitle from "@/components/components/custom-components/CustomPageTitle";
+import EditOrderItems from "@/components/components/forms/EditOrderItmes";
 
 function Orders() {
   const [data, setData] = useState([]);
@@ -48,6 +49,7 @@ function Orders() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [statusFilter, setStatusFilter] = useState("All");
   const [searchValue, setSearchValue] = useState("");
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleViewReceipts = (order) => {
@@ -221,38 +223,18 @@ function Orders() {
     }
   };
 
-  // const handleDelete = async (order) => {
-  //   try {
-  //     setLoadingUpdate(true);
-  //     const res = await axios.delete(
-  //       `${BASE_URL}/api/v1/order/student/delete/${order._id}`,
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //         withCredentials: true,
-  //       }
-  //     );
+  const handleEditOrderItems = (order) => {
+    setSelectedOrder(order);
+    setIsEditDialogOpen(true);
+  };
 
-  //     if (res.status === 200) {
-  //       setLoadingUpdate(false);
-  //       toast.success(`Order of ${order.studentName} is deleted successfully!`);
-  //       setData((prevData) =>
-  //         prevData.filter((item) => item._id !== order._id)
-  //       );
-  //     } else {
-  //       ToasterError();
-  //     }
-  //   } catch (error) {
-  //     ToasterError({
-  //       description: "Please check you internet connection and try again.",
-  //     });
-  //     setLoadingUpdate(false);
-  //   } finally {
-  //     setLoadingUpdate(false);
-  //   }
-  // };
+  const updateOrderData = (updatedOrder) => {
+    setData((prevData) =>
+      prevData.map((order) =>
+        order._id === updatedOrder._id ? updatedOrder : order
+      )
+    );
+  };
 
   const columns = [
     {
@@ -474,6 +456,14 @@ function Orders() {
               >
                 View Order Details
               </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => handleEditOrderItems(order)}
+                disabled={["REJECTED", "MEASURED", "DONE", "CLAIMED"].includes(
+                  order.status
+                )}
+              >
+                Edit Items
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <DropdownMenuItem
@@ -660,6 +650,22 @@ function Orders() {
               Confirm
             </Button>
           </div>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <AlertDialogContent className="max-h-[550px] max-w-[550px] overflow-auto">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Edit Order Items</AlertDialogTitle>
+            <AlertDialogDescription>
+              Update the order items below.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <EditOrderItems
+            selectedOrder={selectedOrder}
+            setIsDialogOpen={setIsEditDialogOpen}
+            onOrderUpdated={updateOrderData}
+          />
         </AlertDialogContent>
       </AlertDialog>
     </Spin>

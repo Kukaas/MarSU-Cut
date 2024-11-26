@@ -76,6 +76,7 @@ SelectField.propTypes = {
   placeholder: PropTypes.string,
   onValueChange: PropTypes.func,
   type: PropTypes.string,
+  className: PropTypes.string,
 };
 
 export default SelectField;

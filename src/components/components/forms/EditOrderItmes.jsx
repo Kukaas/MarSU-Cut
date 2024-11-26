@@ -24,25 +24,19 @@ import {
 import { Separator } from "@/components/ui/separator";
 import ToasterError from "@/lib/Toaster";
 
-const AddOrderItems = ({
-  selectedOrder,
-  setIsDialogOpen,
-  onOrderItemsAdded,
-}) => {
-  const [loadingAddItems, setLoadingAddItems] = useState(false);
+const EditOrderItems = ({ selectedOrder, setIsDialogOpen, onOrderUpdated }) => {
+  const [loadingUpdate, setLoadingUpdate] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
 
   const form = useForm({
     defaultValues: {
-      orderItems: [
-        {
-          level: selectedOrder.level,
-          productType: "",
-          size: "",
-          unitPrice: 0,
-          quantity: 1,
-        },
-      ],
+      orderItems: selectedOrder.orderItems.map((item) => ({
+        level: item.level || "",
+        productType: item.productType || "",
+        size: item.size || "",
+        unitPrice: item.unitPrice || 0,
+        quantity: item.quantity || 1,
+      })),
     },
   });
 
@@ -92,7 +86,7 @@ const AddOrderItems = ({
   };
 
   const updateUnitPrice = (fieldName, productType, size, level) => {
-    const unitPrice = priceMap[level]?.[productType]?.[size];
+    const unitPrice = priceMap[level]?.[productType]?.[size] || 0;
     form.setValue(`orderItems[${fieldName}].unitPrice`, unitPrice);
   };
 
@@ -114,26 +108,27 @@ const AddOrderItems = ({
     return () => subscription.unsubscribe();
   }, [watch]);
 
-  const handleAddItems = async (values) => {
-    setLoadingAddItems(true);
+  const handleUpdateItems = async (values) => {
+    setLoadingUpdate(true);
 
     const orderItems = Array.isArray(values.orderItems)
       ? values.orderItems
       : [];
 
+    // Validation checks
     if (orderItems.length === 0) {
-      toast.error("No items to add to the order", {
-        description: "Please add items to the order",
+      toast.error("No items to update", {
+        description: "Please add items to update the order.",
       });
-      setLoadingAddItems(false);
+      setLoadingUpdate(false);
       return;
     }
 
     if (orderItems.some((item) => item.quantity === 0)) {
       toast.error("Invalid quantity", {
-        description: "Quantity must be greater than 0",
+        description: "Quantity must be greater than 0.",
       });
-      setLoadingAddItems(false);
+      setLoadingUpdate(false);
       return;
     }
 
@@ -141,13 +136,13 @@ const AddOrderItems = ({
       !orderItems.some((item) => item.productType && item.size && item.level)
     ) {
       toast.error("Missing input", {
-        description: "Please fill in all the fields",
+        description: "Please fill in all the fields.",
       });
-      setLoadingAddItems(false);
+      setLoadingUpdate(false);
       return;
     }
 
-    // Add additional items based on productType and update totalPrice
+    // Add additional items based on productType
     const updatedOrderItems = orderItems.flatMap((item) => {
       const newItems = [item]; // Start with the original item
 
@@ -175,42 +170,35 @@ const AddOrderItems = ({
     });
 
     try {
-      const res = await axios.put(
-        `${BASE_URL}/api/v1/order/add-item/${selectedOrder._id}`,
-        {
-          orderItems: updatedOrderItems,
-        },
+      const response = await axios.put(
+        `${BASE_URL}/api/v1/order/edit-items/${selectedOrder._id}`,
+        { orderItems: updatedOrderItems },
         {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          withCredentials: true,
         }
       );
 
-      if (res.status === 200) {
-        toast.success(`The student ${selectedOrder.studentName} is measured`, {
-          description: "The items have been added to the order",
-        });
-        onOrderItemsAdded(res.data.orderStudent);
+      if (response.status === 200) {
+        toast.success("Order items updated successfully!");
+        onOrderUpdated(response.data.orderStudent);
         setIsDialogOpen(false);
       } else {
-        ToasterError({
-          description: "Please check your internet connection and try again.",
-        });
+        toast.error("Failed to update order items.");
       }
     } catch (error) {
       ToasterError({
-        description: "Failed to add items to the order. Please try again.",
+        description: "Failed to update order items. Please try again.",
       });
     } finally {
-      setLoadingAddItems(false);
+      setLoadingUpdate(false);
     }
   };
 
   const onSubmit = async (values) => {
-    await handleAddItems(values);
+    await handleUpdateItems(values);
     form.reset();
   };
 
@@ -241,9 +229,7 @@ const AddOrderItems = ({
           key={index}
           className="flex gap-6 w-full justify-between items-center"
         >
-          {/* Form Fields Container */}
           <div className="flex flex-col gap-4 w-full">
-            {/* First Row: Level and Product Type */}
             <div className="flex gap-4 items-center w-full">
               <Controller
                 control={form.control}
@@ -254,15 +240,7 @@ const AddOrderItems = ({
                     field={field}
                     options={["SHS", "COLLEGE"]}
                     placeholder="Level"
-                    onValueChange={(value) => {
-                      const { productType, size } = getValues([
-                        `orderItems[${index}].productType`,
-                        `orderItems[${index}].size`,
-                      ]);
-                      updateUnitPrice(index, productType, size, value);
-                    }}
                     className="w-full"
-                    type="disabled"
                   />
                 )}
               />
@@ -282,20 +260,11 @@ const AddOrderItems = ({
                       "JPANTS",
                     ]}
                     placeholder="Type"
-                    onValueChange={(value) => {
-                      const { level, size } = getValues([
-                        `orderItems[${index}].level`,
-                        `orderItems[${index}].size`,
-                      ]);
-                      updateUnitPrice(index, value, size, level);
-                    }}
                     className="w-full"
                   />
                 )}
               />
             </div>
-
-            {/* Second Row: Size and Unit Price */}
             <div className="flex gap-4 items-center w-full">
               <Controller
                 control={form.control}
@@ -305,14 +274,6 @@ const AddOrderItems = ({
                     field={field}
                     options={sizes}
                     placeholder="Size"
-                    onValueChange={(value) => {
-                      const { productType, level } = getValues([
-                        `orderItems[${index}].productType`,
-                        `orderItems[${index}].level`,
-                      ]);
-                      updateUnitPrice(index, productType, value, level);
-                    }}
-                    className="w-full"
                   />
                 )}
               />
@@ -322,16 +283,12 @@ const AddOrderItems = ({
                 render={({ field }) => (
                   <FormItem className="w-40">
                     <FormControl>
-                      <Tooltip
-                        title="Unit Price"
-                        className="cursor-pointer w-full"
-                      >
+                      <Tooltip title="Unit Price">
                         <Input
                           {...field}
                           placeholder="Unit Price"
                           type="number"
                           readOnly
-                          className="w-full mt-2"
                         />
                       </Tooltip>
                     </FormControl>
@@ -345,15 +302,11 @@ const AddOrderItems = ({
                 render={({ field }) => (
                   <FormItem className="w-40">
                     <FormControl>
-                      <Tooltip
-                        title="Quantity"
-                        className="cursor-pointer w-full"
-                      >
+                      <Tooltip title="Quantity">
                         <Input
                           {...field}
                           placeholder="Quantity"
                           type="number"
-                          className="w-full mt-2"
                         />
                       </Tooltip>
                     </FormControl>
@@ -363,17 +316,7 @@ const AddOrderItems = ({
               />
             </div>
           </div>
-
-          {/* Remove Button */}
-          <div className="flex items-center">
-            <Tooltip title="Remove field">
-              <MinusCircle
-                onClick={() => remove(index)}
-                style={{ width: "25px", height: "25px" }}
-                className="cursor-pointer text-red-500"
-              />
-            </Tooltip>
-          </div>
+          <MinusCircle onClick={() => remove(index)} />
         </div>
         <Separator />
       </>
@@ -417,41 +360,30 @@ const AddOrderItems = ({
           />
         </Tooltip>
         <Separator />
-
-        {/* Total Price Preview */}
         <div className="flex justify-between items-center">
           <span className="text-lg">Total Price:</span>
-          <span className="text-lg font-bold ">
+          <span className="text-lg font-bold">
             {totalPrice.toLocaleString("en-PH", {
               style: "currency",
               currency: "PHP",
             })}
           </span>
         </div>
-
         <div className="flex flex-col items-center gap-4 mt-4">
           <AlertDialogFooter className="flex flex-col items-center mt-5 gap-4 w-full">
             <AlertDialogCancel asChild>
-              <Button
-                variant="outline"
-                className="w-full"
-                onClick={() => form.reset()}
-              >
+              <Button variant="outline" className="w-full">
                 Cancel
               </Button>
             </AlertDialogCancel>
-            <Button
-              type="submit"
-              className="w-full flex items-center justify-center"
-              disabled={loadingAddItems}
-            >
-              {loadingAddItems ? (
+            <Button type="submit" className="w-full">
+              {loadingUpdate ? (
                 <div className="flex items-center">
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Adding Items...
+                  Updating Items...
                 </div>
               ) : (
-                "Add Items"
+                "Update Items"
               )}
             </Button>
           </AlertDialogFooter>
@@ -461,10 +393,10 @@ const AddOrderItems = ({
   );
 };
 
-AddOrderItems.propTypes = {
-  selectedOrder: PropTypes.object,
-  setIsDialogOpen: PropTypes.func,
-  onOrderItemsAdded: PropTypes.func,
+EditOrderItems.propTypes = {
+  selectedOrder: PropTypes.object.isRequired,
+  setIsDialogOpen: PropTypes.func.isRequired,
+  onOrderUpdated: PropTypes.func.isRequired,
 };
 
-export default AddOrderItems;
+export default EditOrderItems;

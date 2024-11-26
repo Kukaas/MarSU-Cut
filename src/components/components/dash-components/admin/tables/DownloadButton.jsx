@@ -2,6 +2,7 @@ import {
   AlertDialog,
   AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -207,6 +208,9 @@ function DownloadButton({ selectedDate, filteredData }) {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Print Report</AlertDialogTitle>
+            <AlertDialogDescription>
+              Print the accomplishment report
+            </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="mt-3">
             <Input
