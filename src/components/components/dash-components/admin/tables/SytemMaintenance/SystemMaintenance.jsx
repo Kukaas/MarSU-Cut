@@ -11,7 +11,7 @@ const SystemMaintenance = () => {
         title="System Maintenance"
         description="Manage system maintenance"
       />
-      <Tabs defaultValue="table" className="w-full mt-5">
+      <Tabs defaultValue="sizes" className="w-full mt-5">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="sizes">Sizes</TabsTrigger>
           <TabsTrigger value="productTypes">Product Types</TabsTrigger>

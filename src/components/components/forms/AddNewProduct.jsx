@@ -12,7 +12,7 @@ import { AddNewProductSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
@@ -22,9 +22,13 @@ import {
   AlertDialogFooter,
 } from "@/components/ui/alert-dialog";
 import CustomNumberInput from "../custom-components/CustomNumberInput";
+import { fetchProductTypes, fetchSizes } from "@/hooks/helper";
 
 const AddNewProduct = ({ onProductAdded, setIsDialogOpen }) => {
   const [addNewProductLoading, setAddNewProductLoading] = useState(false);
+  const [productTypes, setProductTypes] = useState([]);
+  const [allSizes, setAllSizes] = useState([]);
+  const [filteredSizes, setFilteredSizes] = useState([]);
 
   const addNewProductForm = useForm({
     resolver: zodResolver(AddNewProductSchema),
@@ -37,16 +41,57 @@ const AddNewProduct = ({ onProductAdded, setIsDialogOpen }) => {
   });
 
   const productType = addNewProductForm.watch("productType");
-  const sizes =
-    productType === "POLO" || productType === "BLOUSE"
-      ? ["S14", "S15", "S16", "S17", "S18", "S18+", "S19+"]
-      : productType === "SKIRT" || productType === "PANTS"
-      ? ["S24", "S25", "S26", "S27", "S28+"]
-      : productType === "JPANTS"
-      ? ["S33+34", "S35", "S36", "S37", "S38+40", "S42+45"]
-      : productType === "PE TSHIRT"
-      ? ["2XL", "XS/S", "M/L", "XL", "XXL"]
-      : [];
+
+  // Define the mapping for product types to sizes
+  const productTypeToSizes = {
+    POLO: ["S14", "S15", "S16", "S17", "S18", "S18+", "S19+"],
+    BLOUSE: ["S14", "S15", "S16", "S17", "S18", "S18+", "S19+"],
+    SKIRT: ["S24", "S25", "S26", "S27", "S28+"],
+    PANTS: ["S24", "S25", "S26", "S27", "S28+"],
+    JPANTS: ["S33+34", "S35", "S36", "S37", "S38+40", "S42+45"],
+    "PE TSHIRT": ["2XL", "XS/S", "M/L", "XL", "XXL"],
+  };
+
+  // Fetch product types on mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const productTypesData = await fetchProductTypes();
+        setProductTypes(productTypesData);
+      } catch (error) {
+        console.error("Failed to load product types:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Fetch sizes for all product types on mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const sizesData = await fetchSizes();
+        setAllSizes(sizesData); // Store all sizes fetched
+      } catch (error) {
+        console.error("Failed to load sizes:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Filter sizes based on the selected product type
+  useEffect(() => {
+    if (productType && productTypeToSizes[productType]) {
+      const predefinedSizes = productTypeToSizes[productType];
+      const matchedSizes = allSizes.filter((size) =>
+        predefinedSizes.includes(size.size)
+      );
+      setFilteredSizes(matchedSizes.map((size) => size.size)); // Map matched sizes
+    } else {
+      setFilteredSizes([]); // Clear sizes if no match
+    }
+  }, [productType, allSizes]);
 
   const handleAddNewProduct = async (values) => {
     if (
@@ -111,14 +156,7 @@ const AddNewProduct = ({ onProductAdded, setIsDialogOpen }) => {
             <SelectField
               field={field}
               label="Product Type"
-              options={[
-                "SKIRT",
-                "POLO",
-                "PANTS",
-                "BLOUSE",
-                "PE TSHIRT",
-                "JPANTS",
-              ]}
+              options={productTypes.map((type) => type.productType)}
               placeholder="Type"
             />
           )}
@@ -130,7 +168,7 @@ const AddNewProduct = ({ onProductAdded, setIsDialogOpen }) => {
             <SelectField
               field={field}
               label="Size"
-              options={sizes}
+              options={filteredSizes}
               placeholder="Size"
             />
           )}
