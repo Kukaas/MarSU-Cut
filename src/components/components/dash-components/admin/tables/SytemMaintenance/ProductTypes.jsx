@@ -278,7 +278,9 @@ const ProductTypes = () => {
           </AlertDialogContent>
         </AlertDialog>
       </div>
+
       <CustomTable columns={columns} data={productTypes} loading={false} />
+      
       {/* Delete Dialog */}
       <AlertDialog
         open={deleteDialogOpen}

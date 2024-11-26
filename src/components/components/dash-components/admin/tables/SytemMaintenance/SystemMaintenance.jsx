@@ -25,17 +25,17 @@ const SystemMaintenance = () => {
             <Sizes />
           </div>
         </TabsContent>
-        <TabsContent value="productTypes" className="mt-4 p-5">
+        <TabsContent value="productTypes" className="mt-4">
           <div className="rounded-md border">
             <ProductTypes />
           </div>
         </TabsContent>
-        <TabsContent value="rawMaterialsTypes" className="mt-4 p-5">
+        <TabsContent value="rawMaterialsTypes" className="mt-4">
           <div className="rounded-md border">
             <Sizes />
           </div>
         </TabsContent>
-        <TabsContent value="levels" className="mt-4 p-5">
+        <TabsContent value="levels" className="mt-4">
           <div className="rounded-md border">
             <Sizes />
           </div>
