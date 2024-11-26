@@ -39,10 +39,14 @@ import {
   AlertDialogFooter,
 } from "@/components/ui/alert-dialog";
 import CustomNumberInput from "../custom-components/CustomNumberInput";
+import { fetchProductTypes, fetchSizes } from "@/hooks/helper";
 
 const AddProduction = ({ onProductionAdded, setIsOpen }) => {
   const [addProductionLoading, setAddProductionLoading] = useState(false);
   const [rawMaterials, setRawMaterials] = useState([]);
+  const [productTypes, setProductTypes] = useState([]);
+  const [allSizes, setAllSizes] = useState([]);
+  const [filteredSizes, setFilteredSizes] = useState([]);
   // Initialize formState from localStorage or with default values
   const initialFormState = JSON.parse(localStorage.getItem("formState")) || {
     productType: "",
@@ -73,18 +77,57 @@ const AddProduction = ({ onProductionAdded, setIsOpen }) => {
   }, [productionForm]);
 
   const productType = productionForm.watch("productType");
-  const sizes =
-    productType === "POLO" || productType === "BLOUSE"
-      ? ["S14", "S15", "S16", "S17", "S18", "S18+", "S19+"]
-      : productType === "SKIRT" || productType === "PANTS"
-      ? ["S24", "S25", "S26", "S27", "S28+"]
-      : productType === "JPANTS"
-      ? ["S33+34", "S35", "S36", "S37", "S38+40", "S42+45"]
-      : productType === "PE TSHIRT"
-      ? ["2XL", "XS/S", "M/L", "XL", "XXL"]
-      : productType === "ACADEMIC GOWN"
-      ? ["Small", "Medium", "Large", "Extra Large"]
-      : [];
+
+  // Define the mapping for product types to sizes
+  const productTypeToSizes = {
+    POLO: ["S14", "S15", "S16", "S17", "S18", "S18+", "S19+"],
+    BLOUSE: ["S14", "S15", "S16", "S17", "S18", "S18+", "S19+"],
+    SKIRT: ["S24", "S25", "S26", "S27", "S28+"],
+    PANTS: ["S24", "S25", "S26", "S27", "S28+"],
+    JPANTS: ["S33+34", "S35", "S36", "S37", "S38+40", "S42+45"],
+    "PE TSHIRT": ["2XL", "XS/S", "M/L", "XL", "XXL"],
+  };
+
+  // Fetch product types on mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const productTypesData = await fetchProductTypes();
+        setProductTypes(productTypesData);
+      } catch (error) {
+        console.error("Failed to load product types:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Fetch sizes for all product types on mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const sizesData = await fetchSizes();
+        setAllSizes(sizesData); // Store all sizes fetched
+      } catch (error) {
+        console.error("Failed to load sizes:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Filter sizes based on the selected product type
+  useEffect(() => {
+    if (productType && productTypeToSizes[productType]) {
+      const predefinedSizes = productTypeToSizes[productType];
+      const matchedSizes = allSizes.filter((size) =>
+        predefinedSizes.includes(size.size)
+      );
+      setFilteredSizes(matchedSizes.map((size) => size.size)); // Map matched sizes
+    } else {
+      setFilteredSizes([]); // Clear sizes if no match
+    }
+  }, [productType, allSizes]);
 
   const { fields, append, remove } = useFieldArray({
     control: productionForm.control,
@@ -215,15 +258,7 @@ const AddProduction = ({ onProductionAdded, setIsOpen }) => {
                     <SelectField
                       field={field}
                       label="Product Type"
-                      options={[
-                        "SKIRT",
-                        "POLO",
-                        "PANTS",
-                        "BLOUSE",
-                        "PE TSHIRT",
-                        "JPANTS",
-                        "ACADEMIC GOWN",
-                      ]}
+                      options={productTypes.map((type) => type.productType)}
                       placeholder="Type"
                     />
                   )}
@@ -236,7 +271,7 @@ const AddProduction = ({ onProductionAdded, setIsOpen }) => {
                     <SelectField
                       field={field}
                       label="Size"
-                      options={sizes}
+                      options={filteredSizes}
                       placeholder="Size"
                     />
                   )}
