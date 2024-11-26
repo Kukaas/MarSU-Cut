@@ -308,5 +308,4 @@ export const addPickUpDateSchema = z.object({
 
 export const addNewProductTypeSchema = z.object({
   productType: z.string(),
-  description: z.string(),
 });

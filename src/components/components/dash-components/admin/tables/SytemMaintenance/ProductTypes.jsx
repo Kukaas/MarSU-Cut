@@ -35,7 +35,6 @@ const ProductTypes = () => {
     resolver: zodResolver(addNewProductTypeSchema),
     defaultValues: {
       productType: "",
-      description: "",
     },
   });
 
@@ -43,7 +42,6 @@ const ProductTypes = () => {
     resolver: zodResolver(addNewProductTypeSchema),
     defaultValues: {
       productType: "",
-      description: "",
     },
   });
 
@@ -70,13 +68,12 @@ const ProductTypes = () => {
     if (selectedProductType) {
       updateForm.reset({
         productType: selectedProductType.productType,
-        description: selectedProductType.description,
       });
     }
   }, [selectedProductType, updateForm]);
 
   const handleAddNewProductType = async (values) => {
-    if (!values.productType || !values.description) {
+    if (!values.productType) {
       return toast.error("Please fill all fields");
     }
     try {
@@ -111,7 +108,7 @@ const ProductTypes = () => {
   };
 
   const handleUpdateProductType = async (values) => {
-    if (!values.productType || !values.description) {
+    if (!values.productType) {
       return toast.error("Please fill all fields");
     }
     try {
@@ -183,10 +180,6 @@ const ProductTypes = () => {
       ),
     },
     {
-      accessorKey: "description",
-      header: "Description",
-    },
-    {
       accessorKey: "Actions",
       header: "Actions",
       cell: (row) => {
@@ -253,13 +246,6 @@ const ProductTypes = () => {
                   placeholder="eg, POLO, SKIRT, PANTS"
                   type="text"
                 />
-                <CustomInput
-                  form={form}
-                  name="description"
-                  label="Description"
-                  placeholder="Comfortable, durable, professional, customizable, versatile."
-                  type="text"
-                />
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
                   <Button type="submit" disabled={loading}>
@@ -280,7 +266,7 @@ const ProductTypes = () => {
       </div>
 
       <CustomTable columns={columns} data={productTypes} loading={false} />
-      
+
       {/* Delete Dialog */}
       <AlertDialog
         open={deleteDialogOpen}
@@ -334,13 +320,6 @@ const ProductTypes = () => {
                 name="productType"
                 label="Product Type"
                 placeholder="eg, POLO, SKIRT, PANTS"
-                type="text"
-              />
-              <CustomInput
-                form={updateForm}
-                name="description"
-                label="Description"
-                placeholder="Comfortable, durable, professional, customizable, versatile."
                 type="text"
               />
               <AlertDialogFooter>
