@@ -1,42 +1,21 @@
 // UI
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+
 import { Calendar } from "@/components/ui/calendar";
-import { Tooltip, Typography } from "antd";
+import { Tooltip } from "antd";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { toast } from "sonner";
 
 // icons
 // import { LoadingOutlined } from "@ant-design/icons";
-import { CalendarIcon, Loader2, PlusCircle } from "lucide-react";
+import { CalendarIcon, PlusCircle } from "lucide-react";
 
 // others
 import axios from "axios";
 import { cn } from "@/lib/utils";
-import { useForm } from "react-hook-form";
-import { EditAccomplishmentSchema } from "@/schema/shema";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { endOfMonth, format, startOfMonth } from "date-fns";
 import { useEffect, useState } from "react";
 
@@ -44,7 +23,6 @@ import DownloadButton from "./DownloadButton";
 import CreateAccomplishment from "../../../forms/CreateAccomplishment";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
-import ToasterError from "@/lib/Toaster";
 import CustomTable from "@/components/components/custom-components/CustomTable";
 import DataTableColumnHeader from "@/components/components/custom-components/DataTableColumnHeader";
 // import DeleteDialog from "@/components/components/custom-components/DeleteDialog";
@@ -58,17 +36,15 @@ import {
 } from "@/components/ui/alert-dialog";
 import CustomPageTitle from "@/components/components/custom-components/CustomPageTitle";
 import { useSelector } from "react-redux";
+import EditAccomplishment from "@/components/components/forms/EditAccomplishment";
 
 const AccomplishmentReport = () => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [updateLoading, setUpdateLoading] = useState(false);
   // const [loadingDelete, setLoadingDelete] = useState(false);
   const [selectedAccomplishment, setSelectedAccomplishment] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isDialogEditOpen, setIsDialogEditOpen] = useState(false);
-  const form = useForm();
   const { currentUser } = useSelector((state) => state.user);
 
   const [selectedDate, setSelectedDate] = useState({
@@ -117,29 +93,6 @@ const AccomplishmentReport = () => {
     filterData(data, selectedDate);
   }, [selectedDate, data]);
 
-  const formAccomplishment = useForm({
-    resolver: zodResolver(EditAccomplishmentSchema),
-    defaultValues: {
-      type: "",
-      accomplishment: "",
-    },
-  });
-
-  useEffect(() => {
-    if (selectedAccomplishment) {
-      formAccomplishment.reset({
-        type: selectedAccomplishment.type,
-        accomplishment: selectedAccomplishment.accomplishment,
-      });
-      setIsDialogEditOpen(true);
-    } else {
-      formAccomplishment.reset({
-        type: "",
-        accomplishment: "",
-      });
-    }
-  }, [selectedAccomplishment, formAccomplishment]);
-
   const filterData = (data, dateRange) => {
     if (!dateRange) {
       setFilteredData(data);
@@ -156,112 +109,41 @@ const AccomplishmentReport = () => {
     setFilteredData(filtered);
   };
 
-  const handleEditAccomplishment = async (values, event) => {
-    try {
-      event.preventDefault();
-      event.stopPropagation();
-      setUpdateLoading(true);
-      const res = await axios.put(
-        `${BASE_URL}/api/v1/accomplishment-report/update/${selectedAccomplishment._id}`,
-        values,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        }
-      );
-      if (res.status === 200) {
-        setIsDialogEditOpen(false);
-        setUpdateLoading(false);
-        toast.success("Accomplishment report updated successfully!");
-        setData((prevData) => {
-          return prevData.map((item) => {
-            if (item._id === selectedAccomplishment._id) {
-              return { ...item, ...values };
-            }
-            return item;
-          });
-        });
-        form.reset();
-      } else {
-        ToasterError();
-        setUpdateLoading(false);
-      }
-    } catch (error) {
-      ToasterError({
-        description: "Please check you internet connection and try again.",
-      });
-      setUpdateLoading(false);
-    }
+  const handleEditAccomplishment = (updatedAccomplishment) => {
+    setData((prevData) =>
+      prevData.map((item) =>
+        item._id === updatedAccomplishment._id ? updatedAccomplishment : item
+      )
+    );
   };
-
-  // Function to delete an accomplishment report
-  // const handleDeleteAccomplishment = async (accomplishment) => {
-  //   try {
-  //     setLoadingDelete(true);
-  //     const res = await axios.delete(
-  //       `${BASE_URL}/api/v1/accomplishment-report/delete/${accomplishment._id}`,
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //         withCredentials: true,
-  //       }
-  //     );
-  //     if (res.status === 200) {
-  //       setLoadingDelete(false);
-  //       toast.success(
-  //         `Accomplishment with ID ${accomplishment._id} is deleted successfully!`
-  //       );
-  //       setData((prevData) => {
-  //         return prevData.filter((item) => item._id !== accomplishment._id);
-  //       });
-  //     } else {
-  //       setLoadingDelete(false);
-  //       ToasterError();
-  //     }
-  //   } catch (error) {
-  //     setLoadingDelete(false);
-  //     ToasterError({
-  //       description: "Please check you internet connection and try again.",
-  //     });
-  //   }
-  // };
 
   const columns = [
     {
-      accessorKey: "type",
+      accessorKey: "assignedEmployee",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Assigned Employee" />
+      ),
+    },
+    {
+      accessorKey: "accomplishmentType",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Type of Accomplishment" />
       ),
     },
     {
-      accessorKey: "accomplishment",
+      accessorKey: "product",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Accomplishment" />
-      ),
-      cell: ({ row }) => (
-        <div className="break-words w-52">{row.original.accomplishment}</div>
+        <DataTableColumnHeader column={column} title="Product Type" />
       ),
     },
     {
-      accessorKey: "date",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Accomplishment Date" />
-      ),
+      accessorKey: "quantity",
+      header: "Quantity",
       cell: ({ row }) => {
-        const accomplishmentDate = new Date(row.original.date);
-        return accomplishmentDate.toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        });
+        const quantity = row.original.quantity;
+
+        return <span>{quantity} pcs</span>;
       },
-      sortingFn: (a, b) =>
-        new Date(a.original.date) - new Date(b.original.date),
     },
     {
       accessorKey: "remarks",
@@ -285,31 +167,33 @@ const AccomplishmentReport = () => {
         return (
           <div className="flex items-center justify-center space-x-2">
             <Tooltip title="Edit Accomplishment">
-              <Dialog>
-                <DialogTrigger asChild>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
                   <Button
                     variant="default"
                     size="sm"
                     onClick={() => {
                       setSelectedAccomplishment(accomplishment);
-                      setIsDialogEditOpen(true);
                     }}
                   >
                     Edit
                   </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Edit Product</DialogTitle>
-                    <DialogDescription>
-                      Please fill out the form below to edit product.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <EditAccomplishmentSchema
-                    selectedAccomplishment={selectedAccomplishment}
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Edit Accomplishment</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Make changes to the accomplishment here. Click save when
+                      you&apos;re done.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <EditAccomplishment
+                    accomplishment={selectedAccomplishment}
+                    onAccomplishmentUpdate={handleEditAccomplishment}
+                    setIsDialogOpen={setIsDialogOpen}
                   />
-                </DialogContent>
-              </Dialog>
+                </AlertDialogContent>
+              </AlertDialog>
             </Tooltip>
             {/* <Tooltip title="Delete Accomplishment">
               <DeleteDialog
@@ -458,67 +342,6 @@ const AccomplishmentReport = () => {
           />
         </div>
       </div>
-      <Dialog open={isDialogEditOpen} onOpenChange={setIsDialogEditOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Edit Accomplishment</DialogTitle>
-            <DialogDescription>
-              Edit the selected accomplishment details below.
-            </DialogDescription>
-          </DialogHeader>
-          <Form {...formAccomplishment}>
-            <form
-              onSubmit={formAccomplishment.handleSubmit(
-                handleEditAccomplishment
-              )}
-            >
-              <FormField
-                control={formAccomplishment.control}
-                name="type"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Type of Accomplishment</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={formAccomplishment.control}
-                name="accomplishment"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Accomplishment</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="flex justify-end items-center">
-                <DialogClose asChild>
-                  <Button variant="outline" className="mr-2 mt-4">
-                    Cancel
-                  </Button>
-                </DialogClose>
-                <Button type="submit" className="mt-4" disabled={updateLoading}>
-                  {updateLoading ? (
-                    <div className="flex items-center">
-                      <Loader2 className="mr-2 animate-spin" />
-                      <span>Saving</span>
-                    </div>
-                  ) : (
-                    "Save Changes"
-                  )}
-                </Button>
-              </div>
-            </form>
-          </Form>
-        </DialogContent>
-      </Dialog>
     </>
     // </Spin>
   );

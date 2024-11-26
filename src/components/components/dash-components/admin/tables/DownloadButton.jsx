@@ -40,15 +40,6 @@ function DownloadButton({ selectedDate, filteredData }) {
       return;
     }
 
-    const formatDate = (dateString) => {
-      const date = new Date(dateString);
-      return date.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
-    };
-
     const getMonthsInRange = (start, end) => {
       const months = [];
       let current = new Date(start);
@@ -69,19 +60,18 @@ function DownloadButton({ selectedDate, filteredData }) {
     );
 
     const tableData = sortedData.map((item) => {
-      const splitAccomplishment = item.accomplishment.split("\n");
       const remarks =
         item.remarks?.charAt(0).toUpperCase() +
         item.remarks?.slice(1).toLowerCase();
       return [
-        formatDate(item.date),
-        item.type,
-        splitAccomplishment.join("<br/>"),
+        item.assignedEmployee,
+        item.accomplishmentType,
+        item.product,
+        item.quantity,
         remarks,
       ];
     });
 
-    // Open a new window for printing
     const printWindow = window.open("", "_blank");
 
     if (printWindow) {
@@ -100,7 +90,7 @@ function DownloadButton({ selectedDate, filteredData }) {
                         padding: 0;
                     }
                     .header {
-                      position: relative; /* Set relative positioning for the header */
+                      position: relative;
                       text-align: center;
                       margin-bottom: 20px;
                       display: flex;
@@ -108,8 +98,8 @@ function DownloadButton({ selectedDate, filteredData }) {
                       justify-content: center;
                     }
                     .header img {
-                      position: absolute; /* Set absolute positioning for the logo */
-                      left: 20px; /* Adjust as needed to position the logo */
+                      position: absolute;
+                      left: 20px;
                       width: 60px;
                     }
                     .header h1 {
@@ -153,9 +143,10 @@ function DownloadButton({ selectedDate, filteredData }) {
                 <table>
                     <thead>
                         <tr>
-                            <th>Date</th>
-                            <th>Type</th>
-                            <th>Accomplishment</th>
+                        <th>Assigned Employee</th>
+                            <th>Accomplishment Type</th>
+                            <th>Product</th>
+                            <th>Quantity</th>
                             <th>Remarks</th>
                         </tr>
                     </thead>
@@ -168,6 +159,7 @@ function DownloadButton({ selectedDate, filteredData }) {
                           <td>${row[1]}</td>
                           <td>${row[2]}</td>
                           <td>${row[3]}</td>
+                          <td>${row[4]}</td>
                         </tr>
                       `
                         )
@@ -185,7 +177,6 @@ function DownloadButton({ selectedDate, filteredData }) {
                         <p>Head BAO</p>
                     </div>
                 </footer>
-  
             </body>
         </html>
       `);

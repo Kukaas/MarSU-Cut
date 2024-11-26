@@ -1,36 +1,34 @@
-import { Form, FormField } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
-import ToasterError from "@/lib/Toaster";
-import { CreateAccomplishmentSchema } from "@/schema/shema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
-import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { token } from "@/lib/token";
-import { BASE_URL } from "@/lib/api";
-import CustomInput from "../custom-components/CustomInput";
-import SelectField from "../custom-components/SelectField";
 import {
   AlertDialogCancel,
   AlertDialogFooter,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { EditAccomplishmentSchema } from "@/schema/shema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import { useForm } from "react-hook-form";
+import CustomInput from "../custom-components/CustomInput";
+import SelectField from "../custom-components/SelectField";
+import { Form, FormField } from "@/components/ui/form";
+import { useEffect, useState } from "react";
 import { fetchEmployees, fetchProductTypes } from "@/hooks/helper";
+import { toast } from "sonner";
+import axios from "axios";
+import { BASE_URL } from "@/lib/api";
+import { token } from "@/lib/token";
 
-const CreateAccomplishment = ({ onAccomplishmentCreate, setIsDialogOpen }) => {
+const EditAccomplishment = ({ accomplishment, onAccomplishmentUpdate }) => {
   const [loading, setLoading] = useState(false);
   const [employees, setEmployees] = useState([]);
   const [productTypes, setProductTypes] = useState([]);
 
   const form = useForm({
-    resolver: zodResolver(CreateAccomplishmentSchema),
+    resolver: zodResolver(EditAccomplishmentSchema),
     defaultValues: {
-      assignedEmployee: "",
-      accomplishmentType: "",
-      product: "",
-      quantity: 0,
+      assignedEmployee: accomplishment.assignedEmployee,
+      accomplishmentType: accomplishment.accomplishmentType,
+      product: accomplishment.product,
+      quantity: accomplishment.quantity,
     },
   });
 
@@ -60,12 +58,12 @@ const CreateAccomplishment = ({ onAccomplishmentCreate, setIsDialogOpen }) => {
     fetchData();
   }, []);
 
-  const handleCreateAccomplishment = async (values) => {
+  const HandleUpdate = async (data) => {
+    setLoading(true);
     try {
-      setLoading(true);
-      const res = await axios.post(
-        `${BASE_URL}/api/v1/accomplishment-report/create`,
-        values,
+      const response = await axios.put(
+        `${BASE_URL}/api/v1/accomplishment-report/update/${accomplishment._id}`,
+        data,
         {
           headers: {
             "Content-Type": "application/json",
@@ -74,18 +72,17 @@ const CreateAccomplishment = ({ onAccomplishmentCreate, setIsDialogOpen }) => {
           withCredentials: true,
         }
       );
-      if (res.status === 201) {
-        setLoading(false);
-        toast.success("Accomplishment report created successfully!");
-        form.reset();
-        onAccomplishmentCreate(res.data.accomplishmentReport);
-        setIsDialogOpen(false);
-        console.log(res.data);
+
+      if (response.status === 200) {
+        toast.success("Accomplishment updated successfully!");
+        onAccomplishmentUpdate(response.data.accomplishmentReport);
+      } else {
+        throw new Error("Failed to update accomplishment");
       }
     } catch (error) {
-      ToasterError({
-        description: "Please check your internet connection and try again.",
-      });
+      console.error("Error updating accomplishment:", error);
+      toast.error("Failed to update accomplishment. Please try again.");
+    } finally {
       setLoading(false);
     }
   };
@@ -95,7 +92,7 @@ const CreateAccomplishment = ({ onAccomplishmentCreate, setIsDialogOpen }) => {
       <div className="w-full">
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(handleCreateAccomplishment)}
+            onSubmit={form.handleSubmit(HandleUpdate)}
             className="space-y-4"
           >
             <FormField
@@ -158,10 +155,10 @@ const CreateAccomplishment = ({ onAccomplishmentCreate, setIsDialogOpen }) => {
                   {loading ? (
                     <div className="flex items-center">
                       <Loader2 className="mr-2 animate-spin" />
-                      <span>Creating</span>
+                      <span>Update</span>
                     </div>
                   ) : (
-                    "Create"
+                    "Updating"
                   )}
                 </Button>
               </AlertDialogFooter>
@@ -173,9 +170,4 @@ const CreateAccomplishment = ({ onAccomplishmentCreate, setIsDialogOpen }) => {
   );
 };
 
-CreateAccomplishment.propTypes = {
-  onAccomplishmentCreate: PropTypes.func,
-  setIsDialogOpen: PropTypes.func,
-};
-
-export default CreateAccomplishment;
+export default EditAccomplishment;

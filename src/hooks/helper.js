@@ -60,3 +60,30 @@ export const fetchSizes = async (productType) => {
     throw error;
   }
 };
+
+export const fetchEmployees = async () => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/api/v1/system-maintenance/employee/all`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (response.status === 200) {
+      // Sort employees alphabetically by name
+      return response.data.employees.sort((a, b) =>
+        a.name.localeCompare(b.name)
+      );
+    } else {
+      throw new Error("Failed to fetch employees");
+    }
+  } catch (error) {
+    console.error("Error fetching employees:", error);
+    throw error;
+  }
+};
