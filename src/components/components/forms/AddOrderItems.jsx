@@ -23,6 +23,13 @@ import {
 } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import ToasterError from "@/lib/Toaster";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const AddOrderItems = ({
   selectedOrder,
@@ -31,6 +38,26 @@ const AddOrderItems = ({
 }) => {
   const [loadingAddItems, setLoadingAddItems] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [finishedProducts, setFinishedProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchFinishedProducts = async () => {
+      try {
+        const res = await axios.get(`${BASE_URL}/api/v1/finished-product/all`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        });
+        setFinishedProducts(res.data.finishedProducts);
+      } catch (error) {
+        console.error("Error fetching finished products:", error);
+      }
+    };
+
+    fetchFinishedProducts();
+  }, []);
 
   const form = useForm({
     defaultValues: {
@@ -97,6 +124,7 @@ const AddOrderItems = ({
   };
 
   const { watch } = form;
+  const orderItems = watch("orderItems");
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "orderItems",
@@ -416,8 +444,54 @@ const AddOrderItems = ({
             className="mt-5 w-full cursor-pointer"
           />
         </Tooltip>
-        <Separator />
+        <Separator className="my-8" />
+        <h2 className="text-2xl font-bold mb-4">
+          Selected Order Items Preview
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {orderItems.map((item, index) => {
+            const availableProduct = finishedProducts.find(
+              (product) =>
+                product.level === item.level &&
+                product.productType === item.productType &&
+                product.size === item.size
+            );
 
+            return (
+              <Card key={index}>
+                <CardContent>
+                  <CardHeader className="text-lg font-bold">
+                    <CardTitle>{item.productType}</CardTitle>
+                  </CardHeader>
+                  <CardDescription>
+                    <p className="text-sm mb-1">Level: {item.level}</p>
+                    <p className="text-sm mb-1">Size: {item.size}</p>
+                    <p className="text-sm mb-1">Quantity: {item.quantity}</p>
+                    {availableProduct && (
+                      <p
+                        className={`text-sm font-medium ${
+                          availableProduct.status === "Low Stock"
+                            ? "text-yellow-600"
+                            : "text-green-600"
+                        }`}
+                      >
+                        Status: {availableProduct.status} (Available:{" "}
+                        {availableProduct.quantity})
+                      </p>
+                    )}
+                    {!availableProduct && (
+                      <p className="text-sm font-medium text-red-600">
+                        Status: Not available in stock
+                      </p>
+                    )}
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+
+        <Separator className="my-8" />
         {/* Total Price Preview */}
         <div className="flex justify-between items-center">
           <span className="text-lg">Total Price:</span>
