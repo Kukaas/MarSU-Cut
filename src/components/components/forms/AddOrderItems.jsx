@@ -30,6 +30,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { fetchProductTypes, fetchSizes } from "@/hooks/helper";
 
 const AddOrderItems = ({
   selectedOrder,
@@ -39,6 +40,8 @@ const AddOrderItems = ({
   const [loadingAddItems, setLoadingAddItems] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
   const [finishedProducts, setFinishedProducts] = useState([]);
+  const [productTypes, setProductTypes] = useState([]);
+  const [allSizes, setAllSizes] = useState([]);
 
   useEffect(() => {
     const fetchFinishedProducts = async () => {
@@ -57,6 +60,22 @@ const AddOrderItems = ({
     };
 
     fetchFinishedProducts();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const productTypesData = await fetchProductTypes();
+        setProductTypes(productTypesData);
+
+        const sizesData = await fetchSizes();
+        setAllSizes(sizesData);
+      } catch (error) {
+        console.error("Failed to load data:", error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const form = useForm({
@@ -252,16 +271,22 @@ const AddOrderItems = ({
       updateUnitPrice(index, productType, size, level);
     }, [level, productType, size, index, updateUnitPrice]);
 
-    const sizes =
-      productType === "POLO" || productType === "BLOUSE"
-        ? ["S14", "S15", "S16", "S17", "S18", "S18+", "S19+"]
-        : productType === "SKIRT" || productType === "PANTS"
-        ? ["S24", "S25", "S26", "S27", "S28+"]
-        : productType === "JPANTS"
-        ? ["S33+34", "S35", "S36", "S37", "S38+40", "S42+45"]
-        : productType === "PE TSHIRT"
-        ? ["2XL", "XS/S", "M/L", "XL", "XXL"]
-        : [];
+    const filteredSizes = allSizes.filter((sizeObj) => {
+      if (productType === "POLO" || productType === "BLOUSE") {
+        return ["S14", "S15", "S16", "S17", "S18", "S18+", "S19+"].includes(
+          sizeObj.size
+        );
+      } else if (productType === "SKIRT" || productType === "PANTS") {
+        return ["S24", "S25", "S26", "S27", "S28+"].includes(sizeObj.size);
+      } else if (productType === "JPANTS") {
+        return ["S33+34", "S35", "S36", "S37", "S38+40", "S42+45"].includes(
+          sizeObj.size
+        );
+      } else if (productType === "PE TSHIRT") {
+        return ["2XL", "XS/S", "M/L", "XL", "XXL"].includes(sizeObj.size);
+      }
+      return false;
+    });
 
     return (
       <>
@@ -301,14 +326,7 @@ const AddOrderItems = ({
                 render={({ field }) => (
                   <SelectField
                     field={field}
-                    options={[
-                      "SKIRT",
-                      "POLO",
-                      "PANTS",
-                      "BLOUSE",
-                      "PE TSHIRT",
-                      "JPANTS",
-                    ]}
+                    options={productTypes.map((type) => type.productType)}
                     placeholder="Type"
                     onValueChange={(value) => {
                       const { level, size } = getValues([
@@ -316,6 +334,8 @@ const AddOrderItems = ({
                         `orderItems[${index}].size`,
                       ]);
                       updateUnitPrice(index, value, size, level);
+                      // Reset size when product type changes
+                      form.setValue(`orderItems[${index}].size`, "");
                     }}
                     className="w-full"
                   />
@@ -331,7 +351,7 @@ const AddOrderItems = ({
                 render={({ field }) => (
                   <SelectField
                     field={field}
-                    options={sizes}
+                    options={filteredSizes.map((sizeObj) => sizeObj.size)}
                     placeholder="Size"
                     onValueChange={(value) => {
                       const { productType, level } = getValues([
@@ -448,7 +468,7 @@ const AddOrderItems = ({
         <h2 className="text-2xl font-bold mb-4">
           Selected Order Items Preview
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
           {orderItems.map((item, index) => {
             const availableProduct = finishedProducts.find(
               (product) =>

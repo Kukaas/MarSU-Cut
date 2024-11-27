@@ -463,7 +463,6 @@ function Orders() {
                 onClick={() => handleEditOrderItems(order)}
                 disabled={[
                   "REJECTED",
-                  "MEASURED",
                   "DONE",
                   "CLAIMED",
                   "PENDING",

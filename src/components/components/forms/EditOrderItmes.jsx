@@ -23,22 +23,73 @@ import {
 } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import ToasterError from "@/lib/Toaster";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { fetchProductTypes, fetchSizes } from "@/hooks/helper";
 
 const EditOrderItems = ({ selectedOrder, setIsDialogOpen, onOrderUpdated }) => {
   const [loadingUpdate, setLoadingUpdate] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [finishedProducts, setFinishedProducts] = useState([]);
+  const [productTypes, setProductTypes] = useState([]);
+  const [allSizes, setAllSizes] = useState([]);
 
   const form = useForm({
     defaultValues: {
-      orderItems: selectedOrder.orderItems.map((item) => ({
-        level: item.level || "",
-        productType: item.productType || "",
-        size: item.size || "",
-        unitPrice: item.unitPrice || 0,
-        quantity: item.quantity || 1,
-      })),
+      orderItems: selectedOrder.orderItems
+        .filter(
+          (item) =>
+            item.productType !== "LOGO" && item.productType !== "NECKTIE"
+        )
+        .map((item) => ({
+          level: item.level || "",
+          productType: item.productType || "",
+          size: item.size || "",
+          unitPrice: item.unitPrice || 0,
+          quantity: item.quantity || 1,
+        })),
     },
   });
+
+  useEffect(() => {
+    const fetchFinishedProducts = async () => {
+      try {
+        const res = await axios.get(`${BASE_URL}/api/v1/finished-product/all`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        });
+        setFinishedProducts(res.data.finishedProducts);
+      } catch (error) {
+        console.error("Error fetching finished products:", error);
+      }
+    };
+
+    fetchFinishedProducts();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const productTypesData = await fetchProductTypes();
+        setProductTypes(productTypesData);
+
+        const sizesData = await fetchSizes();
+        setAllSizes(sizesData);
+      } catch (error) {
+        console.error("Failed to load data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const priceMap = {
     SHS: {
@@ -91,6 +142,7 @@ const EditOrderItems = ({ selectedOrder, setIsDialogOpen, onOrderUpdated }) => {
   };
 
   const { watch } = form;
+  const orderItems = watch("orderItems");
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "orderItems",
@@ -212,16 +264,22 @@ const EditOrderItems = ({ selectedOrder, setIsDialogOpen, onOrderUpdated }) => {
       updateUnitPrice(index, productType, size, level);
     }, [level, productType, size, index, updateUnitPrice]);
 
-    const sizes =
-      productType === "POLO" || productType === "BLOUSE"
-        ? ["S14", "S15", "S16", "S17", "S18", "S18+", "S19+"]
-        : productType === "SKIRT" || productType === "PANTS"
-        ? ["S24", "S25", "S26", "S27", "S28+"]
-        : productType === "JPANTS"
-        ? ["S33+34", "S35", "S36", "S37", "S38+40", "S42+45"]
-        : productType === "PE TSHIRT"
-        ? ["2XL", "XS/S", "M/L", "XL", "XXL"]
-        : [];
+    const filteredSizes = allSizes.filter((sizeObj) => {
+      if (productType === "POLO" || productType === "BLOUSE") {
+        return ["S14", "S15", "S16", "S17", "S18", "S18+", "S19+"].includes(
+          sizeObj.size
+        );
+      } else if (productType === "SKIRT" || productType === "PANTS") {
+        return ["S24", "S25", "S26", "S27", "S28+"].includes(sizeObj.size);
+      } else if (productType === "JPANTS") {
+        return ["S33+34", "S35", "S36", "S37", "S38+40", "S42+45"].includes(
+          sizeObj.size
+        );
+      } else if (productType === "PE TSHIRT") {
+        return ["2XL", "XS/S", "M/L", "XL", "XXL"].includes(sizeObj.size);
+      }
+      return false;
+    });
 
     return (
       <>
@@ -229,7 +287,9 @@ const EditOrderItems = ({ selectedOrder, setIsDialogOpen, onOrderUpdated }) => {
           key={index}
           className="flex gap-6 w-full justify-between items-center"
         >
+          {/* Form Fields Container */}
           <div className="flex flex-col gap-4 w-full">
+            {/* First Row: Level and Product Type */}
             <div className="flex gap-4 items-center w-full">
               <Controller
                 control={form.control}
@@ -240,7 +300,15 @@ const EditOrderItems = ({ selectedOrder, setIsDialogOpen, onOrderUpdated }) => {
                     field={field}
                     options={["SHS", "COLLEGE"]}
                     placeholder="Level"
+                    onValueChange={(value) => {
+                      const { productType, size } = getValues([
+                        `orderItems[${index}].productType`,
+                        `orderItems[${index}].size`,
+                      ]);
+                      updateUnitPrice(index, productType, size, value);
+                    }}
                     className="w-full"
+                    type="disabled"
                   />
                 )}
               />
@@ -251,20 +319,24 @@ const EditOrderItems = ({ selectedOrder, setIsDialogOpen, onOrderUpdated }) => {
                 render={({ field }) => (
                   <SelectField
                     field={field}
-                    options={[
-                      "SKIRT",
-                      "POLO",
-                      "PANTS",
-                      "BLOUSE",
-                      "PE TSHIRT",
-                      "JPANTS",
-                    ]}
+                    options={productTypes.map((type) => type.productType)}
                     placeholder="Type"
+                    onValueChange={(value) => {
+                      const { level, size } = getValues([
+                        `orderItems[${index}].level`,
+                        `orderItems[${index}].size`,
+                      ]);
+                      updateUnitPrice(index, value, size, level);
+                      // Reset size when product type changes
+                      form.setValue(`orderItems[${index}].size`, "");
+                    }}
                     className="w-full"
                   />
                 )}
               />
             </div>
+
+            {/* Second Row: Size and Unit Price */}
             <div className="flex gap-4 items-center w-full">
               <Controller
                 control={form.control}
@@ -272,8 +344,16 @@ const EditOrderItems = ({ selectedOrder, setIsDialogOpen, onOrderUpdated }) => {
                 render={({ field }) => (
                   <SelectField
                     field={field}
-                    options={sizes}
+                    options={filteredSizes.map((sizeObj) => sizeObj.size)}
                     placeholder="Size"
+                    onValueChange={(value) => {
+                      const { productType, level } = getValues([
+                        `orderItems[${index}].productType`,
+                        `orderItems[${index}].level`,
+                      ]);
+                      updateUnitPrice(index, productType, value, level);
+                    }}
+                    className="w-full"
                   />
                 )}
               />
@@ -283,12 +363,16 @@ const EditOrderItems = ({ selectedOrder, setIsDialogOpen, onOrderUpdated }) => {
                 render={({ field }) => (
                   <FormItem className="w-40">
                     <FormControl>
-                      <Tooltip title="Unit Price">
+                      <Tooltip
+                        title="Unit Price"
+                        className="cursor-pointer w-full"
+                      >
                         <Input
                           {...field}
                           placeholder="Unit Price"
                           type="number"
                           readOnly
+                          className="w-full mt-2"
                         />
                       </Tooltip>
                     </FormControl>
@@ -302,11 +386,15 @@ const EditOrderItems = ({ selectedOrder, setIsDialogOpen, onOrderUpdated }) => {
                 render={({ field }) => (
                   <FormItem className="w-40">
                     <FormControl>
-                      <Tooltip title="Quantity">
+                      <Tooltip
+                        title="Quantity"
+                        className="cursor-pointer w-full"
+                      >
                         <Input
                           {...field}
                           placeholder="Quantity"
                           type="number"
+                          className="w-full mt-2"
                         />
                       </Tooltip>
                     </FormControl>
@@ -316,7 +404,17 @@ const EditOrderItems = ({ selectedOrder, setIsDialogOpen, onOrderUpdated }) => {
               />
             </div>
           </div>
-          <MinusCircle onClick={() => remove(index)} />
+
+          {/* Remove Button */}
+          <div className="flex items-center">
+            <Tooltip title="Remove field">
+              <MinusCircle
+                onClick={() => remove(index)}
+                style={{ width: "25px", height: "25px" }}
+                className="cursor-pointer text-red-500"
+              />
+            </Tooltip>
+          </div>
         </div>
         <Separator />
       </>
@@ -359,10 +457,63 @@ const EditOrderItems = ({ selectedOrder, setIsDialogOpen, onOrderUpdated }) => {
             className="mt-5 w-full cursor-pointer"
           />
         </Tooltip>
-        <Separator />
+        <Separator className="my-8" />
+        <h2 className="text-2xl font-bold mb-4">
+          Selected Order Items Preview
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {orderItems
+            .filter(
+              (item) =>
+                item.productType !== "LOGO" && item.productType !== "NECKTIE"
+            )
+            .map((item, index) => {
+              const availableProduct = finishedProducts.find(
+                (product) =>
+                  product.level === item.level &&
+                  product.productType === item.productType &&
+                  product.size === item.size
+              );
+
+              return (
+                <Card key={index}>
+                  <CardContent>
+                    <CardHeader className="text-lg font-bold">
+                      <CardTitle>{item.productType}</CardTitle>
+                    </CardHeader>
+                    <CardDescription>
+                      <p className="text-sm mb-1">Level: {item.level}</p>
+                      <p className="text-sm mb-1">Size: {item.size}</p>
+                      <p className="text-sm mb-1">Quantity: {item.quantity}</p>
+                      {availableProduct && (
+                        <p
+                          className={`text-sm font-medium ${
+                            availableProduct.status === "Low Stock"
+                              ? "text-yellow-600"
+                              : "text-green-600"
+                          }`}
+                        >
+                          Status: {availableProduct.status} (Available:{" "}
+                          {availableProduct.quantity})
+                        </p>
+                      )}
+                      {!availableProduct && (
+                        <p className="text-sm font-medium text-red-600">
+                          Status: Not available in stock
+                        </p>
+                      )}
+                    </CardDescription>
+                  </CardContent>
+                </Card>
+              );
+            })}
+        </div>
+
+        <Separator className="my-8" />
+        {/* Total Price Preview */}
         <div className="flex justify-between items-center">
           <span className="text-lg">Total Price:</span>
-          <span className="text-lg font-bold">
+          <span className="text-lg font-bold ">
             {totalPrice.toLocaleString("en-PH", {
               style: "currency",
               currency: "PHP",
