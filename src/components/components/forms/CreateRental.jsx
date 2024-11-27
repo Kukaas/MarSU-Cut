@@ -44,8 +44,14 @@ import {
 } from "@/components/ui/alert-dialog";
 import { DialogClose } from "@/components/ui/dialog";
 import SelectField from "../custom-components/SelectField";
-import CustomNumberInput from "../custom-components/CustomNumberInput";
 import { Input } from "@/components/ui/input";
+
+// Utility function to determine stock color
+const getStockColorClass = (quantity) => {
+  if (quantity === 0) return "text-red-500";
+  if (quantity < 15) return "text-orange-500";
+  return "text-green-500";
+};
 
 const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
   const [finishedProducts, setFinishedProducts] = useState([]);
@@ -246,23 +252,34 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
                   </FormItem>
                 )}
               />
-              <div className="flex justify-between gap-4">
-                <FormField
-                  control={form.control}
-                  name="small"
-                  render={({ field }) => {
-                    const maxQuantity =
-                      finishedProducts.find(
-                        (product) => product.size === "Small"
-                      )?.quantity || 0;
+              {["small", "medium", "large", "extraLarge"].map((sizeKey) => {
+                const sizeName =
+                  sizeKey.charAt(0).toUpperCase() + sizeKey.slice(1);
+                const maxQuantity =
+                  finishedProducts.find(
+                    (product) => product.size.toLowerCase() === sizeKey
+                  )?.quantity || 0;
+                const colorClass = getStockColorClass(maxQuantity);
 
-                    return (
-                      <FormItem>
-                        <FormLabel>
-                          Small{" "}
-                          {maxQuantity > 0 ? `(Available: ${maxQuantity})` : ""}
-                        </FormLabel>
-
+                return (
+                  <FormField
+                    key={sizeKey}
+                    control={form.control}
+                    name={sizeKey}
+                    render={({ field }) => (
+                      <FormItem className="">
+                        <div className="flex items-center justify-between mb-2">
+                          <FormLabel className="font-medium flex items-center ">
+                            <span>{sizeName}</span>
+                            <span
+                              className={`px-2 py-1 text-xs ${colorClass} bg-opacity-10`}
+                            >
+                              {maxQuantity > 0
+                                ? `Available: ${maxQuantity}`
+                                : "Out of stock"}
+                            </span>
+                          </FormLabel>
+                        </div>
                         <FormControl>
                           <Input
                             type="number"
@@ -271,13 +288,11 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
                             onChange={(e) => {
                               const value = e.target.value;
 
-                              // Allow empty input for backspacing or clearing
                               if (value === "") {
                                 field.onChange("");
                                 return;
                               }
 
-                              // Parse and validate the number
                               const numericValue = parseFloat(value);
                               if (
                                 numericValue >= 0 &&
@@ -286,168 +301,17 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
                                 field.onChange(numericValue);
                               }
                             }}
-                            placeholder="Small"
-                            className="w-full"
-                            max={maxQuantity} // This sets the max property for browsers
+                            placeholder={`Enter quantity for ${sizeName}`}
+                            className="w-full rounded-md border-gray-300 focus:ring focus:ring-blue-300 focus:outline-none p-2"
+                            max={maxQuantity}
                           />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
-                    );
-                  }}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="medium"
-                  render={({ field }) => {
-                    const maxQuantity =
-                      finishedProducts.find(
-                        (product) => product.size === "Medium"
-                      )?.quantity || 0;
-
-                    return (
-                      <FormItem>
-                        <FormLabel>
-                          Medium{" "}
-                          {maxQuantity > 0 ? `(Available: ${maxQuantity})` : ""}
-                        </FormLabel>
-
-                        <FormControl>
-                          <Input
-                            type="number"
-                            {...field}
-                            value={field.value !== undefined ? field.value : ""}
-                            onChange={(e) => {
-                              const value = e.target.value;
-
-                              // Allow empty input for backspacing or clearing
-                              if (value === "") {
-                                field.onChange("");
-                                return;
-                              }
-
-                              // Parse and validate the number
-                              const numericValue = parseFloat(value);
-                              if (
-                                numericValue >= 0 &&
-                                numericValue <= maxQuantity
-                              ) {
-                                field.onChange(numericValue);
-                              }
-                            }}
-                            placeholder="Medium"
-                            className="w-full"
-                            max={maxQuantity} // This sets the max property for browsers
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    );
-                  }}
-                />
-              </div>
-
-              <div className="flex justify-between gap-4">
-                <FormField
-                  control={form.control}
-                  name="large"
-                  render={({ field }) => {
-                    const maxQuantity =
-                      finishedProducts.find(
-                        (product) => product.size === "Large"
-                      )?.quantity || 0;
-
-                    return (
-                      <FormItem>
-                        <FormLabel>
-                          Large{" "}
-                          {maxQuantity > 0 ? `(Available: ${maxQuantity})` : ""}
-                        </FormLabel>
-
-                        <FormControl>
-                          <Input
-                            type="number"
-                            {...field}
-                            value={field.value !== undefined ? field.value : ""}
-                            onChange={(e) => {
-                              const value = e.target.value;
-
-                              // Allow empty input for backspacing or clearing
-                              if (value === "") {
-                                field.onChange("");
-                                return;
-                              }
-
-                              // Parse and validate the number
-                              const numericValue = parseFloat(value);
-                              if (
-                                numericValue >= 0 &&
-                                numericValue <= maxQuantity
-                              ) {
-                                field.onChange(numericValue);
-                              }
-                            }}
-                            placeholder="Large"
-                            className="w-full"
-                            max={maxQuantity} // This sets the max property for browsers
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    );
-                  }}
-                />
-                <FormField
-                  control={form.control}
-                  name="extraLarge"
-                  render={({ field }) => {
-                    const maxQuantity =
-                      finishedProducts.find(
-                        (product) => product.size === "Extra Large"
-                      )?.quantity || 0;
-
-                    return (
-                      <FormItem>
-                        <FormLabel>
-                          Extra Large{" "}
-                          {maxQuantity > 0 ? `(Available: ${maxQuantity})` : ""}
-                        </FormLabel>
-
-                        <FormControl>
-                          <Input
-                            type="number"
-                            {...field}
-                            value={field.value !== undefined ? field.value : ""}
-                            onChange={(e) => {
-                              const value = e.target.value;
-
-                              // Allow empty input for backspacing or clearing
-                              if (value === "") {
-                                field.onChange("");
-                                return;
-                              }
-
-                              // Parse and validate the number
-                              const numericValue = parseFloat(value);
-                              if (
-                                numericValue >= 0 &&
-                                numericValue <= maxQuantity
-                              ) {
-                                field.onChange(numericValue);
-                              }
-                            }}
-                            placeholder="Extra Large"
-                            className="w-full"
-                            max={maxQuantity} // This sets the max property for browsers
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    );
-                  }}
-                />
-              </div>
+                    )}
+                  />
+                );
+              })}
             </div>
           </fieldset>
 
