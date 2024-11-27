@@ -13,18 +13,18 @@ import React, { useState } from "react";
 import { toast } from "sonner";
 
 const PrintableForm = () => {
-  const [sewerName, setSewerName] = useState("");
+  const [tailorName, setTailorName] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handlePrint = () => {
-    if (!sewerName) {
+    if (!tailorName) {
       toast.error("Please add the name of the sewer");
       return;
     }
 
     const printContent = document
       .getElementById("printableContent")
-      .innerHTML.replace("{sewerName}", sewerName);
+      .innerHTML.replace("{sewerName}", tailorName);
 
     // Create a temporary print area
     const originalContent = document.body.innerHTML;
@@ -124,8 +124,8 @@ const PrintableForm = () => {
             <Input
               type="text"
               placeholder="Enter Sewer Name"
-              value={sewerName}
-              onChange={(e) => setSewerName(e.target.value)}
+              value={tailorName}
+              onChange={(e) => setTailorName(e.target.value)}
               className="mb-4"
             />
             <div className="flex flex-col items-center gap-4 mt-4">
@@ -137,7 +137,7 @@ const PrintableForm = () => {
                 </AlertDialogCancel>
                 <Button
                   onClick={() => {
-                    if (sewerName) {
+                    if (tailorName) {
                       handlePrint();
                       setIsDialogOpen(false);
                     } else {
@@ -163,7 +163,7 @@ const PrintableForm = () => {
             <p className="text-sm">
               For the Month of: {currentMonth} {currentYear}
             </p>
-            <p className="text-sm">Sewer Name: {sewerName || "N/A"}</p>{" "}
+            <p className="text-sm">Tailor Name: {tailorName || "N/A"}</p>{" "}
           </div>
 
           <table>
