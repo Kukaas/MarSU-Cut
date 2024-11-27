@@ -1,63 +1,36 @@
-import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { toast } from "sonner";
+import { forwardRef, useImperativeHandle } from "react";
 import PropTypes from "prop-types";
-import { useState } from "react";
-import { Printer } from "lucide-react";
 import logo from "../../../../../assets/logo_msc.jpg";
+import ToasterError from "@/lib/Toaster";
 
-function DownloadButton({ selectedDate, filteredData }) {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [fileName, setFileName] = useState("accomplishment_report.pdf");
+const DownloadButton = forwardRef(({ selectedDate, filteredData }, ref) => {
+  useImperativeHandle(ref, () => ({
+    handlePrint: (dateRange, data) => {
+      handlePrint(dateRange, data);
+    },
+  }));
 
-  const toastError = () => {
-    toast.error("No data to print, please select a month", {
-      action: {
-        label: "Ok",
-      },
+  const handlePrint = (dateRange, data) => {
+    if (!dateRange?.from || !dateRange?.to || !data || data.length === 0) {
+      ToasterError();
+      return;
+    }
+
+    const formattedStartDate = dateRange.from.toLocaleString("default", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
     });
-  };
-
-  const handlePrint = () => {
-    const startDate = selectedDate?.from;
-    const endDate = selectedDate?.to;
-
-    if (!startDate || !endDate) {
-      toastError();
-      return;
-    }
-
-    if (!filteredData || filteredData.length === 0) {
-      toastError();
-      return;
-    }
-
-    const getMonthsInRange = (start, end) => {
-      const months = [];
-      let current = new Date(start);
-      while (current <= end) {
-        months.push(current.toLocaleString("default", { month: "long" }));
-        current.setMonth(current.getMonth() + 1);
-      }
-      return months;
-    };
-
-    const monthNames = getMonthsInRange(startDate, endDate);
-    const formattedMonths = monthNames.join(", ");
-    const title = `ACCOMPLISHMENT REPORT FOR THE MONTH(S) OF ${formattedMonths.toUpperCase()} ${endDate.getFullYear()}`;
+    const formattedEndDate = dateRange.to.toLocaleString("default", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
+    const title = `ACCOMPLISHMENT REPORT FOR ${formattedStartDate.toUpperCase()} TO ${formattedEndDate.toUpperCase()}`;
 
     // Sort by date (ascending order)
-    const sortedData = filteredData.sort(
-      (a, b) => new Date(a.date) - new Date(b.date)
+    const sortedData = [...data].sort((a, b) =>
+      a.assignedEmployee.localeCompare(b.assignedEmployee)
     );
 
     const tableData = sortedData.map((item) => {
@@ -192,59 +165,9 @@ function DownloadButton({ selectedDate, filteredData }) {
       alert("Please allow popups for this website");
     }
   };
+});
 
-  return (
-    <div>
-      <Button
-        className="h-8"
-        onClick={() => setIsDialogOpen(true)}
-        variant="outline"
-      >
-        <Printer className="mr-2 h-4" />
-        Print
-      </Button>
-
-      <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Print Report</AlertDialogTitle>
-            <AlertDialogDescription>
-              Print the accomplishment report
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <div className="mt-3">
-            <Input
-              type="text"
-              placeholder="Enter file name"
-              value={fileName}
-              onChange={(e) => setFileName(e.target.value)}
-              className="mb-4"
-            />
-            <div className="flex flex-col items-center gap-4">
-              <AlertDialogFooter className="flex flex-col items-center gap-4 w-full">
-                <AlertDialogCancel asChild>
-                  <Button variant="outline" className="w-full">
-                    Cancel
-                  </Button>
-                </AlertDialogCancel>
-
-                <Button
-                  onClick={() => {
-                    handlePrint();
-                    setIsDialogOpen(false);
-                  }}
-                  className="flex items-center justify-center w-full"
-                >
-                  Confirm
-                </Button>
-              </AlertDialogFooter>
-            </div>
-          </div>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
-  );
-}
+DownloadButton.displayName = "DownloadButton";
 
 DownloadButton.propTypes = {
   selectedDate: PropTypes.shape({
@@ -254,8 +177,10 @@ DownloadButton.propTypes = {
   filteredData: PropTypes.arrayOf(
     PropTypes.shape({
       date: PropTypes.string,
-      type: PropTypes.string,
-      accomplishment: PropTypes.string,
+      assignedEmployee: PropTypes.string,
+      accomplishmentType: PropTypes.string,
+      product: PropTypes.string,
+      quantity: PropTypes.number,
       remarks: PropTypes.string,
     })
   ),

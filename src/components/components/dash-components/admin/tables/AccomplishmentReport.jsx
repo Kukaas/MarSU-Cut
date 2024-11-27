@@ -1,4 +1,3 @@
-// UI
 import {
   Popover,
   PopoverContent,
@@ -8,16 +7,13 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { Tooltip } from "antd";
 import { Button } from "@/components/ui/button";
-
-// icons
-// import { LoadingOutlined } from "@ant-design/icons";
+import { Printer } from "lucide-react";
 import { CalendarIcon, PlusCircle } from "lucide-react";
 
-// others
 import axios from "axios";
 import { cn } from "@/lib/utils";
-import { endOfMonth, format, startOfMonth } from "date-fns";
-import { useEffect, useState } from "react";
+import { format } from "date-fns";
+import { useEffect, useState, useRef } from "react";
 
 import DownloadButton from "./DownloadButton";
 import CreateAccomplishment from "../../../forms/CreateAccomplishment";
@@ -25,7 +21,6 @@ import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomTable from "@/components/components/custom-components/CustomTable";
 import DataTableColumnHeader from "@/components/components/custom-components/DataTableColumnHeader";
-// import DeleteDialog from "@/components/components/custom-components/DeleteDialog";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -33,30 +28,35 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
+  AlertDialogFooter,
+  AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
 import CustomPageTitle from "@/components/components/custom-components/CustomPageTitle";
 import { useSelector } from "react-redux";
 import EditAccomplishment from "@/components/components/forms/EditAccomplishment";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { fetchEmployees } from "@/hooks/helper";
+import { toast } from "sonner";
 
 const AccomplishmentReport = () => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(false);
-  // const [loadingDelete, setLoadingDelete] = useState(false);
   const [selectedAccomplishment, setSelectedAccomplishment] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
 
-  const [selectedDate, setSelectedDate] = useState({
-    from: startOfMonth(new Date()),
-    to: endOfMonth(new Date()),
-  });
-
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-
-  const handleSelect = (selectedDateRange) => {
-    setSelectedDate(selectedDateRange);
-  };
+  const [selectedDate, setSelectedDate] = useState({ from: null, to: null });
+  const [isPrintDialogOpen, setIsPrintDialogOpen] = useState(false);
+  const [employees, setEmployees] = useState([]);
+  const [selectedEmployee, setSelectedEmployee] = useState("All");
+  const downloadButtonRef = useRef(null);
 
   useEffect(() => {
     const fetchAccomplishments = async () => {
@@ -76,7 +76,7 @@ const AccomplishmentReport = () => {
         if (res.status === 200) {
           const fetchedData = res.data.accomplishmentReports;
           setData(fetchedData);
-          filterData(fetchedData, selectedDate); // Apply initial filter
+          setFilteredData(fetchedData);
           setLoading(false);
         }
       } catch (error) {
@@ -86,28 +86,39 @@ const AccomplishmentReport = () => {
     };
 
     fetchAccomplishments();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    filterData(data, selectedDate);
-  }, [selectedDate, data]);
+    const getEmployees = async () => {
+      try {
+        const fetchedEmployees = await fetchEmployees();
+        setEmployees(fetchedEmployees);
+      } catch (error) {
+        console.error("Failed to fetch employees:", error);
+      }
+    };
+    getEmployees();
+  }, []);
 
-  const filterData = (data, dateRange) => {
-    if (!dateRange) {
-      setFilteredData(data);
-      return;
-    }
-
-    const filtered = data.filter((item) => {
-      const itemDate = new Date(item.date);
-      return (
-        itemDate >= new Date(dateRange.from) &&
-        itemDate <= new Date(dateRange.to)
+  useEffect(() => {
+    if (selectedDate.from && selectedDate.to) {
+      let filtered = data.filter((item) => {
+        const itemDate = new Date(item.date);
+        return itemDate >= selectedDate.from && itemDate <= selectedDate.to;
+      });
+      if (selectedEmployee !== "All") {
+        filtered = filtered.filter(
+          (item) => item.assignedEmployee === selectedEmployee
+        );
+      }
+      const sortedData = filtered.sort((a, b) =>
+        a.assignedEmployee.localeCompare(b.assignedEmployee)
       );
-    });
-    setFilteredData(filtered);
-  };
+      setFilteredData(sortedData);
+    } else {
+      setFilteredData(data);
+    }
+  }, [selectedDate, data, selectedEmployee]);
 
   const handleEditAccomplishment = (updatedAccomplishment) => {
     setData((prevData) =>
@@ -195,12 +206,6 @@ const AccomplishmentReport = () => {
                 </AlertDialogContent>
               </AlertDialog>
             </Tooltip>
-            {/* <Tooltip title="Delete Accomplishment">
-              <DeleteDialog
-                item={`accompishment with ID ${accomplishment?._id}`}
-                handleDelete={() => handleDeleteAccomplishment(accomplishment)}
-              />
-            </Tooltip> */}
           </div>
         );
       },
@@ -211,13 +216,32 @@ const AccomplishmentReport = () => {
     setData((prevData) => [newAccomplishment, ...prevData]);
   };
 
+  const handlePrint = () => {
+    if (!selectedDate.from || !selectedDate.to) {
+      toast.error("Please select a date range");
+      return;
+    }
+
+    let dataToPrint = filteredData;
+    if (selectedEmployee !== "All") {
+      dataToPrint = dataToPrint.filter(
+        (item) => item.assignedEmployee === selectedEmployee
+      );
+    }
+
+    if (dataToPrint.length === 0) {
+      toast.error("No data to print for the selected criteria");
+      return;
+    }
+
+    // Call the DownloadButton's print function with the filtered data
+    if (downloadButtonRef.current) {
+      downloadButtonRef.current.handlePrint(selectedDate, dataToPrint);
+    }
+    setIsPrintDialogOpen(false);
+  };
+
   return (
-    // <Spin
-    //   spinning={loadingDelete}
-    //   indicator={
-    //     <LoadingOutlined className="dark:text-white" style={{ fontSize: 48 }} />
-    //   }
-    // >
     <>
       <div className="w-full p-5 h-screen">
         <CustomPageTitle
@@ -226,83 +250,133 @@ const AccomplishmentReport = () => {
         />
         <div className="flex flex-wrap items-center justify-between pb-2">
           <div className="flex flex-1 flex-wrap items-center gap-2">
-            <div className={cn("grid gap-2")}>
-              <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
-                <Tooltip
-                  title={
-                    selectedDate?.from ? (
-                      <>
-                        <span>
-                          {selectedDate?.from &&
-                            format(selectedDate.from, "LLL dd, y")}{" "}
-                          -{" "}
-                        </span>
-                        <span>
-                          {selectedDate?.to &&
-                            format(selectedDate.to, "LLL dd, y")}
-                        </span>
-                      </>
-                    ) : (
-                      "Please select a date"
-                    )
-                  }
-                >
-                  <PopoverTrigger asChild>
-                    <Button
-                      id="date"
-                      variant={"outline"}
-                      className={cn(
-                        "h-8 w-[250px] justify-start text-left font-normal",
-                        !selectedDate && "text-muted-foreground"
-                      )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {selectedDate?.from ? (
-                        selectedDate.to ? (
-                          <>
-                            {format(selectedDate.from, "LLL dd, y")} -{" "}
-                            {format(selectedDate.to, "LLL dd, y")}
-                          </>
-                        ) : (
-                          format(selectedDate.from, "LLL dd, y")
-                        )
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                </Tooltip>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    initialFocus
-                    mode="range"
-                    defaultMonth={selectedDate?.from}
-                    selected={selectedDate}
-                    onSelect={handleSelect}
-                    numberOfMonths={2}
-                  />
-                  <div className="flex justify-end gap-2 p-2">
-                    <Button
-                      variant="outline"
-                      onClick={() => setIsPopoverOpen(false)}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        setSelectedDate(null);
-                        setIsPopoverOpen(false);
-                      }}
-                    >
-                      Show All
-                    </Button>
-                  </div>
-                </PopoverContent>
-              </Popover>
-            </div>
+            {/* Removed Popover for date selection */}
           </div>
           <div className="flex items-center py-4 justify-between overflow-y-auto">
+            <AlertDialog
+              open={isPrintDialogOpen}
+              onOpenChange={setIsPrintDialogOpen}
+            >
+              <AlertDialogTrigger asChild>
+                <Button variant="outline" className="h-8 mr-2">
+                  <Printer className="mr-2 h-4 w-4" />
+                  Print
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Select Date Range and Employee for Printing
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Choose a date range and employee to print the accomplishment
+                    report.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex flex-col space-y-2">
+                      <label htmlFor="startDate">Start Date</label>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            id="startDate"
+                            variant={"outline"}
+                            className={cn(
+                              "w-full justify-start text-left font-normal",
+                              !selectedDate.from && "text-muted-foreground"
+                            )}
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {selectedDate.from ? (
+                              format(selectedDate.from, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={selectedDate.from}
+                            onSelect={(date) =>
+                              setSelectedDate((prev) => ({
+                                ...prev,
+                                from: date,
+                              }))
+                            }
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+                    <div className="flex flex-col space-y-2">
+                      <label htmlFor="endDate">End Date</label>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            id="endDate"
+                            variant={"outline"}
+                            className={cn(
+                              "w-full justify-start text-left font-normal",
+                              !selectedDate.to && "text-muted-foreground"
+                            )}
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {selectedDate.to ? (
+                              format(selectedDate.to, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={selectedDate.to}
+                            onSelect={(date) =>
+                              setSelectedDate((prev) => ({ ...prev, to: date }))
+                            }
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+                  </div>
+                  <div className="flex flex-col space-y-2">
+                    <label htmlFor="employee">Assigned Employee</label>
+                    <Select
+                      onValueChange={setSelectedEmployee}
+                      defaultValue={selectedEmployee}
+                    >
+                      <SelectTrigger id="employee">
+                        <SelectValue placeholder="Select an employee" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="All">All Employees</SelectItem>
+                        {employees.map((employee) => (
+                          <SelectItem key={employee._id} value={employee.name}>
+                            {employee.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <AlertDialogFooter className="w-full">
+                  <AlertDialogCancel asChild>
+                    <Button variant="outline" className="w-full">
+                      Cancel
+                    </Button>
+                  </AlertDialogCancel>
+                  <Button onClick={handlePrint} className="w-full">
+                    Print
+                  </Button>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
             <DownloadButton
+              ref={downloadButtonRef}
               selectedDate={selectedDate}
               filteredData={filteredData}
             />
@@ -343,7 +417,6 @@ const AccomplishmentReport = () => {
         </div>
       </div>
     </>
-    // </Spin>
   );
 };
 
