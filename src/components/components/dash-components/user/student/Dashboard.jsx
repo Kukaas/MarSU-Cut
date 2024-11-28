@@ -20,6 +20,7 @@ import CreateOrder from "@/components/components/forms/CreateOrder";
 import { Toaster } from "sonner";
 import Blouse from "../../../../../assets/blouse.png";
 import Skirt from "../../../../../assets/skirt.png";
+import SetFemale from "../../../../../assets/1SetFemale.png";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -106,7 +107,7 @@ const Dashboard = () => {
                 <div className="ml-6 space-y-1">
                   {item.details.map((detail, idx) => (
                     <p key={idx} className="text-base text-muted-foreground">
-                      <span className="text-muted mr-2">•</span>
+                      <span className="mr-2">•</span>
                       {detail}
                     </p>
                   ))}
@@ -156,7 +157,7 @@ const Dashboard = () => {
               {[
                 { src: `${Skirt}`, label: "Skirt" },
                 { src: `${Blouse}`, label: "Blouse" },
-                { src: "/placeholder.svg", label: "Uniform Set" },
+                { src: `${SetFemale}`, label: "Uniform Set (Female)" },
               ].map((product, idx) => (
                 <div
                   key={idx}
@@ -165,7 +166,7 @@ const Dashboard = () => {
                   <img
                     src={`${product.src}?height=300&width=300`}
                     alt={`${product.label} preview`}
-                    className="object-cover w-full h-full"
+                    className="object-contain w-full h-full"
                   />
                   <span className="absolute bottom-2 left-2 bg-popover text-popover-foreground px-3 py-1 rounded text-sm font-medium shadow-md">
                     {product.label}
