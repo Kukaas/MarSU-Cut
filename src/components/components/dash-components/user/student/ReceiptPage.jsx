@@ -375,7 +375,7 @@ function ReceiptsPage() {
           Go Back
         </Button>
       </div>
-      <Toaster position="top-right" richColors />
+      <Toaster position="top-center" richColors closeButton />
     </div>
   );
 }
