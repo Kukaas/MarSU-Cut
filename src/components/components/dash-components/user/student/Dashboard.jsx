@@ -18,6 +18,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CreateOrder from "@/components/components/forms/CreateOrder";
 import { Toaster } from "sonner";
+import Blouse from "../../../../../assets/blouse.png";
+import Skirt from "../../../../../assets/skirt.png";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -152,8 +154,8 @@ const Dashboard = () => {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[
-                { src: "/placeholder.svg", label: "Polo Shirt" },
-                { src: "/placeholder.svg", label: "Blouse" },
+                { src: `${Skirt}`, label: "Skirt" },
+                { src: `${Blouse}`, label: "Blouse" },
                 { src: "/placeholder.svg", label: "Uniform Set" },
               ].map((product, idx) => (
                 <div
