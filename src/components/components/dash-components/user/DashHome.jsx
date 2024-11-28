@@ -2,8 +2,9 @@ import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { CustomCalendar } from "../../custom-components/CustomCalendar";
 import CustomPageTitle from "../../custom-components/CustomPageTitle";
+import Dashboard from "./student/Dashboard";
+import { Toaster } from "sonner";
 
 const DashHome = () => {
   const navigate = useNavigate();
@@ -20,9 +21,9 @@ const DashHome = () => {
   }, [currentUser, navigate]);
 
   return (
-    <div className="w-full h-screen p-5 overflow-x-auto">
+    <div className="w-full h-screen p-5 overflow-x-auto bg-background text-foreground">
       {currentUser.role !== "Coordinator" && (
-        <CustomPageTitle title="Schedules" description="View all schedules" />
+        <CustomPageTitle title="Dashboard" description="View your dashboard" />
       )}
       <div className="w-full pt-10">
         <Helmet>
@@ -34,9 +35,10 @@ const DashHome = () => {
             <h1 className="text-3xl font-bold">Welcome, Coordinator</h1>
           </div>
         ) : (
-          <CustomCalendar />
+          <Dashboard />
         )}
       </div>
+      <Toaster position="top-center" richColors closeButton />
     </div>
   );
 };

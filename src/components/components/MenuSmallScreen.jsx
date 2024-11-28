@@ -153,7 +153,7 @@ const MenuSmallScreen = () => {
             {currentUser.role === "JO" && currentUser.isAdmin && (
               <>
                 <Link
-                  to="/dashboard?tab=home"
+                  to="/dashboard?tab=home-admin"
                   className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
                     isActive("/dashboard?tab=home-admin")
                       ? "bg-muted text-primary"
@@ -515,6 +515,19 @@ const MenuSmallScreen = () => {
                   <>
                     <SheetTrigger asChild>
                       <Link
+                        to="/dashboard?tab=home"
+                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                          isActive("/dashboard?tab=home")
+                            ? "bg-muted text-primary"
+                            : "text-muted-foreground hover:text-primary"
+                        }`}
+                      >
+                        <Home className="h-4 w-4" />
+                        Dashboard
+                      </Link>
+                    </SheetTrigger>
+                    <SheetTrigger asChild>
+                      <Link
                         to="/dashboard?tab=orders"
                         className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
                           isActive("/dashboard?tab=orders")
@@ -528,9 +541,9 @@ const MenuSmallScreen = () => {
                     </SheetTrigger>
                     <SheetTrigger asChild>
                       <Link
-                        to="/dashboard?tab=home"
+                        to="/dashboard?tab=schedules"
                         className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                          isActive("/dashboard?tab=home")
+                          isActive("/dashboard?tab=schedules")
                             ? "bg-muted text-primary"
                             : "text-muted-foreground hover:text-primary"
                         }`}

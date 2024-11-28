@@ -1,6 +1,3 @@
-// UI
-import { Typography } from "antd";
-
 // others
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -10,7 +7,6 @@ import { useEffect } from "react";
 import CustomCalendar from "../../custom-components/CustomCalendar";
 import CustomPageTitle from "../../custom-components/CustomPageTitle";
 
-
 const DashSchedules = () => {
   const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
@@ -19,14 +15,14 @@ const DashSchedules = () => {
     if (currentUser && currentUser.isAdmin) {
       navigate("/dashboard?tab=schedules");
     } else if (currentUser && currentUser.isAdmin === false) {
-      navigate("/dashboard?tab=home");
+      navigate("/dashboard?tab=schedules");
     } else {
       navigate("/");
     }
   }, [currentUser, navigate]);
 
   return (
-    <div className="w-full p-5">
+    <div className="w-full p-5 h-screen overflow-auto">
       <CustomPageTitle title="Schedules" description="View all schedules" />
       <div className="w-full h-screen flex items-center justify-center overflow-x-auto">
         <Helmet>
