@@ -16,6 +16,7 @@ import {
   AlertDialogAction,
   AlertDialog,
   AlertDialogDescription,
+  AlertDialogFooter,
 } from "@/components/ui/alert-dialog";
 import {
   Form,
@@ -49,7 +50,7 @@ import CustomTable from "@/components/components/custom-components/CustomTable";
 import { statusColors } from "@/lib/utils";
 import DataTableColumnHeader from "@/components/components/custom-components/DataTableColumnHeader";
 import DataTableToolBar from "@/components/components/custom-components/DataTableToolBar";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addPickUpDateSchema } from "@/schema/shema";
@@ -58,6 +59,7 @@ import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import RentalDetails from "./details/RentalDetails";
 import CustomPageTitle from "@/components/components/custom-components/CustomPageTitle";
+import { Input } from "@/components/ui/input";
 
 function Rentals() {
   const [data, setData] = useState([]);
@@ -69,6 +71,10 @@ function Rentals() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(true);
   const [selectedRental, setSelectedRental] = useState(null);
+  const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
+  const [rejectReason, setRejectReason] = useState("");
+  const [rentalToReject, setRentalToReject] = useState(null);
+  const [loadingReject, setLoadingReject] = useState(false);
   const navigate = useNavigate();
 
   const form = useForm({
@@ -168,12 +174,22 @@ function Rentals() {
     }
   };
 
-  const handleReject = async (rental) => {
+  const handleReject = async (order) => {
+    setRentalToReject(order);
+    setIsRejectDialogOpen(true);
+  };
+
+  const confirmReject = async () => {
+    if (!rejectReason.trim()) {
+      toast.error("Please provide a reason for rejection");
+      return;
+    }
+
     try {
-      setLoadingUpdate(true);
+      setLoadingReject(true);
       const res = await axios.put(
-        `${BASE_URL}/api/v1/rental/update/${rental._id}`,
-        { status: "REJECTED" },
+        `${BASE_URL}/api/v1/rental/update/${rentalToReject._id}`,
+        { status: "REJECTED", reason: rejectReason },
         {
           headers: {
             "Content-Type": "application/json",
@@ -184,28 +200,26 @@ function Rentals() {
       );
 
       if (res.status === 200) {
-        setLoadingUpdate(false);
         toast.success(
-          `Rental of ${rental.coordinatorName} is rejected successfully!`
+          `Rental of ${rentalToReject.studentName} is rejected successfully!`
         );
-
-        // Update the data in the state
-        setData((prevData) => {
-          return prevData.map((item) => {
-            if (item._id === rental._id) {
-              return { ...item, status: "REJECTED" };
-            }
-
-            return item;
-          });
-        });
+        setData((prevData) =>
+          prevData.map((item) =>
+            item._id === rentalToReject._id
+              ? { ...item, status: "REJECTED" }
+              : item
+          )
+        );
+        setIsRejectDialogOpen(false);
+        setRejectReason("");
       } else {
-        ToasterError();
-        setLoadingUpdate(false);
+        toast.error("Failed to reject order");
       }
     } catch (error) {
-      ToasterError();
-      setLoadingUpdate(false);
+      console.error("Error rejecting rental", error);
+      toast.error("An error occurred while rejecting the rental");
+    } finally {
+      setLoadingReject(false);
     }
   };
 
@@ -696,6 +710,43 @@ function Rentals() {
           setDetailsDialogOpen={setDetailsDialogOpen}
           selectedRental={selectedRental}
         />
+      </AlertDialog>
+
+      <AlertDialog
+        open={isRejectDialogOpen}
+        onOpenChange={setIsRejectDialogOpen}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Reject Order</AlertDialogTitle>
+            <AlertDialogDescription>
+              Please provide a reason for rejecting this order.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <Input
+            value={rejectReason}
+            onChange={(e) => setRejectReason(e.target.value)}
+            placeholder="Enter reason for rejection"
+          />
+          <AlertDialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsRejectDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button onClick={confirmReject} disabled={loadingReject}>
+              {loadingReject ? (
+                <div className="flex items-center">
+                  <Loader2 className="mr-2 animate-spin" />
+                  <span>Rejecting</span>
+                </div>
+              ) : (
+                "Reject"
+              )}
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
       </AlertDialog>
     </Spin>
   );
