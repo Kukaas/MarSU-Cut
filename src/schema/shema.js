@@ -142,7 +142,11 @@ export const OTPVerificationSchema = z.object({
 export const ResetPasswordSchema = z.object({
   password: z
     .string()
-    .min(6, { message: "Password must be at least 6 characters" }),
+    .min(6, { message: "Password must be at least 6 characters" })
+    .regex(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W_]).+$/, {
+      message:
+        "Password must contain letters, numbers, and a special character",
+    }),
   confirmPassword: z
     .string()
     .min(6, { message: "Confirm Password must be at least 6 characters" }),
@@ -154,7 +158,11 @@ export const ResetPasswordSchemaProfile = z.object({
     .min(6, { message: "Password must be at least 6 characters" }),
   newPassword: z
     .string()
-    .min(6, { message: "Confirm Password must be at least 6 characters" }),
+    .min(6, { message: "Confirm Password must be at least 6 characters" })
+    .regex(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W_]).+$/, {
+      message:
+        "Password must contain letters, numbers, and a special character",
+    }),
   confirmPassword: z
     .string()
     .min(6, { message: "Confirm Password must be at least 6 characters" }),
