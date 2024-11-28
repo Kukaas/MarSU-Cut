@@ -5,17 +5,16 @@ import { Button } from "../ui/button";
 import { toast, Toaster } from "sonner";
 
 // icons
-import { Loader2, Trash } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 // others
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { Tooltip } from "antd";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import ToasterError from "@/lib/Toaster";
-import { formatDistanceToNow, set } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import { Input } from "../ui/input";
 import CardLoading from "./custom-components/CardLoading";
 

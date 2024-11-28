@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import axios from "axios";
 import { BASE_URL } from "@/lib/api";
 import { token } from "@/lib/token";
+import PropTypes from "prop-types";
 
 const EditAccomplishment = ({ accomplishment, onAccomplishmentUpdate }) => {
   const [loading, setLoading] = useState(false);
@@ -168,6 +169,11 @@ const EditAccomplishment = ({ accomplishment, onAccomplishmentUpdate }) => {
       </div>
     </div>
   );
+};
+
+EditAccomplishment.propTypes = {
+  accomplishment: PropTypes.object,
+  onAccomplishmentUpdate: PropTypes.func,
 };
 
 export default EditAccomplishment;

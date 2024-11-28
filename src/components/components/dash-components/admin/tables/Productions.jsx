@@ -3,13 +3,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tooltip } from "antd";
-// import { toast } from "sonner";
 
 import { PlusCircle } from "lucide-react";
-// import { LoadingOutlined } from "@ant-design/icons";
 
 // others
-// import ToasterError from "@/lib/Toaster";
 import axios from "axios";
 import { useEffect, useState } from "react";
 

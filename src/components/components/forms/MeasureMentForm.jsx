@@ -14,6 +14,7 @@ import { BASE_URL } from "@/lib/api";
 import { token } from "@/lib/token";
 import { Loader2 } from "lucide-react";
 import CustomNumberInput from "../custom-components/CustomNumberInput";
+import PropTypes from "prop-types";
 
 const MeasureMentForm = ({ selectedOrder, setIsDialogOpen }) => {
   const [loading, setLoading] = useState(false);
@@ -200,6 +201,11 @@ const MeasureMentForm = ({ selectedOrder, setIsDialogOpen }) => {
       </Form>
     </div>
   );
+};
+
+MeasureMentForm.propTypes = {
+  selectedOrder: PropTypes.object,
+  setIsDialogOpen: PropTypes.func,
 };
 
 export default MeasureMentForm;

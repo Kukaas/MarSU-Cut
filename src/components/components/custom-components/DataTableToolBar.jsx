@@ -14,7 +14,7 @@ const DataTableToolBar = ({
   status,
   placeholder,
   title,
-  name
+  name,
 }) => {
   return (
     <div className="flex flex-wrap items-center justify-between pb-2">
@@ -50,6 +50,7 @@ DataTableToolBar.propTypes = {
   status: PropTypes.string.isRequired,
   placeholder: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
 };
 
 export default DataTableToolBar;

@@ -31,7 +31,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { Spin, Typography } from "antd";
+import { Spin } from "antd";
 import { toast } from "sonner";
 
 // icons
@@ -384,42 +384,6 @@ function Rentals() {
     }
   };
 
-  // Delete the rental
-  // const handleDelete = async (rental) => {
-  //   try {
-  //     setLoadingUpdate(true);
-  //     const res = await axios.delete(
-  //       `${BASE_URL}/api/v1/rental/${rental._id}`,
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //         withCredentials: true,
-  //       }
-  //     );
-
-  //     if (res.status === 200) {
-  //       setLoadingUpdate(false);
-  //       toast.success(
-  //         `Rental of ${rental.coordinatorName} is deleted successfully!`
-  //       );
-  //       // Update the data in the state
-  //       setData((prevData) => {
-  //         return prevData.filter((item) => item._id !== rental._id);
-  //       });
-  //     } else {
-  //       ToasterError();
-  //       setLoadingUpdate(false);
-  //     }
-  //   } catch (error) {
-  //     ToasterError({
-  //       description: "Please check you internet connection and try again.",
-  //     });
-  //     setLoadingUpdate(false);
-  //   }
-  // };
-
   const columns = [
     {
       accessorKey: "coordinatorName",
@@ -624,7 +588,10 @@ function Rentals() {
       }
     >
       <div className="w-full p-5 h-screen">
-        <CustomPageTitle title="Rentals" description={<span>Total Rentals: {data.length}</span>} />
+        <CustomPageTitle
+          title="Rentals"
+          description={<span>Total Rentals: {data.length}</span>}
+        />
         <DataTableToolBar
           searchValue={searchValue}
           setSearchValue={setSearchValue}

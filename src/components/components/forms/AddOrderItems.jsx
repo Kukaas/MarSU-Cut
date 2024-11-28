@@ -559,6 +559,7 @@ AddOrderItems.propTypes = {
   selectedOrder: PropTypes.object,
   setIsDialogOpen: PropTypes.func,
   onOrderItemsAdded: PropTypes.func,
+  form: PropTypes.object,
 };
 
 export default AddOrderItems;

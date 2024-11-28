@@ -19,7 +19,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 
-const CustomHeader = ({ date, prev, next, setView }) => {
+const CustomHeader = ({ date, prev, next }) => {
   const formattedDate = new Date(date);
   return (
     <div className="flex flex-col md:flex-row justify-center items-center mb-6">
@@ -227,7 +227,6 @@ export const CustomCalendar = () => {
           events={getVisibleSchedules()}
           dateClick={handleDateClick}
           headerToolbar={false}
-          
         />
       )}
 

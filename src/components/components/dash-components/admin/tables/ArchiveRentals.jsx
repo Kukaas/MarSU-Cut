@@ -10,7 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Spin, Tooltip, Typography } from "antd";
+import { Spin, Tooltip } from "antd";
 
 // icons
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
@@ -127,42 +127,6 @@ function ArchiveRentals() {
     }
   };
 
-  // Delete the rental
-  // const handleDelete = async (rental) => {
-  //   try {
-  //     setLoadingUpdate(true);
-  //     const res = await axios.delete(
-  //       `${BASE_URL}/api/v1/rental/${rental._id}`,
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //         withCredentials: true,
-  //       }
-  //     );
-
-  //     if (res.status === 200) {
-  //       setLoadingUpdate(false);
-  //       toast.success(
-  //         `Rental of ${rental.coordinatorName} is deleted successfully!`
-  //       );
-  //       // Update the data in the state
-  //       setData((prevData) => {
-  //         return prevData.filter((item) => item._id !== rental._id);
-  //       });
-  //     } else {
-  //       ToasterError();
-  //       setLoadingUpdate(false);
-  //     }
-  //   } catch (error) {
-  //     ToasterError({
-  //       description: "Please check you internet connection and try again.",
-  //     });
-  //     setLoadingUpdate(false);
-  //   }
-  // };
-
   const columns = [
     {
       accessorKey: "idNumber",
@@ -254,9 +218,6 @@ function ArchiveRentals() {
               <DropdownMenuItem onClick={() => handleUnarchive(rental)}>
                 Unarchive
               </DropdownMenuItem>
-              {/* <DropdownMenuItem onClick={() => handleDelete(rental)}>
-                <span className="text-red-500 hover:text-red-400">Delete</span>
-              </DropdownMenuItem> */}
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -277,7 +238,10 @@ function ArchiveRentals() {
       }
     >
       <div className="w-full p-5 h-screen">
-        <CustomPageTitle title="Archive Rentals" description="View all archived rentals" />
+        <CustomPageTitle
+          title="Archive Rentals"
+          description="View all archived rentals"
+        />
         <div className="flex flex-wrap items-center justify-between pb-2">
           <div className="flex flex-1 flex-wrap items-center gap-2">
             <Input

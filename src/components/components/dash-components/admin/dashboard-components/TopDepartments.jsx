@@ -4,8 +4,6 @@ import axios from "axios";
 import TableLoading from "../../../custom-components/TableLoading";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
-import { statusColors } from "@/lib/utils";
-import CustomBadge from "@/components/components/custom-components/CustomBadge";
 import CustomTable from "@/components/components/custom-components/CustomTable";
 import DataTableColumnHeader from "@/components/components/custom-components/DataTableColumnHeader";
 
@@ -36,7 +34,6 @@ const TopDepartments = () => {
             index: index + 1,
           }));
 
-
           setRecentOrders(dataWithIndex);
           setLoading(false);
         }
@@ -55,9 +52,9 @@ const TopDepartments = () => {
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="#" />
       ),
-      cell: ({ row }) => <span className="font-semibold">
-        Top {row.index + 1}
-      </span>,
+      cell: ({ row }) => (
+        <span className="font-semibold">Top {row.index + 1}</span>
+      ),
     },
     {
       accessorKey: "_id",

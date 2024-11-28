@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import logo from "../../../../../assets/logo_msc.jpg";
 import ToasterError from "@/lib/Toaster";
 
-const DownloadButton = forwardRef(({ selectedDate, filteredData }, ref) => {
+const DownloadButton = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => ({
     handlePrint: (dateRange, data) => {
       handlePrint(dateRange, data);

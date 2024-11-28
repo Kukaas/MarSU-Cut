@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { Spin, Tooltip, Typography } from "antd";
+import { Spin, Tooltip } from "antd";
 import {
   Dialog,
   DialogContent,
@@ -234,7 +234,10 @@ function Rentals() {
       }
     >
       <div className="w-full p-5 h-screen">
-        <CustomPageTitle title="Rentals" description="View and manage rentals" />
+        <CustomPageTitle
+          title="Rentals"
+          description="View and manage rentals"
+        />
         <div className="flex items-center py-4 justify-end overflow-auto">
           <Tooltip title="Create a rental">
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

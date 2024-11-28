@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Typography } from "antd";
 import SalesSummary from "./sales-components/SalesSummary";
 import { Button } from "@/components/ui/button";
 import { PrinterIcon } from "lucide-react";

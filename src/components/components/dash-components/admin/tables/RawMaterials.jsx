@@ -1,11 +1,9 @@
 // UI
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-// import { toast } from "sonner";
-import { Tooltip, Typography } from "antd";
+import { Tooltip } from "antd";
 
 import { PlusCircle } from "lucide-react";
-// import { LoadingOutlined } from "@ant-design/icons";
 
 // others
 import { useEffect, useState } from "react";
@@ -20,7 +18,6 @@ import CustomTable from "@/components/components/custom-components/CustomTable";
 import { statusColors } from "@/lib/utils";
 import CustomBadge from "@/components/components/custom-components/CustomBadge";
 import DataTableColumnHeader from "@/components/components/custom-components/DataTableColumnHeader";
-// import DeleteDialog from "@/components/components/custom-components/DeleteDialog";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -37,10 +34,9 @@ const RawMaterials = () => {
   const [originalData, setOriginalData] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [loading, setLoading] = useState(true);
-  // const [deleteLoading, setDeleteLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedRawMaterial, setSelectedRawMaterial] = useState(null);
-  const {currentUser} = useSelector((state) => state.user)  
+  const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
     const fetchRawMaterial = async () => {
@@ -80,37 +76,6 @@ const RawMaterials = () => {
       setData(filteredData);
     }
   }, [searchValue, originalData]);
-
-  // const handleDelete = async (rawMaterial) => {
-  //   try {
-  //     setDeleteLoading(true);
-  //     const res = await axios.delete(
-  //       `${BASE_URL}/api/v1/raw-materials/delete/${rawMaterial._id}`,
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //         withCredentials: true,
-  //       }
-  //     );
-
-  //     if (res.status === 200) {
-  //       setDeleteLoading(false);
-  //       setData((prevData) =>
-  //         prevData.filter((rawMaterial) => rawMaterial._id !== rawMaterial._id)
-  //       );
-  //       toast.success("Raw material deleted successfully!");
-  //     } else {
-  //       ToasterError();
-  //     }
-  //   } catch (error) {
-  //     ToasterError({
-  //       description: "Please check you internet connection and try again.",
-  //     });
-  //     setDeleteLoading(false);
-  //   }
-  // };
 
   const columns = [
     {
@@ -170,12 +135,6 @@ const RawMaterials = () => {
                 </AlertDialogContent>
               </AlertDialog>
             </Tooltip>
-            {/* <Tooltip title="Delete raw material">
-              <DeleteDialog
-                item={`raw material with ID ${rawMaterial?._id}`}
-                handleDelete={() => handleDelete(rawMaterial)}
-              />
-            </Tooltip> */}
           </div>
         );
       },
@@ -188,20 +147,12 @@ const RawMaterials = () => {
   };
 
   return (
-    // <Spin
-    //   spinning={deleteLoading}
-    //   indicator={
-    //     <LoadingOutlined
-    //       className="dark:text-white"
-    //       style={{
-    //         fontSize: 48,
-    //       }}
-    //     />
-    //   }
-    // >
     <div className="overflow-x-auto">
       <div className="w-full p-5 h-screen">
-      <CustomPageTitle title="Raw Materials" description="View and manage raw materials" />
+        <CustomPageTitle
+          title="Raw Materials"
+          description="View and manage raw materials"
+        />
         <div className="flex flex-wrap items-center justify-between pb-2">
           <div className="flex flex-1 flex-wrap items-center gap-2">
             <Input
@@ -241,7 +192,6 @@ const RawMaterials = () => {
         </div>
       </div>
     </div>
-    // </Spin>
   );
 };
 

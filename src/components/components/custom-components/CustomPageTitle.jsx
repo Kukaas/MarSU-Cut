@@ -1,4 +1,5 @@
 import { Card, CardDescription } from "@/components/ui/card";
+import PropTypes from "prop-types";
 
 const CustomPageTitle = ({ title, description }) => {
   return (
@@ -13,12 +14,19 @@ const CustomPageTitle = ({ title, description }) => {
         <h2 className="text-2xl font-bold leading-tight">{title}</h2>
         {description && (
           <CardDescription>
-            <p className="text-gray-300 dark:text-gray-400 text-xs">{description}</p>
+            <p className="text-gray-300 dark:text-gray-400 text-xs">
+              {description}
+            </p>
           </CardDescription>
         )}
       </div>
     </Card>
   );
+};
+
+CustomPageTitle.propTypes = {
+  title: PropTypes.string,
+  description: PropTypes.string,
 };
 
 export default CustomPageTitle;

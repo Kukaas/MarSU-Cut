@@ -82,7 +82,7 @@ const AddNewReceipt = ({ addNewReceipt, selectedOrder, currentBalance }) => {
   const receiptType = watch("receiptType");
 
   useEffect(() => {
-    const subscription = form.watch((value) => {});
+    const subscription = form.watch(() => {});
     return () => subscription.unsubscribe();
   }, [form]);
 
@@ -199,6 +199,9 @@ const AddNewReceipt = ({ addNewReceipt, selectedOrder, currentBalance }) => {
         if (status === 400) {
           toast.error(data.message);
         } else if (status === 401) {
+          ToasterError({
+            description: "Please login to continue.",
+          });
         } else if (status === 500) {
           ToasterError({
             description: "Check your internet connection and try again.",
@@ -440,9 +443,8 @@ const AddNewReceipt = ({ addNewReceipt, selectedOrder, currentBalance }) => {
 
 AddNewReceipt.propTypes = {
   addNewReceipt: PropTypes.func,
-  selectedOrder: PropTypes.shape({
-    id: PropTypes.string,
-  }),
+  selectedOrder: PropTypes.object,
+  currentBalance: PropTypes.number,
 };
 
 export default AddNewReceipt;

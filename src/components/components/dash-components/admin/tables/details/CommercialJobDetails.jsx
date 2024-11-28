@@ -7,6 +7,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import PropTypes from "prop-types";
 
 const CommercialJobDetails = ({ selectedOrder }) => {
   if (!selectedOrder) return null;
@@ -114,6 +115,10 @@ const CommercialJobDetails = ({ selectedOrder }) => {
       </AlertDialogFooter>
     </AlertDialogContent>
   );
+};
+
+CommercialJobDetails.propTypes = {
+  selectedOrder: PropTypes.object,
 };
 
 export default CommercialJobDetails;

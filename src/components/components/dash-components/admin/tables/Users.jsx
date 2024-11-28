@@ -3,19 +3,16 @@ import { Input } from "@/components/ui/input";
 import { Typography } from "antd";
 
 import { CheckCheckIcon, EyeIcon, XIcon } from "lucide-react";
-// import { LoadingOutlined } from "@ant-design/icons";
 
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomTable from "@/components/components/custom-components/CustomTable";
-// import { toast } from "sonner";
 import DataTableColumnHeader from "@/components/components/custom-components/DataTableColumnHeader";
 import {
   AlertDialog,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -30,12 +27,8 @@ import {
 import { AlertDialogCancel } from "@radix-ui/react-alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import CustomInput from "@/components/components/custom-components/CustomInput";
-import { FormField } from "@/components/ui/form";
-import SelectField from "@/components/components/custom-components/SelectField";
 import { Separator } from "@/components/ui/separator";
 import CustomPageTitle from "@/components/components/custom-components/CustomPageTitle";
-// import DeleteDialog from "@/components/components/custom-components/DeleteDialog";
 
 const Users = () => {
   const [data, setData] = useState([]);

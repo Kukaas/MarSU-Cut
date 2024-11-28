@@ -543,9 +543,6 @@ function Orders() {
               <DropdownMenuItem onClick={() => handleArchive(order)}>
                 Archive
               </DropdownMenuItem>
-              {/* <DropdownMenuItem onClick={() => handleDelete(order)}>
-                <span className="text-red-500 hover:text-red-400">Delete</span>
-              </DropdownMenuItem> */}
             </DropdownMenuContent>
           </DropdownMenu>
         );

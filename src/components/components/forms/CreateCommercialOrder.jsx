@@ -8,7 +8,6 @@ import { Loader2 } from "lucide-react";
 import ToasterError from "@/lib/Toaster";
 import { AddCommercialJobSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { DialogClose } from "@radix-ui/react-dialog";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { useState } from "react";

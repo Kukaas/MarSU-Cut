@@ -10,7 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Spin, Tooltip, Typography } from "antd";
+import { Spin, Tooltip } from "antd";
 
 // icons
 import { LoadingOutlined } from "@ant-design/icons";
@@ -114,41 +114,6 @@ function ArchiveOrders() {
       setLoadingUpdate(false);
     }
   };
-
-  // Function to handle delete
-  // const handleDelete = async (order) => {
-  //   try {
-  //     setLoadingUpdate(true);
-  //     const res = await axios.delete(
-  //       `${BASE_URL}/api/v1/order/student/delete/${order._id}`,
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //         withCredentials: true,
-  //       }
-  //     );
-
-  //     if (res.status === 200) {
-  //       setLoadingUpdate(false);
-  //       toast.success(`Order of ${order.studentName} is deleted successfully!`);
-
-  //       // Update the data in the state
-  //       setData((prevData) => {
-  //         return prevData.filter((item) => item._id !== order._id);
-  //       });
-  //     } else {
-  //       setLoadingUpdate(false);
-  //       ToasterError();
-  //     }
-  //   } catch (error) {
-  //     setLoadingUpdate(false);
-  //     ToasterError({
-  //       description: "Please check you internet connection and try again.",
-  //     });
-  //   }
-  // };
 
   const columns = [
     {
@@ -348,9 +313,6 @@ function ArchiveOrders() {
               <DropdownMenuItem onClick={() => handleUnarchive(order)}>
                 Unarchive
               </DropdownMenuItem>
-              {/* <DropdownMenuItem onClick={() => handleDelete(order)}>
-                <span className="text-red-500 hover:text-red-400">Delete</span>
-              </DropdownMenuItem> */}
             </DropdownMenuContent>
           </DropdownMenu>
         );

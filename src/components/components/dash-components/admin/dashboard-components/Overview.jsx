@@ -3,7 +3,6 @@ import {
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
-  ChartTooltipContent,
 } from "@/components/ui/chart";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
@@ -12,6 +11,7 @@ import { useEffect, useState } from "react";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import PropTypes from "prop-types";
 
 const ChartTooltipContentSales = ({ active, payload, mode }) => {
   if (active && payload && payload.length) {
@@ -47,9 +47,7 @@ const ChartTooltipContentSales = ({ active, payload, mode }) => {
         <p style={labelStyles}>{payload[0].payload.productType}</p>
         <p style={valueStyles}>
           Current Month Sales:
-          <span>
-            ₱{Intl.NumberFormat("en-PH").format(payload[0].value)}
-          </span>
+          <span>₱{Intl.NumberFormat("en-PH").format(payload[0].value)}</span>
         </p>
       </div>
     );
@@ -91,9 +89,7 @@ const ChartTooltipContentProduction = ({ active, payload, mode }) => {
         <p style={labelStyles}>{payload[0].payload.productType}</p>
         <p style={valueStyles}>
           Production Quantity:
-          <span>
-            {(payload[0].value)}
-          </span>
+          <span>{payload[0].value}</span>
         </p>
       </div>
     );
@@ -101,6 +97,17 @@ const ChartTooltipContentProduction = ({ active, payload, mode }) => {
   return null;
 };
 
+ChartTooltipContentSales.propTypes = {
+  active: PropTypes.bool,
+  payload: PropTypes.array,
+  mode: PropTypes.string,
+};
+
+ChartTooltipContentProduction.propTypes = {
+  active: PropTypes.bool,
+  payload: PropTypes.array,
+  mode: PropTypes.string,
+};
 
 const Overview = () => {
   const [overview, setOverview] = useState([]);
@@ -228,8 +235,10 @@ const Overview = () => {
                   tickMargin={10}
                   axisLine={false}
                 />
-                <YAxis 
-                  tickFormatter={(value) => `₱ ${Intl.NumberFormat("en-PH").format(value)}`}
+                <YAxis
+                  tickFormatter={(value) =>
+                    `₱ ${Intl.NumberFormat("en-PH").format(value)}`
+                  }
                 />
                 <ChartTooltip content={<ChartTooltipContentSales />} />
                 <ChartLegend content={<ChartLegendContent />} />
@@ -253,6 +262,12 @@ const Overview = () => {
       </Tabs>
     </>
   );
+};
+
+ChartTooltipContentSales.propTypes = {
+  active: PropTypes.bool,
+  payload: PropTypes.array,
+  mode: PropTypes.string,
 };
 
 export default Overview;

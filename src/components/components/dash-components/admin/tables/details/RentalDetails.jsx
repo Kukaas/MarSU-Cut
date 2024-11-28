@@ -7,6 +7,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import PropTypes from "prop-types";
 
 const RentalDetails = ({ selectedRental }) => {
   if (!selectedRental) return null;
@@ -102,11 +103,15 @@ const RentalDetails = ({ selectedRental }) => {
           asChild
           className="px-4 py-2 font-medium text-white w-full"
         >
-          <Button className="w-full">Close</Button>
+          <Button className="w-full text-black dark:text-white">Close</Button>
         </AlertDialogCancel>
       </AlertDialogFooter>
     </AlertDialogContent>
   );
+};
+
+RentalDetails.propTypes = {
+  selectedRental: PropTypes.object,
 };
 
 export default RentalDetails;

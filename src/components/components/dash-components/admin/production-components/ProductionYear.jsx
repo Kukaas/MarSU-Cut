@@ -9,6 +9,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
+import PropTypes from "prop-types";
 
 const ChartTooltipContent = ({ active, payload, mode }) => {
   if (active && payload && payload.length) {
@@ -44,21 +45,21 @@ const ChartTooltipContent = ({ active, payload, mode }) => {
         <p style={labelStyles}>{payload[0].payload.productType}</p>
         <div className="text-violet-600 h-2 w-2"></div>
         <p style={valueStyles}>
-          Current Year Production: {" "}
-          <span>
-            {(payload[0].value)}
-          </span>
+          Current Year Production: <span>{payload[0].value}</span>
         </p>
         <p style={valueStyles}>
-          Last Year Production:{" "}
-          <span>
-            {(payload[1].value)}
-          </span>
+          Last Year Production: <span>{payload[1].value}</span>
         </p>
       </div>
     );
   }
   return null;
+};
+
+ChartTooltipContent.propTypes = {
+  active: PropTypes.bool,
+  payload: PropTypes.array,
+  mode: PropTypes.string,
 };
 
 const ProductionYear = () => {

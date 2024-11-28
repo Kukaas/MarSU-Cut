@@ -548,6 +548,7 @@ EditOrderItems.propTypes = {
   selectedOrder: PropTypes.object.isRequired,
   setIsDialogOpen: PropTypes.func.isRequired,
   onOrderUpdated: PropTypes.func.isRequired,
+  form: PropTypes.object,
 };
 
 export default EditOrderItems;

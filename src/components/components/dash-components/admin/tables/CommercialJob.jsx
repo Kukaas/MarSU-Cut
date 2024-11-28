@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Spin, Typography } from "antd";
+import { Spin } from "antd";
 
 // icons
 import { LoadingOutlined } from "@ant-design/icons";
@@ -63,7 +63,6 @@ const CommercialJob = () => {
           },
           withCredentials: true,
         });
-        const data = res.data;
         const commercialOrders = res.data.commercialOrders.filter(
           (order) => !order.isArchived
         );
@@ -174,38 +173,6 @@ const CommercialJob = () => {
       });
     }
   };
-
-  // const handleDelete = async (commercial) => {
-  //   try {
-  //     setLoadingUpdate(true);
-  //     const res = await axios.delete(
-  //       `${BASE_URL}/api/v1/commercial-job/${commercial._id}`,
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //         withCredentials: true,
-  //       }
-  //     );
-
-  //     if (res.status === 200) {
-  //       const updatedData = data.filter((item) => item._id !== commercial._id);
-  //       setData(updatedData);
-  //       setLoadingUpdate(false);
-  //       toast.success(
-  //         `Commercial job order of ${commercial.cbName} has been deleted.`
-  //       );
-  //     } else {
-  //       ToasterError();
-  //     }
-  //   } catch (error) {
-  //     ToasterError({
-  //       description: "Please check you internet connection and try again.",
-  //     });
-  //     setLoadingUpdate(false);
-  //   }
-  // };
 
   const columns = [
     {
@@ -387,7 +354,10 @@ const CommercialJob = () => {
       }
     >
       <div className="w-full p-5 h-screen">
-        <CustomPageTitle title="Commercial Job Orders" description={<span>Total Commercial Job Orders: {data.length}</span>} />
+        <CustomPageTitle
+          title="Commercial Job Orders"
+          description={<span>Total Commercial Job Orders: {data.length}</span>}
+        />
         <DataTableToolBar
           searchValue={searchValue}
           setSearchValue={setSearchValue}

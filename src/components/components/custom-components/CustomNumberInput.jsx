@@ -6,6 +6,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import PropTypes from "prop-types";
 
 const CustomNumberInput = ({
   control,
@@ -50,5 +51,15 @@ const CustomNumberInput = ({
     )}
   />
 );
+
+CustomNumberInput.propTypes = {
+  control: PropTypes.object,
+  name: PropTypes.string,
+  label: PropTypes.string,
+  type: PropTypes.string,
+  placeholder: PropTypes.string,
+  disabled: PropTypes.bool,
+  quantity: PropTypes.number,
+};
 
 export default CustomNumberInput;

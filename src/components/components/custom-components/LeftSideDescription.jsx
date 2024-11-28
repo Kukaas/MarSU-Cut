@@ -1,3 +1,5 @@
+import Proptypes from "prop-types";
+
 const LeftSideDescription = ({ black, gradient, description }) => {
   return (
     <div className="flex-1 mb-4">
@@ -18,6 +20,12 @@ const LeftSideDescription = ({ black, gradient, description }) => {
       <p className="text-sm mt-2">{description}</p>
     </div>
   );
+};
+
+LeftSideDescription.propTypes = {
+  black: Proptypes.string,
+  gradient: Proptypes.string,
+  description: Proptypes.string,
 };
 
 export default LeftSideDescription;

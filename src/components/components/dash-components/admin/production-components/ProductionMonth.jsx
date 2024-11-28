@@ -1,50 +1,55 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import {
   CartesianGrid,
   Line,
   LineChart,
   ResponsiveContainer,
-  Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
 import { token } from "@/lib/token";
-import { ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { ChartTooltip } from "@/components/ui/chart";
 import { BASE_URL } from "@/lib/api";
+import PropTypes from "prop-types";
 
 const Legend = () => {
-    // Define all product types (matching the colors)
-    const allProductTypes = [
-      "ACADEMIC GOWN", "PANTS", "POLO", "SKIRT", "BLOUSE", "PE TSHIRT", "JPANTS"
-    ];
-  
-    // Define the product colors
-    const productColors = {
-      "ACADEMIC GOWN": "#8884d8",  // Light Purple
-      "PANTS": "#82ca9d",           // Light Green
-      "POLO": "#ff7300",            // Orange
-      "SKIRT": "#ff6b6b",           // Red
-      "BLOUSE": "#8884d8",          // Light Purple
-      "PE TSHIRT": "#ffbf00",       // Yellow
-      "JPANTS": "#00bfff",          // Light Blue
-    };
-  
-    return (
-      <div className="flex flex-wrap gap-2 justify-center">
-        {allProductTypes.map((productType) => (
-          <div key={productType} className="flex items-center gap-2">
-            <div
-              className="w-3 h-3 rounded-full"
-              style={{ backgroundColor: productColors[productType] }}
-            ></div>
-            <p className="text-xs">{productType}</p>
-          </div>
-        ))}
-      </div>
-    );
+  // Define all product types (matching the colors)
+  const allProductTypes = [
+    "ACADEMIC GOWN",
+    "PANTS",
+    "POLO",
+    "SKIRT",
+    "BLOUSE",
+    "PE TSHIRT",
+    "JPANTS",
+  ];
+
+  // Define the product colors
+  const productColors = {
+    "ACADEMIC GOWN": "#8884d8", // Light Purple
+    PANTS: "#82ca9d", // Light Green
+    POLO: "#ff7300", // Orange
+    SKIRT: "#ff6b6b", // Red
+    BLOUSE: "#8884d8", // Light Purple
+    "PE TSHIRT": "#ffbf00", // Yellow
+    JPANTS: "#00bfff", // Light Blue
   };
-  
+
+  return (
+    <div className="flex flex-wrap gap-2 justify-center">
+      {allProductTypes.map((productType) => (
+        <div key={productType} className="flex items-center gap-2">
+          <div
+            className="w-3 h-3 rounded-full"
+            style={{ backgroundColor: productColors[productType] }}
+          ></div>
+          <p className="text-xs">{productType}</p>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 const TooltipContent = ({ active, payload, label }) => {
   if (active) {
@@ -69,6 +74,12 @@ const TooltipContent = ({ active, payload, label }) => {
   }
 
   return null;
+};
+
+TooltipContent.propTypes = {
+  active: PropTypes.bool,
+  payload: PropTypes.array,
+  label: PropTypes.string,
 };
 
 const ProductionMonth = () => {
@@ -170,7 +181,7 @@ const ProductionMonth = () => {
           data={data} // Pass fullData array here
           margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
         >
-          <CartesianGrid vertical={false}/>
+          <CartesianGrid vertical={false} />
           <XAxis
             dataKey="name"
             tickFormatter={(month) => month} // Ensure month is rendered as the full month name
@@ -180,7 +191,7 @@ const ProductionMonth = () => {
           <YAxis tick={{ fontSize: 10 }} tickMargin={10} />
           <ChartTooltip content={<TooltipContent />} />
           <Legend />
-          {allProductTypes.map((productType, index) => (
+          {allProductTypes.map((productType) => (
             <Line
               key={productType}
               type="monotone"

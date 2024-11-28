@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 // import { toast } from "sonner";
-import { Tooltip, Typography } from "antd";
+import { Tooltip } from "antd";
 
 import { PlusCircle } from "lucide-react";
 // import { LoadingOutlined } from "@ant-design/icons";
@@ -37,7 +37,6 @@ const FinishedProduct = () => {
   const [originalData, setOriginalData] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [loading, setLoading] = useState(true);
-  // const [deleteLoading, setDeleteLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const { currentUser } = useSelector((state) => state.user);
@@ -84,40 +83,6 @@ const FinishedProduct = () => {
       setData(originalData);
     }
   }, [searchValue, originalData]);
-
-  // const handleDelete = async (product) => {
-  //   try {
-  //     setDeleteLoading(true);
-  //     const res = await axios.delete(
-  //       `${BASE_URL}/api/v1/finished-product/delete/${product._id}`,
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //         withCredentials: true,
-  //       }
-  //     );
-
-  //     if (res.status === 200) {
-  //       setDeleteLoading(false);
-  //       setData((prevData) =>
-  //         prevData.filter(
-  //           (finishedProduct) => finishedProduct._id !== product._id
-  //         )
-  //       );
-  //       toast.success("Product deleted successfully!");
-  //     } else {
-  //       ToasterError();
-  //     }
-  //   } catch (error) {
-  //     ToasterError({
-  //       description: "Please check you internet connection and try again.",
-  //     });
-
-  //     setDeleteLoading(false);
-  //   }
-  // };
 
   const handleProductUpdated = (updatedProduct) => {
     setData((prevData) =>
@@ -214,16 +179,6 @@ const FinishedProduct = () => {
   };
 
   return (
-    // <Spin
-    //   indicator={
-    //     <LoadingOutlined
-    //       className="dark:text-white"
-    //       style={{
-    //         fontSize: 48,
-    //       }}
-    //     />
-    //   }
-    // >
     <div className="overflow-x-auto">
       <div className="w-full p-5 h-screen">
         <CustomPageTitle
@@ -269,7 +224,6 @@ const FinishedProduct = () => {
         </div>
       </div>
     </div>
-    // </Spin>
   );
 };
 
