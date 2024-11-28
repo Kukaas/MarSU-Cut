@@ -318,3 +318,7 @@ export const addNewEmployeeSchema = z.object({
   address: z.string(),
   contact: z.string(),
 });
+
+export const addNewRawMaterialTypeSchema = z.object({
+  rawMaterialType: z.string(),
+});

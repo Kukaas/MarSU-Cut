@@ -4,6 +4,7 @@ import { TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import Sizes from "./Sizes";
 import ProductTypes from "./ProductTypes";
 import Employees from "./Employees";
+import RawMaterialTypes from "./RawMaterialTypes";
 
 const SystemMaintenance = () => {
   return (
@@ -33,7 +34,7 @@ const SystemMaintenance = () => {
         </TabsContent>
         <TabsContent value="rawMaterialsTypes" className="mt-4">
           <div className="rounded-md border">
-            <Sizes />
+            <RawMaterialTypes />
           </div>
         </TabsContent>
         <TabsContent value="employees" className="mt-4">

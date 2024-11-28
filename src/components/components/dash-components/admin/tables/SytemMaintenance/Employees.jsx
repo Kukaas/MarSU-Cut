@@ -306,7 +306,7 @@ const Employees = () => {
         </AlertDialog>
       </div>
 
-      <CustomTable columns={columns} data={employees} />
+      <CustomTable columns={columns} data={employees} loading={loading} />
 
       {/* Delete Dialog */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>

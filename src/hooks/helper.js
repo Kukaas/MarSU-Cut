@@ -87,3 +87,30 @@ export const fetchEmployees = async () => {
     throw error;
   }
 };
+
+// Fetch all raw material types
+export const fetchRawMaterialTypes = async () => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/api/v1/system-maintenance/raw-material-type/all`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (response.status === 200) {
+      return response.data.rawMaterialTypes.sort((a, b) =>
+        a.rawMaterialType.localeCompare(b.rawMaterialType)
+      );
+    } else {
+      throw new Error("Failed to fetch raw material types");
+    }
+  } catch (error) {
+    console.error("Error fetching raw material types:", error);
+    throw error;
+  }
+};
