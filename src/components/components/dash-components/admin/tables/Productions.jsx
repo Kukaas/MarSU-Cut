@@ -2,10 +2,10 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Tooltip, Typography } from "antd";
+import { Tooltip } from "antd";
 // import { toast } from "sonner";
 
-import { Maximize2Icon, PlusCircle } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 // import { LoadingOutlined } from "@ant-design/icons";
 
 // others
@@ -21,7 +21,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import DataTableColumnHeader from "@/components/components/custom-components/DataTableColumnHeader";
@@ -44,7 +43,6 @@ const Productions = () => {
   const [originalData, setOriginalData] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [loading, setLoading] = useState(true);
-  // const [deleteLoading, setDeleteLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [tab, setTab] = useState("monthly");
   const { currentUser } = useSelector((state) => state.user);
@@ -93,40 +91,6 @@ const Productions = () => {
       setData(originalData);
     }
   }, [searchValue, originalData]);
-
-  // const handleDelete = async (production) => {
-  //   try {
-  //     setDeleteLoading(true);
-  //     const res = await axios.delete(
-  //       `${BASE_URL}/api/v1/production/delete/${production._id}`,
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //         withCredentials: true,
-  //       }
-  //     );
-
-  //     if (res.status === 200) {
-  //       toast.success(`Production with ID ${production._id} deleted.`);
-
-  //       setData((prevData) => {
-  //         return prevData.filter(
-  //           (deletedProduction) => deletedProduction._id !== production._id
-  //         );
-  //       });
-  //     } else {
-  //       ToasterError();
-  //     }
-  //   } catch (error) {
-  //     ToasterError({
-  //       description: "Please check you internet connection and try again.",
-  //     });
-  //   } finally {
-  //     setDeleteLoading(false);
-  //   }
-  // };
 
   const columns = [
     {
@@ -196,22 +160,6 @@ const Productions = () => {
         </ul>
       ),
     },
-    // {
-    //   id: "actions",
-    //   cell: ({ row }) => {
-    //     const production = row.original;
-    //     return (
-    //       <div className="flex space-x-2">
-    //         <Tooltip title="Delete production">
-    //           <DeleteDialog
-    //             item={`raw material with ID ${production?._id}`}
-    //             handleDelete={() => handleDelete(production)}
-    //           />
-    //         </Tooltip>
-    //       </div>
-    //     );
-    //   },
-    // },
   ];
 
   const handleProductionAdded = (newProduction) => {
@@ -219,17 +167,6 @@ const Productions = () => {
   };
 
   return (
-    // <Spin
-    //   spinning={deleteLoading}
-    //   indicator={
-    //     <LoadingOutlined
-    //       className="dark:text-white"
-    //       style={{
-    //         fontSize: 48,
-    //       }}
-    //     />
-    //   }
-    // >
     <div className="overflow-x-auto">
       <div className="w-full p-5 h-screen">
         <CustomPageTitle
@@ -336,7 +273,6 @@ const Productions = () => {
         </Tabs>
       </div>
     </div>
-    // </Spin>
   );
 };
 
