@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import CustomPageTitle from "../../custom-components/CustomPageTitle";
 import Dashboard from "./student/Dashboard";
 import { Toaster } from "sonner";
+import DashSchedules from "../admin/DashSchedules";
 
 const DashHome = () => {
   const navigate = useNavigate();
@@ -34,8 +35,10 @@ const DashHome = () => {
           <div>
             <h1 className="text-3xl font-bold">Welcome, Coordinator</h1>
           </div>
-        ) : (
+        ) : currentUser.role === "Student" ? (
           <Dashboard />
+        ) : (
+          <DashSchedules />
         )}
       </div>
       <Toaster position="top-center" richColors closeButton />
