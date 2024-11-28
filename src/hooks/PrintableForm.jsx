@@ -7,14 +7,34 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Printer } from "lucide-react";
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { fetchEmployees } from "./helper";
 
 const PrintableForm = () => {
   const [tailorName, setTailorName] = useState("");
+  const [tailors, setTailors] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  useEffect(() => {
+    const getEmployees = async () => {
+      try {
+        const fetchedEmployees = await fetchEmployees();
+        setTailors(fetchedEmployees);
+      } catch (error) {
+        console.error("Failed to fetch employees:", error);
+      }
+    };
+    getEmployees();
+  }, []);
 
   const handlePrint = () => {
     if (!tailorName) {
@@ -118,16 +138,21 @@ const PrintableForm = () => {
       <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <AlertDialogContent className="overflow-auto">
           <AlertDialogHeader>
-            <AlertDialogTitle>Enter Sewer Name</AlertDialogTitle>
+            <AlertDialogTitle>Enter Tailor Name</AlertDialogTitle>
           </AlertDialogHeader>
           <div className="mt-3">
-            <Input
-              type="text"
-              placeholder="Enter Sewer Name"
-              value={tailorName}
-              onChange={(e) => setTailorName(e.target.value)}
-              className="mb-4"
-            />
+            <Select onValueChange={setTailorName} value={tailorName}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select a tailor" />
+              </SelectTrigger>
+              <SelectContent>
+                {tailors.map((tailor) => (
+                  <SelectItem key={tailor.id} value={tailor.name}>
+                    {tailor.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <div className="flex flex-col items-center gap-4 mt-4">
               <AlertDialogFooter className="w-full flex flex-col items-center gap-4">
                 <AlertDialogCancel asChild>
