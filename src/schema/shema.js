@@ -5,7 +5,12 @@ export const StudentRegisterSchema = z.object({
     .string()
     .min(3, { message: "Name must be at least 3 characters" })
     .max(255, { message: "Name must be less than 256 characters" }),
-  email: z.string().email({ message: "Invalid email address" }),
+  email: z
+    .string()
+    .email({ message: "Invalid email address" })
+    .refine((email) => email.endsWith("@marsu.edu.ph"), {
+      message: "Email must end with @marsu.edu.ph",
+    }),
   studentNumber: z
     .string()
     .min(3, { message: "Student Number must be at least 3 characters" }),
@@ -15,7 +20,11 @@ export const StudentRegisterSchema = z.object({
     .min(3, { message: "Department must be at least 3 characters" }),
   password: z
     .string()
-    .min(6, { message: "Password must be at least 6 characters" }),
+    .min(6, { message: "Password must be at least 6 characters" })
+    .regex(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W_]).+$/, {
+      message:
+        "Password must contain letters, numbers, and a special character",
+    }),
   confirmPassword: z
     .string()
     .min(6, { message: "Confirm Password must be at least 6 characters" }),
@@ -27,11 +36,20 @@ export const CoordinatorRegisterSchema = z.object({
     .string()
     .min(3, { message: "Department must be at least 3 characters" }),
   name: z.string().min(3, { message: "Name must be at least 3 characters" }),
-  email: z.string().email({ message: "Invalid email address" }),
+  email: z
+    .string()
+    .email({ message: "Invalid email address" })
+    .refine((email) => email.endsWith("@marsu.edu.ph"), {
+      message: "Email must end with @marsu.edu.ph",
+    }),
   gender: z.string(),
   password: z
     .string()
-    .min(6, { message: "Password must be at least 6 characters" }),
+    .min(6, { message: "Password must be at least 6 characters" })
+    .regex(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W_]).+$/, {
+      message:
+        "Password must contain letters, numbers, and a special character",
+    }),
   confirmPassword: z
     .string()
     .min(6, { message: "Confirm Password must be at least 6 characters" }),
@@ -46,7 +64,11 @@ export const CommercialJobRegisterSchema = z.object({
   gender: z.string(),
   password: z
     .string()
-    .min(6, { message: "Password must be at least 6 characters" }),
+    .min(6, { message: "Password must be at least 6 characters" })
+    .regex(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W_]).+$/, {
+      message:
+        "Password must contain letters, numbers, and a special character",
+    }),
   confirmPassword: z
     .string()
     .min(6, { message: "Confirm Password must be at least 6 characters" }),
