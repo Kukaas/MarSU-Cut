@@ -10,11 +10,10 @@ import PropTypes from "prop-types";
 import { AddRawMaterialsSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
-import CustomInput from "../custom-components/CustomInput";
 import {
   AlertDialogCancel,
   AlertDialogFooter,
@@ -24,6 +23,7 @@ import CustomNumberInput from "../custom-components/CustomNumberInput";
 
 const AddNewRawMaterial = ({ onRawMaterialAdded, setIsDialogOpen }) => {
   const [addRawMaterialLoading, setAddRawMaterialLoading] = useState(false);
+  const [rawMaterialTypes, setRawMaterialTypes] = useState([]);
 
   const addRawMaterialForm = useForm({
     resolver: zodResolver(AddRawMaterialsSchema),
@@ -33,6 +33,36 @@ const AddNewRawMaterial = ({ onRawMaterialAdded, setIsDialogOpen }) => {
       quantity: 0,
     },
   });
+
+  useEffect(() => {
+    const fetchRawMaterialTypes = async () => {
+      try {
+        const response = await axios.get(
+          `${BASE_URL}/api/v1/system-maintenance/raw-material-type/all`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
+        );
+
+        if (response.status === 200) {
+          return response.data.rawMaterialTypes.sort((a, b) =>
+            a.rawMaterialType.localeCompare(b.rawMaterialType)
+          );
+        } else {
+          throw new Error("Failed to fetch raw material types");
+        }
+      } catch (error) {
+        console.error("Error fetching raw material types:", error);
+        throw error;
+      }
+    };
+
+    fetchRawMaterialTypes().then((data) => setRawMaterialTypes(data));
+  }, []);
 
   const handleAddRawMaterial = async (values) => {
     if (!values.quantity || !values.type || !values.unit) {
@@ -78,11 +108,19 @@ const AddNewRawMaterial = ({ onRawMaterialAdded, setIsDialogOpen }) => {
         onSubmit={addRawMaterialForm.handleSubmit(handleAddRawMaterial)}
         className="space-y-4 w-full p-3"
       >
-        <CustomInput
-          form={addRawMaterialForm}
+        <FormField
+          control={addRawMaterialForm.control}
           name="type"
-          label="Type"
-          placeholder="e.g Fabric, Thread, etc."
+          render={({ field }) => (
+            <SelectField
+              field={field}
+              label="Raw Material Type"
+              options={rawMaterialTypes.map(
+                (rawMaterialType) => rawMaterialType.rawMaterialType
+              )}
+              placeholder="Select a raw material type"
+            />
+          )}
         />
         <FormField
           control={addRawMaterialForm.control}
@@ -91,7 +129,7 @@ const AddNewRawMaterial = ({ onRawMaterialAdded, setIsDialogOpen }) => {
             <SelectField
               field={field}
               label="Unit"
-              options={["Yard", "Kilo", "Meter", "Piece"]}
+              options={["Yard", "Kilo", "Meter", "Piece", "Gram", "Cone"]}
               placeholder="Unit"
             />
           )}
