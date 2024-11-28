@@ -33,12 +33,15 @@ import {
   AlertDialog,
   AlertDialogContent,
   AlertDialogDescription,
+  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import MeasureMentForm from "@/components/components/forms/MeasureMentForm";
 import CommercialJobDetails from "./details/CommercialJobDetails";
 import CustomPageTitle from "@/components/components/custom-components/CustomPageTitle";
+import { Loader2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 const CommercialJob = () => {
   const [data, setData] = useState([]);
@@ -51,6 +54,10 @@ const CommercialJob = () => {
   const [loading, setLoading] = useState(true);
   const [loadingUpdate, setLoadingUpdate] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
+  const [rejectReason, setRejectReason] = useState("");
+  const [orderToReject, setOrderToReject] = useState(null);
+  const [loadingReject, setLoadingReject] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -132,11 +139,58 @@ const CommercialJob = () => {
 
   const handleApprove = (commercial) =>
     handleUpdateStatus(commercial, "APPROVED");
-  const handleReject = (commercial) =>
-    handleUpdateStatus(commercial, "REJECTED");
   const handleDone = (commercial) => handleUpdateStatus(commercial, "DONE");
   const handleClaimed = (commercial) =>
     handleUpdateStatus(commercial, "CLAIMED");
+
+  const handleReject = async (order) => {
+    setOrderToReject(order);
+    setIsRejectDialogOpen(true);
+  };
+
+  const confirmReject = async () => {
+    if (!rejectReason.trim()) {
+      toast.error("Please provide a reason for rejection");
+      return;
+    }
+
+    try {
+      setLoadingReject(true);
+      const res = await axios.put(
+        `${BASE_URL}/api/v1/commercial-job/update/${orderToReject._id}`,
+        { status: "REJECTED", reason: rejectReason },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+
+      if (res.status === 200) {
+        toast.success(
+          `Order of ${orderToReject.studentName} is rejected successfully!`
+        );
+        setData((prevData) =>
+          prevData.map((item) =>
+            item._id === orderToReject._id
+              ? { ...item, status: "REJECTED" }
+              : item
+          )
+        );
+        setIsRejectDialogOpen(false);
+        setRejectReason("");
+      } else {
+        toast.error("Failed to reject order");
+      }
+    } catch (error) {
+      console.error("Error rejecting order:", error);
+      toast.error("An error occurred while rejecting the order");
+    } finally {
+      setLoadingReject(false);
+    }
+  };
 
   const handleArchive = async (commercial) => {
     try {
@@ -389,6 +443,43 @@ const CommercialJob = () => {
       </AlertDialog>
       <AlertDialog open={detailsDialogOpen} onOpenChange={setDetailsDialogOpen}>
         <CommercialJobDetails selectedOrder={selectedOrder} />
+      </AlertDialog>
+
+      <AlertDialog
+        open={isRejectDialogOpen}
+        onOpenChange={setIsRejectDialogOpen}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Reject Order</AlertDialogTitle>
+            <AlertDialogDescription>
+              Please provide a reason for rejecting this order.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <Input
+            value={rejectReason}
+            onChange={(e) => setRejectReason(e.target.value)}
+            placeholder="Enter reason for rejection"
+          />
+          <AlertDialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsRejectDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button onClick={confirmReject} disabled={loadingReject}>
+              {loadingReject ? (
+                <div className="flex items-center">
+                  <Loader2 className="mr-2 animate-spin" />
+                  <span>Rejecting</span>
+                </div>
+              ) : (
+                "Reject"
+              )}
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
       </AlertDialog>
     </Spin>
   );
