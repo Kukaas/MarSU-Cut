@@ -124,7 +124,13 @@ const MenuSmallScreen = () => {
               {currentUser?.name?.split(" ")[0]} |
             </span>
             <span className="text-muted-foreground">
-              {currentUser.isAdmin ? "Admin" : "User"}
+              {currentUser?.role === "JO" && currentUser.isAdmin ? "JO" : ""}
+              {currentUser?.role === "Admin" ? "Admin" : ""}
+              {currentUser?.role === "Student" ||
+              currentUser?.role === "Coordinator" ||
+              currentUser?.role === "CommercialJob"
+                ? "User"
+                : ""}
             </span>
           </div>
           <Sheet>
@@ -150,7 +156,7 @@ const MenuSmallScreen = () => {
         </div>
         <div className="flex-1 overflow-auto">
           <nav className="grid items-start px-3 text-sm font-medium lg:px-4 gap-2 overflow-auto">
-            {currentUser.role === "JO" && currentUser.isAdmin && (
+            {currentUser.role === "Admin" && currentUser.isAdmin && (
               <>
                 <Link
                   to="/dashboard?tab=home-admin"
@@ -272,7 +278,7 @@ const MenuSmallScreen = () => {
                 </Accordion>
               </>
             )}
-            {currentUser.isAdmin && currentUser.role === "Admin" ? (
+            {currentUser.isAdmin && currentUser.role === "JO" ? (
               <div>
                 <SheetTrigger asChild>
                   <Link

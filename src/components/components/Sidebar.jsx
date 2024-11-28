@@ -123,7 +123,7 @@ const Sidebar = () => {
         </div>
         <div className="flex-1 overflow-auto">
           <nav className="grid items-start px-3 text-sm font-medium lg:px-4 gap-2">
-            {currentUser.role === "JO" && currentUser.isAdmin && (
+            {currentUser.role === "Admin" && currentUser.isAdmin && (
               <>
                 <Link
                   to="/dashboard?tab=home"
@@ -245,7 +245,7 @@ const Sidebar = () => {
                 </Accordion>
               </>
             )}
-            {currentUser.isAdmin && currentUser.role === "Admin" ? (
+            {currentUser.isAdmin && currentUser.role === "JO" ? (
               <div>
                 <Link
                   to="/dashboard?tab=home-admin"
