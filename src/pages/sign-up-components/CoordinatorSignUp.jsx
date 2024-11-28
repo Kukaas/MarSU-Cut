@@ -130,14 +130,18 @@ const CoordinatorSignUp = () => {
                     field={field}
                     label="Department"
                     options={[
-                      "College of Engineering",
-                      "College of Industrial Technology",
+                      "College of Agriculture(Torrijos Campus)",
+                      "College of Allied Health Sciences",
+                      "College of Arts and Social Sciences",
+                      "College of Business and Accountancy",
+                      "College of Criminal Justice Education",
                       "College of Education",
-                      "College of Business Administration",
-                      "College of Arts and Sciences",
-                      "College of Information and Computing Sciences",
-                      "College of Allied Health and Medicine",
+                      "College of Engineering",
+                      "College of Environmental Studies",
+                      "College of Fisheries and Aquatic Sciences(Gasan Campus)",
                       "College of Governance",
+                      "College of Industrial Technology",
+                      "College of Information and Computing Sciences",
                     ]}
                     placeholder="Department"
                   />
