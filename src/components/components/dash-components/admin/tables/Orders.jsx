@@ -33,11 +33,14 @@ import {
   AlertDialog,
   AlertDialogContent,
   AlertDialogDescription,
+  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import CustomPageTitle from "@/components/components/custom-components/CustomPageTitle";
 import EditOrderItems from "@/components/components/forms/EditOrderItmes";
+import { Input } from "@/components/ui/input";
+import { Loader2 } from "lucide-react";
 
 function Orders() {
   const [data, setData] = useState([]);
@@ -51,6 +54,10 @@ function Orders() {
   const [searchValue, setSearchValue] = useState("");
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const navigate = useNavigate();
+  const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
+  const [rejectReason, setRejectReason] = useState("");
+  const [orderToReject, setOrderToReject] = useState(null);
+  const [loadingReject, setLoadingReject] = useState(false);
 
   const handleViewReceipts = (order) => {
     navigate(`/orders/receipts/${order}`);
@@ -150,7 +157,6 @@ function Orders() {
     }
   };
 
-  const handleReject = (order) => updateOrderStatus(order, "REJECTED");
   const handleApprove = (order) => updateOrderStatus(order, "APPROVED");
   const handleDone = (order) => updateOrderStatus(order, "DONE");
   const handleClaimed = async (order) => {
@@ -185,6 +191,55 @@ function Orders() {
       });
     } finally {
       setLoadingUpdate(false);
+    }
+  };
+
+  const handleReject = async (order) => {
+    setOrderToReject(order);
+    setIsRejectDialogOpen(true);
+  };
+
+  const confirmReject = async () => {
+    if (!rejectReason.trim()) {
+      toast.error("Please provide a reason for rejection");
+      return;
+    }
+
+    try {
+      setLoadingReject(true);
+      const res = await axios.put(
+        `${BASE_URL}/api/v1/order/update/student/${orderToReject._id}`,
+        { status: "REJECTED", reason: rejectReason },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+
+      if (res.status === 200) {
+        toast.success(
+          `Order of ${orderToReject.studentName} is rejected successfully!`
+        );
+        setData((prevData) =>
+          prevData.map((item) =>
+            item._id === orderToReject._id
+              ? { ...item, status: "REJECTED" }
+              : item
+          )
+        );
+        setIsRejectDialogOpen(false);
+        setRejectReason("");
+      } else {
+        toast.error("Failed to reject order");
+      }
+    } catch (error) {
+      console.error("Error rejecting order:", error);
+      toast.error("An error occurred while rejecting the order");
+    } finally {
+      setLoadingReject(false);
     }
   };
 
@@ -674,6 +729,43 @@ function Orders() {
             setIsDialogOpen={setIsEditDialogOpen}
             onOrderUpdated={updateOrderData}
           />
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog
+        open={isRejectDialogOpen}
+        onOpenChange={setIsRejectDialogOpen}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Reject Order</AlertDialogTitle>
+            <AlertDialogDescription>
+              Please provide a reason for rejecting this order.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <Input
+            value={rejectReason}
+            onChange={(e) => setRejectReason(e.target.value)}
+            placeholder="Enter reason for rejection"
+          />
+          <AlertDialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsRejectDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button onClick={confirmReject} disabled={loadingReject}>
+              {loadingReject ? (
+                <div className="flex items-center">
+                  <Loader2 className="mr-2 animate-spin" />
+                  <span>Rejecting</span>
+                </div>
+              ) : (
+                "Reject"
+              )}
+            </Button>
+          </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </Spin>
