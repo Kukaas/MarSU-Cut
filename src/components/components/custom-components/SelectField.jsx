@@ -39,7 +39,7 @@ const SelectField = ({
           <SelectTrigger className="w-full" disabled={type === "disabled"}>
             <SelectValue placeholder={placeholder} />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="max-w-[350px]">
             {hasManyOptions ? (
               <ScrollArea className="h-72 p-3">
                 <SelectGroup>
