@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import CustomPageTitle from "../../custom-components/CustomPageTitle";
 import Dashboard from "./student/Dashboard";
 import { Toaster } from "sonner";
-import DashSchedules from "../admin/DashSchedules";
+import Schedules from "./Schedules";
 
 const DashHome = () => {
   const navigate = useNavigate();
@@ -23,7 +23,11 @@ const DashHome = () => {
 
   return (
     <div className="w-full h-screen p-5 overflow-x-auto bg-background text-foreground">
-      {currentUser.role !== "Coordinator" && (
+      {currentUser.role === "Student" ? (
+        <CustomPageTitle title="Dashboard" description="View your dashboard" />
+      ) : currentUser.role === "Coordinator" ? (
+        <CustomPageTitle title="Schedules" description="View all schedules" />
+      ) : (
         <CustomPageTitle title="Dashboard" description="View your dashboard" />
       )}
       <div className="w-full pt-10">
@@ -38,7 +42,7 @@ const DashHome = () => {
         ) : currentUser.role === "Student" ? (
           <Dashboard />
         ) : (
-          <DashSchedules />
+          <Schedules />
         )}
       </div>
       <Toaster position="top-center" richColors closeButton />

@@ -540,7 +540,7 @@ const Sidebar = () => {
                       Appointments
                     </Link>
                     <Link
-                      to="/dashboard?tab=schedules"
+                      to="/dashboard?tab=home"
                       className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
                         isActive("/dashboard?tab=home")
                           ? "bg-muted text-primary"
