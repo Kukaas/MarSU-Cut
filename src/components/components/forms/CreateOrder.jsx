@@ -140,6 +140,11 @@ const CreateOrder = ({ addNewOrder, setIsDialogOpen }) => {
     event.preventDefault();
     event.stopPropagation();
 
+    if(!values.receipt || !values.receiptType || !values.ORNumber || !values.datePaid){
+      toast.error("Please fill al fields");
+      return;
+    }
+
     if (imageFileUrl === null) {
       toast.error("Please wait for the image to upload.");
       return;

@@ -162,41 +162,46 @@ const AddOrderItems = ({
   }, [watch]);
 
   const handleAddItems = async (values) => {
-    setLoadingAddItems(true);
-
-    const orderItems = Array.isArray(values.orderItems)
+    // Ensure orderItems is a valid array
+    const orderItems = Array.isArray(values?.orderItems)
       ? values.orderItems
       : [];
 
+    // Check if orderItems array is empty
     if (orderItems.length === 0) {
       toast.error("No items to add to the order", {
-        description: "Please add items to the order",
+        description: "Please add items to the order.",
       });
-      setLoadingAddItems(false);
       return;
     }
 
-    if (orderItems.some((item) => item.quantity === 0)) {
-      toast.error("Invalid quantity", {
-        description: "Quantity must be greater than 0",
-      });
-      setLoadingAddItems(false);
-      return;
-    }
+    // Validate each item in the array
+    const hasInvalidItem = orderItems.some((item, index) => {
+      // Check for missing or invalid fields
+      if (
+        !item.productType?.trim() || // Missing or empty productType
+        !item.size?.trim() || // Missing or empty size
+        !item.level?.trim() || // Missing or empty level
+        item.quantity === undefined || // Missing quantity
+        item.quantity <= 0 // Quantity must be > 0
+      ) {
+        toast.error(`Invalid entry in item #${index + 1}`, {
+          description:
+            "Each item must have a valid product type, size, level, and quantity greater than 0.",
+        });
+        return true; // Invalid item found
+      }
+      return false; // Item is valid
+    });
 
-    if (
-      !orderItems.some((item) => item.productType && item.size && item.level)
-    ) {
-      toast.error("Missing input", {
-        description: "Please fill in all the fields",
-      });
-      setLoadingAddItems(false);
+    // If any item is invalid, stop execution
+    if (hasInvalidItem) {
       return;
     }
 
     // Add additional items based on productType and update totalPrice
     const updatedOrderItems = orderItems.flatMap((item) => {
-      const newItems = [item]; // Start with the original item
+      const newItems = [item]; // Original item
 
       if (item.productType === "POLO") {
         newItems.push({
@@ -222,6 +227,8 @@ const AddOrderItems = ({
     });
 
     try {
+      setLoadingAddItems(true);
+
       const res = await axios.put(
         `${BASE_URL}/api/v1/order/add-item/${selectedOrder._id}`,
         {
@@ -238,7 +245,7 @@ const AddOrderItems = ({
 
       if (res.status === 200) {
         toast.success(`The student ${selectedOrder.studentName} is measured`, {
-          description: "The items have been added to the order",
+          description: "The items have been added to the order.",
         });
         onOrderItemsAdded(res.data.orderStudent);
         setIsDialogOpen(false);
@@ -402,6 +409,13 @@ const AddOrderItems = ({
                           placeholder="Quantity"
                           type="number"
                           className="w-full mt-2"
+                          onInput={(e) => {
+                            e.target.value = e.target.value.replace(
+                              /[^0-9]/g,
+                              ""
+                            ); // Allow only non-negative numbers
+                          }}
+                          min="0" // Enforces non-negative numbers for up/down buttons
                         />
                       </Tooltip>
                     </FormControl>

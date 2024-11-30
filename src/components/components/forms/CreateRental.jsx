@@ -116,8 +116,6 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
     fetchFinishedProducts();
   }, []);
 
-  console.log(finishedProducts);
-
   const departmentOptions = [
     "College of Agriculture(Torrijos Campus)",
     "College of Allied Health Sciences",
@@ -209,6 +207,7 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
                     label="Department"
                     options={departmentOptions}
                     placeholder="Department"
+                    type="disabled"
                   />
                 )}
               />
@@ -224,7 +223,7 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
                 name="possiblePickupDate"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel>Pick up Date</FormLabel>
+                    <FormLabel>Date Needed</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
@@ -238,7 +237,7 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
                             {field.value ? (
                               format(field.value, "MMMM dd, YYY")
                             ) : (
-                              <span>Pick your possible pickup date</span>
+                              <span>Pick a date</span>
                             )}
                             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                           </Button>

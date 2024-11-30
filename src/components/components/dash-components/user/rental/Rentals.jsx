@@ -249,7 +249,7 @@ function Rentals() {
               </DialogTrigger>
               <DialogContent className="max-h-[550px] overflow-auto">
                 <DialogHeader>
-                  <DialogTitle>Create a rental</DialogTitle>
+                  <DialogTitle>Create a rental for ACADEMIC GOWNS</DialogTitle>
                   <DialogDescription>
                     Click submit when you&apos;re done.
                   </DialogDescription>
