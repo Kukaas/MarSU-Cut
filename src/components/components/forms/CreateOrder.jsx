@@ -140,8 +140,14 @@ const CreateOrder = ({ addNewOrder, setIsDialogOpen }) => {
     event.preventDefault();
     event.stopPropagation();
 
-    if(!values.receipt || !values.receiptType || !values.ORNumber || !values.datePaid){
-      toast.error("Please fill al fields");
+    if (!values.datePaid || values.amount !== 500 || !values.ORNumber) {
+      if (!values.datePaid) {
+        toast.error("Please select a date.");
+      } else if (values.amount !== 500) {
+        toast.error("Amount should be ₱500.");
+      } else if (!values.ORNumber) {
+        toast.error("OR Number is required.");
+      }
       return;
     }
 
