@@ -70,6 +70,8 @@ const ChangePassword = () => {
         message.error("Internal server error");
       }
       setLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
 

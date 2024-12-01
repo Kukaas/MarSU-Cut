@@ -67,6 +67,8 @@ const EditRawMaterial = ({ selectedRawMaterial }) => {
       ToasterError({
         description: "Please check your internet connection and try again.",
       });
+    } finally {
+      setEditRawMaterialLoading(false);
     }
   };
 

@@ -87,6 +87,8 @@ const CreateAccomplishment = ({ onAccomplishmentCreate, setIsDialogOpen }) => {
         description: "Please check your internet connection and try again.",
       });
       setLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
 

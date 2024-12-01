@@ -163,6 +163,8 @@ const EditReciept = ({ selectedReceipt, orderId, updateReceipt }) => {
         description: "An error occurred while updating the receipt.",
       });
       setLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
 

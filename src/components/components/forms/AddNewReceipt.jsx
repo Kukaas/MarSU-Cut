@@ -208,6 +208,8 @@ const AddNewReceipt = ({ addNewReceipt, selectedOrder, currentBalance }) => {
           });
         }
       }
+    } finally {
+      setLoading(false);
     }
   };
 

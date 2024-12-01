@@ -177,6 +177,8 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
       ToasterError({
         description: "Please check your internet connection and try again.",
       });
+    } finally {
+      setLoading(false);
     }
   };
 

@@ -189,6 +189,8 @@ const AddProduction = ({ onProductionAdded, setIsOpen }) => {
       ToasterError({
         description: "Please check your internet connection and try again.",
       });
+    } finally {
+      setAddProductionLoading(false);
     }
   };
 

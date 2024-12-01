@@ -87,6 +87,8 @@ const EditProduct = ({
       ToasterError({
         description: "Please check your internet connection and try again.",
       });
+    } finally {
+      setEditProductLoading(false);
     }
   };
 

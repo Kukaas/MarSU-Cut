@@ -205,6 +205,9 @@ const CreateOrder = ({ addNewOrder, setIsDialogOpen }) => {
       ToasterError({
         description: "Please check your internet connection and try again.",
       });
+    } finally {
+      setLoading(false);
+      setIsDialogOpen(false);
     }
   };
   // Disable date from tomorrow onwards
