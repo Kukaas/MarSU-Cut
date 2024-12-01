@@ -183,7 +183,7 @@ const Productions = () => {
           <div className="flex items-center py-2 justify-between overflow-y-auto">
             <Tooltip title="Add new production">
               <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-                {currentUser.role === "Admin" && currentUser.isAdmin && (
+                {currentUser.role === "JO" && currentUser.isAdmin && (
                   <AlertDialogTrigger asChild>
                     <Button className="h-8">
                       <PlusCircle className="mr-2 h-4 w-4" />

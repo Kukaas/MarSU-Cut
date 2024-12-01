@@ -196,7 +196,7 @@ const FinishedProduct = () => {
           </div>
           <Tooltip title="Add new product">
             <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              {currentUser.role === "Admin" && currentUser.isAdmin && (
+              {currentUser.role === "JO" && currentUser.isAdmin && (
                 <AlertDialogTrigger asChild>
                   <Button variant="default" className="m-2 h-8">
                     <PlusCircle size={20} className="mr-2 h-4 w-4" />
