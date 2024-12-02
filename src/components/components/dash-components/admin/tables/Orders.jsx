@@ -589,6 +589,7 @@ function Orders() {
                     "PENDING",
                     "APPROVED",
                     "CLAIMED",
+                    "MEASURED"
                   ].includes(order.status)}
                 >
                   Claimed
