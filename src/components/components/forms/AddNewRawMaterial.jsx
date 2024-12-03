@@ -1,10 +1,10 @@
-// UI
 import { Button } from "@/components/ui/button";
-import { Form, FormField } from "@/components/ui/form";
+import {
+  Form,
+  FormField,
+} from "@/components/ui/form";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
-
-// others
+import { Loader2} from "lucide-react";
 import ToasterError from "@/lib/Toaster";
 import PropTypes from "prop-types";
 import { AddRawMaterialsSchema } from "@/schema/shema";
@@ -20,24 +20,30 @@ import {
 } from "@/components/ui/alert-dialog";
 import SelectField from "../custom-components/SelectField";
 import CustomNumberInput from "../custom-components/CustomNumberInput";
+import ImageUpload from "../custom-components/ImageUpload";
 
 const AddNewRawMaterial = ({ onRawMaterialAdded, setIsDialogOpen }) => {
   const [addRawMaterialLoading, setAddRawMaterialLoading] = useState(false);
   const [rawMaterialTypes, setRawMaterialTypes] = useState([]);
+  const [imageFileUrl, setImageFileUrl] = useState(null);
+  const [filteredRawMaterialTypes, setFilteredRawMaterialTypes] = useState([]);
+  const [units, setUnits] = useState([]);
 
   const addRawMaterialForm = useForm({
     resolver: zodResolver(AddRawMaterialsSchema),
     defaultValues: {
+      category: "",
       type: "",
       unit: "",
       quantity: 0,
+      image: "",
     },
   });
 
   useEffect(() => {
     const fetchRawMaterialTypes = async () => {
       try {
-        const response = await axios.get(
+        const res = await axios.get(
           `${BASE_URL}/api/v1/system-maintenance/raw-material-type/all`,
           {
             headers: {
@@ -48,31 +54,73 @@ const AddNewRawMaterial = ({ onRawMaterialAdded, setIsDialogOpen }) => {
           }
         );
 
-        if (response.status === 200) {
-          return response.data.rawMaterialTypes.sort((a, b) =>
-            a.rawMaterialType.localeCompare(b.rawMaterialType)
-          );
-        } else {
-          throw new Error("Failed to fetch raw material types");
+        const data = res.data.rawMaterialTypes;
+        if (res.status === 200) {
+          const uniqueCategories = [
+            ...new Set(data.map((item) => item.category)),
+          ];
+
+          const groupedArray = uniqueCategories.map((category) => {
+            return {
+              category,
+              items: data.filter((item) => item.category === category),
+            };
+          });
+
+          setRawMaterialTypes(groupedArray);
         }
       } catch (error) {
-        console.error("Error fetching raw material types:", error);
-        throw error;
+        console.error(error);
       }
     };
 
-    fetchRawMaterialTypes().then((data) => setRawMaterialTypes(data));
+    fetchRawMaterialTypes();
   }, []);
+
+  useEffect(() => {
+    if (addRawMaterialForm.watch("category")) {
+      const selectedCategory = addRawMaterialForm.watch("category");
+      const categoryData = rawMaterialTypes.find(
+        (group) => group.category === selectedCategory
+      );
+      setFilteredRawMaterialTypes(categoryData ? categoryData.items : []);
+    }
+  }, [addRawMaterialForm.watch("category"), rawMaterialTypes]);
+
+  useEffect(() => {
+    if (addRawMaterialForm.watch("type")) {
+      const selectedType = addRawMaterialForm.watch("type");
+      const selectedItem = filteredRawMaterialTypes.find(
+        (item) => item.rawMaterialType === selectedType
+      );
+      if (selectedItem) {
+        setUnits([selectedItem.unit]);
+      }
+    }
+  }, [addRawMaterialForm.watch("type"), filteredRawMaterialTypes]);
 
   const handleAddRawMaterial = async (values) => {
     if (!values.quantity || !values.type || !values.unit) {
       return toast.error("Please fill all fields");
     }
+
+    if (!imageFileUrl) {
+      return toast.error(
+        "Please upload an image and wait for it to finish uploading."
+      );
+    }
+
     try {
       setAddRawMaterialLoading(true);
+
+      const payload = {
+        ...values,
+        image: imageFileUrl,
+      };
+
       const res = await axios.post(
         `${BASE_URL}/api/v1/raw-materials/new`,
-        values,
+        payload,
         {
           headers: {
             "Content-Type": "application/json",
@@ -99,8 +147,6 @@ const AddNewRawMaterial = ({ onRawMaterialAdded, setIsDialogOpen }) => {
       ToasterError({
         description: "Please check your internet connection and try again.",
       });
-    } finally {
-      setAddRawMaterialLoading(false);
     }
   };
 
@@ -112,13 +158,27 @@ const AddNewRawMaterial = ({ onRawMaterialAdded, setIsDialogOpen }) => {
       >
         <FormField
           control={addRawMaterialForm.control}
+          name="category"
+          render={({ field }) => (
+            <SelectField
+              field={field}
+              label="Category"
+              options={rawMaterialTypes.map(
+                (rawMaterialType) => rawMaterialType.category
+              )}
+              placeholder="Select a category"
+            />
+          )}
+        />
+        <FormField
+          control={addRawMaterialForm.control}
           name="type"
           render={({ field }) => (
             <SelectField
               field={field}
               label="Raw Material Type"
-              options={rawMaterialTypes.map(
-                (rawMaterialType) => rawMaterialType.rawMaterialType
+              options={filteredRawMaterialTypes.map(
+                (item) => item.rawMaterialType
               )}
               placeholder="Select a raw material type"
             />
@@ -131,7 +191,7 @@ const AddNewRawMaterial = ({ onRawMaterialAdded, setIsDialogOpen }) => {
             <SelectField
               field={field}
               label="Unit"
-              options={["Yard", "Kilo", "Meter", "Piece", "Gram", "Cone"]}
+              options={units}
               placeholder="Unit"
             />
           )}
@@ -142,6 +202,10 @@ const AddNewRawMaterial = ({ onRawMaterialAdded, setIsDialogOpen }) => {
           name="quantity"
           placeholder="Quantity"
           type="number"
+        />
+        <ImageUpload
+          onImageUpload={setImageFileUrl}
+          defaultImageUrl={imageFileUrl}
         />
         <div className="flex flex-col items-center gap-4 mt-4">
           <AlertDialogFooter className="flex flex-col items-center gap-4 w-full">
@@ -173,8 +237,8 @@ const AddNewRawMaterial = ({ onRawMaterialAdded, setIsDialogOpen }) => {
 };
 
 AddNewRawMaterial.propTypes = {
-  onRawMaterialAdded: PropTypes.func,
-  setIsDialogOpen: PropTypes.func,
+  onRawMaterialAdded: PropTypes.func.isRequired,
+  setIsDialogOpen: PropTypes.func.isRequired,
 };
 
 export default AddNewRawMaterial;

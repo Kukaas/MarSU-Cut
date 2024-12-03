@@ -280,15 +280,19 @@ export const EditProductSchema = z.object({
 });
 
 export const EditRawMAterialsSchema = z.object({
+  category: z.string(),
   type: z.string(),
-  quantity: z.number().int().nonnegative(),
+  quantity: z.number(),
   unit: z.string(),
+  image: z.string(),
 });
 
 export const AddRawMaterialsSchema = z.object({
+  category: z.string(),
   type: z.string(),
-  quantity: z.number().int().nonnegative(),
+  quantity: z.number(),
   unit: z.string(),
+  image: z.string(),
 });
 
 export const AddProductionSchema = z.object({
@@ -350,5 +354,7 @@ export const addNewEmployeeSchema = z.object({
 });
 
 export const addNewRawMaterialTypeSchema = z.object({
+  category: z.string(),
   rawMaterialType: z.string(),
+  unit: z.string(),
 });

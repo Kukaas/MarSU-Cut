@@ -17,12 +17,13 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
+import { Form, FormField } from "@/components/ui/form";
 import { addNewRawMaterialTypeSchema } from "@/schema/shema";
 import axios from "axios";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import { toast } from "sonner";
+import SelectField from "@/components/components/custom-components/SelectField";
 
 const RawMaterialTypes = () => {
   const [loading, setLoading] = useState(false);
@@ -35,14 +36,18 @@ const RawMaterialTypes = () => {
   const form = useForm({
     resolver: zodResolver(addNewRawMaterialTypeSchema),
     defaultValues: {
+      category: "",
       rawMaterialType: "",
+      unit: "",
     },
   });
 
   const updateForm = useForm({
     resolver: zodResolver(addNewRawMaterialTypeSchema),
     defaultValues: {
-      rawMaterialType: "",
+      category: selectedRawMaterialType?.category || "",
+      rawMaterialType: selectedRawMaterialType?.rawMaterialType || "",
+      unit: selectedRawMaterialType?.unit || "",
     },
   });
 
@@ -85,10 +90,20 @@ const RawMaterialTypes = () => {
 
   const columns = [
     {
+      accessorKey: "category",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Category" />
+      ),
+    },
+    {
       accessorKey: "rawMaterialType",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Raw Material Type" />
       ),
+    },
+    {
+      accessorKey: "unit",
+      header: "Unit",
     },
     {
       accessorKey: "Actions",
@@ -219,12 +234,52 @@ const RawMaterialTypes = () => {
                 className="space-y-4"
                 onSubmit={form.handleSubmit(handleAddNewRawMaterialType)}
               >
+                <FormField
+                  control={form.control}
+                  name="category"
+                  render={({ field }) => (
+                    <SelectField
+                      field={field}
+                      label="Category"
+                      options={[
+                        "Fabric",
+                        "Thread",
+                        "Buttons",
+                        "Zippers",
+                        "Nonwoven Textiles",
+                        "Seweng Fasteners",
+                      ]}
+                      placeholder="Select a category"
+                    />
+                  )}
+                />
                 <CustomInput
                   form={form}
                   name="rawMaterialType"
                   label="Raw Material Type"
-                  placeholder="e.g. Fabric, Thread, etc."
+                  placeholder="e.g. CVC Cream, Shank, etc."
                   type="text"
+                />
+                <FormField
+                  control={form.control}
+                  name="unit"
+                  render={({ field }) => (
+                    <SelectField
+                      field={field}
+                      label="Unit"
+                      options={[
+                        "Yard",
+                        "Piece",
+                        "Roll",
+                        "Centimeter",
+                        "Meter",
+                        "Kilogram",
+                        "Gram",
+                        "Millimeter",
+                      ]}
+                      placeholder="Select a unit"
+                    />
+                  )}
                 />
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
@@ -298,12 +353,52 @@ const RawMaterialTypes = () => {
               className="space-y-4"
               onSubmit={updateForm.handleSubmit(handleUpdateRawMaterialType)}
             >
+              <FormField
+                control={updateForm.control}
+                name="category"
+                render={({ field }) => (
+                  <SelectField
+                    field={field}
+                    label="Category"
+                    options={[
+                      "Fabric",
+                      "Thread",
+                      "Buttons",
+                      "Zippers",
+                      "Nonwoven Textiles",
+                      "Seweng Fasteners",
+                    ]}
+                    placeholder="Select a category"
+                  />
+                )}
+              />
               <CustomInput
                 form={updateForm}
                 name="rawMaterialType"
                 label="Raw Material Type"
-                placeholder="e.g. Fabric, CVC Cream, etc."
+                placeholder="e.g. CVC Cream, Shank, etc."
                 type="text"
+              />
+              <FormField
+                control={updateForm.control}
+                name="unit"
+                render={({ field }) => (
+                  <SelectField
+                    field={field}
+                    label="Unit"
+                    options={[
+                      "Yard",
+                      "Piece",
+                      "Roll",
+                      "Centimeter",
+                      "Meter",
+                      "Kilogram",
+                      "Gram",
+                      "Millimeter",
+                    ]}
+                    placeholder="Select a unit"
+                  />
+                )}
               />
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>

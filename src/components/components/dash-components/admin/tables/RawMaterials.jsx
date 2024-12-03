@@ -79,6 +79,12 @@ const RawMaterials = () => {
 
   const columns = [
     {
+      accessorKey: "category",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Category" />
+      ),
+    },
+    {
       accessorKey: "type",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Type" />
@@ -93,6 +99,24 @@ const RawMaterials = () => {
     {
       accessorKey: "quantity",
       header: "Quantity",
+    },
+    {
+      accessorKey: "image",
+      header: "Image",
+      cell: ({ row }) => {
+        const image = row.original.image;
+        console.log("Image URL:", image); // Check if the URL is valid
+        return (
+          <a
+            href={image}
+            target="_blank"
+            rel="noreferrer"
+            className="text-blue-500 hover:underline"
+          >
+            View Image
+          </a>
+        );
+      },
     },
     {
       accessorKey: "status",
@@ -124,7 +148,7 @@ const RawMaterials = () => {
                     Edit
                   </Button>
                 </AlertDialogTrigger>
-                <AlertDialogContent>
+                <AlertDialogContent className="max-w-[500px] max-h-[600px] overflow-auto">
                   <AlertDialogHeader>
                     <AlertDialogTitle>Edit Raw Material</AlertDialogTitle>
                     <AlertDialogDescription>
@@ -172,7 +196,7 @@ const RawMaterials = () => {
                   </Button>
                 </AlertDialogTrigger>
               )}
-              <AlertDialogContent className="sm:max-w-[425px]">
+              <AlertDialogContent className="max-w-[500px] max-h-[600px] overflow-auto">
                 <AlertDialogHeader>
                   <AlertDialogTitle>Add a new raw material</AlertDialogTitle>
                   <AlertDialogDescription>
