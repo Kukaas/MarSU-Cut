@@ -35,6 +35,8 @@ import ProductionYear from "../production-components/ProductionYear";
 import ProductionMonth from "../production-components/ProductionMonth";
 import { useSelector } from "react-redux";
 import AddProductionUniform from "@/components/components/forms/AddProductionUniform";
+import AcademicTable from "../production-components/AcademicTable";
+import AddProductionAcademic from "@/components/components/forms/AddProductionAcademic";
 
 const Productions = () => {
   const [data, setData] = useState([]);
@@ -60,8 +62,10 @@ const Productions = () => {
       case "academicGown":
         return (
           <div>
-            Academic Gown Form
-            <Button onClick={() => setSelectedForm(null)}>Back</Button>
+            <AddProductionAcademic
+              onAcademicAdded={handleProductionAdded}
+              setIsDialogOpen={setIsOpen}
+            />
           </div>
         );
       case "others":
@@ -267,6 +271,9 @@ const Productions = () => {
             <div className="rounded-md border">
               <CustomTable columns={columns} data={data} loading={loading} />
             </div>
+          </TabsContent>
+          <TabsContent value="academicGown" className="mt-4">
+            <AcademicTable />
           </TabsContent>
           <TabsContent value="graph" className="mt-4 p-5">
             <Card>

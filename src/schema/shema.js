@@ -316,6 +316,27 @@ export const AddProductionSchema = z.object({
   ),
 });
 
+export const AddProductionAcademicSchema = z.object({
+  level: z.string().min(3, { message: "Level must be at least 3 characters" }),
+  productType: z
+    .string()
+    .min(3, { message: "Product Type must be at least 3 characters" }),
+  productionDateFrom: z.string().refine((date) => !isNaN(Date.parse(date)), {
+    message: "Invalid date format for productionDateFrom",
+  }),
+  productionDateTo: z.string().refine((date) => !isNaN(Date.parse(date)), {
+    message: "Invalid date format for productionDateTo",
+  }),
+  size: z.string().min(1, { message: "Size must be at least 1 character" }),
+  quantity: z.number().int().nonnegative(),
+  rawMaterialsUsed: z.array(
+    z.object({
+      type: z.string(),
+      quantity: z.number().nonnegative(),
+    })
+  ),
+});
+
 export const AddCommercialJobSchema = z.object({
   contactNumber: z
     .string()

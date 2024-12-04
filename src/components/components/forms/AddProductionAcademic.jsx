@@ -1,3 +1,4 @@
+// UI
 import {
   Form,
   FormControl,
@@ -21,7 +22,8 @@ import { CalendarIcon, Loader2 } from "lucide-react";
 
 // others
 import ToasterError from "@/lib/Toaster";
-import { AddProductionSchema } from "@/schema/shema";
+import { cn } from "@/lib/utils";
+import { AddProductionAcademicSchema } from "@/schema/shema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import PropTypes from "prop-types";
@@ -32,9 +34,9 @@ import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import SelectField from "../custom-components/SelectField";
 import { AlertDialogFooter } from "@/components/ui/alert-dialog";
-import { fetchSizes } from "@/hooks/helper";
+import { fetchProductTypes, fetchSizes } from "@/hooks/helper";
 
-const AddProductionUniform = ({ onProductionAdded, setIsOpen }) => {
+const AddProductionAcademic = ({ onProductionAdded, setIsOpen }) => {
   const [addProductionLoading, setAddProductionLoading] = useState(false);
   const [productTypes, setProductTypes] = useState([]);
   const [filteredRawMaterials, setRawMaterialsForSelectedType] = useState([]);
@@ -42,10 +44,12 @@ const AddProductionUniform = ({ onProductionAdded, setIsOpen }) => {
   const [allSizes, setAllSizes] = useState([]);
   const [filteredSizes, setFilteredSizes] = useState([]);
 
+  // Initialize formState from localStorage or with default values
   const initialFormState = JSON.parse(localStorage.getItem("formState")) || {
     productType: "",
     size: "",
     level: "",
+    department: "",
     productionDateFrom: "",
     productionDateTo: "",
     quantity: 0,
@@ -54,8 +58,9 @@ const AddProductionUniform = ({ onProductionAdded, setIsOpen }) => {
 
   const [formState, setFormState] = useState(initialFormState);
 
+  // Initialize the form with default values from formState or localStorage
   const productionForm = useForm({
-    resolver: zodResolver(AddProductionSchema),
+    resolver: zodResolver(AddProductionAcademicSchema),
     defaultValues: formState,
   });
 
@@ -68,90 +73,40 @@ const AddProductionUniform = ({ onProductionAdded, setIsOpen }) => {
     return () => subscription.unsubscribe();
   }, [productionForm]);
 
-  // Define the mapping for product types to sizes
-  const productTypeToSizes = {
-    POLO: ["S14", "S15", "S16", "S17", "S18", "S18+", "S19+"],
-    BLOUSE: ["S14", "S15", "S16", "S17", "S18", "S18+", "S19+"],
-    SKIRT: ["S24", "S25", "S26", "S27", "S28+"],
-    PANTS: ["S24", "S25", "S26", "S27", "S28+"],
-    JPANTS: ["S33+34", "S35", "S36", "S37", "S38+40", "S42+45"],
-    "PE TSHIRT": ["2XL", "XS/S", "M/L", "XL", "XXL"],
-  };
+  const { level, size } = productionForm.watch();
+  const productType = productionForm.watch("productType");
 
-  const { level, productType, size } = productionForm.watch();
-
-  useEffect(() => {
-    const fetchProductTypes = async () => {
-      setLoading(true);
-      try {
-        const res = await axios.get(
-          `${BASE_URL}/api/v1/system-maintenance/product-type/all`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-          }
-        );
-
-        // Log the response to confirm its structure
-        console.log(res.data);
-
-        // Assuming product types are under "productTypes" key
-        const uniqueProductTypes = Array.from(
-          new Set(res.data.productTypes.map((a) => a.productType))
-        ).map((productType) => {
-          return {
-            productType,
-          };
-        });
-
-        // Filter out unwanted types
-        const filteredProductTypes = uniqueProductTypes.filter(
-          (item) =>
-            item.productType !== "TOGA" &&
-            item.productType !== "CAP" &&
-            item.productType !== "HOOD"
-        );
-
-        setProductTypes(filteredProductTypes);
-      } catch (error) {
-        console.error("Error fetching product types:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProductTypes();
-  }, []);
-
-  // Fetch sizes for all product types on mount
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const sizesData = await fetchSizes();
-        setAllSizes(sizesData); // Store all sizes fetched
+        setLoading(true);
+        const productTypesData = await fetchProductTypes();
+        const uniqueProductTypes = Array.from(
+          new Set(productTypesData.map((a) => a.productType))
+        ).map((productType) => ({ productType }));
+
+        const filteredProductTypes = uniqueProductTypes.filter(
+          (productType) =>
+            ![
+              "POLO",
+              "BLOUSE",
+              "SKIRT",
+              "PANTS",
+              "JPANTS",
+              "PE TSHIRT",
+            ].includes(productType.productType)
+        );
+
+        setProductTypes(filteredProductTypes);
+        setLoading(false);
       } catch (error) {
-        console.error("Failed to load sizes:", error);
+        setLoading(false);
+        console.error("Failed to load product types:", error);
       }
     };
 
     fetchData();
   }, []);
-
-  // Filter sizes based on the selected product type
-  useEffect(() => {
-    if (productType && productTypeToSizes[productType]) {
-      const predefinedSizes = productTypeToSizes[productType];
-      const matchedSizes = allSizes.filter((size) =>
-        predefinedSizes.includes(size.size)
-      );
-      setFilteredSizes(matchedSizes.map((size) => size.size)); // Map matched sizes
-    } else {
-      setFilteredSizes([]); // Clear sizes if no match
-    }
-  }, [productType, allSizes]);
 
   useEffect(() => {
     const fetchRawMaterialsForSelected = async () => {
@@ -190,6 +145,37 @@ const AddProductionUniform = ({ onProductionAdded, setIsOpen }) => {
     fetchRawMaterialsForSelected();
   }, [productType, formState.level, formState.size, filteredSizes]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const sizesData = await fetchSizes();
+        setAllSizes(sizesData);
+      } catch (error) {
+        console.error("Failed to load sizes:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const productTypeToSizes = {
+    TOGA: ["S14", "S15", "S16", "S17", "S18", "S18+", "S19+"],
+    CAP: ["M/L", "XL", "XXL"],
+    HOOD: ["M/L", "XL", "XXL"],
+  };
+
+  useEffect(() => {
+    if (productType && productTypeToSizes[productType]) {
+      const predefinedSizes = productTypeToSizes[productType];
+      const matchedSizes = allSizes.filter((size) =>
+        predefinedSizes.includes(size.size)
+      );
+      setFilteredSizes(matchedSizes.map((size) => size.size));
+    } else {
+      setFilteredSizes([]);
+    }
+  }, [productType, allSizes]);
+
   const handleAddProduction = async (values) => {
     if (values.productionDateFrom > values.productionDateTo) {
       return toast.error(
@@ -212,7 +198,7 @@ const AddProductionUniform = ({ onProductionAdded, setIsOpen }) => {
       const productionData = { ...values, rawMaterialsUsed };
 
       const res = await axios.post(
-        `${BASE_URL}/api/v1/production/create`,
+        `${BASE_URL}/api/v1/production/academic/create`,
         productionData,
         {
           headers: {
@@ -256,6 +242,7 @@ const AddProductionUniform = ({ onProductionAdded, setIsOpen }) => {
       <div className="w-full">
         <Form {...productionForm}>
           <form onSubmit={productionForm.handleSubmit(handleAddProduction)}>
+            {/* Production Details */}
             <fieldset className="border border-gray-300 rounded-md p-4 space-y-3">
               <legend className="text-lg font-semibold">
                 Production Details
@@ -308,23 +295,60 @@ const AddProductionUniform = ({ onProductionAdded, setIsOpen }) => {
                 />
               </div>
 
+              <FormField
+                control={productionForm.control}
+                name="department"
+                render={({ field }) => (
+                  <SelectField
+                    field={field}
+                    label="Department"
+                    options={[
+                      "College of Agriculture(Torrijos Campus)",
+                      "College of Allied Health Sciences",
+                      "College of Arts and Social Sciences",
+                      "College of Business and Accountancy",
+                      "College of Criminal Justice Education",
+                      "College of Education",
+                      "College of Engineering",
+                      "College of Environmental Studies",
+                      "College of Fisheries and Aquatic Sciences(Gasan Campus)",
+                      "College of Governance",
+                      "College of Industrial Technology",
+                      "College of Information and Computing Sciences",
+                      "No Department",
+                    ]}
+                    placeholder="Select Department"
+                  />
+                )}
+              />
+
               <div className="flex space-x-4 mt-4">
                 <FormField
                   control={productionForm.control}
                   name="productionDateFrom"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Production Date From</FormLabel>
+                    <FormItem className="flex flex-col w-full">
+                      <FormLabel>Production From</FormLabel>
                       <Popover>
                         <PopoverTrigger asChild>
-                          <Button variant="outline" className="w-full">
-                            <CalendarIcon className="w-4 h-4 mr-2" />
-                            {field.value
-                              ? format(new Date(field.value), "PPP")
-                              : "Select Date"}
-                          </Button>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "pl-3 text-left font-normal w-full",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value ? (
+                                format(new Date(field.value), "MMMM dd, yyy")
+                              ) : (
+                                <span>From</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
                         </PopoverTrigger>
-                        <PopoverContent>
+                        <PopoverContent className="w-auto p-0" align="start">
                           <Calendar
                             mode="single"
                             selected={
@@ -338,6 +362,7 @@ const AddProductionUniform = ({ onProductionAdded, setIsOpen }) => {
                           />
                         </PopoverContent>
                       </Popover>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -345,18 +370,28 @@ const AddProductionUniform = ({ onProductionAdded, setIsOpen }) => {
                   control={productionForm.control}
                   name="productionDateTo"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Production Date To</FormLabel>
+                    <FormItem className="flex flex-col w-full">
+                      <FormLabel>Production To</FormLabel>
                       <Popover>
                         <PopoverTrigger asChild>
-                          <Button variant="outline" className="w-full">
-                            <CalendarIcon className="w-4 h-4 mr-2" />
-                            {field.value
-                              ? format(new Date(field.value), "PPP")
-                              : "Select Date"}
-                          </Button>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "pl-3 text-left font-normal w-full",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value ? (
+                                format(new Date(field.value), "MMMM dd, yyy")
+                              ) : (
+                                <span>To</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
                         </PopoverTrigger>
-                        <PopoverContent>
+                        <PopoverContent className="w-auto p-0" align="start">
                           <Calendar
                             mode="single"
                             selected={
@@ -370,77 +405,86 @@ const AddProductionUniform = ({ onProductionAdded, setIsOpen }) => {
                           />
                         </PopoverContent>
                       </Popover>
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="mt-4">
-                <FormField
-                  control={productionForm.control}
-                  name="quantity"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Quantity</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="Quantity"
-                          {...field}
-                        />
-                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
 
-              <fieldset className="border border-gray-300 rounded-md p-4 mt-4">
-                <legend className="text-lg font-semibold">
-                  Raw Materials Used
-                </legend>
-                {filteredRawMaterials.length > 0 ? (
-                  <ul className="space-y-2">
-                    {filteredRawMaterials.map((material) => (
-                      <li
-                        key={material._id}
-                        className="flex justify-between items-center"
-                      >
-                        <span>
-                          <strong>{material.type}</strong> ({material.category})
-                        </span>
-                        <span>
-                          {material.quantity} {material.unit}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-gray-500">
-                    {level && productType && size
-                      ? "No raw materials available for this selection."
-                      : "Select level, product type, and size to see raw materials."}
-                  </p>
+              <FormField
+                control={productionForm.control}
+                name="quantity"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Quantity</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        {...field}
+                        value={field.value !== undefined ? field.value : ""}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          field.onChange(value !== "" ? parseFloat(value) : ""); // Ensure the value is parsed as float
+                        }}
+                        placeholder="Quantity"
+                        className="w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )}
-              </fieldset>
-
-              <div className="mt-6">
-                <AlertDialogFooter>
-                  <Button
-                    variant="default"
-                    className="w-full"
-                    onClick={handleButtonClick}
-                    disabled={addProductionLoading}
-                  >
-                    {addProductionLoading ? (
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    ) : (
-                      "Add Production"
-                    )}
-                  </Button>
-                </AlertDialogFooter>
-              </div>
+              />
             </fieldset>
+
+            {/* Raw Materials */}
+            <fieldset className="border border-gray-300 rounded-md p-4 mt-4">
+              <legend className="text-lg font-semibold">
+                Raw Materials Used
+              </legend>
+              {filteredRawMaterials.length > 0 ? (
+                <ul className="space-y-2">
+                  {filteredRawMaterials.map((material) => (
+                    <li
+                      key={material._id}
+                      className="flex justify-between items-center"
+                    >
+                      <span>
+                        <strong>{material.type}</strong> ({material.category})
+                      </span>
+                      <span>
+                        {material.quantity} {material.unit}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-gray-500">
+                  {level && productType && size
+                    ? "No raw materials available for this selection."
+                    : "Select level, product type, and size to see raw materials."}
+                </p>
+              )}
+            </fieldset>
+
+            <div className="flex flex-col items-center gap-4 mt-4">
+              <AlertDialogFooter className="w-full flex flex-col items-center gap-4">
+                <Button
+                  onClick={handleButtonClick}
+                  type="button"
+                  disabled={addProductionLoading}
+                  className="w-full flex items-center justify-center"
+                >
+                  {addProductionLoading ? (
+                    <div className="flex items-center">
+                      <Loader2 className="mr-2 animate-spin" />
+                      <span>Adding</span>
+                    </div>
+                  ) : (
+                    "Add Production"
+                  )}
+                </Button>
+              </AlertDialogFooter>
+            </div>
           </form>
         </Form>
       </div>
@@ -448,9 +492,9 @@ const AddProductionUniform = ({ onProductionAdded, setIsOpen }) => {
   );
 };
 
-AddProductionUniform.propTypes = {
-  onProductionAdded: PropTypes.func.isRequired,
-  setIsOpen: PropTypes.func.isRequired,
+AddProductionAcademic.propTypes = {
+  onProductionAdded: PropTypes.func,
+  setIsOpen: PropTypes.func,
 };
 
-export default AddProductionUniform;
+export default AddProductionAcademic;
