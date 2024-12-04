@@ -57,7 +57,16 @@ const AddNewProduct = ({ onProductAdded, setIsDialogOpen }) => {
     const fetchData = async () => {
       try {
         const productTypesData = await fetchProductTypes();
-        setProductTypes(productTypesData);
+        // remove duplication of product types
+        const uniqueProductTypes = Array.from(
+          new Set(productTypesData.map((a) => a.productType))
+        ).map((productType) => {
+          return {
+            productType,
+          };
+        });
+
+        setProductTypes(uniqueProductTypes);
       } catch (error) {
         console.error("Failed to load product types:", error);
       }

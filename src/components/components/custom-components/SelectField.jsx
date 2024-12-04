@@ -23,6 +23,9 @@ const SelectField = ({
 }) => {
   const hasManyOptions = options.length > 2; // Adjust the threshold as needed
 
+  // Filter out empty string options
+  const filteredOptions = options.filter((option) => option !== "");
+
   return (
     <FormItem className={className}>
       <FormLabel>{label}</FormLabel>
@@ -43,7 +46,7 @@ const SelectField = ({
             {hasManyOptions ? (
               <ScrollArea className="h-72 p-3">
                 <SelectGroup>
-                  {options.map((option) => (
+                  {filteredOptions.map((option) => (
                     <React.Fragment key={option}>
                       <SelectItem value={option}>{option}</SelectItem>
                       <Separator className="my-2" />
@@ -53,7 +56,7 @@ const SelectField = ({
               </ScrollArea>
             ) : (
               <SelectGroup className="p-3">
-                {options.map((option) => (
+                {filteredOptions.map((option) => (
                   <React.Fragment key={option}>
                     <SelectItem value={option}>{option}</SelectItem>
                     <Separator className="my-2" />
@@ -70,9 +73,9 @@ const SelectField = ({
 };
 
 SelectField.propTypes = {
-  field: PropTypes.object.isRequired,
-  label: PropTypes.string.isRequired,
-  options: PropTypes.array.isRequired,
+  field: PropTypes.object,
+  label: PropTypes.string,
+  options: PropTypes.array,
   placeholder: PropTypes.string,
   onValueChange: PropTypes.func,
   type: PropTypes.string,

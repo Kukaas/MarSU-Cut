@@ -66,12 +66,32 @@ const AddOrderItems = ({
     const fetchData = async () => {
       try {
         const productTypesData = await fetchProductTypes();
-        setProductTypes(productTypesData);
 
-        const sizesData = await fetchSizes();
-        setAllSizes(sizesData);
+        // remove duplication of product types
+        const uniqueProductTypes = Array.from(
+          new Set(productTypesData.map((a) => a.productType))
+        ).map((productType) => {
+          return {
+            productType,
+          };
+        });
+
+        setProductTypes(uniqueProductTypes);
       } catch (error) {
         console.error("Failed to load data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const sizesData = await fetchSizes();
+        setAllSizes(sizesData); // Store all sizes fetched
+      } catch (error) {
+        console.error("Failed to load sizes:", error);
       }
     };
 
