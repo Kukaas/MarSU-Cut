@@ -9,8 +9,6 @@ import { PlusCircle } from "lucide-react";
 // others
 import axios from "axios";
 import { useEffect, useState } from "react";
-
-import AddProduction from "@/components/components/forms/AddProduction";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomTable from "@/components/components/custom-components/CustomTable";
@@ -24,8 +22,10 @@ import DataTableColumnHeader from "@/components/components/custom-components/Dat
 // import DeleteDialog from "@/components/components/custom-components/DeleteDialog";
 import {
   AlertDialog,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
+  AlertDialogFooter,
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
@@ -34,6 +34,7 @@ import CustomPageTitle from "@/components/components/custom-components/CustomPag
 import ProductionYear from "../production-components/ProductionYear";
 import ProductionMonth from "../production-components/ProductionMonth";
 import { useSelector } from "react-redux";
+import AddProductionUniform from "@/components/components/forms/AddProductionUniform";
 
 const Productions = () => {
   const [data, setData] = useState([]);
@@ -43,6 +44,42 @@ const Productions = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [tab, setTab] = useState("monthly");
   const { currentUser } = useSelector((state) => state.user);
+  const [selectedForm, setSelectedForm] = useState(null);
+
+  const renderForm = () => {
+    switch (selectedForm) {
+      case "schoolUniform":
+        return (
+          <div>
+            <AddProductionUniform
+              onProductionAdded={handleProductionAdded}
+              setIsOpen={setIsOpen}
+            />
+          </div>
+        );
+      case "academicGown":
+        return (
+          <div>
+            Academic Gown Form
+            <Button onClick={() => setSelectedForm(null)}>Back</Button>
+          </div>
+        );
+      case "others":
+        return <div>Other Productions Form</div>;
+      default:
+        return (
+          <div className="flex flex-col gap-4">
+            <Button onClick={() => setSelectedForm("schoolUniform")}>
+              School Uniform
+            </Button>
+            <Button onClick={() => setSelectedForm("academicGown")}>
+              Academic Gown
+            </Button>
+            <Button onClick={() => setSelectedForm("others")}>Others</Button>
+          </div>
+        );
+    }
+  };
 
   useEffect(() => {
     const fetchProductions = async () => {
@@ -192,14 +229,27 @@ const Productions = () => {
                   </AlertDialogTrigger>
                 )}
                 <AlertDialogContent className="max-h-[550px] overflow-auto">
-                  <AlertDialogTitle>Add a new production</AlertDialogTitle>
+                  <AlertDialogTitle>
+                    {selectedForm ? "Fill the Form" : "Select Production Type"}
+                  </AlertDialogTitle>
                   <AlertDialogDescription>
-                    Click submit when you&apos;re done.
+                    {selectedForm
+                      ? "Please fill in the details for the selected production type."
+                      : "Select the type of production you want to add."}
                   </AlertDialogDescription>
-                  <AddProduction
-                    onProductionAdded={handleProductionAdded}
-                    setIsOpen={setIsOpen}
-                  />
+                  {renderForm()}
+                  <AlertDialogFooter className="w-full flex justify-between">
+                    <Button
+                      className="w-full"
+                      onClick={() => setSelectedForm(null)}
+                      variant="secondary"
+                    >
+                      Back
+                    </Button>
+                    <AlertDialogCancel className="w-full">
+                      Cancel
+                    </AlertDialogCancel>
+                  </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
             </Tooltip>

@@ -253,10 +253,10 @@ const EditProductTypeForm = ({ onClose, onSuccess, selectedProductType }) => {
                         {...field}
                         placeholder="Quantity"
                         type="number"
-                        step="0.01"
+                        step="any"
                         min="0"
                         onChange={(e) =>
-                          field.onChange(parseFloat(e.target.value) || 0)
+                          field.onChange(parseFloat(e.target.value))
                         }
                         className="w-full mt-2"
                       />

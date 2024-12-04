@@ -250,10 +250,10 @@ const AddProductTypeForm = ({ onClose, onSuccess }) => {
                         {...field}
                         placeholder="Quantity"
                         type="number"
-                        step="0.01"
+                        step="any"
                         min="0"
                         onChange={(e) =>
-                          field.onChange(parseFloat(e.target.value) || "")
+                          field.onChange(parseFloat(e.target.value))
                         }
                         className="w-full mt-2"
                       />
