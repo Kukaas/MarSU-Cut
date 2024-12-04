@@ -42,6 +42,7 @@ const DashboardWrapper = () => {
     "productions",
     "order-details",
     "system-maintenance",
+    "academic-gown-inventory",
   ];
 
   return validTabs.includes(tab) ? <Dashboard tab={tab} /> : <PageNotFound />;

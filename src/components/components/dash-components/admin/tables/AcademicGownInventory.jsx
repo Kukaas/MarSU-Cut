@@ -12,8 +12,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 // import ToasterError from "@/lib/Toaster";
 
-import EditProduct from "@/components/components/forms/EditProduct";
-import AddNewProduct from "@/components/components/forms/AddNewProduct";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomTable from "@/components/components/custom-components/CustomTable";
@@ -31,8 +29,10 @@ import {
 } from "@/components/ui/alert-dialog";
 import CustomPageTitle from "@/components/components/custom-components/CustomPageTitle";
 import { useSelector } from "react-redux";
+import AddNewAcademic from "@/components/components/forms/AddNewAcademic";
+import EditAcademicGown from "@/components/components/forms/EditAcademicGown";
 
-const FinishedProduct = () => {
+const AcademicGownInventory = () => {
   const [data, setData] = useState([]);
   const [originalData, setOriginalData] = useState([]);
   const [searchValue, setSearchValue] = useState("");
@@ -45,7 +45,7 @@ const FinishedProduct = () => {
     const fetchFinishedProduct = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(`${BASE_URL}/api/v1/finished-product/all`, {
+        const res = await axios.get(`${BASE_URL}/api/v1/academic-gown/all`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -54,7 +54,7 @@ const FinishedProduct = () => {
         });
 
         const data = res.data;
-        setData(data.finishedProducts);
+        setData(data.academicGown);
         setOriginalData(data.finishedProducts);
         setLoading(false);
       } catch (error) {
@@ -84,12 +84,8 @@ const FinishedProduct = () => {
     }
   }, [searchValue, originalData]);
 
-  const handleProductUpdated = (updatedProduct) => {
-    setData((prevData) =>
-      prevData.map((product) =>
-        product._id === updatedProduct._id ? updatedProduct : product
-      )
-    );
+  const handleProductUpdated = () => {
+    setIsDialogOpen(false);
   };
 
   const columns = [
@@ -103,6 +99,12 @@ const FinishedProduct = () => {
       accessorKey: "productType",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Product Type" />
+      ),
+    },
+    {
+      accessorKey: "department",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Department" />
       ),
     },
     {
@@ -147,17 +149,17 @@ const FinishedProduct = () => {
                     Edit
                   </Button>
                 </AlertDialogTrigger>
-                <AlertDialogContent>
+                <AlertDialogContent className="sm:max-w-[500px] max-h-[600px] overflow-auto">
                   <AlertDialogHeader>
                     <AlertDialogTitle>Edit Product</AlertDialogTitle>
                     <AlertDialogDescription>
                       Please fill out the form below to edit product.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
-                  <EditProduct
+                  <EditAcademicGown
                     selectedProduct={selectedProduct}
+                    onAcademicUpdated={handleProductUpdated}
                     setIsDialogOpen={setIsDialogOpen}
-                    onProductUpdated={handleProductUpdated}
                   />
                 </AlertDialogContent>
               </AlertDialog>
@@ -182,8 +184,8 @@ const FinishedProduct = () => {
     <div className="overflow-x-auto">
       <div className="w-full p-5 h-screen">
         <CustomPageTitle
-          title="School Uniforms Inventory"
-          description="View and manage all school uniforms inventory."
+          title="Academic Gown Inventory"
+          description="View and manage academic gown inventory"
         />
         <div className="flex flex-wrap items-center justify-between pb-2">
           <div className="flex flex-1 flex-wrap items-center gap-2">
@@ -204,15 +206,15 @@ const FinishedProduct = () => {
                   </Button>
                 </AlertDialogTrigger>
               )}
-              <AlertDialogContent className="sm:max-w-[425px]">
+              <AlertDialogContent className="sm:max-w-[500px] max-h-[600px] overflow-auto">
                 <AlertDialogHeader>
                   <AlertDialogTitle>Add a new product</AlertDialogTitle>
                   <AlertDialogDescription>
                     Click submit when you&apos;re done.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
-                <AddNewProduct
-                  onProductAdded={handleProductAdded}
+                <AddNewAcademic
+                  onAcademicAdded={handleProductAdded}
                   setIsDialogOpen={setIsDialogOpen}
                 />
               </AlertDialogContent>
@@ -227,4 +229,4 @@ const FinishedProduct = () => {
   );
 };
 
-export default FinishedProduct;
+export default AcademicGownInventory;

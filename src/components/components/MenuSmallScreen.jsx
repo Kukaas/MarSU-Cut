@@ -222,7 +222,18 @@ const MenuSmallScreen = () => {
                           }`}
                         >
                           <PackageOpen className="h-4 w-4" />
-                          Finished Product
+                          School Uniform Inventory
+                        </Link>
+                        <Link
+                          to="/dashboard?tab=academic-gown-inventory"
+                          className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                            isActive("/dashboard?tab=academic-gown-inventory")
+                              ? "bg-muted text-primary"
+                              : "text-muted-foreground hover:text-primary"
+                          }`}
+                        >
+                          <Shirt className="h-4 w-4" />
+                          Academic Gown Inventory
                         </Link>
                       </div>
                     </AccordionContent>
@@ -429,7 +440,20 @@ const MenuSmallScreen = () => {
                             }`}
                           >
                             <PackageOpen className="h-4 w-4" />
-                            Finished Product
+                            School Uniform Inventory
+                          </Link>
+                        </SheetTrigger>
+                        <SheetTrigger asChild>
+                          <Link
+                            to="/dashboard?tab=academic-gown-inventory"
+                            className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                              isActive("/dashboard?tab=academic-gown-inventory")
+                                ? "bg-muted text-primary"
+                                : "text-muted-foreground hover:text-primary"
+                            }`}
+                          >
+                            <Shirt className="h-4 w-4" />
+                            Academic Gown Inventory
                           </Link>
                         </SheetTrigger>
                       </div>

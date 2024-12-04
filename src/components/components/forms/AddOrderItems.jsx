@@ -70,11 +70,13 @@ const AddOrderItems = ({
         // remove duplication of product types
         const uniqueProductTypes = Array.from(
           new Set(productTypesData.map((a) => a.productType))
-        ).map((productType) => {
-          return {
+        )
+          .map((productType) => ({
             productType,
-          };
-        });
+          }))
+          .filter(
+            (product) => !["CAP", "HOOD", "TOGA"].includes(product.productType)
+          ); // Filter out CAP, HOOD, and TOGA
 
         setProductTypes(uniqueProductTypes);
       } catch (error) {

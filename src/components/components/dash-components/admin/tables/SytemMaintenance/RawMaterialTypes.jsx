@@ -249,6 +249,7 @@ const RawMaterialTypes = () => {
                         "Nonwoven Textiles",
                         "Seweng Fasteners",
                         "Zipper",
+                        "Others",
                       ]}
                       placeholder="Select a category"
                     />

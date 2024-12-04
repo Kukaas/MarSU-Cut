@@ -256,12 +256,14 @@ const Productions = () => {
             <PrintableForm />
           </div>
         </div>
-        <Tabs defaultValue="table">
-          <TabsList className="grid w-[300px] grid-cols-2">
-            <TabsTrigger value="table">Table</TabsTrigger>
+        <Tabs defaultValue="schoolUniform">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="schoolUniform">School Uniform</TabsTrigger>
+            <TabsTrigger value="academicGown">Academic Gown</TabsTrigger>
+            <TabsTrigger value="others">Others</TabsTrigger>
             <TabsTrigger value="graph">Graph</TabsTrigger>
           </TabsList>
-          <TabsContent value="table" className="mt-4">
+          <TabsContent value="schoolUniform" className="mt-4">
             <div className="rounded-md border">
               <CustomTable columns={columns} data={data} loading={loading} />
             </div>

@@ -358,3 +358,11 @@ export const addNewRawMaterialTypeSchema = z.object({
   rawMaterialType: z.string(),
   unit: z.string(),
 });
+
+export const addNewAcademicSchema = z.object({
+  productType: z.string(),
+  level: z.string(),
+  department: z.string(),
+  size: z.string(),
+  quantity: z.number().int().nonnegative(),
+});

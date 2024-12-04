@@ -27,6 +27,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 import Sidebar from "@/components/components/Sidebar";
+import DashAcademicGownInventory from "@/components/components/dash-components/admin/DashAcademicGownInventory";
 
 const Dashboard = ({ tab }) => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
@@ -76,6 +77,8 @@ const Dashboard = ({ tab }) => {
         return <OrderDetails orderId={id} />;
       case "system-maintenance":
         return <DashSystemMaintenance />;
+      case "academic-gown-inventory":
+        return <DashAcademicGownInventory />;
       default:
         return null;
     }

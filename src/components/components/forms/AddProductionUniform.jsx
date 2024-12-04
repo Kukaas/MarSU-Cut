@@ -87,7 +87,24 @@ const AddProductionUniform = ({ onProductionAdded, setIsOpen }) => {
             withCredentials: true,
           }
         );
-        setProductTypes(res.data.productTypes);
+        // remove duplication of product types
+        const uniqueProductTypes = Array.from(
+          new Set(res.data.map((a) => a.productType))
+        ).map((productType) => {
+          return {
+            productType,
+          };
+        });
+
+        // Remove TOGA, CAP, HOOD
+        const filteredProductTypes = uniqueProductTypes.filter(
+          (item) =>
+            item.productType !== "TOGA" &&
+            item.productType !== "CAP" &&
+            item.productType !== "HOOD"
+        );
+
+        setProductTypes(filteredProductTypes);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching product types:", error);
