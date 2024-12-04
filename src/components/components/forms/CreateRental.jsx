@@ -64,10 +64,22 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
     coordinatorGender: "",
     department: "",
     possiblePickupDate: "",
-    small: 0,
-    medium: 0,
-    large: 0,
-    extraLarge: 0,
+    toga: {
+      S14: 0,
+      S16: 0,
+      S17: 0,
+      S18: 0,
+      S19: 0,
+      S20: 0,
+      "S20+": 0,
+    },
+    hood: 0,
+    cap: {
+      "M/L": 0,
+      XL: 0,
+      XXL: 0,
+    },
+    monacoThread: 0,
   };
   const [formState, setFormState] = useState(initialFormState);
 
@@ -77,6 +89,23 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
       ...formState,
       coordinatorName: currentUser.name,
       department: currentUser.department,
+      possiblePickupDate: new Date(),
+      toga: {
+        S14: 0,
+        S16: 0,
+        S17: 0,
+        S18: 0,
+        S19: 0,
+        S20: 0,
+        "S20+": 0,
+      },
+      hood: 0,
+      cap: {
+        "M/L": 0,
+        XL: 0,
+        XXL: 0,
+      },
+      monacoThread: 0,
     },
   });
 
@@ -132,6 +161,7 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
   ];
 
   const handleCreateRental = async (values) => {
+    console.log(values); // Check if toga and cap values are properly captured
     if (
       !values.coordinatorName ||
       !values.department ||
@@ -213,13 +243,6 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
                   />
                 )}
               />
-            </div>
-          </fieldset>
-
-          {/* Rental Details Section */}
-          <fieldset className="border border-gray-300 rounded-md p-4">
-            <legend className="text-lg font-semibold">Rental Details</legend>
-            <div className="space-y-4">
               <FormField
                 control={form.control}
                 name="possiblePickupDate"
@@ -237,7 +260,7 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
                             )}
                           >
                             {field.value ? (
-                              format(field.value, "MMMM dd, YYY")
+                              format(field.value, "MMMM dd, yyy")
                             ) : (
                               <span>Pick a date</span>
                             )}
@@ -261,58 +284,100 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
                   </FormItem>
                 )}
               />
-              {["small", "medium", "large", "extraLarge"].map((sizeKey) => {
-                const sizeName =
-                  sizeKey.charAt(0).toUpperCase() + sizeKey.slice(1);
-                const maxQuantity =
-                  finishedProducts.find(
-                    (product) => product.size.toLowerCase() === sizeKey
-                  )?.quantity || 0;
-                const colorClass = getStockColorClass(maxQuantity);
+            </div>
+          </fieldset>
 
+          {/* Rental Details SToga */}
+          <fieldset className="border border-gray-300 rounded-md p-4">
+            <legend className="text-lg font-semibold">Toga</legend>
+            <div className="space-y-4">
+              {["S14", "S16", "S17", "S18", "S19", "S20", "S20+"].map(
+                (sizeKey) => {
+                  const sizeName =
+                    sizeKey.charAt(0).toUpperCase() + sizeKey.slice(1);
+                  const maxQuantity =
+                    finishedProducts.find(
+                      (product) => product.size.toLowerCase() === sizeKey
+                    )?.quantity || 0;
+                  const colorClass = getStockColorClass(maxQuantity);
+
+                  return (
+                    <FormField
+                      key={sizeKey}
+                      control={form.control}
+                      name={`toga.${sizeKey}`}
+                      render={({ field }) => (
+                        <FormItem className="">
+                          <div className="flex items-center justify-between mb-2">
+                            <FormLabel className="font-medium flex items-center ">
+                              <span>{sizeName}</span>
+                              <span
+                                className={`px-2 py-1 text-xs ${colorClass} bg-opacity-10`}
+                              >
+                                {maxQuantity > 0
+                                  ? `Available: ${maxQuantity}`
+                                  : "Out of stock"}
+                              </span>
+                            </FormLabel>
+                          </div>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              {...field}
+                              value={
+                                field.value !== undefined ? field.value : ""
+                              }
+                              placeholder={`Enter quantity for ${sizeName}`}
+                              className="w-full rounded-md border-gray-300 focus:ring focus:ring-blue-300 focus:outline-none p-2"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  );
+                }
+              )}
+            </div>
+          </fieldset>
+
+          {/* Rental Details Hood */}
+          <fieldset className="border border-gray-300 rounded-md p-4">
+            <legend className="text-lg font-semibold">Hood</legend>
+            <div className="space-y-4">
+              <CustomInput
+                form={form}
+                name="hood"
+                label="Hood"
+                placeholder="Enter quantity for Hood"
+                type="number"
+              />
+            </div>
+          </fieldset>
+
+          {/* Rental Details Cap */}
+          <fieldset className="border border-gray-300 rounded-md p-4">
+            <legend className="text-lg font-semibold">Cap</legend>
+            <div className="space-y-4">
+              {["M/L", "XL", "XXL"].map((sizeKey) => {
+                const sizeName = sizeKey.toUpperCase();
                 return (
                   <FormField
                     key={sizeKey}
                     control={form.control}
-                    name={sizeKey}
+                    name={`cap.${sizeKey}`}
                     render={({ field }) => (
                       <FormItem className="">
-                        <div className="flex items-center justify-between mb-2">
-                          <FormLabel className="font-medium flex items-center ">
-                            <span>{sizeName}</span>
-                            <span
-                              className={`px-2 py-1 text-xs ${colorClass} bg-opacity-10`}
-                            >
-                              {maxQuantity > 0
-                                ? `Available: ${maxQuantity}`
-                                : "Out of stock"}
-                            </span>
-                          </FormLabel>
-                        </div>
+                        <FormLabel className="font-medium">
+                          {sizeName}
+                        </FormLabel>
                         <FormControl>
                           <Input
                             type="number"
                             {...field}
                             value={field.value !== undefined ? field.value : ""}
-                            onChange={(e) => {
-                              const value = e.target.value;
-
-                              if (value === "") {
-                                field.onChange("");
-                                return;
-                              }
-
-                              const numericValue = parseFloat(value);
-                              if (
-                                numericValue >= 0 &&
-                                numericValue <= maxQuantity
-                              ) {
-                                field.onChange(numericValue);
-                              }
-                            }}
                             placeholder={`Enter quantity for ${sizeName}`}
                             className="w-full rounded-md border-gray-300 focus:ring focus:ring-blue-300 focus:outline-none p-2"
-                            max={maxQuantity}
                           />
                         </FormControl>
                         <FormMessage />
@@ -321,6 +386,20 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
                   />
                 );
               })}
+            </div>
+          </fieldset>
+
+          {/* Rental Details Monaco Thread */}
+          <fieldset className="border border-gray-300 rounded-md p-4">
+            <legend className="text-lg font-semibold">Monaco Thread</legend>
+            <div className="space-y-4">
+              <CustomInput
+                form={form}
+                name="monacoThread"
+                label="Monaco Thread"
+                placeholder="Enter quantity for Monaco Thread"
+                type="number"
+              />
             </div>
           </fieldset>
 

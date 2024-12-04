@@ -225,10 +225,22 @@ export const CreateRentalSchema = z.object({
     .string()
     .min(3, { message: "Department must be at least 3 characters" }),
   possiblePickupDate: z.string(),
-  small: z.number().int().nonnegative(),
-  medium: z.number().int().nonnegative(),
-  large: z.number().int().nonnegative(),
-  extraLarge: z.number().int().nonnegative(),
+  toga: {
+    S14: z.number().int().nonnegative(),
+    S15: z.number().int().nonnegative(),
+    S16: z.number().int().nonnegative(),
+    S17: z.number().int().nonnegative(),
+    S18: z.number().int().nonnegative(),
+    S19: z.number().int().nonnegative(),
+    S20: z.number().int().nonnegative(),
+  },
+  hood: z.number().int().nonnegative(),
+  cap: {
+    "M/L": z.number().int().nonnegative(),
+    XL: z.number().int().nonnegative(),
+    XXL: z.number().int().nonnegative(),
+  },
+  monacoThread: z.number().int().nonnegative(),
 });
 
 export const CreateAccomplishmentSchema = z.object({

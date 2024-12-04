@@ -20,8 +20,16 @@ const RentalDetails = ({ selectedRental }) => {
     });
   };
 
+  const renderSizes = (sizesObject) => {
+    return Object.entries(sizesObject).map(([size, quantity]) => (
+      <div key={size} className="flex justify-between mt-2">
+        <span>{size}:</span> <span>{quantity}</span>
+      </div>
+    ));
+  };
+
   return (
-    <AlertDialogContent>
+    <AlertDialogContent className="max-w-[500px] max-h-[600px] overflow-auto">
       <AlertDialogHeader>
         <AlertDialogTitle>
           Rental Details of {selectedRental.coordinatorName}
@@ -83,17 +91,29 @@ const RentalDetails = ({ selectedRental }) => {
           <div className="flex justify-center mt-4">
             <AlertDialogTitle>Sizes Ordered</AlertDialogTitle>
           </div>
-          <div className="flex justify-between">
-            <span>Small:</span> <span>{selectedRental.small}</span>
+
+          {/* Toga Sizes */}
+          <div>
+            <div className="font-medium">Toga Sizes:</div>
+            {renderSizes(selectedRental.toga)}
           </div>
-          <div className="flex justify-between">
-            <span>Medium:</span> <span>{selectedRental.medium}</span>
+
+          {/* Cap Sizes */}
+          <div>
+            <div className="font-medium">Cap Sizes:</div>
+            {renderSizes(selectedRental.cap)}
           </div>
+
+          {/* Hood Quantity */}
           <div className="flex justify-between">
-            <span>Large:</span> <span>{selectedRental.large}</span>
+            <span className="font-medium">Hood:</span>
+            <span>{selectedRental.hood}</span>
           </div>
+
+          {/* Monaco Thread */}
           <div className="flex justify-between">
-            <span>Extra Large:</span> <span>{selectedRental.extraLarge}</span>
+            <span className="font-medium">Monaco Thread:</span>
+            <span>{selectedRental.monacoThread}</span>
           </div>
         </div>
       </div>
