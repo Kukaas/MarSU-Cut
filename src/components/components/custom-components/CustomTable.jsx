@@ -71,7 +71,7 @@ const CustomTable = ({ data, columns, loading }) => {
               {headerGroup.headers.map((header) => (
                 <TableHead
                   key={header.id}
-                  className="text-left text-sm p-2 border-b border-gray-300"
+                  className="text-left text-sm p-2 border-b-2"
                 >
                   {header.isPlaceholder
                     ? null
@@ -87,19 +87,16 @@ const CustomTable = ({ data, columns, loading }) => {
         {loading ? (
           <div className="p-6">Loading...</div>
         ) : (
-          <TableBody>
+          <TableBody className="overflow-x-auto text-xs">
             {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className="hover:bg-gray-100 border-b border-gray-300"
+                  className="text-sm p-2 border-b"
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      className="text-sm p-2 border-b border-gray-300"
-                    >
+                    <TableCell key={cell.id} className="tabular-nums">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
