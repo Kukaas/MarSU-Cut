@@ -1,16 +1,9 @@
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { token } from "@/lib/token";
@@ -81,7 +74,7 @@ const ReleaseAcademicGown = ({
 
       // Adjusting the release logic
       const res = await axios.put(
-        `http://localhost:3000/api/v1/rental/release`,
+        `${BASE_URL}/api/v1/rental/release`,
         {
           ...values,
           rentalId: selectedRentalOrder._id,
