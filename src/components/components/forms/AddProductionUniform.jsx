@@ -109,7 +109,8 @@ const AddProductionUniform = ({ onProductionAdded, setIsOpen }) => {
           (item) =>
             item.productType !== "TOGA" &&
             item.productType !== "CAP" &&
-            item.productType !== "HOOD"
+            item.productType !== "HOOD" &&
+            item.productType !== "MONACO THREAD"
         );
 
         setProductTypes(filteredProductTypes);

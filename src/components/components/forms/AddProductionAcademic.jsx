@@ -219,9 +219,6 @@ const AddProductionAcademic = ({ onProductionAdded, setIsOpen }) => {
       }
     } catch (error) {
       setAddProductionLoading(false);
-      ToasterError({
-        description: "Please check your internet connection and try again.",
-      });
       if (error.response && error.response.status === 400) {
         toast.error(error.response.data.message);
       } else if (error.response && error.response.status === 404) {
