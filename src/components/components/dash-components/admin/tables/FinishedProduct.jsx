@@ -66,17 +66,16 @@ const FinishedProduct = () => {
   }, []);
 
   useEffect(() => {
-    if (searchValue) {
+    if (searchValue.trim()) {
       const lowercasedSearchValue = searchValue.toLowerCase();
 
-      const filteredData = originalData.filter((production) => {
-        return (
-          production.productType
-            .toLowerCase()
-            .includes(lowercasedSearchValue) ||
-          production.level.toLowerCase().includes(lowercasedSearchValue)
-        );
-      });
+      // Filter based on productType, size, or level
+      const filteredData = originalData.filter(
+        (product) =>
+          product.productType.toLowerCase().includes(lowercasedSearchValue) ||
+          product.size.toLowerCase().includes(lowercasedSearchValue) ||
+          product.level.toLowerCase().includes(lowercasedSearchValue)
+      );
 
       setData(filteredData);
     } else {
@@ -188,10 +187,10 @@ const FinishedProduct = () => {
         <div className="flex flex-wrap items-center justify-between pb-2">
           <div className="flex flex-1 flex-wrap items-center gap-2">
             <Input
-              placeholder="Filter by product type or level..."
+              placeholder="Search by product type, size level..."
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
-              className="h-8 w-[270px]"
+              className="h-8 w-[280px]"
             />
           </div>
           <Tooltip title="Add new product">
