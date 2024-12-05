@@ -23,6 +23,7 @@ const CreateAccomplishment = ({ onAccomplishmentCreate, setIsDialogOpen }) => {
   const [loading, setLoading] = useState(false);
   const [employees, setEmployees] = useState([]);
   const [productTypes, setProductTypes] = useState([]);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
 
   const form = useForm({
     resolver: zodResolver(CreateAccomplishmentSchema),
@@ -34,24 +35,39 @@ const CreateAccomplishment = ({ onAccomplishmentCreate, setIsDialogOpen }) => {
     },
   });
 
+  const { watch } = form; // Watch for changes in form
+
+  const selectedEmployeeName = watch("assignedEmployee");
+
   useEffect(() => {
     const getEmployees = async () => {
       try {
         const employeeData = await fetchEmployees();
         setEmployees(employeeData);
+        if (employeeData.length > 0) {
+          setSelectedEmployee(
+            employeeData.find((e) => e.name === selectedEmployeeName)
+          );
+        }
       } catch (error) {
         console.error("Error fetching employees:", error);
       }
     };
 
     getEmployees();
-  }, []);
+  }, [selectedEmployeeName]); // Re-run when selectedEmployee changes
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const productTypesData = await fetchProductTypes();
-        setProductTypes(productTypesData);
+        const uniqueProductTypes = Array.from(
+          new Set(productTypesData.map((a) => a.productType))
+        ).map((productType) => {
+          return productTypesData.find((a) => a.productType === productType);
+        });
+
+        setProductTypes(uniqueProductTypes);
       } catch (error) {
         console.error("Failed to load product types:", error);
       }
@@ -59,6 +75,15 @@ const CreateAccomplishment = ({ onAccomplishmentCreate, setIsDialogOpen }) => {
 
     fetchData();
   }, []);
+
+  const accomplishmentOptions = selectedEmployee
+    ? selectedEmployee.jobRole.includes("Pattern Maker") &&
+      selectedEmployee.jobRole.includes("Cutting Specialist")
+      ? ["Cutting", "Pattern Making"]
+      : selectedEmployee.jobRole.includes("Tailoring Specialist")
+      ? ["Sewing"]
+      : ["Cutting", "Sewing", "Pattern Making"] // Default options
+    : ["Cutting", "Sewing", "Pattern Making"]; // Fallback if no employee selected
 
   const handleCreateAccomplishment = async (values) => {
     try {
@@ -119,7 +144,7 @@ const CreateAccomplishment = ({ onAccomplishmentCreate, setIsDialogOpen }) => {
                 <SelectField
                   field={field}
                   label="Accomplishment Type"
-                  options={["Cutting", "Sewing", "Pattern Making"]}
+                  options={accomplishmentOptions}
                   placeholder="Select a Type"
                 />
               )}

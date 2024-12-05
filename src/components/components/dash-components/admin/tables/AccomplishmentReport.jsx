@@ -190,7 +190,7 @@ const AccomplishmentReport = () => {
                     Edit
                   </Button>
                 </AlertDialogTrigger>
-                <AlertDialogContent>
+                <AlertDialogContent className="max-w-[500px] max-h-[600px] overflow-auto">
                   <AlertDialogHeader>
                     <AlertDialogTitle>Edit Accomplishment</AlertDialogTitle>
                     <AlertDialogDescription>
@@ -263,7 +263,7 @@ const AccomplishmentReport = () => {
                   Print
                 </Button>
               </AlertDialogTrigger>
-              <AlertDialogContent>
+              <AlertDialogContent className="max-w-[500px] max-h-[600px] overflow-auto">
                 <AlertDialogHeader>
                   <AlertDialogTitle>
                     Select Date Range and Employee for Printing
@@ -390,7 +390,7 @@ const AccomplishmentReport = () => {
                     </Button>
                   </AlertDialogTrigger>
                 )}
-                <AlertDialogContent className="sm:max-w-[425px]">
+                <AlertDialogContent className="sm:max-w-[500px] max-h-[600px] overflow-auto">
                   <AlertDialogHeader>
                     <AlertDialogTitle>
                       Create an Accomplishment

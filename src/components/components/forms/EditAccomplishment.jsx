@@ -22,6 +22,7 @@ const EditAccomplishment = ({ accomplishment, onAccomplishmentUpdate }) => {
   const [loading, setLoading] = useState(false);
   const [employees, setEmployees] = useState([]);
   const [productTypes, setProductTypes] = useState([]);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
 
   const form = useForm({
     resolver: zodResolver(EditAccomplishmentSchema),
@@ -50,7 +51,15 @@ const EditAccomplishment = ({ accomplishment, onAccomplishmentUpdate }) => {
     const fetchData = async () => {
       try {
         const productTypesData = await fetchProductTypes();
-        setProductTypes(productTypesData);
+
+        // remove duplicates
+        const uniqueProductTypes = productTypesData.filter(
+          (product, index, self) =>
+            index ===
+            self.findIndex((t) => t.productType === product.productType)
+        );
+
+        setProductTypes(uniqueProductTypes);
       } catch (error) {
         console.error("Failed to load product types:", error);
       }
@@ -58,6 +67,23 @@ const EditAccomplishment = ({ accomplishment, onAccomplishmentUpdate }) => {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    // Find the selected employee from the list
+    const employee = employees.find(
+      (emp) => emp.name === form.getValues("assignedEmployee")
+    );
+    setSelectedEmployee(employee);
+  }, [employees, form.getValues("assignedEmployee")]);
+
+  const accomplishmentOptions = selectedEmployee
+    ? selectedEmployee.jobRole.includes("Pattern Maker") &&
+      selectedEmployee.jobRole.includes("Cutting Specialist")
+      ? ["Cutting", "Pattern Making"]
+      : selectedEmployee.jobRole.includes("Tailoring Specialist")
+      ? ["Sewing"]
+      : ["Cutting", "Sewing", "Pattern Making"] // Default options
+    : ["Cutting", "Sewing", "Pattern Making"]; // Fallback if no employee selected
 
   const HandleUpdate = async (data) => {
     setLoading(true);
@@ -115,7 +141,7 @@ const EditAccomplishment = ({ accomplishment, onAccomplishmentUpdate }) => {
                 <SelectField
                   field={field}
                   label="Accomplishment Type"
-                  options={["Cutting", "Sewing", "Pattern Making"]}
+                  options={accomplishmentOptions}
                   placeholder="Select a Type"
                 />
               )}
@@ -156,10 +182,10 @@ const EditAccomplishment = ({ accomplishment, onAccomplishmentUpdate }) => {
                   {loading ? (
                     <div className="flex items-center">
                       <Loader2 className="mr-2 animate-spin" />
-                      <span>Update</span>
+                      <span>Updating</span>
                     </div>
                   ) : (
-                    "Updating"
+                    "Update"
                   )}
                 </Button>
               </AlertDialogFooter>

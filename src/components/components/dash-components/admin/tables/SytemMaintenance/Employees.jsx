@@ -280,7 +280,7 @@ const Employees = () => {
                       label="Job Role"
                       options={[
                         "Tailoring Specialist",
-                        "Pattern Maker",
+                        "Pattern Maker and Cutting Specialist",
                         "Production Technician",
                       ]}
                       placeholder="Job Role"
@@ -386,7 +386,7 @@ const Employees = () => {
                     label="Job Role"
                     options={[
                       "Tailoring Specialist",
-                      "Pattern Maker",
+                      "Pattern Maker and Cutting Specialist",
                       "Production Technician",
                     ]}
                     placeholder="Job Role"
