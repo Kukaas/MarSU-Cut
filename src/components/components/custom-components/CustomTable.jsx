@@ -63,13 +63,16 @@ const CustomTable = ({ data, columns, loading }) => {
   };
 
   return (
-    <div>
-      <Table className="border-b-2">
+    <div className="overflow-x-auto">
+      <Table className="min-w-full table-auto border-b-2">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id} className="bg-accent">
               {headerGroup.headers.map((header) => (
-                <TableHead key={header.id}>
+                <TableHead
+                  key={header.id}
+                  className="text-left text-sm p-2 border-b border-gray-300"
+                >
                   {header.isPlaceholder
                     ? null
                     : flexRender(
@@ -84,15 +87,19 @@ const CustomTable = ({ data, columns, loading }) => {
         {loading ? (
           <div className="p-6">Loading...</div>
         ) : (
-          <TableBody className="overflow-x-auto">
+          <TableBody>
             {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className="hover:bg-gray-100 border-b border-gray-300"
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="tabular-nums">
+                    <TableCell
+                      key={cell.id}
+                      className="text-sm p-2 border-b border-gray-300"
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
