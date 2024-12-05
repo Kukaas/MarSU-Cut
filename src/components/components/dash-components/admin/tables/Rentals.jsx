@@ -61,6 +61,7 @@ import RentalDetails from "./details/RentalDetails";
 import CustomPageTitle from "@/components/components/custom-components/CustomPageTitle";
 import { Input } from "@/components/ui/input";
 import ReleaseAcademicGown from "@/components/components/forms/ReleaseAcademicGown";
+import ReturnAcademicGown from "@/components/components/forms/ReturnAcademicGown";
 
 function Rentals() {
   const [data, setData] = useState([]);
@@ -77,6 +78,7 @@ function Rentals() {
   const [rentalToReject, setRentalToReject] = useState(null);
   const [loadingReject, setLoadingReject] = useState(false);
   const [dialogReleaseOpen, setDialogReleaseOpen] = useState(false);
+  const [dialogReturnOpen, setDialogReturnOpen] = useState(false);
   const navigate = useNavigate();
 
   const form = useForm({
@@ -504,7 +506,10 @@ function Rentals() {
                   Given
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={() => handleReturn(rental)}
+                  onClick={() => {
+                    setSelectedRental(rental);
+                    setDialogReturnOpen(true);
+                  }}
                   disabled={[
                     "REJECTED",
                     "APPROVED",
@@ -717,6 +722,22 @@ function Rentals() {
           <ReleaseAcademicGown
             setDialogReleaseOpen={setDialogReleaseOpen}
             selectedRentalOrder={selectedRental}
+          />
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={dialogReturnOpen} onOpenChange={setDialogReturnOpen}>
+        <AlertDialogContent className="max-w-[500px[ max-h-[600px] overflow-auto">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Set the Returned Items</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will update the inventory of the items returned
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <ReturnAcademicGown
+            setDialogReleaseOpen={setDialogReturnOpen}
+            selectedRentalOrder={selectedRental}
+            isReturn
           />
         </AlertDialogContent>
       </AlertDialog>

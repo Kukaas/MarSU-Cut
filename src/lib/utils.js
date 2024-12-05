@@ -34,7 +34,7 @@ export const statusColors = {
   // Rentals
   GIVEN: {
     color: "#c09000",
-    badgeText: "Given",
+    badgeText: "Released",
   },
   RETURNED: {
     color: "#31a900",
@@ -64,5 +64,9 @@ export const statusColors = {
   Paid: {
     color: "#16a34a",
     badgeText: "Paid",
+  },
+  "PARTIALLY RETURNED": {
+    color: "#c09000",
+    badgeText: "Partially Returned",
   },
 };

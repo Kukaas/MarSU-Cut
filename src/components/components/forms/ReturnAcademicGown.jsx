@@ -15,9 +15,9 @@ import {
   AlertDialogFooter,
 } from "@/components/ui/alert-dialog";
 
-const ReleaseAcademicGown = ({
+const ReturnAcademicGown = ({
   selectedRentalOrder,
-  onReleaseSuccess,
+  onReturnSuccess,
   setIsDialogOpen,
 }) => {
   const [finishedProducts, setFinishedProducts] = useState({
@@ -42,44 +42,85 @@ const ReleaseAcademicGown = ({
 
   const [loading, setLoading] = useState(false);
 
-  // Setting default form values based on selected rental order
   const form = useForm({
     defaultValues: {
-      ...selectedRentalOrder,
       coordinatorName: selectedRentalOrder.name,
       department: selectedRentalOrder.department,
       possiblePickupDate: new Date(),
-      toga: selectedRentalOrder.toga || {
-        S14: 0,
-        S15: 0,
-        S16: 0,
-        S17: 0,
-        S18: 0,
-        S19: 0,
-        S20: 0,
-        "S20+": 0,
+      toga: {
+        S14:
+          selectedRentalOrder.toga.S14 -
+          selectedRentalOrder.returnedItems.toga.S14,
+        S15:
+          selectedRentalOrder.toga.S15 -
+          selectedRentalOrder.returnedItems.toga.S15,
+        S16:
+          selectedRentalOrder.toga.S16 -
+          selectedRentalOrder.returnedItems.toga.S16,
+        S17:
+          selectedRentalOrder.toga.S17 -
+          selectedRentalOrder.returnedItems.toga.S17,
+        S18:
+          selectedRentalOrder.toga.S18 -
+          selectedRentalOrder.returnedItems.toga.S18,
+        S19:
+          selectedRentalOrder.toga.S19 -
+          selectedRentalOrder.returnedItems.toga.S19,
+        S20:
+          selectedRentalOrder.toga.S20 -
+          selectedRentalOrder.returnedItems.toga.S20,
+        "S20+":
+          selectedRentalOrder.toga["S20+"] -
+          selectedRentalOrder.returnedItems.toga["S20+"],
       },
-      cap: selectedRentalOrder.cap || {
-        "M/L": 0,
-        XL: 0,
-        XXL: 0,
+      cap: {
+        "M/L":
+          selectedRentalOrder.cap["M/L"] -
+          selectedRentalOrder.returnedItems.cap["M/L"],
+        XL:
+          selectedRentalOrder.cap.XL - selectedRentalOrder.returnedItems.cap.XL,
+        XXL:
+          selectedRentalOrder.cap.XXL -
+          selectedRentalOrder.returnedItems.cap.XXL,
       },
-      hood: selectedRentalOrder.hood || 0,
-      monacoThread: selectedRentalOrder.monacoThread || 0,
+      hood: selectedRentalOrder.hood - selectedRentalOrder.returnedItems.hood,
+      monacoThread:
+        selectedRentalOrder.monacoThread -
+        selectedRentalOrder.returnedItems.monacoThread,
     },
   });
 
-  const handleReleaseItems = async (values) => {
+  const handleReturnItems = async (values) => {
     try {
       setLoading(true);
 
-      // Adjusting the release logic
-      const res = await axios.put(
-        `${BASE_URL}/api/v1/rental/release`,
-        {
-          ...values,
-          rentalId: selectedRentalOrder._id,
+      // Prepare the release payload with returned items
+      const releaseData = {
+        rentalId: selectedRentalOrder._id,
+        returnedItems: {
+          toga: {
+            S14: values.toga.S14 || 0,
+            S15: values.toga.S15 || 0,
+            S16: values.toga.S16 || 0,
+            S17: values.toga.S17 || 0,
+            S18: values.toga.S18 || 0,
+            S19: values.toga.S19 || 0,
+            S20: values.toga.S20 || 0,
+            "S20+": values.toga["S20+"] || 0,
+          },
+          cap: {
+            "M/L": values.cap["M/L"] || 0,
+            XL: values.cap.XL || 0,
+            XXL: values.cap.XXL || 0,
+          },
+          hood: values.hood || 0,
+          monacoThread: values.monacoThread || 0,
         },
+      };
+
+      const res = await axios.put(
+        `http://localhost:3000/api/v1/rental/return`,
+        releaseData,
         {
           headers: {
             "Content-Type": "application/json",
@@ -92,7 +133,7 @@ const ReleaseAcademicGown = ({
       if (res.status === 200) {
         setLoading(false);
         toast.success("Items released successfully!");
-        onReleaseSuccess(res.data.releasedRental);
+        onReturnSuccess();
         setIsDialogOpen(false);
       }
     } catch (error) {
@@ -104,7 +145,7 @@ const ReleaseAcademicGown = ({
     <div className="grid gap-4 py-4 overflow-y-auto">
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(handleReleaseItems)}
+          onSubmit={form.handleSubmit(handleReturnItems)}
           className="space-y-6 w-full overflow-y-auto"
         >
           {/* Rental Order Details */}
@@ -144,7 +185,7 @@ const ReleaseAcademicGown = ({
                       <FormItem className="flex flex-col">
                         <div className="flex gap-2 items-center">
                           <FormLabel>{size}</FormLabel>
-                          <span>({selectedRentalOrder.toga[size]})</span>
+                          <span>({form.getValues(`toga.${size}`)})</span>
                         </div>
                         <Input
                           {...field}
@@ -155,6 +196,7 @@ const ReleaseAcademicGown = ({
                             const newValue = parseInt(e.target.value, 10);
                             field.onChange(isNaN(newValue) ? "" : newValue);
                           }}
+                          disabled={form.getValues(`toga.${size}`) === 0} // Disable input if the default value is 0
                         />
                       </FormItem>
                     )}
@@ -177,7 +219,7 @@ const ReleaseAcademicGown = ({
                       <FormItem className="flex flex-col">
                         <div className="flex gap-2 items-center">
                           <FormLabel>{size}</FormLabel>
-                          <span>({selectedRentalOrder.cap[size]})</span>
+                          <span>({finishedProducts.cap[size]})</span>
                         </div>
                         <Input
                           {...field}
@@ -188,6 +230,7 @@ const ReleaseAcademicGown = ({
                             const newValue = parseInt(e.target.value, 10);
                             field.onChange(isNaN(newValue) ? "" : newValue);
                           }}
+                          disabled={form.getValues(`cap.${size}`) === 0}
                         />
                       </FormItem>
                     )}
@@ -207,7 +250,7 @@ const ReleaseAcademicGown = ({
                   <FormItem className="flex flex-col">
                     <div className="flex gap-2 items-center">
                       <FormLabel>Hood</FormLabel>
-                      <span>({selectedRentalOrder.hood})</span>
+                      <span>({finishedProducts.hood})</span>
                     </div>
                     <Input
                       {...field}
@@ -218,6 +261,7 @@ const ReleaseAcademicGown = ({
                         const newValue = parseInt(e.target.value, 10);
                         field.onChange(isNaN(newValue) ? "" : newValue);
                       }}
+                      disabled={form.getValues("hood") === 0}
                     />
                   </FormItem>
                 )}
@@ -236,7 +280,7 @@ const ReleaseAcademicGown = ({
                   <FormItem className="flex flex-col">
                     <div className="flex gap-2 items-center">
                       <FormLabel>Monaco Thread</FormLabel>
-                      <span>({selectedRentalOrder.monacoThread})</span>
+                      <span>({finishedProducts.monacoThread})</span>
                     </div>
                     <Input
                       {...field}
@@ -247,6 +291,7 @@ const ReleaseAcademicGown = ({
                         const newValue = parseInt(e.target.value, 10);
                         field.onChange(isNaN(newValue) ? "" : newValue);
                       }}
+                      disabled={form.getValues(`monacoThread`) === 0}
                     />
                   </FormItem>
                 )}
@@ -266,7 +311,7 @@ const ReleaseAcademicGown = ({
                 {loading ? (
                   <Loader2 className="animate-spin h-4 w-4" />
                 ) : (
-                  "Release Items"
+                  "Return Items"
                 )}
               </Button>
             </AlertDialogFooter>
@@ -277,10 +322,10 @@ const ReleaseAcademicGown = ({
   );
 };
 
-ReleaseAcademicGown.propTypes = {
+ReturnAcademicGown.propTypes = {
   selectedRentalOrder: PropTypes.object.isRequired,
-  onReleaseSuccess: PropTypes.func.isRequired,
+  onReturnSuccess: PropTypes.func.isRequired,
   setIsDialogOpen: PropTypes.func.isRequired,
 };
 
-export default ReleaseAcademicGown;
+export default ReturnAcademicGown;

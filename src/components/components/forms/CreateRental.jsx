@@ -95,7 +95,7 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
       ...formState,
       coordinatorName: currentUser.name,
       department: currentUser.department,
-      possiblePickupDate: new Date(),
+      possiblePickupDate: "",
       toga: {
         S14: 0,
         S15: 0,
