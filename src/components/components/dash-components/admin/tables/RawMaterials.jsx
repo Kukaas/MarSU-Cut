@@ -99,6 +99,14 @@ const RawMaterials = () => {
     {
       accessorKey: "quantity",
       header: "Quantity",
+      cell: ({ getValue }) => {
+        const value = getValue();
+        return value !== undefined && value !== null
+          ? Number(value) % 1 === 0 // Check if the number is a whole number
+            ? value.toString() // If it's a whole number, display it without decimals
+            : value.toFixed(3) // Otherwise, display it with 3 decimals
+          : "0"; // Default to "0" if the value is undefined or null
+      },
     },
     {
       accessorKey: "image",
