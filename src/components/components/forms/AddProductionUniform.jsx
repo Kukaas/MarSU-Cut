@@ -195,6 +195,14 @@ const AddProductionUniform = ({ onProductionAdded, setIsOpen }) => {
       );
     }
 
+    if (values.productionDateFrom === values.productionDateTo) {
+      return toast.error("Production date from and to cannot be the same");
+    }
+
+    if (!values.productionDateFrom || !values.productionDateTo) {
+      return toast.error("Please select production date from and to");
+    }
+
     if (!values.level || !values.productType || !values.size) {
       return toast.error("Please select level, product type, and size");
     }
