@@ -43,12 +43,11 @@ const ChartTooltipContent = ({ active, payload, mode }) => {
     return (
       <div style={tooltipStyles}>
         <p style={labelStyles}>{payload[0].payload.productType}</p>
-        <div className="text-violet-600 h-2 w-2"></div>
         <p style={valueStyles}>
           Current Year Production: <span>{payload[0].value}</span>
         </p>
         <p style={valueStyles}>
-          Last Year Production: <span>{payload[1].value}</span>
+          Last Year Production: <span>{payload[1]?.value || 0}</span>
         </p>
       </div>
     );
@@ -69,22 +68,69 @@ const ProductionYear = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [currentYearRes, lastYearRes] = await Promise.all([
+        const [
+          currentGeneralRes,
+          lastYearGeneralRes,
+          currentAcademicRes,
+          lastYearAcademicRes,
+        ] = await Promise.all([
           axios.get(`${BASE_URL}/api/v1/production/all`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
           axios.get(`${BASE_URL}/api/v1/production/all/last-year`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
+          axios.get(`${BASE_URL}/api/v1/production/academic/this-year`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          axios.get(`${BASE_URL}/api/v1/production/academic/all/last-year`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
         ]);
 
-        const rawData = currentYearRes.data.productions;
-        const lastYearRawData = lastYearRes.data.productions;
-        const aggregatedData = aggregateData(rawData);
-        const aggregatedLastYearData = aggregateData(lastYearRawData);
+        const aggregateData = (data) => {
+          return data.reduce((acc, curr) => {
+            const { productType, quantity } = curr;
+            acc[productType] = (acc[productType] || 0) + quantity;
+            return acc;
+          }, {});
+        };
 
-        setData(aggregatedData);
-        setLastYearData(aggregatedLastYearData);
+        const mergeData = (general, academic) => {
+          const result = { ...general };
+          for (const [productType, quantity] of Object.entries(academic)) {
+            result[productType] = (result[productType] || 0) + quantity;
+          }
+          return Object.entries(result).map(([productType, quantity]) => ({
+            productType,
+            quantity,
+          }));
+        };
+
+        const generalCurrentData = aggregateData(
+          currentGeneralRes.data.productions
+        );
+        const academicCurrentData = aggregateData(
+          currentAcademicRes.data.productions
+        );
+        const currentYearData = mergeData(
+          generalCurrentData,
+          academicCurrentData
+        );
+
+        const generalLastYearData = aggregateData(
+          lastYearGeneralRes.data.productions
+        );
+        const academicLastYearData = aggregateData(
+          lastYearAcademicRes.data.productions
+        );
+        const lastYearData = mergeData(
+          generalLastYearData,
+          academicLastYearData
+        );
+
+        setData(currentYearData);
+        setLastYearData(lastYearData);
       } catch (error) {
         console.error("Failed to fetch data", error);
       }
@@ -92,23 +138,6 @@ const ProductionYear = () => {
 
     fetchData();
   }, []);
-
-  const aggregateData = (data) => {
-    const result = data.reduce((acc, curr) => {
-      const { productType, quantity } = curr;
-      if (acc[productType]) {
-        acc[productType] += quantity;
-      } else {
-        acc[productType] = quantity;
-      }
-      return acc;
-    }, {});
-
-    return Object.entries(result).map(([productType, quantity]) => ({
-      productType,
-      quantity,
-    }));
-  };
 
   const chartData = data.map((item) => {
     const lastYearItem = lastYearData.find(
@@ -131,9 +160,8 @@ const ProductionYear = () => {
     },
   };
 
-  // Define colors for the bars
-  const currentQuantityColor = "#8884d8"; // Blue for current year quantity
-  const lastYearQuantityColor = "#82ca9d"; // Green for last year quantity
+  const currentQuantityColor = "#8884d8"; // Blue for current year
+  const lastYearQuantityColor = "#82ca9d"; // Green for last year
 
   return (
     <ChartContainer config={chartConfig}>
