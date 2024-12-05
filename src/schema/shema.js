@@ -224,6 +224,7 @@ export const CreateRentalSchema = z.object({
   // Add validation for other fields...
   toga: z.object({
     S14: z.number().min(0),
+    S15: z.number().min(0),
     S16: z.number().min(0),
     S17: z.number().min(0),
     S18: z.number().min(0),

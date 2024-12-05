@@ -71,6 +71,7 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
     possiblePickupDate: "",
     toga: {
       S14: 0,
+      S15: 0,
       S16: 0,
       S17: 0,
       S18: 0,
@@ -97,6 +98,7 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
       possiblePickupDate: new Date(),
       toga: {
         S14: 0,
+        S15: 0,
         S16: 0,
         S17: 0,
         S18: 0,
@@ -153,6 +155,7 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
             {
               toga: {
                 S14: 0,
+                S15: 0,
                 S16: 0,
                 S17: 0,
                 S18: 0,
