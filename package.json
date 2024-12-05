@@ -44,6 +44,7 @@
     "crypto-js": "^4.2.0",
     "date-fns": "^3.6.0",
     "firebase": "^10.12.4",
+    "framer-motion": "^11.13.1",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.2",
     "jwt-decode": "^4.0.0",

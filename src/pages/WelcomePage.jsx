@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const WelcomePage = () => {
   const [loading, setLoading] = useState(false);
@@ -31,7 +32,12 @@ const WelcomePage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen mt-[-80px]">
+    <motion.div
+      className="flex flex-col items-center justify-center min-h-screen mt-[-80px]"
+      initial={{ opacity: 0, x: -100 }} // Start from the left
+      animate={{ opacity: 1, x: 0 }} // Animate to the default position
+      transition={{ duration: 0.5 }}
+    >
       <Helmet>
         <title>MarSUKAT | Get Started</title>
         <meta
@@ -59,7 +65,12 @@ const WelcomePage = () => {
         <p className="mt-5 ">
           We&apos;re glad to have you here. Start exploring our features now.
         </p>
-        <div className="flex flex-row gap-2 mt-4">
+        <motion.div
+          className="flex flex-row gap-2 mt-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
           <Button
             className="w-full mt-3 rounded-lg text-white text-lg"
             style={{
@@ -79,9 +90,9 @@ const WelcomePage = () => {
               "Get Started"
             )}
           </Button>
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

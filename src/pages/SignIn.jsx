@@ -1,4 +1,3 @@
-// UI
 import { toast, Toaster } from "sonner";
 import { Button } from "@/components/ui/button";
 
@@ -29,6 +28,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import LeftSideDescription from "@/components/components/custom-components/LeftSideDescription";
+import { motion } from "framer-motion";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -118,7 +118,12 @@ const SignIn = () => {
   };
 
   return (
-    <div className="min-h-[450px] mt-[120px] mb-8">
+    <motion.div
+      className="min-h-[500px] mt-[50px] mb-8"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       <Helmet>
         <title>MarSUKAT | Sign In</title>
         <meta name="description" content="" />
@@ -126,9 +131,18 @@ const SignIn = () => {
       </Helmet>
       <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center">
         {/* left */}
-        <LeftSideDescription black="Welcome to " gradient="MarSUKAT" description="Sign in to get started" />
+        <LeftSideDescription
+          black="Welcome to "
+          gradient="MarSUKAT"
+          description="Sign in to get started"
+        />
         {/* right */}
-        <div className="flex-1">
+        <motion.div
+          className="flex-1"
+          initial={{ x: 100 }}
+          animate={{ x: 0 }}
+          transition={{ type: "spring", stiffness: 50 }}
+        >
           <Card>
             <CardHeader>
               <CardTitle>Sign In</CardTitle>
@@ -186,15 +200,18 @@ const SignIn = () => {
           <div>
             <p className="text-center text-sm mt-4">
               Don&apos;t have an account?{" "}
-              <Link to="/sign-up" className="text-blue-400 underline hover:text-blue-500">
+              <Link
+                to="/sign-up"
+                className="text-blue-400 underline hover:text-blue-500"
+              >
                 Sign up
               </Link>
             </p>
           </div>
-        </div>
+        </motion.div>
       </div>
       <Toaster position="top-center" closeButton richColors />
-    </div>
+    </motion.div>
   );
 };
 

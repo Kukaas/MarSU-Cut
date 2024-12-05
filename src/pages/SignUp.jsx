@@ -18,6 +18,7 @@ import CoordinatorSignUp from "./sign-up-components/CoordinatorSignUp";
 import StudentSignUp from "./sign-up-components/StudentSignUp";
 import CommercialSignUp from "./sign-up-components/CommercialSignUp";
 import LeftSideDescription from "@/components/components/custom-components/LeftSideDescription";
+import { motion } from "framer-motion";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -35,7 +36,12 @@ const SignUp = () => {
   }, [currentUser, navigate]);
 
   return (
-    <div className="min-h-[500px] mt-[50px] mb-8">
+    <motion.div
+      className="min-h-[500px] mt-[50px] mb-8"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       <Helmet>
         <title>MarSUKAT | Sign Up</title>
         <meta name="description" content="" />
@@ -43,9 +49,18 @@ const SignUp = () => {
       </Helmet>
       <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center">
         {/* left */}
-        <LeftSideDescription black="Welcome to " gradient="MarSUKAT" description="Sign up to get started" />
+        <LeftSideDescription
+          black="Welcome to "
+          gradient="MarSUKAT"
+          description="Sign up to get started"
+        />
         {/* right */}
-        <div className="flex-1">
+        <motion.div
+          className="flex-1"
+          initial={{ x: 100 }}
+          animate={{ x: 0 }}
+          transition={{ type: "spring", stiffness: 50 }}
+        >
           <Tabs defaultValue="student" className="w-full">
             <TabsList className="grid w-full grid-cols-3 gap-2">
               <TabsTrigger value="student">Student</TabsTrigger>
@@ -92,18 +107,26 @@ const SignUp = () => {
               </Card>
             </TabsContent>
           </Tabs>
-          <div>
-            <p className="text-center text-sm  mt-4">
+          <motion.div
+            className="mt-4 text-center text-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            <p>
               Already have an account?{" "}
-              <Link to="/sign-in" className="text-blue-400 underline hover:text-blue-500">
+              <Link
+                to="/sign-in"
+                className="text-blue-400 underline hover:text-blue-500"
+              >
                 Sign in
               </Link>
             </p>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
       <Toaster position="top-center" closeButton richColors />
-    </div>
+    </motion.div>
   );
 };
 
