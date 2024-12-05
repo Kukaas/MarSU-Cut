@@ -81,7 +81,11 @@ const OtherProductionTable = () => {
           {Array.isArray(row.original.rawMaterialsUsed) ? (
             row.original.rawMaterialsUsed.map((rawMaterial) => (
               <li key={rawMaterial.type}>
-                {rawMaterial.type} - {rawMaterial.quantity}
+                {rawMaterial.type} -{" "}
+                {Number(rawMaterial.quantity) % 1 === 0
+                  ? rawMaterial.quantity // Display as a whole number if it's an integer
+                  : rawMaterial.quantity.toFixed(3)}{" "}
+                {/* Display 3 decimals if not a whole number */}
               </li>
             ))
           ) : (
