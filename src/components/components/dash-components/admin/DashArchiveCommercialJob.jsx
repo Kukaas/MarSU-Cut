@@ -1,3 +1,4 @@
+import { motion } from "framer-motion"; // Import motion from framer-motion
 import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { useSelector } from "react-redux";
@@ -21,14 +22,28 @@ const DashArchiveCommercialjob = () => {
   }, [currentUser, navigate]);
 
   return (
-    <div className="w-full h-screen overflow-x-auto">
+    <motion.div
+      className="w-full h-screen overflow-x-auto"
+      initial={{ opacity: 0, y: 50 }} // Start with opacity 0 and moved down
+      animate={{ opacity: 1, y: 0 }} // Fade in and move to position
+      transition={{ duration: 0.5 }} // Duration for the transition
+    >
       <Helmet>
         <title>MarSUKAT | Archive Commercial Job Orders</title>
         <meta name="description" content="" />
       </Helmet>
-      <ArchiveCommercialJob />
+
+      {/* Archive Commercial Job table animation */}
+      <motion.div
+        initial={{ opacity: 0, y: 50 }} // Start with opacity 0 and moved down
+        animate={{ opacity: 1, y: 0 }} // Fade in and move up
+        transition={{ delay: 0.3, duration: 0.5 }} // Delay for smoother entry
+      >
+        <ArchiveCommercialJob />
+      </motion.div>
+
       <Toaster position="top-center" richColors closeButton />
-    </div>
+    </motion.div>
   );
 };
 

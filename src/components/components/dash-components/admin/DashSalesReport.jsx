@@ -32,6 +32,7 @@ import axios from "axios";
 import { token } from "@/lib/token";
 import logo from "../../../../assets/logo_msc.jpg";
 import CustomPageTitle from "../../custom-components/CustomPageTitle";
+import { motion } from "framer-motion";
 
 const DashSalesReport = () => {
   const navigate = useNavigate();
@@ -361,131 +362,145 @@ const DashSalesReport = () => {
   };
 
   return (
-    <div className="w-full p-5 h-screen">
-      <div className="flex justify-between items-center mb-4">
-        <CustomPageTitle
-          title="Sales Report"
-          description="View and download sales reports"
-        />
-      </div>
-      <div className="mb-4 flex justify-end">
-      <AlertDialog>
-        <AlertDialogTrigger asChild>
-          <Button>
-            <PrinterIcon className="h-4 w-4 mr-2" />
-            Print
-          </Button>
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <div className="p-2">
-            <AlertDialogHeader>
-              <AlertDialogTitle>Print Sales Report</AlertDialogTitle>
-              <AlertDialogDescription>
-                Select the time period you want to print.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <Tabs defaultValue="monthly">
-              <TabsList className="w-full">
-                <TabsTrigger
-                  value="monthly"
-                  className="w-full"
-                  onClick={() => setTab("monthly")}
-                >
-                  Monthly
-                </TabsTrigger>
-                <TabsTrigger
-                  value="yearly"
-                  className="w-full"
-                  onClick={() => setTab("yearly")}
-                >
-                  Yearly
-                </TabsTrigger>
-              </TabsList>
-              <TabsContent value="monthly">
-                <div className="flex gap-2 mt-3">
-                  <Select
-                    onValueChange={(value) => {
-                      const [month, year] = value.split("-");
-                      setSelectedMonth(Number(month));
-                      setSelectedYear(Number(year));
-                    }}
-                    defaultValue={`${selectedMonth}-${selectedYear}`}
-                  >
-                    <SelectTrigger className="w-full mb-5">
-                      <span>{`${
-                        monthNames[selectedMonth - 1]
-                      } ${selectedYear}`}</span>
-                    </SelectTrigger>
-                    <SelectContent>
-                      <ScrollArea className="h-72 p-3">
-                        <SelectGroup>
-                          {monthOptions.map(({ value, label }) => (
-                            <React.Fragment key={value}>
-                              <SelectItem value={value}>{label}</SelectItem>
-                              <Separator className="my-2" />
-                            </React.Fragment>
-                          ))}
-                        </SelectGroup>
-                      </ScrollArea>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </TabsContent>
-              <TabsContent value="yearly">
-                <div className="flex gap-2 mt-3">
-                  <Select
-                    onValueChange={(value) => {
-                      setSelectedYear(Number(value));
-                    }}
-                    defaultValue={currentYear.toString()}
-                  >
-                    <SelectTrigger className="w-full mb-5">
-                      <span>{selectedYear}</span>
-                    </SelectTrigger>
-                    <SelectContent>
-                      <ScrollArea className="h-72 p-3">
-                        <SelectGroup>
-                          {years.map((year) => (
-                            <React.Fragment key={year}>
-                              <SelectItem value={year.toString()}>
-                                {year}
-                              </SelectItem>
-                              <Separator className="my-2" />
-                            </React.Fragment>
-                          ))}
-                        </SelectGroup>
-                      </ScrollArea>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </TabsContent>
-            </Tabs>
-          </div>
-          <div className="flex flex-col items-center gap-4">
-            <AlertDialogFooter className="w-full flex justify-end gap-2">
-              <AlertDialogCancel asChild>
-                <Button variant="secondary" className="w-full">
-                  Cancel
-                </Button>
-              </AlertDialogCancel>
-              <Button
-                onClick={handlePrint}
-                className="w-full flex items-center justify-center"
-              >
+    <motion.div
+      className="w-full h-screen overflow-x-auto"
+      initial={{ opacity: 0, y: 50 }} // Start with opacity 0 and moved down
+      animate={{ opacity: 1, y: 0 }} // Fade in and move to its position
+      transition={{ duration: 0.5 }} // Duration for the transition
+    >
+      <div className="w-full p-5 h-screen">
+        <div className="flex justify-between items-center mb-4">
+          <CustomPageTitle
+            title="Sales Report"
+            description="View and download sales reports"
+          />
+        </div>
+        <div className="mb-4 flex justify-end">
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button>
+                <PrinterIcon className="h-4 w-4 mr-2" />
                 Print
               </Button>
-            </AlertDialogFooter>
-          </div>
-        </AlertDialogContent>
-      </AlertDialog>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <div className="p-2">
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Print Sales Report</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Select the time period you want to print.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <Tabs defaultValue="monthly">
+                  <TabsList className="w-full">
+                    <TabsTrigger
+                      value="monthly"
+                      className="w-full"
+                      onClick={() => setTab("monthly")}
+                    >
+                      Monthly
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="yearly"
+                      className="w-full"
+                      onClick={() => setTab("yearly")}
+                    >
+                      Yearly
+                    </TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="monthly">
+                    <div className="flex gap-2 mt-3">
+                      <Select
+                        onValueChange={(value) => {
+                          const [month, year] = value.split("-");
+                          setSelectedMonth(Number(month));
+                          setSelectedYear(Number(year));
+                        }}
+                        defaultValue={`${selectedMonth}-${selectedYear}`}
+                      >
+                        <SelectTrigger className="w-full mb-5">
+                          <span>{`${
+                            monthNames[selectedMonth - 1]
+                          } ${selectedYear}`}</span>
+                        </SelectTrigger>
+                        <SelectContent>
+                          <ScrollArea className="h-72 p-3">
+                            <SelectGroup>
+                              {monthOptions.map(({ value, label }) => (
+                                <React.Fragment key={value}>
+                                  <SelectItem value={value}>{label}</SelectItem>
+                                  <Separator className="my-2" />
+                                </React.Fragment>
+                              ))}
+                            </SelectGroup>
+                          </ScrollArea>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </TabsContent>
+                  <TabsContent value="yearly">
+                    <div className="flex gap-2 mt-3">
+                      <Select
+                        onValueChange={(value) => {
+                          setSelectedYear(Number(value));
+                        }}
+                        defaultValue={currentYear.toString()}
+                      >
+                        <SelectTrigger className="w-full mb-5">
+                          <span>{selectedYear}</span>
+                        </SelectTrigger>
+                        <SelectContent>
+                          <ScrollArea className="h-72 p-3">
+                            <SelectGroup>
+                              {years.map((year) => (
+                                <React.Fragment key={year}>
+                                  <SelectItem value={year.toString()}>
+                                    {year}
+                                  </SelectItem>
+                                  <Separator className="my-2" />
+                                </React.Fragment>
+                              ))}
+                            </SelectGroup>
+                          </ScrollArea>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </TabsContent>
+                </Tabs>
+              </div>
+              <div className="flex flex-col items-center gap-4">
+                <AlertDialogFooter className="w-full flex justify-end gap-2">
+                  <AlertDialogCancel asChild>
+                    <Button variant="secondary" className="w-full">
+                      Cancel
+                    </Button>
+                  </AlertDialogCancel>
+                  <Button
+                    onClick={handlePrint}
+                    className="w-full flex items-center justify-center"
+                  >
+                    Print
+                  </Button>
+                </AlertDialogFooter>
+              </div>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+        <Helmet>
+          <title>MarSUKAT | Sales Report</title>
+          <meta name="description" content="" />
+        </Helmet>
+        <motion.div
+          initial={{ opacity: 0, y: 50 }} // Start with opacity 0 and moved down
+          animate={{ opacity: 1, y: 0 }} // Fade in and move to its position
+          transition={{ delay: 0.3, duration: 0.5 }} // Delay for smoother entry
+        >
+          <SalesSummary />
+        </motion.div>
+
+        <Toaster position="top-center" closeButton={true} richColors={true} />
       </div>
-      <Helmet>
-        <title>MarSUKAT | Sales Report</title>
-        <meta name="description" content="" />
-      </Helmet>
-      <SalesSummary />
-      <Toaster position="top-center" closeButton={true} richColors={true} />
-    </div>
+    </motion.div>
   );
 };
 

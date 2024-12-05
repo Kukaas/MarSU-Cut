@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion"; // Import motion from framer-motion
 import { Toaster } from "sonner";
 import AcademicGownInventory from "./tables/AcademicGownInventory";
 
@@ -20,14 +21,28 @@ const DashAcademicGownInventory = () => {
   }, [currentUser, navigate]);
 
   return (
-    <div className="w-full h-screen overfolow-x-auto">
+    <motion.div
+      className="w-full h-screen overflow-x-auto"
+      initial={{ opacity: 0, y: 50 }} // Start with opacity 0 and moved down
+      animate={{ opacity: 1, y: 0 }} // Fade in and move to its position
+      transition={{ duration: 0.5 }} // Duration for the transition
+    >
       <Helmet>
-        <title>MarSUKAT | Finished Products</title>
+        <title>MarSUKAT | Academic Gown Inventory</title>
         <meta name="description" content="" />
       </Helmet>
-      <AcademicGownInventory />
+
+      {/* Academic Gown Inventory table animation */}
+      <motion.div
+        initial={{ opacity: 0, y: 50 }} // Start with opacity 0 and moved down
+        animate={{ opacity: 1, y: 0 }} // Fade in and move up
+        transition={{ delay: 0.3, duration: 0.5 }} // Delay for smoother entry
+      >
+        <AcademicGownInventory />
+      </motion.div>
+
       <Toaster position="top-center" richColors closeButton />
-    </div>
+    </motion.div>
   );
 };
 

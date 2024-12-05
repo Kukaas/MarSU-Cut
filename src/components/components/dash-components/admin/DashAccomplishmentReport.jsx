@@ -1,10 +1,10 @@
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { Helmet } from "react-helmet";
-
-import AccomplishmentReport from "./tables/AccomplishmentReport";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion"; // Import motion from framer-motion
 import { Toaster } from "sonner";
+import AccomplishmentReport from "./tables/AccomplishmentReport";
 
 const DashAccomplishmentReport = () => {
   const navigate = useNavigate();
@@ -21,14 +21,28 @@ const DashAccomplishmentReport = () => {
   }, [currentUser, navigate]);
 
   return (
-    <div className="w-full h-screen overflow-x-auto">
+    <motion.div
+      className="w-full h-screen overflow-x-auto"
+      initial={{ opacity: 0, y: 50 }} // Start with opacity 0 and moved down
+      animate={{ opacity: 1, y: 0 }} // Fade in and move to its position
+      transition={{ duration: 0.5 }} // Duration for the transition
+    >
       <Helmet>
         <title>MarSUKAT | Accomplishment Reports</title>
         <meta name="description" content="" />
       </Helmet>
-      <AccomplishmentReport />
+
+      {/* Accomplishment Report table animation */}
+      <motion.div
+        initial={{ opacity: 0, y: 50 }} // Start with opacity 0 and moved down
+        animate={{ opacity: 1, y: 0 }} // Fade in and move up
+        transition={{ delay: 0.3, duration: 0.5 }} // Delay for smoother entry
+      >
+        <AccomplishmentReport />
+      </motion.div>
+
       <Toaster position="top-center" richColors closeButton />
-    </div>
+    </motion.div>
   );
 };
 

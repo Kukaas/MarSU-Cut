@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Toaster } from "sonner";
 import CommercialJob from "./CommercialJob";
+import { motion } from "framer-motion"; // Import motion from framer-motion
 
 const DashCommercial = () => {
   const navigate = useNavigate();
@@ -20,14 +21,20 @@ const DashCommercial = () => {
   }, [currentUser, navigate]);
 
   return (
-    <div className="w-full h-screen overflow-x-auto">
-      <Helmet>
-        <title>MarSUKAT | Commercial Job</title>
-        <meta name="description" content="" />
-      </Helmet>
-      <CommercialJob />
-      <Toaster position="top-center" richColors closeButton />
-    </div>
+    <motion.div
+      initial={{ opacity: 0, y: 50 }} // Fade-in effect with slide up
+      animate={{ opacity: 1, y: 0 }} // End state: visible and in place
+      transition={{ duration: 0.5 }} // Smooth transition
+    >
+      <div className="w-full h-screen overflow-x-auto">
+        <Helmet>
+          <title>MarSUKAT | Commercial Job</title>
+          <meta name="description" content="" />
+        </Helmet>
+        <CommercialJob />
+        <Toaster position="top-center" richColors closeButton />
+      </div>
+    </motion.div>
   );
 };
 

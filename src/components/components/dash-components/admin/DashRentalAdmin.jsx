@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { Helmet } from "react-helmet";
+import { motion } from "framer-motion"; // Import motion from framer-motion
 
 import Rentals from "./tables/Rentals";
 import { Toaster } from "sonner";
@@ -19,15 +20,29 @@ const DashRentalAdmin = () => {
       navigate("/");
     }
   }, [currentUser, navigate]);
+
   return (
-    <div className="w-full h-screen overflow-x-auto">
+    <motion.div
+      className="w-full h-screen overflow-x-auto"
+      initial={{ opacity: 0, y: 50 }} // Start with the page hidden and slightly below
+      animate={{ opacity: 1, y: 0 }} // Animate to normal position
+      transition={{ duration: 0.5 }} // Transition duration of 0.5 seconds
+    >
       <Helmet>
         <title>MarSUKAT | Rentals</title>
         <meta name="description" content="" />
       </Helmet>
-      <Rentals />
+
+      <motion.div
+        initial={{ opacity: 0, y: 50 }} // Rentals component starts below and hidden
+        animate={{ opacity: 1, y: 0 }} // Fade in and move up to the final position
+        transition={{ delay: 0.3, duration: 0.5 }} // Delay for 0.3 seconds
+      >
+        <Rentals />
+      </motion.div>
+
       <Toaster position="top-center" richColors closeButton />
-    </div>
+    </motion.div>
   );
 };
 
