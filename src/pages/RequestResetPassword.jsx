@@ -1,4 +1,3 @@
-// Ui import
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { toast, Toaster } from "sonner";
@@ -16,7 +15,7 @@ import {
   forgotPasswordSuccess,
 } from "../redux/forgotPassword/forgotPassword";
 
-//Libraries
+// Libraries
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,6 +27,9 @@ import { BASE_URL } from "@/lib/api";
 import ToasterError from "@/lib/Toaster";
 import CustomInput from "@/components/components/custom-components/CustomInput";
 import LeftSideDescription from "@/components/components/custom-components/LeftSideDescription";
+
+// Import framer-motion for animations
+import { motion } from "framer-motion";
 
 const RequestResetPassword = () => {
   const dispatch = useDispatch();
@@ -87,22 +89,44 @@ const RequestResetPassword = () => {
     } catch (error) {
       setLoading(false);
       ToasterError({
-        description: "Please check you internet connection and try again.",
+        description: "Please check your internet connection and try again.",
       });
       dispatch(forgotPasswordFail());
     }
   };
 
   return (
-    <div className="min-h-[450px] mt-[120px]">
+    <motion.div
+      className="min-h-[450px] mt-[120px]"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       {loading1 ? (
         <Spin spinning={loading1} />
       ) : (
         <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center">
-          {/* left */}
-          <LeftSideDescription black="Forgot your " gradient="password?" description="Enter your email to reset your password" />
-          {/* right */}
-          <div className="flex-1">
+          {/* Left Description with animation */}
+          <motion.div
+            className="flex-1"
+            initial={{ x: -200, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 100, duration: 0.6 }}
+          >
+            <LeftSideDescription
+              black="Forgot your "
+              gradient="password?"
+              description="Enter your email to reset your password"
+            />
+          </motion.div>
+
+          {/* Right Form with animation */}
+          <motion.div
+            className="flex-1"
+            initial={{ x: 200, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 100, duration: 0.6 }}
+          >
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(handleSendOTP)}
@@ -137,16 +161,19 @@ const RequestResetPassword = () => {
             <div>
               <p className="text-center text-sm mt-3">
                 Remembered your password?{" "}
-                <Link to="/sign-in" className="text-blue-400 underline hover:text-blue-500">
+                <Link
+                  to="/sign-in"
+                  className="text-blue-400 underline hover:text-blue-500"
+                >
                   Sign in
                 </Link>
               </p>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
       <Toaster position="top-center" closeButton richColors />
-    </div>
+    </motion.div>
   );
 };
 

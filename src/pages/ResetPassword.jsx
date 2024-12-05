@@ -24,6 +24,7 @@ import { ResetPasswordSchema } from "@/schema/shema";
 import { BASE_URL } from "@/lib/api";
 import CustomInput from "@/components/components/custom-components/CustomInput";
 import LeftSideDescription from "@/components/components/custom-components/LeftSideDescription";
+import { motion } from "framer-motion";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -99,55 +100,80 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="min-h-[400px] mt-[100px] mb-5">
-      <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center">
-        {/* left */}
-        <LeftSideDescription black="Reset " gradient="Password" description="Reset your password" />
-        {/* right */}
-        <div className="flex-1">
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(handleResetPassword)}
-              className="space-y-4"
-            >
-              <CustomInput
-                form={form}
-                name="password"
-                label="Password"
-                placeholder="Enter your new password..."
-                type="password"
-              />
-              <CustomInput
-                form={form}
-                name="confirmPassword"
-                label="Confirm Password"
-                placeholder="Confirm your new password..."
-                type="password"
-              />
-              <Button
-                type="submit"
-                className="w-full mt-3 rounded-lg text-white text-lg"
-                style={{
-                  background:
-                    "linear-gradient(90deg, hsla(48, 80%, 66%, 1) 0%, hsla(0, 100%, 25%, 1) 100%)",
-                }}
-                disabled={loading}
-              >
-                {loading ? (
-                  <div className="flex items-center">
-                    <Loader2 className="mr-2 animate-spin" />
-                    <span>Reseting Password</span>
-                  </div>
-                ) : (
-                  "Reset Password"
-                )}
-              </Button>
-            </form>
-          </Form>
+    <motion.div
+      className="min-h-[450px] mt-[140px]"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <div className="min-h-[400px] mt-[100px] mb-5">
+        <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center">
+          {/* left */}
+          <motion.div
+            className="flex-1"
+            initial={{ x: -200, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 100, duration: 0.6 }}
+          >
+            <LeftSideDescription
+              black="Reset "
+              gradient="Password"
+              description="Reset your password"
+            />
+          </motion.div>
+          {/* right */}
+          <motion.div
+            className="flex-1"
+            initial={{ x: 200, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 100, duration: 0.6 }}
+          >
+            <div className="flex-1">
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(handleResetPassword)}
+                  className="space-y-4"
+                >
+                  <CustomInput
+                    form={form}
+                    name="password"
+                    label="Password"
+                    placeholder="Enter your new password..."
+                    type="password"
+                  />
+                  <CustomInput
+                    form={form}
+                    name="confirmPassword"
+                    label="Confirm Password"
+                    placeholder="Confirm your new password..."
+                    type="password"
+                  />
+                  <Button
+                    type="submit"
+                    className="w-full mt-3 rounded-lg text-white text-lg"
+                    style={{
+                      background:
+                        "linear-gradient(90deg, hsla(48, 80%, 66%, 1) 0%, hsla(0, 100%, 25%, 1) 100%)",
+                    }}
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <div className="flex items-center">
+                        <Loader2 className="mr-2 animate-spin" />
+                        <span>Reseting Password</span>
+                      </div>
+                    ) : (
+                      "Reset Password"
+                    )}
+                  </Button>
+                </form>
+              </Form>
+            </div>
+          </motion.div>
         </div>
+        <Toaster position="top-center" closeButton richColors />
       </div>
-      <Toaster position="top-center" closeButton richColors />
-    </div>
+    </motion.div>
   );
 };
 
