@@ -5,7 +5,6 @@ import {
   ChartTooltip,
 } from "@/components/ui/chart";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
-
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { token } from "@/lib/token";
@@ -112,26 +111,35 @@ ChartTooltipContentProduction.propTypes = {
 const Overview = () => {
   const [overview, setOverview] = useState([]);
   const [salesOverview, setSalesOverview] = useState([]);
+  const [academicProductions, setAcademicProductions] = useState([]);
 
   useEffect(() => {
     const fetchOverviews = async () => {
       try {
-        const [productionRes, salesRes] = await Promise.all([
-          axios.get(`${BASE_URL}/api/v1/production/overview`, {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-          }),
-          axios.get(`${BASE_URL}/api/v1/sales-report/overview`, {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-          }),
-        ]);
+        const [productionRes, salesRes, academicProductionRes] =
+          await Promise.all([
+            axios.get(`${BASE_URL}/api/v1/production/overview`, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              withCredentials: true,
+            }),
+            axios.get(`${BASE_URL}/api/v1/sales-report/overview`, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              withCredentials: true,
+            }),
+            axios.get(`${BASE_URL}/api/v1/production/academic/this-year`, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              withCredentials: true,
+            }),
+          ]);
 
         if (productionRes.status === 200) {
           setOverview(productionRes.data.data);
@@ -139,6 +147,10 @@ const Overview = () => {
 
         if (salesRes.status === 200) {
           setSalesOverview(salesRes.data.data);
+        }
+
+        if (academicProductionRes.status === 200) {
+          setAcademicProductions(academicProductionRes.data.productions);
         }
       } catch (error) {
         console.log(error);
@@ -148,13 +160,19 @@ const Overview = () => {
     fetchOverviews();
   }, []);
 
-  // Create production chart data, excluding "LOGO"
-  const productionChartData = overview
-    .filter((item) => item.productType !== "LOGO")
-    .map((productionItem) => ({
-      productType: productionItem.productType,
-      totalQuantity: productionItem.totalQuantity,
-    }));
+  // Create production chart data, excluding "LOGO" and integrating academic productions
+  const productionChartData = [
+    ...overview
+      .filter((item) => item.productType !== "LOGO")
+      .map((productionItem) => ({
+        productType: productionItem.productType,
+        totalQuantity: productionItem.totalQuantity,
+      })),
+    ...academicProductions.map((academicItem) => ({
+      productType: academicItem.productType,
+      totalQuantity: academicItem.quantity,
+    })),
+  ];
 
   // Create sales chart data, including "LOGO"
   const salesChartData = salesOverview.map((salesItem) => ({
@@ -262,12 +280,6 @@ const Overview = () => {
       </Tabs>
     </>
   );
-};
-
-ChartTooltipContentSales.propTypes = {
-  active: PropTypes.bool,
-  payload: PropTypes.array,
-  mode: PropTypes.string,
 };
 
 export default Overview;
