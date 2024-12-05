@@ -37,6 +37,8 @@ import { useSelector } from "react-redux";
 import AddProductionUniform from "@/components/components/forms/AddProductionUniform";
 import AcademicTable from "../production-components/AcademicTable";
 import AddProductionAcademic from "@/components/components/forms/AddProductionAcademic";
+import OtherProductionTable from "../production-components/OtherProductionTable";
+import CreateOtherProduction from "@/components/components/forms/CreateOtherProduction";
 
 const Productions = () => {
   const [data, setData] = useState([]);
@@ -69,7 +71,14 @@ const Productions = () => {
           </div>
         );
       case "others":
-        return <div>Other Productions Form</div>;
+        return (
+          <div>
+            <CreateOtherProduction
+              onOtherProductionAdded={handleProductionAdded}
+              setIsDialogOpen={setIsOpen}
+            />
+          </div>
+        );
       default:
         return (
           <div className="flex flex-col gap-4">
@@ -238,7 +247,7 @@ const Productions = () => {
                   </AlertDialogTitle>
                   <AlertDialogDescription>
                     {selectedForm
-                      ? "Please fill in the details for the selected production type."
+                      ? `Please fill out the form below to add ${selectedForm}.`
                       : "Select the type of production you want to add."}
                   </AlertDialogDescription>
                   {renderForm()}
@@ -274,6 +283,9 @@ const Productions = () => {
           </TabsContent>
           <TabsContent value="academicGown" className="mt-4">
             <AcademicTable />
+          </TabsContent>
+          <TabsContent value="others" className="mt-4">
+            <OtherProductionTable />
           </TabsContent>
           <TabsContent value="graph" className="mt-4 p-5">
             <Card>

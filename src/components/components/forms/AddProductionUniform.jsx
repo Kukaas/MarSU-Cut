@@ -95,9 +95,6 @@ const AddProductionUniform = ({ onProductionAdded, setIsOpen }) => {
           }
         );
 
-        // Log the response to confirm its structure
-        console.log(res.data);
-
         // Assuming product types are under "productTypes" key
         const uniqueProductTypes = Array.from(
           new Set(res.data.productTypes.map((a) => a.productType))
