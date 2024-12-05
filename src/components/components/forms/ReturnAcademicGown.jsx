@@ -132,7 +132,7 @@ const ReturnAcademicGown = ({
 
       if (res.status === 200) {
         setLoading(false);
-        toast.success("Items released successfully!");
+        toast.success("Items returned successfully!");
         onReturnSuccess();
         setIsDialogOpen(false);
       }
