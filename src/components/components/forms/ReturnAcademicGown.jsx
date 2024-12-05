@@ -119,7 +119,7 @@ const ReturnAcademicGown = ({
       };
 
       const res = await axios.put(
-        `http://localhost:3000/api/v1/rental/return`,
+        `${BASE_URL}/api/v1/rental/return`,
         releaseData,
         {
           headers: {

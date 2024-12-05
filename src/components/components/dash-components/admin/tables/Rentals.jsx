@@ -269,50 +269,6 @@ function Rentals() {
     }
   };
 
-  // Update the status of the rental to returned
-  const handleReturn = async (rental) => {
-    try {
-      setLoadingUpdate(true);
-      const res = await axios.put(
-        `${BASE_URL}/api/v1/rental/update/${rental._id}`,
-        {
-          status: "RETURNED",
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        }
-      );
-
-      if (res.status === 200) {
-        setLoadingUpdate(false);
-        toast.success(`Rental of ${rental.coordinatorName} is returned!`);
-
-        // Update the data in the state
-        setData((prevData) => {
-          return prevData.map((item) => {
-            if (item._id === rental._id) {
-              return { ...item, status: "RETURNED" };
-            }
-
-            return item;
-          });
-        });
-      } else {
-        ToasterError();
-        setLoadingUpdate(false);
-      }
-    } catch (error) {
-      ToasterError({
-        description: "Please check you internet connection and try again.",
-      });
-      setLoadingUpdate(false);
-    }
-  };
-
   // Archive the rental
   const handleArchive = async (rental) => {
     try {
