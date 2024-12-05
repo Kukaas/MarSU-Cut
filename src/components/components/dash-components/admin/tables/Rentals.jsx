@@ -60,6 +60,7 @@ import { Calendar } from "@/components/ui/calendar";
 import RentalDetails from "./details/RentalDetails";
 import CustomPageTitle from "@/components/components/custom-components/CustomPageTitle";
 import { Input } from "@/components/ui/input";
+import ReleaseAcademicGown from "@/components/components/forms/ReleaseAcademicGown";
 
 function Rentals() {
   const [data, setData] = useState([]);
@@ -75,6 +76,7 @@ function Rentals() {
   const [rejectReason, setRejectReason] = useState("");
   const [rentalToReject, setRentalToReject] = useState(null);
   const [loadingReject, setLoadingReject] = useState(false);
+  const [dialogReleaseOpen, setDialogReleaseOpen] = useState(false);
   const navigate = useNavigate();
 
   const form = useForm({
@@ -261,54 +263,6 @@ function Rentals() {
       }
     } catch (error) {
       ToasterError();
-      setLoadingUpdate(false);
-    }
-  };
-
-  const handleGiven = async (rental) => {
-    if (!rental.pickupDate) {
-      return toast.error("Please set the pickup date first!");
-    }
-    try {
-      setLoadingUpdate(true);
-      const res = await axios.put(
-        `${BASE_URL}/api/v1/rental/update/${rental._id}`,
-        {
-          status: "GIVEN",
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        }
-      );
-
-      if (res.status === 200) {
-        setLoadingUpdate(false);
-        toast.success(`Rental of ${rental.coordinatorName} is given!`);
-
-        // Update the data in the state
-        setData((prevData) => {
-          return prevData.map((item) => {
-            if (item._id === rental._id) {
-              return { ...item, status: "GIVEN" }; // Correct status update
-            }
-            return item;
-          });
-        });
-      } else {
-        ToasterError();
-      }
-    } catch (error) {
-      if (error.response && error.response.status === 400) {
-        toast.error(error.response.data.message); // Correct error handling
-      } else {
-        ToasterError({
-          description: "Please check you internet connection and try again.",
-        }); // Handle other errors
-      }
       setLoadingUpdate(false);
     }
   };
@@ -536,7 +490,10 @@ function Rentals() {
                   Approve
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={() => handleGiven(rental)}
+                  onClick={() => {
+                    setSelectedRental(rental);
+                    setDialogReleaseOpen(true);
+                  }}
                   disabled={[
                     "REJECTED",
                     "GIVEN",
@@ -746,6 +703,21 @@ function Rentals() {
               )}
             </Button>
           </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={dialogReleaseOpen} onOpenChange={setDialogReleaseOpen}>
+        <AlertDialogContent className="max-w-[500px[ max-h-[600px] overflow-auto">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Set the Released Items</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will update the inventory of the items released
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <ReleaseAcademicGown
+            setDialogReleaseOpen={setDialogReleaseOpen}
+            selectedRentalOrder={selectedRental}
+          />
         </AlertDialogContent>
       </AlertDialog>
     </Spin>
