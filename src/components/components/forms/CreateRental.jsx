@@ -37,13 +37,6 @@ import {
 import SelectField from "../custom-components/SelectField";
 import { Input } from "@/components/ui/input";
 
-// Utility function to determine stock color
-const getStockColorClass = (quantity) => {
-  if (quantity === 0) return "text-red-500 text-sm";
-  if (quantity < 15) return "text-orange-500 text-sm";
-  return "text-green-500 text-sm";
-};
-
 const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
   const [finishedProducts, setFinishedProducts] = useState({
     toga: {
@@ -339,13 +332,6 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
                         <FormItem className="flex flex-col">
                           <div className="flex gap-2 items-center">
                             <FormLabel>{size}</FormLabel>
-                            <span
-                              className={getStockColorClass(
-                                finishedProducts.toga[size]
-                              )}
-                            >
-                              ({finishedProducts.toga[size]})
-                            </span>
                           </div>
                           <Input
                             {...field}
@@ -383,13 +369,6 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
                       <FormItem className="flex flex-col">
                         <div className="flex gap-2 items-center">
                           <FormLabel>{size}</FormLabel>
-                          <span
-                            className={getStockColorClass(
-                              finishedProducts.cap[size]
-                            )}
-                          >
-                            ({finishedProducts.cap[size]})
-                          </span>
                         </div>
                         <Input
                           {...field}
@@ -423,11 +402,6 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
                   <FormItem className="flex flex-col">
                     <div className="flex gap-2 items-center">
                       <FormLabel>Hood</FormLabel>
-                      <span
-                        className={getStockColorClass(finishedProducts.hood)}
-                      >
-                        ({finishedProducts.hood}){" "}
-                      </span>
                     </div>
                     <Input
                       {...field}
@@ -460,14 +434,6 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
                   <FormItem className="flex flex-col">
                     <div className="flex gap-2 items-center">
                       <FormLabel>Monaco Thread</FormLabel>
-                      <span
-                        className={getStockColorClass(
-                          finishedProducts.monacoThread
-                        )}
-                      >
-                        ({finishedProducts.monacoThread}){" "}
-                        {/* Display available quantity */}
-                      </span>
                     </div>
                     <Input
                       {...field}
