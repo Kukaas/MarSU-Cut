@@ -1,4 +1,3 @@
-// UI
 import {
   Form,
   FormControl,
@@ -15,7 +14,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { toast } from "sonner";
-
 import { CalendarIcon, Loader2 } from "lucide-react";
 
 // others
@@ -33,30 +31,37 @@ import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomInput from "../custom-components/CustomInput";
 import {
-  AlertDialog,
   AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { DialogClose } from "@/components/ui/dialog";
 import SelectField from "../custom-components/SelectField";
 import { Input } from "@/components/ui/input";
 
 // Utility function to determine stock color
 const getStockColorClass = (quantity) => {
-  if (quantity === 0) return "text-red-500";
-  if (quantity < 15) return "text-orange-500";
-  return "text-green-500";
+  if (quantity === 0) return "text-red-500 text-sm";
+  if (quantity < 15) return "text-orange-500 text-sm";
+  return "text-green-500 text-sm";
 };
 
 const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
-  const [finishedProducts, setFinishedProducts] = useState([]);
+  const [finishedProducts, setFinishedProducts] = useState({
+    toga: {
+      S14: 0,
+      S16: 0,
+      S17: 0,
+      S18: 0,
+      S19: 0,
+      S20: 0,
+      "S20+": 0,
+    },
+    cap: {
+      "M/L": 0,
+      XL: 0,
+      XXL: 0,
+    },
+  });
   const [loading, setLoading] = useState(false);
-  const [dialogOpen, setDialogOpen] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const initialFormState = JSON.parse(
     localStorage.getItem("createRentalForm")
@@ -121,7 +126,7 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
   useEffect(() => {
     const fetchFinishedProducts = async () => {
       try {
-        const res = await axios.get(`${BASE_URL}/api/v1/finished-product/all`, {
+        const res = await axios.get(`${BASE_URL}/api/v1/academic-gown/all`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -130,12 +135,42 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
         });
 
         if (res.status === 200) {
-          // Filter and map to only include academic gown sizes and quantities
-          const academicGowns = res.data.finishedProducts
-            .filter((product) => product.productType === "ACADEMIC GOWN")
-            .map(({ size, quantity }) => ({ size, quantity }));
+          const academicGowns = res.data.academicGown.reduce(
+            (acc, product) => {
+              if (product.productType === "TOGA") {
+                acc.toga[product.size] = product.quantity;
+              } else if (product.productType === "CAP") {
+                acc.cap[product.size] = product.quantity;
+              } else if (product.productType === "HOOD") {
+                // Assuming the productType for Hood is "HOOD"
+                acc.hood = product.quantity; // Assuming hood is a single quantity
+              } else if (product.productType === "MONACO_THREAD") {
+                // Assuming the productType for Monaco Thread is "MONACO_THREAD"
+                acc.monacoThread = product.quantity; // Assuming monacoThread is a single quantity
+              }
+              return acc;
+            },
+            {
+              toga: {
+                S14: 0,
+                S16: 0,
+                S17: 0,
+                S18: 0,
+                S19: 0,
+                S20: 0,
+                "S20+": 0,
+              },
+              cap: {
+                "M/L": 0,
+                XL: 0,
+                XXL: 0,
+              },
+              hood: 0, // Initialize hood if it isn't already
+              monacoThread: 0, // Initialize monacoThread if it isn't already
+            }
+          );
 
-          setFinishedProducts(academicGowns);
+          setFinishedProducts(academicGowns); // Update state with the fetched data
         }
       } catch (error) {
         console.error(error);
@@ -193,10 +228,9 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
 
       if (res.status === 201) {
         setLoading(false);
-        setDialogOpen(false);
         form.reset();
         toast.success("Rental submitted successfully!", {
-          description: "Wait for the admin to approve you rental",
+          description: "Wait for the admin to approve your rental",
         });
         onRentalCreated(res.data.savedRental);
         setIsDialogOpen(false);
@@ -260,7 +294,7 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
                             )}
                           >
                             {field.value ? (
-                              format(field.value, "MMMM dd, yyy")
+                              format(field.value, "MMMM dd, yyyy")
                             ) : (
                               <span>Pick a date</span>
                             )}
@@ -287,185 +321,188 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
             </div>
           </fieldset>
 
-          {/* Rental Details SToga */}
+          {/* Finished Products Section */}
           <fieldset className="border border-gray-300 rounded-md p-4">
-            <legend className="text-lg font-semibold">Toga</legend>
+            <legend className="text-lg font-semibold">Toga Sizes</legend>
             <div className="space-y-4">
-              {["S14", "S16", "S17", "S18", "S19", "S20", "S20+"].map(
-                (sizeKey) => {
-                  const sizeName =
-                    sizeKey.charAt(0).toUpperCase() + sizeKey.slice(1);
-                  const maxQuantity =
-                    finishedProducts.find(
-                      (product) => product.size.toLowerCase() === sizeKey
-                    )?.quantity || 0;
-                  const colorClass = getStockColorClass(maxQuantity);
-
-                  return (
+              <div className="space-y-2">
+                {finishedProducts.toga &&
+                  Object.keys(finishedProducts.toga).map((size) => (
                     <FormField
-                      key={sizeKey}
+                      key={size}
                       control={form.control}
-                      name={`toga.${sizeKey}`}
+                      name={`toga.${size}`}
                       render={({ field }) => (
-                        <FormItem className="">
-                          <div className="flex items-center justify-between mb-2">
-                            <FormLabel className="font-medium flex items-center ">
-                              <span>{sizeName}</span>
-                              <span
-                                className={`px-2 py-1 text-xs ${colorClass} bg-opacity-10`}
-                              >
-                                {maxQuantity > 0
-                                  ? `Available: ${maxQuantity}`
-                                  : "Out of stock"}
-                              </span>
-                            </FormLabel>
+                        <FormItem className="flex flex-col">
+                          <div className="flex gap-2 items-center">
+                            <FormLabel>{size}</FormLabel>
+                            <span
+                              className={getStockColorClass(
+                                finishedProducts.toga[size]
+                              )}
+                            >
+                              ({finishedProducts.toga[size]})
+                            </span>
                           </div>
-                          <FormControl>
-                            <Input
-                              type="number"
-                              {...field}
-                              value={
-                                field.value !== undefined ? field.value : ""
+                          <Input
+                            {...field}
+                            type="number"
+                            placeholder="Quantity"
+                            value={field.value || ""} // Use an empty string if value is not set
+                            onChange={(e) => {
+                              const newValue = parseInt(e.target.value, 10);
+                              // Only update if the value is a valid number (or empty, to handle clearing the input)
+                              field.onChange(isNaN(newValue) ? "" : newValue);
+                              if (newValue < 0) {
+                                field.onChange(0);
                               }
-                              placeholder={`Enter quantity for ${sizeName}`}
-                              className="w-full rounded-md border-gray-300 focus:ring focus:ring-blue-300 focus:outline-none p-2"
-                            />
-                          </FormControl>
-                          <FormMessage />
+                            }}
+                          />
                         </FormItem>
                       )}
                     />
-                  );
-                }
-              )}
+                  ))}
+              </div>
             </div>
           </fieldset>
 
-          {/* Rental Details Hood */}
+          {/* Cap Section */}
           <fieldset className="border border-gray-300 rounded-md p-4">
-            <legend className="text-lg font-semibold">Hood</legend>
-            <div className="space-y-4">
-              <CustomInput
-                form={form}
-                name="hood"
-                label="Hood"
-                placeholder="Enter quantity for Hood"
-                type="number"
-              />
-            </div>
-          </fieldset>
-
-          {/* Rental Details Cap */}
-          <fieldset className="border border-gray-300 rounded-md p-4">
-            <legend className="text-lg font-semibold">Cap</legend>
-            <div className="space-y-4">
-              {["M/L", "XL", "XXL"].map((sizeKey) => {
-                const sizeName = sizeKey.toUpperCase();
-                return (
+            <legend className="text-lg font-semibold">Cap Sizes</legend>
+            <div className="space-y-2">
+              {finishedProducts.cap &&
+                Object.keys(finishedProducts.cap).map((size) => (
                   <FormField
-                    key={sizeKey}
+                    key={size}
                     control={form.control}
-                    name={`cap.${sizeKey}`}
+                    name={`cap.${size}`}
                     render={({ field }) => (
-                      <FormItem className="">
-                        <FormLabel className="font-medium">
-                          {sizeName}
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            {...field}
-                            value={field.value !== undefined ? field.value : ""}
-                            placeholder={`Enter quantity for ${sizeName}`}
-                            className="w-full rounded-md border-gray-300 focus:ring focus:ring-blue-300 focus:outline-none p-2"
-                          />
-                        </FormControl>
-                        <FormMessage />
+                      <FormItem className="flex flex-col">
+                        <div className="flex gap-2 items-center">
+                          <FormLabel>{size}</FormLabel>
+                          <span
+                            className={getStockColorClass(
+                              finishedProducts.cap[size]
+                            )}
+                          >
+                            ({finishedProducts.cap[size]})
+                          </span>
+                        </div>
+                        <Input
+                          {...field}
+                          type="number"
+                          placeholder="Quantity"
+                          value={field.value || ""} // Use an empty string if value is not set
+                          onChange={(e) => {
+                            const newValue = parseInt(e.target.value, 10);
+                            // Only update if the value is a valid number (or empty, to handle clearing the input)
+                            field.onChange(isNaN(newValue) ? "" : newValue);
+                            if (newValue < 0) {
+                              field.onChange(0);
+                            }
+                          }}
+                        />
                       </FormItem>
                     )}
                   />
-                );
-              })}
+                ))}
             </div>
           </fieldset>
 
-          {/* Rental Details Monaco Thread */}
+          {/* Hood Section */}
           <fieldset className="border border-gray-300 rounded-md p-4">
-            <legend className="text-lg font-semibold">Monaco Thread</legend>
+            <legend className="text-lg font-semibold">Hood</legend>
             <div className="space-y-4">
-              <CustomInput
-                form={form}
-                name="monacoThread"
-                label="Monaco Thread"
-                placeholder="Enter quantity for Monaco Thread"
-                type="number"
+              <FormField
+                control={form.control}
+                name="hood"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <div className="flex gap-2 items-center">
+                      <FormLabel>Hood</FormLabel>
+                      <span
+                        className={getStockColorClass(finishedProducts.hood)}
+                      >
+                        ({finishedProducts.hood}){" "}
+                      </span>
+                    </div>
+                    <Input
+                      {...field}
+                      type="number"
+                      placeholder="Quantity"
+                      value={field.value || ""} // Use an empty string if value is not set
+                      onChange={(e) => {
+                        const newValue = parseInt(e.target.value, 10);
+                        // Only update if the value is a valid number (or empty, to handle clearing the input)
+                        field.onChange(isNaN(newValue) ? "" : newValue);
+                        if (newValue < 0) {
+                          field.onChange(0);
+                        }
+                      }}
+                    />
+                  </FormItem>
+                )}
               />
             </div>
           </fieldset>
 
-          {/* Submission Section */}
-          <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <div className="flex flex-col items-center gap-4 mt-4">
-              <AlertDialogFooter className="w-full flex flex-col items-center gap-4">
-                <DialogClose asChild>
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      localStorage.removeItem("createRentalForm");
-                    }}
-                    className="w-full"
-                  >
-                    Cancel
-                  </Button>
-                </DialogClose>
-                <AlertDialogTrigger asChild>
-                  <Button
-                    onClick={() => setDialogOpen(true)}
-                    className="w-full flex items-center justify-center"
-                  >
-                    Submit Rental
-                  </Button>
-                </AlertDialogTrigger>
-              </AlertDialogFooter>
+          {/* Monaco Thread Section */}
+          <fieldset className="border border-gray-300 rounded-md p-4">
+            <legend className="text-lg font-semibold">Monaco Thread</legend>
+            <div className="space-y-4">
+              <FormField
+                control={form.control}
+                name="monacoThread"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <div className="flex gap-2 items-center">
+                      <FormLabel>Monaco Thread</FormLabel>
+                      <span
+                        className={getStockColorClass(
+                          finishedProducts.monacoThread
+                        )}
+                      >
+                        ({finishedProducts.monacoThread}){" "}
+                        {/* Display available quantity */}
+                      </span>
+                    </div>
+                    <Input
+                      {...field}
+                      type="number"
+                      placeholder="Quantity"
+                      value={field.value || ""} // Use an empty string if value is not set
+                      onChange={(e) => {
+                        const newValue = parseInt(e.target.value, 10);
+                        // Only update if the value is a valid number (or empty, to handle clearing the input)
+                        field.onChange(isNaN(newValue) ? "" : newValue);
+                        if (newValue < 0) {
+                          field.onChange(0);
+                        }
+                      }}
+                    />
+                  </FormItem>
+                )}
+              />
             </div>
+          </fieldset>
 
-            <AlertDialogContent className="sm:max-w-[425px] mx-auto overflow-y-auto">
-              <AlertDialogHeader>
-                <AlertDialogTitle>Confirm Submission</AlertDialogTitle>
-                <AlertDialogDescription>
-                  <div>
-                    <p>Are you sure you want to submit these details?</p>
-                  </div>
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <div className="flex flex-col items-center gap-4 mt-4">
-                <AlertDialogFooter className="w-full flex flex-col items-center gap-4">
-                  <AlertDialogCancel asChild>
-                    <Button variant="outline" className="w-full">
-                      Cancel
-                    </Button>
-                  </AlertDialogCancel>
-                  <Button
-                    onClick={() => {
-                      handleCreateRental(form.getValues());
-                    }}
-                    variant="default"
-                    disabled={loading}
-                    className="w-full flex items-center justify-center"
-                  >
-                    {loading ? (
-                      <div className="flex items-center">
-                        <Loader2 className="mr-2 animate-spin" />
-                        <span>Submitting</span>
-                      </div>
-                    ) : (
-                      "Submit"
-                    )}
-                  </Button>
-                </AlertDialogFooter>
-              </div>
-            </AlertDialogContent>
-          </AlertDialog>
+          {/* Submit Button */}
+          <div className="flex flex-col items-center">
+            <AlertDialogFooter className="flex flex-col items-center w-full gap-2">
+              <AlertDialogCancel asChild>
+                <Button variant="outline" className="w-full">
+                  Cancel
+                </Button>
+              </AlertDialogCancel>
+              <Button type="submit" disabled={loading} className="w-full">
+                {loading ? (
+                  <Loader2 className="animate-spin h-4 w-4" />
+                ) : (
+                  "Submit"
+                )}
+              </Button>
+            </AlertDialogFooter>
+          </div>
         </form>
       </Form>
     </div>
@@ -473,8 +510,8 @@ const CreateRental = ({ onRentalCreated, setIsDialogOpen }) => {
 };
 
 CreateRental.propTypes = {
-  onRentalCreated: PropTypes.func,
-  setIsDialogOpen: PropTypes.func,
+  onRentalCreated: PropTypes.func.isRequired,
+  setIsDialogOpen: PropTypes.func.isRequired,
 };
 
 export default CreateRental;

@@ -218,29 +218,26 @@ export const editReceiptSchema = z.object({
 });
 
 export const CreateRentalSchema = z.object({
-  coordinatorName: z
-    .string()
-    .min(3, { message: "Name must be at least 3 characters" }),
-  department: z
-    .string()
-    .min(3, { message: "Department must be at least 3 characters" }),
-  possiblePickupDate: z.string(),
-  toga: {
-    S14: z.number().int().nonnegative(),
-    S15: z.number().int().nonnegative(),
-    S16: z.number().int().nonnegative(),
-    S17: z.number().int().nonnegative(),
-    S18: z.number().int().nonnegative(),
-    S19: z.number().int().nonnegative(),
-    S20: z.number().int().nonnegative(),
-  },
-  hood: z.number().int().nonnegative(),
-  cap: {
-    "M/L": z.number().int().nonnegative(),
-    XL: z.number().int().nonnegative(),
-    XXL: z.number().int().nonnegative(),
-  },
-  monacoThread: z.number().int().nonnegative(),
+  coordinatorName: z.string().min(1, "Coordinator Name is required"),
+  department: z.string().min(1, "Department is required"),
+  possiblePickupDate: z.date(),
+  // Add validation for other fields...
+  toga: z.object({
+    S14: z.number().min(0),
+    S16: z.number().min(0),
+    S17: z.number().min(0),
+    S18: z.number().min(0),
+    S19: z.number().min(0),
+    S20: z.number().min(0),
+    "S20+": z.number().min(0),
+  }),
+  cap: z.object({
+    "M/L": z.number().min(0),
+    XL: z.number().min(0),
+    XXL: z.number().min(0),
+  }),
+  hood: z.number().min(0),
+  monacoThread: z.number().min(0),
 });
 
 export const CreateAccomplishmentSchema = z.object({

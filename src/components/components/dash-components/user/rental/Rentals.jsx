@@ -13,14 +13,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { Spin, Tooltip } from "antd";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { PlusCircle } from "lucide-react";
 import CreateRental from "../../../forms/CreateRental";
 import { useSelector } from "react-redux";
@@ -32,7 +24,14 @@ import CustomTable from "@/components/components/custom-components/CustomTable";
 import DataTableColumnHeader from "@/components/components/custom-components/DataTableColumnHeader";
 import { statusColors } from "@/lib/utils";
 import RentalDetails from "../../admin/tables/details/RentalDetails";
-import { AlertDialog } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import CustomPageTitle from "@/components/components/custom-components/CustomPageTitle";
 
 function Rentals() {
@@ -240,26 +239,28 @@ function Rentals() {
         />
         <div className="flex items-center py-4 justify-end overflow-auto">
           <Tooltip title="Create a rental">
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
+            <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <AlertDialogTrigger asChild>
                 <Button variant="default" className="m-2 h-8">
                   <PlusCircle size={20} className="mr-2 h-4 w-4" />
                   Create
                 </Button>
-              </DialogTrigger>
-              <DialogContent className="max-h-[550px] overflow-auto">
-                <DialogHeader>
-                  <DialogTitle>Create a rental for ACADEMIC GOWNS</DialogTitle>
-                  <DialogDescription>
+              </AlertDialogTrigger>
+              <AlertDialogContent className="max-h-[550px] overflow-auto">
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Create a rental for ACADEMIC GOWNS
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
                     Click submit when you&apos;re done.
-                  </DialogDescription>
-                </DialogHeader>
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
                 <CreateRental
                   onRentalCreated={handleRentalCreated}
                   setIsDialogOpen={setIsDialogOpen}
                 />
-              </DialogContent>
-            </Dialog>
+              </AlertDialogContent>
+            </AlertDialog>
           </Tooltip>
         </div>
         <div className="rounded-md border">
