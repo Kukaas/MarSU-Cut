@@ -8,7 +8,6 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
-import { format } from "date-fns";
 import { PropTypes } from "prop-types";
 import {
   AlertDialogCancel,
@@ -16,9 +15,9 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const ReturnAcademicGown = ({
+  setDialogReturnOpen,
   selectedRentalOrder,
   onReturnSuccess,
-  setIsDialogOpen,
 }) => {
   const [finishedProducts, setFinishedProducts] = useState({
     toga: {
@@ -134,7 +133,7 @@ const ReturnAcademicGown = ({
         setLoading(false);
         toast.success("Items returned successfully!");
         onReturnSuccess();
-        setIsDialogOpen(false);
+        setDialogReturnOpen(false);
       }
     } catch (error) {
       setLoading(false);
@@ -148,29 +147,6 @@ const ReturnAcademicGown = ({
           onSubmit={form.handleSubmit(handleReturnItems)}
           className="space-y-6 w-full overflow-y-auto"
         >
-          {/* Rental Order Details */}
-          <fieldset className="border border-gray-300 rounded-md p-4">
-            <legend className="text-lg font-semibold">
-              Rental Order Details
-            </legend>
-            <div className="space-y-4">
-              <div className="flex gap-2 items-center">
-                <FormLabel>Coordinator Name</FormLabel>
-                <span>{form.watch("coordinatorName")}</span>
-              </div>
-              <div className="flex gap-2 items-center">
-                <FormLabel>Department</FormLabel>
-                <span>{form.watch("department")}</span>
-              </div>
-              <div className="flex gap-2 items-center">
-                <FormLabel>Date Needed</FormLabel>
-                <span>
-                  {format(form.watch("possiblePickupDate"), "MMMM dd, yyyy")}
-                </span>
-              </div>
-            </div>
-          </fieldset>
-
           {/* Toga Sizes */}
           <fieldset className="border border-gray-300 rounded-md p-4">
             <legend className="text-lg font-semibold">Toga Sizes</legend>
@@ -325,7 +301,7 @@ const ReturnAcademicGown = ({
 ReturnAcademicGown.propTypes = {
   selectedRentalOrder: PropTypes.object.isRequired,
   onReturnSuccess: PropTypes.func.isRequired,
-  setIsDialogOpen: PropTypes.func.isRequired,
+  setDialogReturnOpen: PropTypes.func.isRequired,
 };
 
 export default ReturnAcademicGown;

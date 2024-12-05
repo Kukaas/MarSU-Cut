@@ -8,7 +8,6 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
-import { format } from "date-fns";
 import { PropTypes } from "prop-types";
 import {
   AlertDialogCancel,
@@ -18,7 +17,7 @@ import {
 const ReleaseAcademicGown = ({
   selectedRentalOrder,
   onReleaseSuccess,
-  setIsDialogOpen,
+  setDialogReleaseOpen,
 }) => {
   const [finishedProducts, setFinishedProducts] = useState({
     toga: {
@@ -93,7 +92,7 @@ const ReleaseAcademicGown = ({
         setLoading(false);
         toast.success("Items released successfully!");
         onReleaseSuccess(res.data.releasedRental);
-        setIsDialogOpen(false);
+        setDialogReleaseOpen(false);
       }
     } catch (error) {
       setLoading(false);
@@ -107,29 +106,6 @@ const ReleaseAcademicGown = ({
           onSubmit={form.handleSubmit(handleReleaseItems)}
           className="space-y-6 w-full overflow-y-auto"
         >
-          {/* Rental Order Details */}
-          <fieldset className="border border-gray-300 rounded-md p-4">
-            <legend className="text-lg font-semibold">
-              Rental Order Details
-            </legend>
-            <div className="space-y-4">
-              <div className="flex gap-2 items-center">
-                <FormLabel>Coordinator Name</FormLabel>
-                <span>{form.watch("coordinatorName")}</span>
-              </div>
-              <div className="flex gap-2 items-center">
-                <FormLabel>Department</FormLabel>
-                <span>{form.watch("department")}</span>
-              </div>
-              <div className="flex gap-2 items-center">
-                <FormLabel>Date Needed</FormLabel>
-                <span>
-                  {format(form.watch("possiblePickupDate"), "MMMM dd, yyyy")}
-                </span>
-              </div>
-            </div>
-          </fieldset>
-
           {/* Toga Sizes */}
           <fieldset className="border border-gray-300 rounded-md p-4">
             <legend className="text-lg font-semibold">Toga Sizes</legend>
@@ -280,7 +256,7 @@ const ReleaseAcademicGown = ({
 ReleaseAcademicGown.propTypes = {
   selectedRentalOrder: PropTypes.object.isRequired,
   onReleaseSuccess: PropTypes.func.isRequired,
-  setIsDialogOpen: PropTypes.func.isRequired,
+  setDialogReleaseOpen: PropTypes.func.isRequired,
 };
 
 export default ReleaseAcademicGown;

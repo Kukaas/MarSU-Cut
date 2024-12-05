@@ -507,6 +507,14 @@ function Rentals() {
     RETURNED: "RETURNED",
   };
 
+  const handleReturnSuccess = async () => {
+    setDialogReturnOpen(false);
+  };
+
+  const handleReleaseSuccess = async () => {
+    setDialogReleaseOpen(false);
+  };
+
   return (
     <Spin
       spinning={loadingUpdate}
@@ -678,6 +686,7 @@ function Rentals() {
           <ReleaseAcademicGown
             setDialogReleaseOpen={setDialogReleaseOpen}
             selectedRentalOrder={selectedRental}
+            onReleaseSuccess={handleReleaseSuccess}
           />
         </AlertDialogContent>
       </AlertDialog>
@@ -691,9 +700,9 @@ function Rentals() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <ReturnAcademicGown
-            setDialogReleaseOpen={setDialogReturnOpen}
+            setDialogReturnOpen={setDialogReturnOpen}
             selectedRentalOrder={selectedRental}
-            isReturn
+            onReturnSuccess={handleReturnSuccess}
           />
         </AlertDialogContent>
       </AlertDialog>
