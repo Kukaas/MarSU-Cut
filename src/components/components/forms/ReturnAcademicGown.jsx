@@ -161,7 +161,7 @@ const ReturnAcademicGown = ({
                       <FormItem className="flex flex-col">
                         <div className="flex gap-2 items-center">
                           <FormLabel>{size}</FormLabel>
-                          <span>({form.getValues(`toga.${size}`)})</span>
+                          <span>({selectedRentalOrder.toga[size]})</span>
                         </div>
                         <Input
                           {...field}
@@ -171,6 +171,15 @@ const ReturnAcademicGown = ({
                           onChange={(e) => {
                             const newValue = parseInt(e.target.value, 10);
                             field.onChange(isNaN(newValue) ? "" : newValue);
+                            field.onChange(
+                              isNaN(newValue) ||
+                                newValue >
+                                  selectedRentalOrder.toga[size] -
+                                    selectedRentalOrder.returnedItems.toga[
+                                      size
+                                    ] ||
+                                newValue
+                            );
                           }}
                           disabled={form.getValues(`toga.${size}`) === 0} // Disable input if the default value is 0
                         />
@@ -195,7 +204,7 @@ const ReturnAcademicGown = ({
                       <FormItem className="flex flex-col">
                         <div className="flex gap-2 items-center">
                           <FormLabel>{size}</FormLabel>
-                          <span>({finishedProducts.cap[size]})</span>
+                          <span>({selectedRentalOrder.cap[size]})</span>
                         </div>
                         <Input
                           {...field}
@@ -205,6 +214,15 @@ const ReturnAcademicGown = ({
                           onChange={(e) => {
                             const newValue = parseInt(e.target.value, 10);
                             field.onChange(isNaN(newValue) ? "" : newValue);
+                            field.onChange(
+                              isNaN(newValue) ||
+                                newValue >
+                                  selectedRentalOrder.cap[size] -
+                                    selectedRentalOrder.returnedItems.cap[
+                                      size
+                                    ] ||
+                                newValue
+                            );
                           }}
                           disabled={form.getValues(`cap.${size}`) === 0}
                         />
@@ -226,7 +244,7 @@ const ReturnAcademicGown = ({
                   <FormItem className="flex flex-col">
                     <div className="flex gap-2 items-center">
                       <FormLabel>Hood</FormLabel>
-                      <span>({finishedProducts.hood})</span>
+                      <span>({selectedRentalOrder.hood})</span>
                     </div>
                     <Input
                       {...field}
@@ -236,6 +254,13 @@ const ReturnAcademicGown = ({
                       onChange={(e) => {
                         const newValue = parseInt(e.target.value, 10);
                         field.onChange(isNaN(newValue) ? "" : newValue);
+                        field.onChange(
+                          isNaN(newValue) ||
+                            newValue >
+                              selectedRentalOrder.hood -
+                                selectedRentalOrder.returnedItems.hood ||
+                            newValue
+                        );
                       }}
                       disabled={form.getValues("hood") === 0}
                     />
@@ -256,7 +281,7 @@ const ReturnAcademicGown = ({
                   <FormItem className="flex flex-col">
                     <div className="flex gap-2 items-center">
                       <FormLabel>Monaco Thread</FormLabel>
-                      <span>({finishedProducts.monacoThread})</span>
+                      <span>({selectedRentalOrder.monacoThread})</span>
                     </div>
                     <Input
                       {...field}
@@ -266,6 +291,13 @@ const ReturnAcademicGown = ({
                       onChange={(e) => {
                         const newValue = parseInt(e.target.value, 10);
                         field.onChange(isNaN(newValue) ? "" : newValue);
+                        field.onChange(
+                          isNaN(newValue) ||
+                            newValue > selectedRentalOrder.monacoThread ||
+                            newValue >
+                              selectedRentalOrder.monacoThread -
+                                selectedRentalOrder.returnedItems.monacoThread
+                        );
                       }}
                       disabled={form.getValues(`monacoThread`) === 0}
                     />

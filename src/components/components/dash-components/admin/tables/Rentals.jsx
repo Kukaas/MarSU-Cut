@@ -433,17 +433,23 @@ function Rentals() {
               <DropdownMenuGroup>
                 <DropdownMenuItem
                   onClick={() => handleReject(rental)}
-                  disabled={["APPROVED", "GIVEN", "RETURNED"].includes(
-                    rental.status
-                  )}
+                  disabled={[
+                    "APPROVED",
+                    "GIVEN",
+                    "RETURNED",
+                    "PARTIALLY RETURNED",
+                  ].includes(rental.status)}
                 >
                   Reject
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => handleApprove(rental)}
-                  disabled={["APPROVED", "GIVEN", "RETURNED"].includes(
-                    rental.status
-                  )}
+                  disabled={[
+                    "APPROVED",
+                    "GIVEN",
+                    "RETURNED",
+                    "PARTIALLY RETURNED",
+                  ].includes(rental.status)}
                 >
                   Approve
                 </DropdownMenuItem>
@@ -457,6 +463,7 @@ function Rentals() {
                     "GIVEN",
                     "RETURNED",
                     "PENDING",
+                    "PARTIALLY RETURNED",
                   ].includes(rental.status)}
                 >
                   Given
