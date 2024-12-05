@@ -20,16 +20,47 @@ const RentalDetails = ({ selectedRental }) => {
     });
   };
 
-  const renderSizes = (sizesObject) => {
-    return Object.entries(sizesObject).map(([size, quantity]) => (
-      <div key={size} className="flex justify-between mt-2">
-        <span>{size}:</span> <span>{quantity}</span>
+  const renderGroupedRows = (type, rentedSizes = {}, returnedSizes = {}) => {
+    return (
+      <div key={type} className="border-b py-4">
+        <div className="font-medium text-center">{type}</div>
+        {Object.entries(rentedSizes).map(([size, rentedQty]) => {
+          const returnedQty = returnedSizes[size] || 0; // Default to 0 if not returned
+          const rowColor =
+            rentedQty === returnedQty ? "text-green-500" : "text-red-500";
+
+          return (
+            <div
+              key={`${type}-${size}`}
+              className="flex justify-between py-2 border-t"
+            >
+              <div className="w-1/3 text-center">{size}</div>
+              <div className="w-1/3 text-center">{rentedQty}</div>
+              <div className={`w-1/3 text-center ${rowColor}`}>
+                {returnedQty}
+              </div>
+            </div>
+          );
+        })}
       </div>
-    ));
+    );
+  };
+
+  const renderSingleRow = (type, rentedQty, returnedQty) => {
+    const rowColor =
+      rentedQty === returnedQty ? "text-green-500" : "text-red-500";
+
+    return (
+      <div key={type} className="flex justify-between py-4 border-b">
+        <div className="w-1/3 text-center">{type}</div>
+        <div className="w-1/3 text-center">{rentedQty}</div>
+        <div className={`w-1/3 text-center ${rowColor}`}>{returnedQty}</div>
+      </div>
+    );
   };
 
   return (
-    <AlertDialogContent className="max-w-[500px] max-h-[600px] overflow-auto">
+    <AlertDialogContent className="max-w-[600px] max-h-[600px] overflow-auto">
       <AlertDialogHeader>
         <AlertDialogTitle>
           Rental Details of {selectedRental.coordinatorName}
@@ -56,6 +87,8 @@ const RentalDetails = ({ selectedRental }) => {
                 ? "text-blue-500"
                 : selectedRental.status === "RETURNED"
                 ? "text-green-500"
+                : selectedRental.status === "PARTIALLY RETURNED"
+                ? "text-yellow-500"
                 : "text-red-500"
             }`}
           >
@@ -86,36 +119,43 @@ const RentalDetails = ({ selectedRental }) => {
               : "Not Set"}
           </span>
         </div>
+      </div>
 
-        <div className="mt-4 space-y-2">
-          <div className="flex justify-center mt-4">
-            <AlertDialogTitle>Sizes Ordered</AlertDialogTitle>
-          </div>
-
-          {/* Toga Sizes */}
-          <div>
-            <div className="font-medium">Toga Sizes:</div>
-            {renderSizes(selectedRental.toga)}
-          </div>
-
-          {/* Cap Sizes */}
-          <div>
-            <div className="font-medium">Cap Sizes:</div>
-            {renderSizes(selectedRental.cap)}
-          </div>
-
-          {/* Hood Quantity */}
-          <div className="flex justify-between">
-            <span className="font-medium">Hood:</span>
-            <span>{selectedRental.hood}</span>
-          </div>
-
-          {/* Monaco Thread */}
-          <div className="flex justify-between">
-            <span className="font-medium">Monaco Thread:</span>
-            <span>{selectedRental.monacoThread}</span>
-          </div>
+      <div className="mt-6">
+        <div className="text-lg font-semibold text-center">Rental Summary</div>
+        <div className="flex justify-between font-medium border-b py-2">
+          <div className="w-1/3 text-center">Product Type / Sizes</div>
+          <div className="w-1/3 text-center">Total Rented Items</div>
+          <div className="w-1/3 text-center">Returned Items</div>
         </div>
+
+        {/* Toga Sizes */}
+        {renderGroupedRows(
+          "Toga",
+          selectedRental.toga,
+          selectedRental.returnedItems?.toga
+        )}
+
+        {/* Cap Sizes */}
+        {renderGroupedRows(
+          "Cap",
+          selectedRental.cap,
+          selectedRental.returnedItems?.cap
+        )}
+
+        {/* Hood */}
+        {renderSingleRow(
+          "Hood",
+          selectedRental.hood,
+          selectedRental.returnedItems?.hood || 0
+        )}
+
+        {/* Monaco Thread */}
+        {renderSingleRow(
+          "Monaco Thread",
+          selectedRental.monacoThread,
+          selectedRental.returnedItems?.monacoThread || 0
+        )}
       </div>
 
       <AlertDialogFooter className="mt-6">
