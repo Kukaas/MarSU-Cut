@@ -1,7 +1,6 @@
 // UI
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Tooltip } from "antd";
 
 import { PlusCircle } from "lucide-react";
@@ -42,8 +41,6 @@ import CreateOtherProduction from "@/components/components/forms/CreateOtherProd
 
 const Productions = () => {
   const [data, setData] = useState([]);
-  const [originalData, setOriginalData] = useState([]);
-  const [searchValue, setSearchValue] = useState("");
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const [tab, setTab] = useState("monthly");
@@ -109,7 +106,6 @@ const Productions = () => {
         const data = res.data.productions;
         if (res.status === 200) {
           setData(data);
-          setOriginalData(data);
           setLoading(false);
         }
       } catch (error) {
@@ -119,25 +115,6 @@ const Productions = () => {
 
     fetchProductions();
   }, []);
-
-  useEffect(() => {
-    if (searchValue) {
-      const lowercasedSearchValue = searchValue.toLowerCase();
-
-      const filteredData = originalData.filter((production) => {
-        return (
-          production.productType
-            .toLowerCase()
-            .includes(lowercasedSearchValue) ||
-          production.level.toLowerCase().includes(lowercasedSearchValue)
-        );
-      });
-
-      setData(filteredData);
-    } else {
-      setData(originalData);
-    }
-  }, [searchValue, originalData]);
 
   const columns = [
     {
@@ -224,16 +201,7 @@ const Productions = () => {
           title="Productions"
           description="View and manage productions"
         />
-        <div className="flex flex-wrap items-center justify-between pb-2">
-          <div className="flex flex-1 flex-wrap items-center gap-2">
-            <Input
-              placeholder="Filter by product type or level..."
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              className="h-8 w-[270px]"
-            />
-          </div>
-
+        <div className="flex flex-wrap items-center pb-2 justify-end">
           <div className="flex items-center py-2 justify-between overflow-y-auto">
             <Tooltip title="Add new production">
               <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
