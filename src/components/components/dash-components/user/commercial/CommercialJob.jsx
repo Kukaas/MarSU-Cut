@@ -1,13 +1,5 @@
-import { Spin, Tooltip, Typography } from "antd";
+import { Spin, Tooltip } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import {
@@ -135,6 +127,18 @@ const CommercialJob = () => {
       },
     },
     {
+      accessorKey: "withRawMaterial",
+      header: "With Raw Material",
+      cell: ({ getValue }) => {
+        const value = getValue();
+        return (
+          <span className={value ? "text-green-500" : "text-red-500"}>
+            {value ? "Yes" : "No"}
+          </span>
+        );
+      },
+    },
+    {
       accessorKey: "status",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Status" />
@@ -213,7 +217,10 @@ const CommercialJob = () => {
       }
     >
       <div className="w-full p-5 h-screen">
-        <CustomPageTitle title="Orders" description="View and manage your orders" />
+        <CustomPageTitle
+          title="Orders"
+          description="View and manage your orders"
+        />
         <div className="flex items-center py-4 justify-end">
           <Tooltip title="Create an Order">
             <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -225,9 +232,7 @@ const CommercialJob = () => {
               </AlertDialogTrigger>
               <AlertDialogContent className="sm:max-w-[425px]">
                 <AlertDialogHeader>
-                  <AlertDialogTitle>
-                    Create an Appointment
-                  </AlertDialogTitle>
+                  <AlertDialogTitle>Create an Appointment</AlertDialogTitle>
                   <AlertDialogDescription>
                     Fill in the form to create an appointment.
                   </AlertDialogDescription>

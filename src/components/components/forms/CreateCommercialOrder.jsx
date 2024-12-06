@@ -1,4 +1,10 @@
-import { Form } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -16,7 +22,11 @@ import { useSelector } from "react-redux";
 import { token } from "@/lib/token";
 import { BASE_URL } from "@/lib/api";
 import CustomInput from "../custom-components/CustomInput";
-import { AlertDialogCancel, AlertDialogFooter } from "@/components/ui/alert-dialog";
+import {
+  AlertDialogCancel,
+  AlertDialogFooter,
+} from "@/components/ui/alert-dialog";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const CreateCommercialOrder = ({
   onCommercialOrderCreated,
@@ -26,6 +36,7 @@ const CreateCommercialOrder = ({
   const [commercialOrderLoading, setCommercialOrderLoading] = useState(false);
 
   const handleCreateCommercialOrder = async (values) => {
+    console.log(values.withRawMaterial);
     try {
       setCommercialOrderLoading(true);
       const res = await axios.post(
@@ -35,6 +46,7 @@ const CreateCommercialOrder = ({
           cbName: values.cbName,
           contactNumber: values.contactNumber,
           cbEmail: currentUser.email,
+          withRawMaterial: values.withRawMaterial,
         },
         {
           headers: {
@@ -67,8 +79,10 @@ const CreateCommercialOrder = ({
     defaultValues: {
       contactNumber: "",
       cbName: currentUser.name,
+      withRawMaterial: false,
     },
   });
+
   return (
     <div className="grid gap-4 py-4">
       <div className="w-full">
@@ -93,6 +107,40 @@ const CreateCommercialOrder = ({
                 placeholder="eg. 0912345678"
               />
             </div>
+
+            <FormField
+              control={commercialJobForm.control}
+              name="withRawMaterial"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    Select if you want to provide the raw material
+                  </FormLabel>
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    className="flex flex-col"
+                  >
+                    <FormItem className="flex items-center space-x-3 space-y-0 mb-3">
+                      <FormControl>
+                        <RadioGroupItem value={true} />
+                      </FormControl>
+                      <FormLabel className="font-normal">
+                        With Raw Material
+                      </FormLabel>
+                    </FormItem>
+                    <FormItem className="flex items-center space-x-3 space-y-0 mb-3">
+                      <FormControl>
+                        <RadioGroupItem value={false} />
+                      </FormControl>
+                      <FormLabel className="font-normal">
+                        Without Raw Material
+                      </FormLabel>
+                    </FormItem>
+                  </RadioGroup>
+                </FormItem>
+              )}
+            />
 
             <div className="flex flex-col items-center gap-4 mt-4">
               <AlertDialogFooter className="w-full flex flex-col items-center gap-4">

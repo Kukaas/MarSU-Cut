@@ -352,6 +352,7 @@ export const AddCommercialJobSchema = z.object({
     .string()
     .min(3, { message: "Contact Number must be at least 3 characters" }),
   cbName: z.string().min(3, { message: "Name must be at least 3 characters" }),
+  withRawMaterial: z.boolean(),
 });
 
 export const measureCommercialJobSchema = z.object({

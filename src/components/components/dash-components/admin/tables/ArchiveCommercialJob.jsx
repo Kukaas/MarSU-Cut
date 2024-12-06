@@ -154,6 +154,18 @@ const ArchiveCommercialJob = () => {
       },
     },
     {
+      accessorKey: "withRawMaterial",
+      header: "With Raw Material",
+      cell: ({ getValue }) => {
+        const value = getValue();
+        return (
+          <span className={value ? "text-green-500" : "text-red-500"}>
+            {value ? "Yes" : "No"}
+          </span>
+        );
+      },
+    },
+    {
       accessorKey: "status",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Status" />
