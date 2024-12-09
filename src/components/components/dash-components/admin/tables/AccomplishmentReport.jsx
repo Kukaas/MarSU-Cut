@@ -170,6 +170,20 @@ const AccomplishmentReport = () => {
       },
     },
     {
+      accessorKey: "createdAt",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Date" />
+      ),
+      cell: ({ row }) => {
+        const dateAccomplished = row.getValue("createdAt");
+        const date = new Date(dateAccomplished);
+        return date.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+      },
+    {
       id: "actions",
       header: "Actions",
       cell: ({ row }) => {
