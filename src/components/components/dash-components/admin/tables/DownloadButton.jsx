@@ -45,12 +45,18 @@ const DownloadButton = forwardRef((props, ref) => {
             const remarks =
               item.remarks?.charAt(0).toUpperCase() +
               item.remarks?.slice(1).toLowerCase();
+            const formattedCreatedAt = new Date(item.createdAt).toLocaleString(
+              "default",
+              { month: "long", day: "numeric", year: "numeric" }
+            );
+
             return `
             <tr>
               <td>${item.accomplishmentType}</td>
               <td>${item.product}</td>
               <td>${item.quantity}</td>
               <td>${remarks}</td>
+              <td>${formattedCreatedAt}</td>
             </tr>
           `;
           });
@@ -66,6 +72,7 @@ const DownloadButton = forwardRef((props, ref) => {
                 <th>Product</th>
                 <th>Quantity</th>
                 <th>Remarks</th>
+                <th>Accomplishment Date</th>
               </tr>
             </thead>
             <tbody>
