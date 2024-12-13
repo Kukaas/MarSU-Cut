@@ -247,7 +247,7 @@ const RawMaterialTypes = () => {
                         "Buttons",
                         "Zippers",
                         "Nonwoven Textiles",
-                        "Seweng Fasteners",
+                        "Sewing Fasteners",
                         "Zipper",
                         "Others",
                       ]}
@@ -368,7 +368,9 @@ const RawMaterialTypes = () => {
                       "Buttons",
                       "Zippers",
                       "Nonwoven Textiles",
-                      "Seweng Fasteners",
+                      "Sewing Fasteners",
+                      "Zipper",
+                      "Others",
                     ]}
                     placeholder="Select a category"
                   />

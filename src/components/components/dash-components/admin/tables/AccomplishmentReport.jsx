@@ -183,6 +183,7 @@ const AccomplishmentReport = () => {
           day: "numeric",
         });
       },
+    },
     {
       id: "actions",
       header: "Actions",
